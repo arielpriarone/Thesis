@@ -12,13 +12,12 @@ class snapshot: #this should contain all the useful information about a snapshot
         self.rawData=pd.read_csv(path,delimiter='\t',names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"])
         self.rawData.insert(0,"time",np.arange(0,1,1/len(self.rawData.index)))
         print(self.rawData.head)
-        return self.rawData
-
-        
+       
 if __name__=='__main__': # just for testin, not useful as package functionality
     print(f'the script \"{os.path.basename(__file__)}\" is ruinning as main!')
     dirPath = "./data/raw/1st_test_IMSBearing/"
     fileName = "2003.10.22.12.06.24"
-    dummy=snapshot().readImsFile(path=dirPath+fileName)
+    dummy=snapshot()
+    dummy.readImsFile(path=dirPath+fileName)
     print(f"the dataframe has {len(dummy.index)} rows")
     print(dummy.head)
