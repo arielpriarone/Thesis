@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-import seaborn as sb
 import os
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
