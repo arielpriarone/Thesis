@@ -3,8 +3,8 @@ import numpy as np
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
-    # it return the FFT array (freq domain), and the windowed array (time domaint)
-    #preprocessing the data
+    # it return the FFT array (freq domain), the frequency points (freq domain)
+    # and the windowed array (time domaint) preprocessing the data
     array=np.asarray(array)
     match preproc:
         case 'Hann':
@@ -21,7 +21,7 @@ def FFT(array,samplFreq=1,preproc=None):
     _aux = np.fft.fft(_prepArray)/len(_prepArray)          # Normalize amplitude
     if preproc=='Flip':
         _aux=_aux[::2] # if flip the number of point doubled, now i drop the odd numbers
-    _timePeriod  = len(_prepArray)/2/samplFreq
+    _timePeriod  = len(_prepArray)/samplFreq
     _frequencies = np.arange(int(len(_prepArray)/2))/_timePeriod #frequencies array of fft
     
     return abs(_aux[range(int(len(_prepArray)/2))]), _frequencies, _prepArray
