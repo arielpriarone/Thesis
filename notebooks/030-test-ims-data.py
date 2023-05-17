@@ -1,14 +1,17 @@
 # %%
-
-%matplotlib qt
+import matplotlib
+matplotlib.use('Qt5Agg')
 import importlib
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import os
-sys.path.append("..")       # to make the upper folder visible
 import src
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
+from IPython import get_ipython
+if src.visualization.isNotebook(): # run widget only if in interactive mode
+    get_ipython().run_line_magic('matplotlib', 'widget')
+
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",

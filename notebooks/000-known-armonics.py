@@ -1,12 +1,12 @@
 # %%
-%matplotlib qt
 import numpy as np
 import matplotlib.pyplot as plt
-import sys
-sys.path.append("..")       # to make the upper folder visible
 import src
 import importlib
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
+from IPython import get_ipython
+if src.visualization.isNotebook(): # run widget only if in interactive mode
+    get_ipython().run_line_magic('matplotlib', 'widget')
 
 samplFreq   = 10000 # Hz
 time        = np.arange(0, 5, 1/samplFreq) # Time points
@@ -126,3 +126,4 @@ axes[1].plot(freqs, FFT, alpha=1,label='Flip and Reverse', color='orange', linew
 fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
 plt.subplots_adjust(top=0.9)
 plt.show()
+# %%

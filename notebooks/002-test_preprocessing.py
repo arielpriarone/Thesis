@@ -1,13 +1,14 @@
 # %%
-%matplotlib qt
 import importlib
-import sys
 import matplotlib.pyplot as plt
 import numpy as np
-import os
-sys.path.append("..")       # to make the upper folder visible
 import src
+import importlib
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
+
+from IPython import get_ipython
+if src.visualization.isNotebook(): # run widget only if in interactive mode
+    get_ipython().run_line_magic('matplotlib', 'widget')
 
 # folder path
 dirPath = "../data/raw/1st_test_IMSBearing/"
