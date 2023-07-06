@@ -8,6 +8,12 @@ from IPython import get_ipython
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
 
+plt.rcParams.update({
+    "text.usetex": True,
+    "font.family": "sans-serif",
+    "font.sans-serif": "Helvetica",
+})
+
 samplFreq   = 10000 # Hz
 time        = np.arange(0, 5, 1/samplFreq) # Time points
 freq        = np.array([2,5,7,15,100])
@@ -72,27 +78,27 @@ plt.tight_layout()
 # no preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_multiplePeriod,samplFreq,preproc=None)
 axes[0].plot(time_reduced, prepSignal, alpha=1,label='No preprocessing', color='blue', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='No preprocessing', color='blue', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='blue', s=0.5)
 # Hann window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_multiplePeriod,samplFreq,preproc='Hann')
 axes[0].plot(time_reduced, prepSignal, alpha=1,label='Hann window', color='green', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='Hann window', color='green', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='green', s=0.5)
 # Hamming window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_multiplePeriod,samplFreq,preproc='Hamming')
 axes[0].plot(time_reduced, prepSignal, alpha=1,label='Hamming window', color='purple', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='Hamming window', color='purple', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='purple', s=0.5)
 # Flip window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_multiplePeriod,samplFreq,preproc='Flip')
 axes[0].plot(np.linspace(time_reduced[0],time_reduced[0]+2*(time_reduced[-1]-time_reduced[0]),len(prepSignal)), prepSignal, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='orange', s=0.5)
 
 fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
 plt.subplots_adjust(top=0.9)
 plt.show()
 
 # %%
-ampReduced_fractionedPeriod=ampUndisturbed[0+1234:12000+1234]
-time_reduced=time[0+1234:12000+1234]
+ampReduced_fractionedPeriod=ampUndisturbed[0+1234:8000+1234]
+time_reduced=time[0+1234:8000+1234]
 
 # plotting
 fig, axes = plt.subplots(nrows=2, ncols=1,)
@@ -109,19 +115,19 @@ plt.tight_layout()
 # no preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_fractionedPeriod,samplFreq,preproc=None)
 axes[0].plot(time_reduced, prepSignal, alpha=1,label='No preprocessing', color='blue', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='No preprocessing', color='blue', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='blue', s=0.5)
 # Hann window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_fractionedPeriod,samplFreq,preproc='Hann')
 axes[0].plot(time_reduced, prepSignal, alpha=1,label='Hann window', color='green', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='Hann window', color='green', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='green', s=0.5)
 # Hamming window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_fractionedPeriod,samplFreq,preproc='Hamming')
 axes[0].plot(time_reduced, prepSignal, alpha=1,label='Hamming window', color='purple', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='Hamming window', color='purple', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='purple', s=0.5)
 # Flip window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(ampReduced_fractionedPeriod,samplFreq,preproc='Flip')
 axes[0].plot(np.linspace(time_reduced[0],time_reduced[0]+2*(time_reduced[-1]-time_reduced[0]),len(prepSignal)), prepSignal, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
-axes[1].plot(freqs, FFT, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
+axes[1].scatter(freqs, FFT, alpha=1, color='orange', s=0.5)
 
 fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
 plt.subplots_adjust(top=0.9)

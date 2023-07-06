@@ -18,7 +18,7 @@ plt.rcParams.update({
     "font.sans-serif": "Helvetica",
 })
 # folder path
-dirPath = "../data/raw/1st_test_IMSBearing/"
+dirPath = "./data/raw/1st_test_IMSBearing/"
 indx=0
 fileList=[]
 for fileName in os.listdir(dirPath):

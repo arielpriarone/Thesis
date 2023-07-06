@@ -11,7 +11,7 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
 
 # folder path
-dirPath = "../data/raw/1st_test_IMSBearing/"
+dirPath = "./data/raw/1st_test_IMSBearing/"
 fileName= '2003.10.22.12.06.24'
 
 snap=src.data.snapshot()
@@ -28,7 +28,7 @@ for ax in axes.flat:
     ax.grid(True,'both','both')
     ax.set_ylabel('Magnitude')
 axes[1].set_yscale('log')
-axes[0].set_xlabel('Time [Hz]');axes[1].set_xlabel('Frequency [Hz]')
+axes[0].set_xlabel('Time [s]');axes[1].set_xlabel('Frequency [Hz]')
 plt.tight_layout()
 #performing fast fourier trasfotm
 # no preprocessing
