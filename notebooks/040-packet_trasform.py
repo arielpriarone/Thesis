@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import src
 import importlib
+import pywt
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
 if src.visualization.isNotebook(): # run widget only if in interactive mode
@@ -27,7 +28,25 @@ sin5        = np.sin(2*np.pi*freq[4]*sin5_range) # this is the disturbance
 
 sigUndisturbed = 2*sin1+5*sin2+sin3+1*sin4
 
+# %%
+# wavelet packet
+wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric')
+nodes=[node.path for node in wp.get_level(3, 'freq')]
+print(nodes)
+#print(wp.maxlevel)
+#print(wp['a'].data)
 
+new_wp = pywt.WaveletPacket(data=None, wavelet='db1', mode='symmetric')
+for index in nodes:
+    new_wp[index]=wp[index].data
+    print(index)
+    print(wp[index].data)
+# %%
+print(new_wp.reconstruct(update=True))
+print(sigUndisturbed-new_wp.data)
+dummy=sigUndisturbed-new_wp.data
+
+# %%
 # plotting
 fig, axes = plt.subplots(nrows=2, ncols=1,)
 
