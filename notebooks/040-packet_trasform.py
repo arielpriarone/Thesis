@@ -1,6 +1,7 @@
 # %%
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 import src
 import importlib
 import pywt
@@ -30,33 +31,55 @@ sigUndisturbed = 2*sin1+5*sin2+sin3+1*sin4
 
 # %%
 # wavelet packet
-wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric')
-nodes=[node.path for node in wp.get_level(3, 'freq')]
+wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric',maxlevel=2)
+nodes=[node.path for node in wp.get_level(wp.maxlevel, 'freq')]
 print(nodes)
-#print(wp.maxlevel)
-#print(wp['a'].data)
 
+# %%
+# reconstruct the original signal by decomposition
 new_wp = pywt.WaveletPacket(data=None, wavelet='db1', mode='symmetric')
+
 for index in nodes:
     new_wp[index]=wp[index].data
     print(index)
     print(wp[index].data)
-# %%
+powers=[np.linalg.norm(wp[index].data) for index in nodes]
 print(new_wp.reconstruct(update=True))
 print(sigUndisturbed-new_wp.data)
-dummy=sigUndisturbed-new_wp.data
+
 
 # %%
 # plotting
-fig, axes = plt.subplots(nrows=2, ncols=1,)
 
-for ax in axes.flat:
-    ax.set_axisbelow(True)
-    ax.grid(True,'both','both')
-    ax.set_ylabel('Magnitude')
-    ax.minorticks_on()
-#axes[1].set_yscale('log')
-axes[0].set_xlabel('Time [s]');axes[1].set_xlabel('Frequency [Hz]')
-plt.tight_layout()
-axes[0].plot(time, sigUndisturbed, alpha=1,label='Time domain signal', color='blue', linewidth=0.5); axes[0].set_xlim(0,Tend)
+fig = plt.figure(tight_layout=True)
+gs = gridspec.GridSpec(3, 2)
+
+ax = fig.add_subplot(gs[0, 0])
+ax.set_xlabel('Time [s]')
+ax.set_ylabel('Amplitude [-]')
+
+
+ax.plot(time, sigUndisturbed, alpha=1,label='Original signal', color='blue', linewidth=0.4)
+ax.plot(time,new_wp.data, alpha=1,label='Reconstructed signal', color='red', linewidth=0.4, linestyle=(0, (5, 5)))
+ax.set_xlim(0,Tend)
+ax.legend()
+
+ax = fig.add_subplot(gs[0, 1])
+ax.scatter(nodes,powers)
+ax.set_yscale('log')
+
+ax = fig.add_subplot(gs[1, 0])
+ax.plot(np.arange(0, Tend, 4/samplFreq),wp['aa'].data)
+
+ax = fig.add_subplot(gs[1, 1])
+ax.plot(np.arange(0, Tend, 4/samplFreq),wp['ad'].data)
+
+ax = fig.add_subplot(gs[2, 0])
+ax.plot(np.arange(0, Tend, 4/samplFreq),wp['da'].data)
+
+ax = fig.add_subplot(gs[2, 1])
+ax.plot(np.arange(0, Tend, 4/samplFreq),wp['dd'].data)
+
 plt.show()
+
+# %%
