@@ -16,7 +16,7 @@ plt.rcParams.update({
     "font.sans-serif": "Helvetica",
 })
 
-samplFreq   = 1000 # Hz
+samplFreq   = 20000 # Hz
 Tend        = 1 #end time
 time        = np.arange(0, Tend, 1/samplFreq) # Time points
 freq        = np.array([2,5,7,200,400])
@@ -31,7 +31,7 @@ sigUndisturbed = 2*sin1+5*sin2+sin3+1*sin4
 
 # %%
 # wavelet packet
-wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric',maxlevel=2)
+wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric',maxlevel=3)
 nodes=[node.path for node in wp.get_level(wp.maxlevel, 'natural')]
 print(nodes)
 
@@ -52,7 +52,7 @@ print(sigUndisturbed-new_wp.data)
 # plotting
 
 fig = plt.figure(tight_layout=True)
-gs = gridspec.GridSpec(3, 2)
+gs = gridspec.GridSpec(1+2**wp.maxlevel,2)
 
 ax = fig.add_subplot(gs[0, 0])
 ax.set_xlabel('Time [s]')
@@ -67,19 +67,18 @@ ax.legend()
 ax = fig.add_subplot(gs[0, 1])
 ax.scatter(nodes,powers)
 ax.set_yscale('log')
+ax.set_xlabel('Coeficients')
+ax.set_ylabel('Power')
 
-ax = fig.add_subplot(gs[1, 0])
-ax.plot(np.arange(0, Tend, 4/samplFreq),wp['aa'].data, linewidth=0.4)
-
-ax = fig.add_subplot(gs[1, 1])
-ax.plot(np.arange(0, Tend, 4/samplFreq),wp['ad'].data, linewidth=0.4)
-
-ax = fig.add_subplot(gs[2, 0])
-ax.plot(np.arange(0, Tend, 4/samplFreq),wp['da'].data, linewidth=0.4)
-
-ax = fig.add_subplot(gs[2, 1])
-ax.plot(np.arange(0, Tend, 4/samplFreq),wp['dd'].data, linewidth=0.4)
+i=0
+for indx in nodes:
+    ax = fig.add_subplot(gs[1+int(i/2), np.mod(i,2)])
+    ax.plot(np.linspace(0, Tend, int(samplFreq*Tend/(2**wp.maxlevel))),wp[nodes[i]].data, linewidth=0.4)
+    ax.set_xlabel('Time [s]')
+    ax.set_ylabel('Amplitude [-]')
+    i+=1
 
 plt.show()
+
 
 # %%
