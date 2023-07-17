@@ -31,7 +31,7 @@ sigUndisturbed = 2*sin1+5*sin2+sin3+1*sin4
 
 # %%
 # wavelet packet
-wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric',maxlevel=6)
+wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db10', mode='symmetric',maxlevel=6)
 nodes=[node.path for node in wp.get_level(wp.maxlevel, 'natural')]
 print(nodes)
 
