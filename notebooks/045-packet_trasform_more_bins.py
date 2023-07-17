@@ -16,10 +16,10 @@ plt.rcParams.update({
     "font.sans-serif": "Helvetica",
 })
 
-samplFreq   = 20000 # Hz
+samplFreq   = 2000 # Hz
 Tend        = 1 #end time
 time        = np.arange(0, Tend, 1/samplFreq) # Time points
-freq        = np.array([2,5,7,200,400])
+freq        = np.array([2,53,70,200,400])
 sin1        = np.sin(2*np.pi*freq[0]*time)
 sin2        = np.sin(2*np.pi*freq[1]*time)
 sin3        = np.sin(2*np.pi*freq[2]*time)
@@ -31,7 +31,7 @@ sigUndisturbed = 2*sin1+5*sin2+sin3+1*sin4
 
 # %%
 # wavelet packet
-wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric',maxlevel=3)
+wp = pywt.WaveletPacket(data=sigUndisturbed, wavelet='db1', mode='symmetric',maxlevel=6)
 nodes=[node.path for node in wp.get_level(wp.maxlevel, 'natural')]
 print(nodes)
 
@@ -44,41 +44,34 @@ for index in nodes:
     print(index)
     print(wp[index].data)
 powers=[np.linalg.norm(wp[index].data) for index in nodes]
-print(new_wp.reconstruct(update=True))
-print(sigUndisturbed-new_wp.data)
+#print(new_wp.reconstruct(update=True))
+#print(sigUndisturbed-new_wp.data)
 
 
 # %%
-# plotting
+# # plotting
 
-fig = plt.figure(tight_layout=True)
-gs = gridspec.GridSpec(1+2**wp.maxlevel,2)
+# fig, axes = plt.subplots(1+2**wp.maxlevel,sharex=True)
 
-ax = fig.add_subplot(gs[0, 0])
-ax.set_xlabel('Time [s]')
-ax.set_ylabel('Amplitude [-]')
+# axes[0].plot(time, sigUndisturbed, alpha=1,label='Original signal', color='blue', linewidth=0.4)
+# axes[0].plot(time,new_wp.data, alpha=1,label='Reconstructed signal', color='red', linewidth=0.4, linestyle=(0, (5, 5)))
+# axes[0].set_xlim(0,Tend)
+# axes[0].set_ylabel('Signal')
+# axes[0].legend()
+# i=0
+
+# for indx in nodes:
+#     axes[i+1].plot(np.linspace(0, Tend, int(samplFreq*Tend/(2**wp.maxlevel))),wp[nodes[i]].data, linewidth=0.4)
+#     axes[i+1].set_ylabel(indx)
+#     i+=1
+
+# axes[2**wp.maxlevel].set_xlabel('Time [s]')
+# fig.align_ylabels(axes)
+# plt.show()
 
 
-ax.plot(time, sigUndisturbed, alpha=1,label='Original signal', color='blue', linewidth=0.4)
-ax.plot(time,new_wp.data, alpha=1,label='Reconstructed signal', color='red', linewidth=0.4, linestyle=(0, (5, 5)))
-ax.set_xlim(0,Tend)
-ax.legend()
-
-ax = fig.add_subplot(gs[0, 1])
-ax.scatter(nodes,powers)
-ax.set_yscale('log')
-ax.set_xlabel('Coeficients')
-ax.set_ylabel('Power')
-
-i=0
-for indx in nodes:
-    ax = fig.add_subplot(gs[1+int(i/2), np.mod(i,2)])
-    ax.plot(np.linspace(0, Tend, int(samplFreq*Tend/(2**wp.maxlevel))),wp[nodes[i]].data, linewidth=0.4)
-    ax.set_xlabel('Time [s]')
-    ax.set_ylabel('Amplitude [-]')
-    i+=1
-
+# %%
+fig, ax = plt.subplots()
+ax.bar(nodes,powers)
+ax.tick_params(axis='x',rotation=90)
 plt.show()
-
-
-# %%
