@@ -9,16 +9,19 @@ import os
 import src
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
+auxpath='' # auxilliary path because interactive mode treat path differently 
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
-
+    auxpath='.'
+from sklearn.preprocessing import StandardScaler
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
     "font.sans-serif": "Helvetica",
 })
+stdsclr=StandardScaler()
 # folder path
-dirPath = "./data/raw/1st_test_IMSBearing/"
+dirPath = auxpath + "./data/raw/1st_test_IMSBearing/"
 indx=0
 fileList=[]
 for fileName in os.listdir(dirPath):
@@ -40,18 +43,37 @@ for fileName in os.listdir(dirPath):
         # wavelet packet
         wp = pywt.WaveletPacket(data=snap.rawData["Bearing 3 x"], wavelet='db10', mode='symmetric',maxlevel=6)
         nodes=[node.path for node in wp.get_level(wp.maxlevel, 'natural')]
-        powers=[np.linalg.norm(wp[index].data) for index in nodes]
+        powers=[np.linalg.norm(wp[index].data) for index in nodes]  # getting the powers of the wavelet coefs
         if indx==0:
             wavanaly=powers
         else:
-            wavanaly = np.vstack([wavanaly, powers])       # Exclude sampling frequency
+            wavanaly = np.vstack([wavanaly, powers])
+        if indx==1500: #split training dataset and validation dataset
+            stdsclr.fit(wavanaly) 
         indx+=1
         print(indx)
-        break
- 
- 
-# %%
-fig, ax = plt.subplots()
-ax.bar(nodes,powers)
-ax.tick_params(axis='x',rotation=90)
+wavanaly_standardized=stdslr.transform(wavanaly)
+
+#%%
+from mpl_toolkits import mplot3d
+x = np.arange(0,wavanaly_standardized.shape[1],1)
+y = np.arange(0,wavanaly_standardized.shape[0],1)
+X,Y = np.meshgrid(x,y)
+# Plot a 3D surface
+print(X.shape)
+print(Y.shape)
+print(wavanaly_standardized.shape)
+fig = plt.figure('figure1')#,figsize=[15, 15])
+ax = plt.axes(projection='3d')
+ax.set_xlabel('Frequency [Hz]')
+ax.set_ylabel('Snapshots')
+ax.set_zlabel('Amplitude')
+#ax.yaxis.set_ticks(np.arange(0,6,1))
+dummy=np.round(np.linspace(0, len(fileList) - 1, 6)).astype(int).tolist()
+print(dummy)
+#ax.set_yticklabels([fileList[i] for i in dummy])
+# Create surface plot
+ax.scatter(X, Y, wavanaly_standardized, marker='.',c=wavanaly_standardized/np.max(wavanaly_standardized), cmap='turbo')
+
 plt.show()
+# %%

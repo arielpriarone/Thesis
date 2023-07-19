@@ -37,7 +37,7 @@ print(nodes)
 
 # %%
 # reconstruct the original signal by decomposition
-new_wp = pywt.WaveletPacket(data=None, wavelet='db1', mode='symmetric')
+new_wp = pywt.WaveletPacket(data=None, wavelet='db10', mode='symmetric')
 
 for index in nodes:
     new_wp[index]=wp[index].data
