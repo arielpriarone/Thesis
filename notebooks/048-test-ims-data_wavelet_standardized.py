@@ -52,7 +52,7 @@ for fileName in os.listdir(dirPath):
             stdsclr.fit(wavanaly) 
         indx+=1
         print(indx)
-wavanaly_standardized=stdslr.transform(wavanaly)
+wavanaly_standardized=stdsclr.transform(wavanaly)
 
 #%%
 from mpl_toolkits import mplot3d
@@ -65,7 +65,7 @@ print(Y.shape)
 print(wavanaly_standardized.shape)
 fig = plt.figure('figure1')#,figsize=[15, 15])
 ax = plt.axes(projection='3d')
-ax.set_xlabel('Frequency [Hz]')
+ax.set_xlabel('Features')
 ax.set_ylabel('Snapshots')
 ax.set_zlabel('Amplitude')
 #ax.yaxis.set_ticks(np.arange(0,6,1))
@@ -74,6 +74,26 @@ print(dummy)
 #ax.set_yticklabels([fileList[i] for i in dummy])
 # Create surface plot
 ax.scatter(X, Y, wavanaly_standardized, marker='.',c=wavanaly_standardized/np.max(wavanaly_standardized), cmap='turbo')
-
+ax.set_xticklabels(nodes)
 plt.show()
+
+# %%
+# analyze just one snapshot
+fig, axs = plt.subplots(3,1,sharex=True)
+fig.tight_layout()
+aux=200 # number of the considered sample
+axs[0].bar(nodes,wavanaly[aux,:])
+axs[0].tick_params(axis='x',rotation=90)
+axs[0].set_title('single snapshot, raw')
+
+axs[1].bar(nodes,wavanaly[aux,:]/np.linalg.norm(wavanaly[aux,:]))
+axs[1].tick_params(axis='x',rotation=90)
+axs[1].set_title('single snapshot, power normalized')
+
+axs[2].bar(nodes,wavanaly_standardized[aux,:]/np.linalg.norm(wavanaly_standardized[aux,:]))
+axs[2].tick_params(axis='x',rotation=90)
+axs[2].set_title('single snapshot, standardized along features axes')
+plt.show()
+
+
 # %%
