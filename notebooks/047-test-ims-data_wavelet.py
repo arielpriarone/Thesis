@@ -60,7 +60,7 @@ print(Y.shape)
 print(wavanaly.shape)
 fig = plt.figure('figure1')#,figsize=[15, 15])
 ax = plt.axes(projection='3d')
-ax.set_xlabel('Frequency [Hz]')
+ax.set_xlabel('Features')
 ax.set_ylabel('Snapshots')
 ax.set_zlabel('amplitude')
 #ax.yaxis.set_ticks(np.arange(0,6,1))
@@ -69,6 +69,6 @@ print(dummy)
 #ax.set_yticklabels([fileList[i] for i in dummy])
 # Create surface plot
 ax.scatter(X, Y, wavanaly, marker='.',c=wavanaly/np.max(wavanaly), cmap='turbo')
-
+ax.set_xticklabels(nodes)
 plt.show()
 # %%

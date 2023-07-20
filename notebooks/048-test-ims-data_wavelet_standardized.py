@@ -19,8 +19,10 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
-decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
+decompose   = False                                          # decompose using wavelet packet / reload previous decomposition
 TrainingData={}                                             # empty dictionary to save data 
+n_split     = 1500                                          # number of sample to split the dataset
+
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
@@ -51,7 +53,7 @@ if decompose:
                 wavanaly=powers
             else:
                 wavanaly = np.vstack([wavanaly, powers])
-            if indx==1500: #split training dataset and validation dataset
+            if indx==n_split: #split training dataset and validation dataset
                 stdsclr.fit(wavanaly) 
             indx+=1
             print(indx)
@@ -59,6 +61,10 @@ if decompose:
 
     TrainingData['wavanaly']=wavanaly
     TrainingData['wavanaly_standardized']=wavanaly_standardized
+    TrainingData['wavanaly_train']=wavanaly[0:n_split,:]
+    TrainingData['wavanaly_standardized_train']=wavanaly_standardized[0:n_split,:]
+    TrainingData['wavanaly_test']=wavanaly[n_split::,:]
+    TrainingData['wavanaly_standardized_test']=wavanaly_standardized[n_split::,:]
     TrainingData['nodes']=nodes
     filehandler = open(savepath, 'wb') 
     pickle.dump(TrainingData, filehandler)
@@ -106,7 +112,31 @@ axs[1].set_title('single snapshot, power normalized')
 axs[2].bar(TrainingData['nodes'],TrainingData['wavanaly_standardized'][aux,:]/np.linalg.norm(TrainingData['wavanaly_standardized'][aux,:]))
 axs[2].tick_params(axis='x',rotation=90)
 axs[2].set_title('single snapshot, standardized along features axes')
+
+#%%
+# print as a heatmap
+mynorm = plt.Normalize(vmin=np.min(TrainingData['wavanaly_standardized']), vmax=np.max(TrainingData['wavanaly_standardized']))
+sm = plt.cm.ScalarMappable(cmap='plasma', norm=mynorm)
+fig, axs = plt.subplots(1,2)
+fig.tight_layout()
+aux=200 # number of the considered sample
+im=axs[0].imshow(TrainingData['wavanaly_standardized'][0:0+2*65,:],cmap='plasma')
+im.set_norm(mynorm)
+axs[0].set_xticklabels(TrainingData['nodes'])
+axs[0].set_xlabel('Features')
+axs[0].set_ylabel('n° of record')
+axs[0].set_title('Normal Functioning')
+
+start=2028
+im=axs[1].imshow(TrainingData['wavanaly_standardized'][start:start+2*65,:],cmap='plasma')
+im.set_norm(mynorm)
+axs[1].set_xticklabels(TrainingData['nodes'])
+axs[1].set_yticklabels(np.arange(start,start+2*65))
+axs[1].set_xlabel('Features')
+axs[1].set_ylabel('n° of record')
+axs[1].set_title('Abnormal Functioning')
+
+cb=fig.colorbar(im)
+cb.set_label('Power of the feature')
 plt.show()
-
-
 # %%
