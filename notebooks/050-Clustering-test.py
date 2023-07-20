@@ -32,6 +32,10 @@ for i in range(0, n_features):
         if i!=j:
             axs[i,j].scatter(X[:,i],X[:,j],c=y,cmap='tab20b',s=1,marker='.')
             axs[i,j].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x')
+        if i==n_features-1:
+            axs[i,j].set_xlabel('feature '+str(j))
+        if j==0:
+            axs[i,j].set_ylabel('feature '+str(i))
 
 
 # %%
