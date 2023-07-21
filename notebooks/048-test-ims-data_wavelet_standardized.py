@@ -109,7 +109,7 @@ axs[1].bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:]/np.linalg.norm(
 axs[1].tick_params(axis='x',rotation=90)
 axs[1].set_title('single snapshot, power normalized')
 
-axs[2].bar(TrainingData['nodes'],TrainingData['wavanaly_standardized'][aux,:]/np.linalg.norm(TrainingData['wavanaly_standardized'][aux,:]))
+axs[2].bar(TrainingData['nodes'],TrainingData['wavanaly_standardized'][aux,:])
 axs[2].tick_params(axis='x',rotation=90)
 axs[2].set_title('single snapshot, standardized along features axes')
 

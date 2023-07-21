@@ -9,16 +9,24 @@ import os
 import src
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
+auxpath=''                                                  # auxilliary path because interactive mode treat path differently 
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
+    auxpath='.'
+
+# script settings
+dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
+savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
+decompose   = False                                          # decompose using wavelet packet / reload previous decomposition
+TrainingData={}                                             # empty dictionary to save data 
+n_split     = 1500                                          # number of sample to split the dataset
 
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
     "font.sans-serif": "Helvetica",
 })
-# folder path
-dirPath = "./data/raw/1st_test_IMSBearing/"
+
 indx=0
 fileList=[]
 for fileName in os.listdir(dirPath):
