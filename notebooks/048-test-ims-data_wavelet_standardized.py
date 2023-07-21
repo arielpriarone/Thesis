@@ -8,6 +8,7 @@ import numpy as np
 import os
 import src
 import pickle 
+import tikzplotlib as mp2tk
 from sklearn.preprocessing import StandardScaler
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
@@ -19,7 +20,9 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
-decompose   = False                                          # decompose using wavelet packet / reload previous decomposition
+tickpath    = os.path.join(auxpath + "./reports/tickz/")    #file to save the tickz
+
+decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 TrainingData={}                                             # empty dictionary to save data 
 n_split     = 1500                                          # number of sample to split the dataset
 
@@ -98,20 +101,28 @@ ax.set_xticklabels(TrainingData['nodes'])
 
 # %%
 # analyze just one snapshot
-fig, axs = plt.subplots(3,1,sharex=True)
-fig.tight_layout()
 aux=200 # number of the considered sample
-axs[0].bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:])
-axs[0].tick_params(axis='x',rotation=90)
-axs[0].set_title('single snapshot, raw')
 
-axs[1].bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:]/np.linalg.norm(TrainingData['wavanaly'][aux,:]))
-axs[1].tick_params(axis='x',rotation=90)
-axs[1].set_title('single snapshot, power normalized')
+fig, ax = plt.subplots(figsize=(6.4,1.5))
+ax.bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:])
+ax.tick_params(labelbottom=False)
+ax.set_ylabel('Amplitude')
+mp2tk.save(tickpath+'WT_SingSnap_a.tex',axis_height='3cm', axis_width='0.9\linewidth')
 
-axs[2].bar(TrainingData['nodes'],TrainingData['wavanaly_standardized'][aux,:])
-axs[2].tick_params(axis='x',rotation=90)
-axs[2].set_title('single snapshot, standardized along features axes')
+fig, ax = plt.subplots(figsize=(6.4,1.5))
+ax.bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:]/np.linalg.norm(TrainingData['wavanaly'][aux,:]))
+ax.tick_params(labelbottom=False)
+ax.set_ylabel('Amplitude')
+mp2tk.save(tickpath+'WT_SingSnap_b.tex',axis_height='3cm', axis_width='294.76926pt')
+
+fig, ax = plt.subplots(figsize=(6.4,1.5))
+ax.bar(TrainingData['nodes'],TrainingData['wavanaly_standardized'][aux,:])
+ax.set_ylabel('Amplitude')
+ax.tick_params(axis='x',rotation=90)
+mp2tk.save(tickpath+'WT_SingSnap_c.tex',axis_height='3cm', axis_width='294.76926pt')
+
+
+
 
 #%%
 # print as a heatmap
