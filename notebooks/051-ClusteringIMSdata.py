@@ -82,3 +82,4 @@ for i in range_feature_1:
 
 plt.show()
 # %%
+sil_samples=silhouette_samples(TrainingData['wavanaly_standardized_train'],y_pred_all)
