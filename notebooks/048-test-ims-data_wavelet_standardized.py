@@ -23,7 +23,7 @@ savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized
 tickpath    = os.path.join(auxpath + "./reports/tickz/")    #file to save the tickz
 
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
-TrainingData={}                                             # empty dictionary to save data 
+IMSDATA={}                                             # empty dictionary to save data 
 n_split     = 1500                                          # number of sample to split the dataset
 
 plt.rcParams.update({
@@ -62,29 +62,29 @@ if decompose:
             print(indx)
     wavanaly_standardized=stdsclr.transform(wavanaly)
 
-    TrainingData['wavanaly']=wavanaly
-    TrainingData['wavanaly_standardized']=wavanaly_standardized
-    TrainingData['wavanaly_train']=wavanaly[0:n_split,:]
-    TrainingData['wavanaly_standardized_train']=wavanaly_standardized[0:n_split,:]
-    TrainingData['wavanaly_test']=wavanaly[n_split::,:]
-    TrainingData['wavanaly_standardized_test']=wavanaly_standardized[n_split::,:]
-    TrainingData['nodes']=nodes
+    IMSDATA['wavanaly']=wavanaly
+    IMSDATA['wavanaly_standardized']=wavanaly_standardized
+    IMSDATA['wavanaly_train']=wavanaly[0:n_split,:]
+    IMSDATA['wavanaly_standardized_train']=wavanaly_standardized[0:n_split,:]
+    IMSDATA['wavanaly_test']=wavanaly[n_split::,:]
+    IMSDATA['wavanaly_standardized_test']=wavanaly_standardized[n_split::,:]
+    IMSDATA['nodes']=nodes
     filehandler = open(savepath, 'wb') 
-    pickle.dump(TrainingData, filehandler)
+    pickle.dump(IMSDATA, filehandler)
     filehandler.close()
 else:
     filehandler = open(savepath, 'rb') 
-    TrainingData = pickle.load(filehandler)
+    IMSDATA = pickle.load(filehandler)
 
 #%%
 from mpl_toolkits import mplot3d
-x = np.arange(0,TrainingData['wavanaly_standardized'].shape[1],1)
-y = np.arange(0,TrainingData['wavanaly_standardized'].shape[0],1)
+x = np.arange(0,IMSDATA['wavanaly_standardized'].shape[1],1)
+y = np.arange(0,IMSDATA['wavanaly_standardized'].shape[0],1)
 X,Y = np.meshgrid(x,y)
 # Plot a 3D surface
 print(X.shape)
 print(Y.shape)
-print(TrainingData['wavanaly_standardized'].shape)
+print(IMSDATA['wavanaly_standardized'].shape)
 fig = plt.figure('figure1')#,figsize=[15, 15])
 ax = plt.axes(projection='3d')
 ax.set_xlabel('Features')
@@ -95,8 +95,8 @@ dummy=np.round(np.linspace(0, len(fileList) - 1, 6)).astype(int).tolist()
 print(dummy)
 #ax.set_yticklabels([fileList[i] for i in dummy])
 # Create surface plot
-ax.scatter(X, Y, TrainingData['wavanaly_standardized'], marker='.',c=TrainingData['wavanaly_standardized']/np.max(TrainingData['wavanaly_standardized']), cmap='turbo')
-ax.set_xticklabels(TrainingData['nodes'])
+ax.scatter(X, Y, IMSDATA['wavanaly_standardized'], marker='.',c=IMSDATA['wavanaly_standardized']/np.max(IMSDATA['wavanaly_standardized']), cmap='turbo')
+ax.set_xticklabels(IMSDATA['nodes'])
 
 
 # %%
@@ -104,19 +104,19 @@ ax.set_xticklabels(TrainingData['nodes'])
 aux=200 # number of the considered sample
 
 fig, ax = plt.subplots(figsize=(6.4,1.5))
-ax.bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:])
+ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:])
 ax.tick_params(labelbottom=False)
 ax.set_ylabel('Amplitude')
 mp2tk.save(tickpath+'WT_SingSnap_a.tex',axis_height='3cm', axis_width='0.9\linewidth')
 
 fig, ax = plt.subplots(figsize=(6.4,1.5))
-ax.bar(TrainingData['nodes'],TrainingData['wavanaly'][aux,:]/np.linalg.norm(TrainingData['wavanaly'][aux,:]))
+ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:]/np.linalg.norm(IMSDATA['wavanaly'][aux,:]))
 ax.tick_params(labelbottom=False)
 ax.set_ylabel('Amplitude')
 mp2tk.save(tickpath+'WT_SingSnap_b.tex',axis_height='3cm', axis_width='294.76926pt')
 
 fig, ax = plt.subplots(figsize=(6.4,1.5))
-ax.bar(TrainingData['nodes'],TrainingData['wavanaly_standardized'][aux,:])
+ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly_standardized'][aux,:])
 ax.set_ylabel('Amplitude')
 ax.tick_params(axis='x',rotation=90)
 mp2tk.save(tickpath+'WT_SingSnap_c.tex',axis_height='3cm', axis_width='294.76926pt')
@@ -126,22 +126,22 @@ mp2tk.save(tickpath+'WT_SingSnap_c.tex',axis_height='3cm', axis_width='294.76926
 
 #%%
 # print as a heatmap
-mynorm = plt.Normalize(vmin=np.min(TrainingData['wavanaly_standardized']), vmax=np.max(TrainingData['wavanaly_standardized']))
+mynorm = plt.Normalize(vmin=np.min(IMSDATA['wavanaly_standardized']), vmax=np.max(IMSDATA['wavanaly_standardized']))
 sm = plt.cm.ScalarMappable(cmap='plasma', norm=mynorm)
 fig, axs = plt.subplots(1,2)
 fig.tight_layout()
 aux=200 # number of the considered sample
-im=axs[0].imshow(TrainingData['wavanaly_standardized'][0:0+2*65,:],cmap='plasma')
+im=axs[0].imshow(IMSDATA['wavanaly_standardized'][0:0+2*65,:],cmap='plasma')
 im.set_norm(mynorm)
-axs[0].set_xticklabels(TrainingData['nodes'])
+axs[0].set_xticklabels(IMSDATA['nodes'])
 axs[0].set_xlabel('Features')
 axs[0].set_ylabel('n° of record')
 axs[0].set_title('Normal Functioning')
 
 start=2028
-im=axs[1].imshow(TrainingData['wavanaly_standardized'][start:start+2*65,:],cmap='plasma')
+im=axs[1].imshow(IMSDATA['wavanaly_standardized'][start:start+2*65,:],cmap='plasma')
 im.set_norm(mynorm)
-axs[1].set_xticklabels(TrainingData['nodes'])
+axs[1].set_xticklabels(IMSDATA['nodes'])
 axs[1].set_yticklabels(np.arange(start,start+2*65))
 axs[1].set_xlabel('Features')
 axs[1].set_ylabel('n° of record')

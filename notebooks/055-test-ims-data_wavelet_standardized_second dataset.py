@@ -1,3 +1,5 @@
+# to do: fix this script so it stores conveniently the second dataset, and then repeat the feature extraction
+
 # %%
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -18,7 +20,7 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     auxpath='.'
     
 # script settings
-dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
+dirPath     = auxpath + "./data/raw/2nd_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized_second.pickle") #file to save the analisys
 tickpath    = os.path.join(auxpath + "./reports/tickz/")    #file to save the tickz
 

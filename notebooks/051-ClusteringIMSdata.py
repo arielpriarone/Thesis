@@ -23,10 +23,10 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
-TrainingData={}                                             # empty dictionary to save data 
+IMSDATA={}                                             # empty dictionary to save data 
 
 filehandler = open(savepath, 'rb') 
-TrainingData = pickle.load(filehandler)
+IMSDATA = pickle.load(filehandler)
 
 
 # %%
@@ -35,9 +35,9 @@ inertia=[]
 max_clusters=15
 for n_blobs in range(1,max_clusters+1):
     kmeans=KMeans(n_blobs)
-    y_pred=kmeans.fit_predict(TrainingData['wavanaly_standardized_train'])
+    y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
     if n_blobs>1:
-        sil_score.append(silhouette_score(TrainingData['wavanaly_standardized_train'],y_pred))
+        sil_score.append(silhouette_score(IMSDATA['wavanaly_standardized_train'],y_pred_train))
     inertia.append(kmeans.inertia_)
 
 
@@ -61,10 +61,10 @@ axs.set_xlabel('Num. of clusters')
 # select 2 clusters because of silhouette analisys - train dataset
 n_blobs=2
 kmeans=KMeans(n_blobs)
-y_pred=kmeans.fit_predict(TrainingData['wavanaly_standardized_train'])
+y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
 
-range_feature_1=range(20, 22)
-range_feature_2=range(40, 42)
+range_feature_1=range(30, 33)
+range_feature_2=range(50, 53)
 
 fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
 fig.tight_layout()
@@ -73,7 +73,7 @@ for i in range_feature_1:
     for j in range_feature_2:
         print(i,j)
         if i!=j:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(TrainingData['wavanaly_standardized_train'][:,i],TrainingData['wavanaly_standardized_train'][:,j],s=1,marker='.',c=y_pred+1,cmap='Set1')
+            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(IMSDATA['wavanaly_standardized_train'][:,i],IMSDATA['wavanaly_standardized_train'][:,j],s=1,marker='.',c=y_pred_train+1,cmap='Set1')
             axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c='black')
         if i==range_feature_1[-1]:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
@@ -82,9 +82,9 @@ for i in range_feature_1:
 
 
 # %%
-# with only train dataset
-y_pred_all=kmeans.predict(TrainingData['wavanaly_standardized_train'])
-sil_samples=silhouette_samples(TrainingData['wavanaly_standardized_train'],y_pred_all)
+# with only train dataset - to check htat it's working ok
+y_pred_train=kmeans.predict(IMSDATA['wavanaly_standardized_train'])
+sil_samples=silhouette_samples(IMSDATA['wavanaly_standardized_train'],y_pred_train)
 
 x0=0
 xticks=[]
@@ -92,7 +92,7 @@ max_sil=[]
 fig, axs=plt.subplots()
 fig.tight_layout()
 for i in range(n_blobs):
-    y=sil_samples[y_pred_all==i]
+    y=sil_samples[y_pred_train==i]
     x=range(x0,x0+len(y))
     x0+=len(y)
     axs.fill_between(x,-np.sort(-y))
@@ -106,10 +106,8 @@ axs.set_xlabel('Clusters')
 
 # %%
 # all dataset
-y_pred=kmeans.predict(TrainingData['wavanaly_standardized']) #only predict because all dataset
+y_pred_all=kmeans.predict(IMSDATA['wavanaly_standardized']) #only predict because all dataset
 
-range_feature_1=range(20, 22)
-range_feature_2=range(40, 42)
 
 fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
 fig.tight_layout()
@@ -118,7 +116,7 @@ for i in range_feature_1:
     for j in range_feature_2:
         print(i,j)
         if i!=j:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(TrainingData['wavanaly_standardized'][:,i],TrainingData['wavanaly_standardized'][:,j],s=1,marker='.',c=y_pred+1,cmap='Set1')
+            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(IMSDATA['wavanaly_standardized'][:,i],IMSDATA['wavanaly_standardized'][:,j],s=1,marker='.',c=y_pred_all+1,cmap='Set1')
             axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c='black')
         if i==range_feature_1[-1]:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
@@ -128,8 +126,8 @@ for i in range_feature_1:
 
 # %%
 # with all dataset
-y_pred_all=kmeans.predict(TrainingData['wavanaly_standardized'])
-sil_samples=silhouette_samples(TrainingData['wavanaly_standardized'],y_pred_all)
+y_pred_all=kmeans.predict(IMSDATA['wavanaly_standardized'])
+sil_samples=silhouette_samples(IMSDATA['wavanaly_standardized'],y_pred_all)
 
 x0=0
 xticks=[]
@@ -148,5 +146,47 @@ axs.set_ylabel('Silhouette')
 axs.set_xlabel('Clusters')
 
 
-plt.show()
+
 # %%
+# now i want to actually plot som ekind of error
+# the idea is to record the max silhouette score and compare it with new sample
+# the approach i want to try is to trasform the training dataset, and then, save the maximum distance found to each cluster, and then check 
+# how far the new samples fall over the maximun distance recorded for the assigned cluster
+cluster_distances=kmeans.transform(IMSDATA['wavanaly_standardized_train'])
+max_dist=[] # maximum distance to eah cluster in the train dataset
+for cluster in range(0,n_blobs):
+    max_dist.append(max(cluster_distances[y_pred_train==cluster,cluster]))
+
+# %% # apply this method first to just the train data to verify that error always < 0  
+i=0; error=[]
+for snap in IMSDATA['wavanaly_standardized_train']:
+    # print(np.shape(snap))
+    y=kmeans.predict(np.array(snap).reshape(1, -1)) # predict the cluster for the new snap
+    error.append(kmeans.transform(np.array(snap).reshape(1, -1))[0,y]-max_dist[int(y)])
+    
+fig, axs=plt.subplots()
+fig.tight_layout()
+axs.plot(error)
+axs.set_xlabel('Samples')
+axs.set_ylabel('error')
+
+# %% # apply this method first to all data to verify that diverges
+i=0; error=[]
+for snap in IMSDATA['wavanaly_standardized']:
+    # print(np.shape(snap))
+    y=kmeans.predict(np.array(snap).reshape(1, -1)) # predict the cluster for the new snap
+    error.append(kmeans.transform(np.array(snap).reshape(1, -1))[0,y]-max_dist[int(y)])
+    
+fig, axs=plt.subplots()
+fig.tight_layout()
+axs.plot(error)
+axs.hlines(0,0,len(error),colors=['k'],linestyles='dashdot')
+axs.set_xlabel('Samples')
+axs.set_ylabel('error')
+axs.annotate('Novelty', xy = (1825, 1), 
+             fontsize = 12, xytext = (1200, 100), 
+             arrowprops = dict(facecolor = 'red'),
+             color = 'k')
+
+# %%
+plt.show()
