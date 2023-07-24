@@ -22,10 +22,10 @@ dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
 tickpath    = os.path.join(auxpath + "./reports/tickz/")    #file to save the tickz
 
-decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
-IMSDATA={}                                             # empty dictionary to save data 
+decompose   = True                                         # decompose using wavelet packet / reload previous decomposition
+IMSDATA={}                                                  # empty dictionary to save data 
 n_split     = 1500                                          # number of sample to split the dataset
-
+timestamps  = []                                            # timestamps of the samples
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
@@ -130,19 +130,19 @@ mynorm = plt.Normalize(vmin=np.min(IMSDATA['wavanaly_standardized']), vmax=np.ma
 sm = plt.cm.ScalarMappable(cmap='plasma', norm=mynorm)
 fig, axs = plt.subplots(1,2)
 fig.tight_layout()
-aux=200 # number of the considered sample
-im=axs[0].imshow(IMSDATA['wavanaly_standardized'][0:0+2*65,:],cmap='plasma')
+aux=2*65 # number of the considered sample
+im=axs[0].imshow(IMSDATA['wavanaly_standardized'][0:0+aux,:],cmap='plasma')
 im.set_norm(mynorm)
 axs[0].set_xticklabels(IMSDATA['nodes'])
 axs[0].set_xlabel('Features')
 axs[0].set_ylabel('n° of record')
 axs[0].set_title('Normal Functioning')
 
-start=2028
-im=axs[1].imshow(IMSDATA['wavanaly_standardized'][start:start+2*65,:],cmap='plasma')
+start=np.shape(IMSDATA['wavanaly_standardized'])[0]-aux
+im=axs[1].imshow(IMSDATA['wavanaly_standardized'][start:start+aux,:],cmap='plasma')
 im.set_norm(mynorm)
 axs[1].set_xticklabels(IMSDATA['nodes'])
-axs[1].set_yticklabels(np.arange(start,start+2*65))
+axs[1].set_yticklabels(np.arange(start,start+aux))
 axs[1].set_xlabel('Features')
 axs[1].set_ylabel('n° of record')
 axs[1].set_title('Abnormal Functioning')
@@ -150,4 +150,3 @@ axs[1].set_title('Abnormal Functioning')
 cb=fig.colorbar(im)
 cb.set_label('Power of the feature')
 plt.show()
-# %%

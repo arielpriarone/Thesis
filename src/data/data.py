@@ -5,11 +5,19 @@ import os
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
     def __init__(self,rawData=None):
         self.rawData=rawData
-    def readImsFile(self,path,variables=None):
+    def readImsFile(self,path,variables=None,n_of_test=1):
         __imsTimeInterval=1 # 1[s] intervals records
         # read a ims formatted file data - ref: The  data  was  generated  by  the  NSF  I/UCR  Center  for  Intelligent  Maintenance  Systems  
         # (IMS  – www.imscenter.net) with support from Rexnord Corp. in Milwaukee, WI. 
-        self.rawData=pd.read_csv(path,delimiter='\t',names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"])
+        match n_of_test:
+            case 1:
+                __names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
+            case 2:
+                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+            case 3:
+                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+                
+        self.rawData=pd.read_csv(path,delimiter='\t',names=__names)
         for i in self.rawData.columns.values.tolist():
             if i in variables:
                 pass

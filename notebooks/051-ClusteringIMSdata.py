@@ -21,11 +21,12 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
-savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
+savepath_data    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
+savepath_model    = os.path.join(auxpath + "./models/", "kmeans_model.pickle") #file to save the analisys
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                             # empty dictionary to save data 
 
-filehandler = open(savepath, 'rb') 
+filehandler = open(savepath_data, 'rb') 
 IMSDATA = pickle.load(filehandler)
 
 
@@ -187,6 +188,12 @@ axs.annotate('Novelty', xy = (1825, 1),
              fontsize = 12, xytext = (1200, 100), 
              arrowprops = dict(facecolor = 'red'),
              color = 'k')
+
+# %% # save the trained clustering
+filehandler = open(savepath_model, 'wb') 
+pickle.dump(kmeans, filehandler)
+filehandler.close()
+
 
 # %%
 plt.show()
