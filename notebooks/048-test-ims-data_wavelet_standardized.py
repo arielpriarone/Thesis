@@ -4,6 +4,7 @@ matplotlib.use('Qt5Agg')
 import importlib
 import pywt
 import matplotlib.pyplot as plt
+import matplotlib.ticker as ticker
 import numpy as np
 import os
 import src
@@ -22,10 +23,11 @@ dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
 tickpath    = os.path.join(auxpath + "./reports/tickz/")    #file to save the tickz
 
-decompose   = True                                         # decompose using wavelet packet / reload previous decomposition
+decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                                  # empty dictionary to save data 
 n_split     = 1500                                          # number of sample to split the dataset
 timestamps  = []                                            # timestamps of the samples
+
 plt.rcParams.update({
     "text.usetex": True,
     "font.family": "sans-serif",
@@ -130,10 +132,15 @@ mynorm = plt.Normalize(vmin=np.min(IMSDATA['wavanaly_standardized']), vmax=np.ma
 sm = plt.cm.ScalarMappable(cmap='plasma', norm=mynorm)
 fig, axs = plt.subplots(1,2)
 fig.tight_layout()
-aux=2*65 # number of the considered sample
+aux=64 # number of the considered sample
 im=axs[0].imshow(IMSDATA['wavanaly_standardized'][0:0+aux,:],cmap='plasma')
 im.set_norm(mynorm)
-axs[0].set_xticklabels(IMSDATA['nodes'])
+locator=src.vis.custom_tick_locator(fig,4,IMSDATA['nodes'])
+axs[0].xaxis.set_major_locator(ticker.FixedLocator(locator))
+axs[0].set_xticklabels(IMSDATA['nodes'][i] for i in locator)
+locator=src.vis.custom_tick_locator(fig,8,np.arange(0,0+aux))
+axs[0].yaxis.set_major_locator(ticker.FixedLocator(locator))
+axs[0].set_yticklabels(locator)
 axs[0].set_xlabel('Features')
 axs[0].set_ylabel('n° of record')
 axs[0].set_title('Normal Functioning')
@@ -141,12 +148,14 @@ axs[0].set_title('Normal Functioning')
 start=np.shape(IMSDATA['wavanaly_standardized'])[0]-aux
 im=axs[1].imshow(IMSDATA['wavanaly_standardized'][start:start+aux,:],cmap='plasma')
 im.set_norm(mynorm)
-axs[1].set_xticklabels(IMSDATA['nodes'])
-axs[1].set_yticklabels(np.arange(start,start+aux))
+locator=src.vis.custom_tick_locator(fig,4,IMSDATA['nodes'])
+axs[1].xaxis.set_major_locator(ticker.FixedLocator(locator))
+axs[1].set_xticklabels(IMSDATA['nodes'][i] for i in locator)
+locator=src.vis.custom_tick_locator(fig,8,np.arange(start,start+aux))
+axs[1].yaxis.set_major_locator(ticker.FixedLocator(locator))
+axs[1].set_yticklabels(np.arange(start,start+aux)[i] for i in locator)
 axs[1].set_xlabel('Features')
 axs[1].set_ylabel('n° of record')
-axs[1].set_title('Abnormal Functioning')
+axs[1].set_title('Normal Functioning')
 
-cb=fig.colorbar(im)
-cb.set_label('Power of the feature')
 plt.show()

@@ -20,7 +20,7 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     auxpath='.'
 
 # script settings
-dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
+modelpath     = auxpath + "./models/kmeans_model.pickle"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized_second.pickle") #file to save the analisys
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                             # empty dictionary to save data 
@@ -29,42 +29,21 @@ filehandler = open(savepath, 'rb')
 IMSDATA = pickle.load(filehandler)
 
 
-# %%
-sil_score=[]
-inertia=[]
-max_clusters=15
-for n_blobs in range(1,max_clusters+1):
-    kmeans=KMeans(n_blobs)
-    y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
-    if n_blobs>1:
-        sil_score.append(silhouette_score(IMSDATA['wavanaly_standardized_train'],y_pred_train))
-    inertia.append(kmeans.inertia_)
 
-
-# %%
-fig, axs=plt.subplots()
-fig.tight_layout()
-axs.plot(range(2,max_clusters+1),sil_score)
-axs.set_ylabel('Silhouette')
-axs.set_xlabel('Num. of clusters')
-
-# %%
-fig, axs=plt.subplots()
-fig.tight_layout()
-axs.plot(range(1,max_clusters+1),inertia)
-axs.set_ylabel('Inertia')
-axs.set_xlabel('Num. of clusters')
-
-
-# %%
-
-# select 2 clusters because of silhouette analisys - train dataset
+# %% check if second dataset is a novelty already in normal functioning...maybe retrain if it is
+# select 2 clusters because of silhouette analisys - train dataset in the previous script
 n_blobs=2
-kmeans=KMeans(n_blobs)
-y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
+# load the previous model
+filehandler = open(modelpath, 'rb') 
+kmeans = pickle.load(filehandler)
 
 range_feature_1=range(30, 33)
 range_feature_2=range(50, 53)
+
+# %%
+# portion of second dataset that is normal functioning 
+y_pred_normal=kmeans.predict(IMSDATA['wavanaly_standardized_train']) #only predict because all dataset
+
 
 fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
 fig.tight_layout()
@@ -73,7 +52,7 @@ for i in range_feature_1:
     for j in range_feature_2:
         print(i,j)
         if i!=j:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(IMSDATA['wavanaly_standardized_train'][:,i],IMSDATA['wavanaly_standardized_train'][:,j],s=1,marker='.',c=y_pred_train+1,cmap='Set1')
+            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(IMSDATA['wavanaly_standardized_train'][:,i],IMSDATA['wavanaly_standardized_train'][:,j],s=1,marker='.',c=y_pred_normal+1,cmap='Set1')
             axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c='black')
         if i==range_feature_1[-1]:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
@@ -83,8 +62,7 @@ for i in range_feature_1:
 
 # %%
 # with only train dataset - to check htat it's working ok
-y_pred_train=kmeans.predict(IMSDATA['wavanaly_standardized_train'])
-sil_samples=silhouette_samples(IMSDATA['wavanaly_standardized_train'],y_pred_train)
+sil_samples=silhouette_samples(IMSDATA['wavanaly_standardized_train'],y_pred_normal)
 
 x0=0
 xticks=[]
@@ -92,7 +70,7 @@ max_sil=[]
 fig, axs=plt.subplots()
 fig.tight_layout()
 for i in range(n_blobs):
-    y=sil_samples[y_pred_train==i]
+    y=sil_samples[y_pred_normal==i]
     x=range(x0,x0+len(y))
     x0+=len(y)
     axs.fill_between(x,-np.sort(-y))
@@ -155,20 +133,7 @@ axs.set_xlabel('Clusters')
 cluster_distances=kmeans.transform(IMSDATA['wavanaly_standardized_train'])
 max_dist=[] # maximum distance to eah cluster in the train dataset
 for cluster in range(0,n_blobs):
-    max_dist.append(max(cluster_distances[y_pred_train==cluster,cluster]))
-
-# %% # apply this method first to just the train data to verify that error always < 0  
-i=0; error=[]
-for snap in IMSDATA['wavanaly_standardized_train']:
-    # print(np.shape(snap))
-    y=kmeans.predict(np.array(snap).reshape(1, -1)) # predict the cluster for the new snap
-    error.append(kmeans.transform(np.array(snap).reshape(1, -1))[0,y]-max_dist[int(y)])
-    
-fig, axs=plt.subplots()
-fig.tight_layout()
-axs.plot(error)
-axs.set_xlabel('Samples')
-axs.set_ylabel('error')
+    max_dist.append(max(cluster_distances[y_pred_normal==cluster,cluster]))
 
 # %% # apply this method first to all data to verify that diverges
 i=0; error=[]
