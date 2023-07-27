@@ -1,10 +1,12 @@
 # %%
 import matplotlib
+import matplotlib.font_manager
 matplotlib.use('Qt5Agg')
 import importlib
 import pywt
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import numpy as np
 import os
 import src
@@ -27,11 +29,18 @@ decompose   = False                                         # decompose using wa
 IMSDATA={}                                                  # empty dictionary to save data 
 n_split     = 1500                                          # number of sample to split the dataset
 timestamps  = []                                            # timestamps of the samples
-
+W = 4.7 # inches, s/3 aspect ratio
 plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
+    'figure.figsize': (W, W/(4/3)),     # 4:3 aspect ratio
+    'font.size' : 10,                   # Set font size to 11pt
+    'axes.labelsize': 10,               # -> axis labels
+    'legend.fontsize': 10,              # -> legends
+    'font.family': 'lmodern',
+    'text.usetex': True,
+    'text.latex.preamble': (            # LaTeX preamble
+        r'\usepackage{lmodern}'
+        # ... more packages if needed
+    )
 })
 
 
@@ -128,34 +137,56 @@ mp2tk.save(tickpath+'WT_SingSnap_c.tex',axis_height='3cm', axis_width='294.76926
 
 #%%
 # print as a heatmap
-mynorm = plt.Normalize(vmin=np.min(IMSDATA['wavanaly_standardized']), vmax=np.max(IMSDATA['wavanaly_standardized']))
-sm = plt.cm.ScalarMappable(cmap='plasma', norm=mynorm)
-fig, axs = plt.subplots(1,2)
-fig.tight_layout()
 aux=64 # number of the considered sample
-im=axs[0].imshow(IMSDATA['wavanaly_standardized'][0:0+aux,:],cmap='plasma')
-im.set_norm(mynorm)
-locator=src.vis.custom_tick_locator(fig,4,IMSDATA['nodes'])
-axs[0].xaxis.set_major_locator(ticker.FixedLocator(locator))
-axs[0].set_xticklabels(IMSDATA['nodes'][i] for i in locator)
-locator=src.vis.custom_tick_locator(fig,8,np.arange(0,0+aux))
-axs[0].yaxis.set_major_locator(ticker.FixedLocator(locator))
-axs[0].set_yticklabels(locator)
-axs[0].set_xlabel('Features')
-axs[0].set_ylabel('n° of record')
-axs[0].set_title('Normal Functioning')
-
 start=np.shape(IMSDATA['wavanaly_standardized'])[0]-aux
-im=axs[1].imshow(IMSDATA['wavanaly_standardized'][start:start+aux,:],cmap='plasma')
-im.set_norm(mynorm)
-locator=src.vis.custom_tick_locator(fig,4,IMSDATA['nodes'])
-axs[1].xaxis.set_major_locator(ticker.FixedLocator(locator))
-axs[1].set_xticklabels(IMSDATA['nodes'][i] for i in locator)
-locator=src.vis.custom_tick_locator(fig,8,np.arange(start,start+aux))
-axs[1].yaxis.set_major_locator(ticker.FixedLocator(locator))
-axs[1].set_yticklabels(np.arange(start,start+aux)[i] for i in locator)
-axs[1].set_xlabel('Features')
-axs[1].set_ylabel('n° of record')
-axs[1].set_title('Normal Functioning')
+mynorm = plt.Normalize(vmin=np.min(IMSDATA['wavanaly_standardized']), vmax=np.max(IMSDATA['wavanaly_standardized']))
 
+# Create some example data (replace these with your own image data)
+image1 = IMSDATA['wavanaly_standardized'][0:0+aux,:]
+image2 = IMSDATA['wavanaly_standardized'][start:start+aux,:]
+
+# Create a figure and a grid for the layout
+fig = plt.figure(figsize=(5.5, 3))
+gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 0.05])  # Add an extra column for the colorbar
+
+# Create the first subplot for image1
+ax1 = fig.add_subplot(gs[0, 0])
+im1 = ax1.imshow(image1, cmap='plasma', aspect='auto')
+im1.set_norm(mynorm)
+locator=src.vis.custom_tick_locator(fig,6,IMSDATA['nodes'])
+ax1.xaxis.set_major_locator(ticker.FixedLocator(locator))
+ax1.set_xticklabels([IMSDATA['nodes'][i] for i in locator], rotation=45)
+locator=src.vis.custom_tick_locator(fig,8,np.arange(0,0+aux))
+ax1.yaxis.set_major_locator(ticker.FixedLocator(locator))
+ax1.set_yticklabels(locator)
+ax1.set_xlabel('Features')
+ax1.set_ylabel('n° of record')
+ax1.set_title('Normal Functioning')
+
+# Create the second subplot for image2
+ax2 = fig.add_subplot(gs[0, 1], sharex=ax1)  # share axes to ensure equal height and width
+im2 = ax2.imshow(image2, cmap='plasma', aspect='auto')
+im2.set_norm(mynorm)
+locator=src.vis.custom_tick_locator(fig,4,IMSDATA['nodes'])
+ax2.xaxis.set_major_locator(ticker.FixedLocator(locator))
+ax2.set_xticklabels([IMSDATA['nodes'][i] for i in locator], rotation=45)
+locator=src.vis.custom_tick_locator(fig,8,np.arange(start,start+aux))
+ax2.yaxis.set_major_locator(ticker.FixedLocator(locator))
+ax2.set_yticklabels(np.arange(start,start+aux)[i] for i in locator)
+ax2.set_xlabel('Features')
+ax2.set_ylabel('n° of record')
+ax2.set_title('Abnormal Functioning')
+
+# Add a colorbar on the right that has the same height as the two plots
+cax = fig.add_subplot(gs[0, 2])
+cbar = plt.colorbar(im2, cax=cax)
+cbar.set_label('Power of the features')
+
+# Adjust the layout to prevent overlapping of labels
+plt.tight_layout()
+# save the plot
+mp2tk.save(tickpath+'WT_heatmap.tex',axis_width='\\thesisAxisWidth',axis_height=None,textsize='\\thesisFigFontsize')
+# Show the plot
 plt.show()
+
+

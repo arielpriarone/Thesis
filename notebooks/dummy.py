@@ -5,12 +5,10 @@ import matplotlib.ticker as ticker
 labels = ['Label_{}'.format(i) for i in range(1, 65)]
 
 
-def custom_tick_locator(width):
+def custom_tick_locator(fig,n_ticks):
     # Function to select the subset of tick locations based on the width of the plot
     num_labels = len(labels)
-    num_ticks = 4  # Adjust the divisor based on your preference
-
-    tick_step = max(num_labels // num_ticks, 1)
+    tick_step = max(num_labels // n_ticks, 1)
     return range(0, num_labels, tick_step)
 
 # Create a figure and axis
