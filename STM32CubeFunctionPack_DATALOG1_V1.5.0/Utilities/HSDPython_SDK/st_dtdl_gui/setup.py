@@ -16,7 +16,7 @@
 import setuptools
 import os
 
-with open("LICENSE.txt", "r") as fh:
+with open("LICENSE.python .\hsdatalog_plot.py STWIN_00001 -s all", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
