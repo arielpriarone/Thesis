@@ -27,18 +27,31 @@ class snapshot: #this should contain all the useful information about a snapshot
                 self.rawData.drop(labels=i,axis=1, inplace=True) # axis 1  are columns
         self.rawData.insert(0,"time",np.linspace(0,__imsTimeInterval,int(len(self.rawData.index)))) # linspace prioritize endpoint, arange priorityze increment
 
-def IMS_to_mongo(filePath,n_of_test,sensors,URI='mongodb://localhost:27017',database='novRecog',collection='unconsumed',print=True):
+def IMS_to_mongo(filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',database='novRecog',collection='unconsumed',printout=True):
     '''
+    ### author: Ariel Priarone - ariel.priarone@studenti.polito.it
+    ### Description
     This function take a textual file in the format of the ims dataset and write it to mongoDB for further use.
     Reference: The  data  was  generated  by  the  NSF  I/UCR  Center  for  Intelligent  Maintenance  Systems  
     (IMS  – www.imscenter.net) with support from Rexnord Corp. in Milwaukee, WI. 
-    @param filePath: colplete path includeing filename 
-    @param n_of_test: number of ims test (1st,2nd,3rd datasets hasve different format)
-    @param sensors: list of sensor names to save to mongoDB, as CORRELATED vairables, to save variables as uncorrelated, run this function multiple times for each sensor
-    @param URI: URI of mongodb connection. default: 'mongodb://localhost:27017'
-    @param database: name of the database to write to. default: 'novRecog'
-    @param collection: collection to write to. default: 'unconsumed'
-    @param print: set to false to suppress print to command line. default=True
+    ### Parameters
+    #### filePath:   
+    colplete path includeing filename 
+    #### n_of_test:  
+    number of ims test (1st,2nd,3rd datasets hasve different format)
+    #### sensors:    
+    list of sensor names to save to mongoDB, as CORRELATED vairables, to save variables as uncorrelated, run this function multiple times for each sensor
+    axcepted values:\n'Bearing 1 x'\n'Bearing 1 y'\n'Bearing 2 x'\n'Bearing 2 y'\n'Bearing 3 x'\n'Bearing 3 y'\n'Bearing 4 x'\n'Bearing 4 y'\n'Bearing 1'\n 'Bearing 2'\n'Bearing 3'\n'Bearing 4
+    #### URI:        
+    URI of mongodb connection. default: 'mongodb://localhost:27017'
+    ### #database:   
+    name of the database to write to. default: 'novRecog'
+    #### collection: 
+    collection to write to. default: 'unconsumed'
+    #### print:      
+    set to false to suppress print to command line. default=True
+    ### Return
+    None
     '''
     try:
         type(filePath) == str and type(URI) == str and type(database) == str and type(collection) == str
@@ -73,18 +86,19 @@ def IMS_to_mongo(filePath,n_of_test,sensors,URI='mongodb://localhost:27017',data
     __client = MongoClient(URI)
     __db = __client[database]
     __collection=__db[collection] 
-    print(__name__, ' succesfully connected to the collection in MongoDB')
+    print(__name__ +' succesfully connected to the collection in MongoDB')
 
     # get the timestamp from filename
     __sampleToAadd={'timestamp': IMS_filepathToTimestamp(filePath)} #initialize the dictionary with timestamp
     for __varname in sensors:
         __update={
         'varName': __varname,
-        'sampFreq': 2000,
-        'timeSerie': __data[__varname]
+        'sampFreq': 20000, # typical of IMS files
+        'timeSerie': __data[__varname].tolist()
         }
         __sampleToAadd.update(__update)
-    collection.insert_one(__sampleToAadd)
+    __collection.insert_one(__sampleToAadd)
+    print('\n' + filePath + ' inserted in ' + database + ' ' + collection)
 
 
 def IMS_filepathToTimestamp(filepath=str):
@@ -98,7 +112,7 @@ def IMS_filepathToTimestamp(filepath=str):
 if __name__=='__main__': 
     pass
     # just for testin, not useful as package functionality
-    # print(f'the script \"{os.path.basename(__file__)}\" is ruinning as main!')
+    # print(f'the script \"{os.path.basename(__file__)}\" is running as main!')
     # dirPath = "./data/raw/1st_test_IMSBearing/"
     # fileName = "2003.10.22.12.06.24"
     # dummy=snapshot()
