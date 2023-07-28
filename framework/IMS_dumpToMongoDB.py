@@ -13,8 +13,8 @@ for fileName in os.listdir(dirPath):
     # check if current path is a file
     path=os.path.join(dirPath, fileName) # complete path including filename
     if os.path.isfile(path):
-        src.data.IMS_to_mongo(filePath=path,
-                                   n_of_test= 1, # this folder os first test
-                                   sensors=['Bearing 1 x', 'Bearing 1 y'])
- 
+        src.data.IMS_to_mongo(database='IMS',collection='unconsumed',
+                              filePath= path, n_of_test=1, # this folder os first test
+                                sensors=['Bearing 1 x', 'Bearing 1 y'])
+
 

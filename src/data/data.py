@@ -27,7 +27,7 @@ class snapshot: #this should contain all the useful information about a snapshot
                 self.rawData.drop(labels=i,axis=1, inplace=True) # axis 1  are columns
         self.rawData.insert(0,"time",np.linspace(0,__imsTimeInterval,int(len(self.rawData.index)))) # linspace prioritize endpoint, arange priorityze increment
 
-def IMS_to_mongo(filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',database='novRecog',collection='unconsumed',printout=True):
+def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',printout=True):
     '''
     ### author: Ariel Priarone - ariel.priarone@studenti.polito.it
     ### Description
@@ -35,6 +35,10 @@ def IMS_to_mongo(filePath: str,n_of_test: str,sensors: str,URI='mongodb://localh
     Reference: The  data  was  generated  by  the  NSF  I/UCR  Center  for  Intelligent  Maintenance  Systems  
     (IMS  – www.imscenter.net) with support from Rexnord Corp. in Milwaukee, WI. 
     ### Parameters
+    ### #database:   
+    name of the database to write to.
+    #### collection: 
+    collection to write to.
     #### filePath:   
     colplete path includeing filename 
     #### n_of_test:  
@@ -44,10 +48,6 @@ def IMS_to_mongo(filePath: str,n_of_test: str,sensors: str,URI='mongodb://localh
     axcepted values:\n'Bearing 1 x'\n'Bearing 1 y'\n'Bearing 2 x'\n'Bearing 2 y'\n'Bearing 3 x'\n'Bearing 3 y'\n'Bearing 4 x'\n'Bearing 4 y'\n'Bearing 1'\n 'Bearing 2'\n'Bearing 3'\n'Bearing 4
     #### URI:        
     URI of mongodb connection. default: 'mongodb://localhost:27017'
-    ### #database:   
-    name of the database to write to. default: 'novRecog'
-    #### collection: 
-    collection to write to. default: 'unconsumed'
     #### print:      
     set to false to suppress print to command line. default=True
     ### Return
@@ -85,20 +85,24 @@ def IMS_to_mongo(filePath: str,n_of_test: str,sensors: str,URI='mongodb://localh
     # connect to MongoDb
     __client = MongoClient(URI)
     __db = __client[database]
-    __collection=__db[collection] 
-    print(__name__ +' succesfully connected to the collection in MongoDB')
+    __collection=__db[collection]
+    if printout: 
+        print(__name__ +' succesfully connected to the collection in MongoDB')
 
     # get the timestamp from filename
     __sampleToAadd={'timestamp': IMS_filepathToTimestamp(filePath)} #initialize the dictionary with timestamp
     for __varname in sensors:
         __update={
-        'varName': __varname,
+        __varname:
+        {
         'sampFreq': 20000, # typical of IMS files
         'timeSerie': __data[__varname].tolist()
+        }    
         }
         __sampleToAadd.update(__update)
     __collection.insert_one(__sampleToAadd)
-    print('\n' + filePath + ' inserted in ' + database + ' ' + collection)
+    if printout: 
+        print('\n' + filePath + ' inserted in ' + database + ' ' + collection)
 
 
 def IMS_filepathToTimestamp(filepath=str):
