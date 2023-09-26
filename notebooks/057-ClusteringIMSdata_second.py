@@ -148,8 +148,8 @@ axs.plot(error)
 axs.hlines(0,0,len(error),colors=['k'],linestyles='dashdot')
 axs.set_xlabel('Samples')
 axs.set_ylabel('error')
-axs.annotate('Novelty', xy = (1825, 1), 
-             fontsize = 12, xytext = (1200, 100), 
+axs.annotate('Novelty', xy = (825, 1), 
+             fontsize = 12, xytext = (200, 100), 
              arrowprops = dict(facecolor = 'red'),
              color = 'k')
 
