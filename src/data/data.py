@@ -1,8 +1,10 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot  as plt
 import os
 from pymongo import MongoClient
 import datetime
+import rich
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
     def __init__(self,rawData=None):
@@ -111,17 +113,25 @@ def IMS_filepathToTimestamp(filepath=str):
     __int=[int(__splitted[__i]) for __i in range(0,len(__splitted))] # converted in integer values
     return(datetime.datetime(*__int,tzinfo=None))
 
+def readSnapshot(database: str,collection: str,URI: str,plot=False):
+    '''
+    Read the oldest snapshot from mongoDB and provide dataframe with the elements
+    '''
+    client  = MongoClient(URI)          # connect to MongoBD
+    db      = client[database]          # connect database
+    col     = db[collection]            # connect to collection
+    snap    = col.find().sort('timestamp',1).limit(1) # oldest record
+    snap    = pd.DataFrame.from_dict(snap) # convert to dataframe
+    if plot:
+        fig, axs = plt.subplots()
+        print(snap['Bearing 1 x','timeserie'])
+        plt.show()
 
+
+    
 
 if __name__=='__main__': 
     pass
     # just for testin, not useful as package functionality
-    # print(f'the script \"{os.path.basename(__file__)}\" is running as main!')
-    # dirPath = "./data/raw/1st_test_IMSBearing/"
-    # fileName = "2003.10.22.12.06.24"
-    # dummy=snapshot()
-    # dummy.readImsFile(path=dirPath+fileName,variables=["Bearing 1 x", "Bearing 1 y"])
-    # print(f"the dataframe has {len(dummy.rawData.index)} rows")
-    # print(dummy.rawData.head)
-    # print(IMS_filepathToTimestamp(filepath=r'C:\Users\ariel\Documents\Courses\Tesi\Code\data\raw\1st_test_IMSBearing\2003.11.23.20.21.24'))
+    readSnapshot('IMS','caccona','mongodb://localhost:27017',plot=True)
 
