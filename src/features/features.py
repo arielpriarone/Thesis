@@ -25,3 +25,10 @@ def FFT(array,samplFreq=1,preproc=None):
     _frequencies = np.arange(int(len(_prepArray)/2))/_timePeriod #frequencies array of fft
     
     return abs(_aux[range(int(len(_prepArray)/2))]), _frequencies, _prepArray
+
+
+def featExtraction():
+    pass
+
+def packTrasform():
+    pass
