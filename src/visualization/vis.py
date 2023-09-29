@@ -15,3 +15,4 @@ def custom_tick_locator(fig,n_ticks,labels):
     num_labels = len(labels)
     tick_step = max(num_labels // (n_ticks-1), 1)
     return range(0, num_labels, tick_step)
+

@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime
 import matplotlib.pyplot  as plt
-import os
 from pymongo import MongoClient
-import datetime
-import rich
+
 from rich import print
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
@@ -114,18 +113,35 @@ def IMS_filepathToTimestamp(filepath=str):
     __int=[int(__splitted[__i]) for __i in range(0,len(__splitted))] # converted in integer values
     return(datetime.datetime(*__int,tzinfo=None))
 
-def readSnapshot(database: str,collection: str,URI: str,plot=False):
+def readOldSnapshot(database: str,collection: str,URI: str,timestamp='',plot=False):
     '''
-    Read the oldest snapshot from mongoDB and provide dataframe with the elements
+    Read the oldest snapshot from mongoDB and provide dictionary with the elements, optional plot available
+    INPUT:
+        database: str       name of the dateabase
+        collection: str     name of the collection
+        URI: str            URI of the database
+        timestamp=''        if '' the oldest record is collected
+        plot=False          plot the data or just return the dictionary
+    RETURN: snap - dicttionary of the snapshot
+    EXAMPLE: readOldSnapshot('IMS','RAW','mongodb://localhost:27017',timestamp='2003-10-22T12:06:24.000+00:00',plot=True)
     '''
     client, db, col = MongoConnect(database,collection,URI)
-    snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
-    _sens   = list(snap.keys())[2::]                        # sensors to iterate
-    print(snap[_sens[0]]['timeSerie'])
-    # if plot:
-    #     fig, axs = plt.subplots()
-    #     axs.plot(snap['Bearing 1 x'])
-    #     #plt.show()
+    if timestamp == '':
+        snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
+    else:
+        mydate  = datetime.fromisoformat(timestamp)
+        snap    = col.find({'timestamp': mydate})[0] #pick the right snapshot
+    _sens  = list(snap.keys())[2::]                        # sensors to iterate
+    if plot:
+        fig, axs = plt.subplots(len(_sens))
+        for _i, _sen in enumerate(_sens):
+            _time = np.linspace(0,len(snap[_sen]['timeSerie'])/snap[_sen]['sampFreq'],len(snap[_sen]['timeSerie']))
+            axs[_i].plot(_time,snap[_sen]['timeSerie'])
+            axs[_i].grid('both');axs[_i].set_ylabel(_sen)
+        axs[-1].set_xlabel('Time [s]')
+        aux='timestamp'; axs[0].set_title(f'Plot of the snapshot {snap[aux]}')
+        plt.show()
+    return snap
 
 def MongoConnect(database: str,collection: str,URI: str):
     '''
@@ -143,13 +159,8 @@ def MongoConnect(database: str,collection: str,URI: str):
     else:
         raise ConnectionError(f'Collection \'{collection}\' not found in Database \'{database}\' @ \'{URI}\'')
     return client, db, col
-    
 
-        
-
-
-    
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
-    readSnapshot('IMS','RAW','mongodb://localhost:27017',plot=True)
+    print(readOldSnapshot('IMS','RAW','mongodb://localhost:27017'))
