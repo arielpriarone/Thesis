@@ -10,7 +10,7 @@ def isNotebook() -> bool:
     except NameError:
         return False      # Probably standard Python interpreter
     
-def custom_tick_locator(fig,n_ticks,labels):
+def custom_tick_locator(n_ticks,labels):
     # Function to select the subset of tick locations based on the width of the plot
     num_labels = len(labels)
     tick_step = max(num_labels // (n_ticks-1), 1)
