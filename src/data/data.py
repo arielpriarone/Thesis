@@ -20,7 +20,6 @@ class snapshot: #this should contain all the useful information about a snapshot
                 __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
             case 3:
                 __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
-                
         self.rawData=pd.read_csv(path,delimiter='\t',names=__names)
         for i in self.rawData.columns.values.tolist():
             if i in variables:
@@ -106,14 +105,13 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sens
     if printout: 
         print('\n' + filePath + ' inserted in ' + database + ' ' + collection)
 
-
 def IMS_filepathToTimestamp(filepath=str):
     __splitted=filepath.split('\\')
     __splitted=__splitted[-1].split('.')
     __int=[int(__splitted[__i]) for __i in range(0,len(__splitted))] # converted in integer values
     return(datetime.datetime(*__int,tzinfo=None))
 
-def readOldSnapshot(database: str,collection: str,URI: str,timestamp='',plot=False):
+def readSnapshot(database: str,collection: str,URI: str,timestamp='',plot=False):
     '''
     Read the oldest snapshot from mongoDB and provide dictionary with the elements, optional plot available
     INPUT:
@@ -125,7 +123,7 @@ def readOldSnapshot(database: str,collection: str,URI: str,timestamp='',plot=Fal
     RETURN: snap - dicttionary of the snapshot
     EXAMPLE: readOldSnapshot('IMS','RAW','mongodb://localhost:27017',timestamp='2003-10-22T12:06:24.000+00:00',plot=True)
     '''
-    client, db, col = MongoConnect(database,collection,URI)
+    client, db, col = mongoConnect(database,collection,URI)
     if timestamp == '':
         snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
     else:
@@ -143,7 +141,7 @@ def readOldSnapshot(database: str,collection: str,URI: str,timestamp='',plot=Fal
         plt.show()
     return snap
 
-def MongoConnect(database: str,collection: str,URI: str):
+def mongoConnect(database: str,collection: str,URI: str):
     '''
     connect to a MongoDB server collection, return the client, the database and the collection.
     this is meant to connect to an EXISTING colleciton!
@@ -163,4 +161,4 @@ def MongoConnect(database: str,collection: str,URI: str):
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
-    print(readOldSnapshot('IMS','RAW','mongodb://localhost:27017'))
+    print(readSnapshot('IMS','RAW','mongodb://localhost:27017'))

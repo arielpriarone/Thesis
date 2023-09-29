@@ -1,5 +1,6 @@
-import pandas as pd
+import src
 import numpy as np
+from sklearn.preprocessing import StandardScaler
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
@@ -23,12 +24,11 @@ def FFT(array,samplFreq=1,preproc=None):
         _aux=_aux[::2] # if flip the number of point doubled, now i drop the odd numbers
     _timePeriod  = len(_prepArray)/samplFreq
     _frequencies = np.arange(int(len(_prepArray)/2))/_timePeriod #frequencies array of fft
-    
     return abs(_aux[range(int(len(_prepArray)/2))]), _frequencies, _prepArray
 
 
 def featExtraction():
     pass
 
-def packTrasform():
-    pass
+def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6):
+    pass #to continue here
