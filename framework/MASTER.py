@@ -30,32 +30,32 @@ def IMS_converter(
         Enter start file [2003.10.22.12.06.24]:
         Enter end file [2003.11.25.23.39.56]: 2003.10.22.12.59.13
     """
-    fileList            = sorted(os.listdir(dirpath))                                               # al things in folder
-    fileList            = [x for x in fileList if os.path.isfile(os.path.join(dirpath, x))]         # selsct only the files in the folders
-    filerange           = []
-    filerange.append(typer.prompt('Enter start file', default=fileList[0]))                         # prompt start file
-    filerange.append(typer.prompt('Enter end file', default=fileList[-1]))                          # prompt stop file
-    fileList            =   fileList[fileList.index(filerange[0]):fileList.index(filerange[-1])]    # dump all not needed items
+    _fileList            = sorted(os.listdir(dirpath))                                               # al things in folder
+    _fileList            = [x for x in _fileList if os.path.isfile(os.path.join(dirpath, x))]         # selsct only the files in the folders
+    _filerange           = []
+    _filerange.append(typer.prompt('Enter start file', default=_fileList[0]))                         # prompt start file
+    _filerange.append(typer.prompt('Enter end file', default=_fileList[-1]))                          # prompt stop file
+    _fileList            =   _fileList[_fileList.index(_filerange[0]):_fileList.index(_filerange[1])+1]    # dump all not needed items
 
-    table = Table(title="\n \n Current options of the command")
-    table.add_column('Option',style='bright_magenta')
-    table.add_column('Value',style='bright_cyan')
-    table.add_row('Database',database)
-    table.add_row('Collection',collection)
-    table.add_row('Folder path',dirpath)
-    table.add_row('Type of test (code)',str(test))
-    table.add_row('Sensor names',str(sensor))
-    table.add_row('URI to connect to MongoDB',URI)
-    table.add_row('Range of file to import',str(filerange))
-    console = Console()
-    console.print(table)  
+    _table = Table(title="\n \n Current options of the command")
+    _table.add_column('Option',style='bright_magenta')
+    _table.add_column('Value',style='bright_cyan')
+    _table.add_row('Database',database)
+    _table.add_row('Collection',collection)
+    _table.add_row('Folder path',dirpath)
+    _table.add_row('Type of test (code)',str(test))
+    _table.add_row('Sensor names',str(sensor))
+    _table.add_row('URI to connect to MongoDB',URI)
+    _table.add_row('Range of file to import',str(_filerange))
+    _console = Console()
+    _console.print(_table)  
     
     if not typer.confirm("do toy want to proceed importing the data from files to MongoDB?"):
         return
-    for fileName in track(fileList,description=f'Writing files to MongoDB',):
-        path=os.path.join(dirpath, fileName) # complete path including filename
+    for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
+        path=os.path.join(dirpath, _fileName) # complete path including filename
         src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
-    print('\n Finished: '+str(len(fileList))+' files inserted in '+str(database)+'\n')
+    print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
 
 

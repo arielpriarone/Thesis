@@ -5,6 +5,7 @@ import os
 from pymongo import MongoClient
 import datetime
 import rich
+from rich import print
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
     def __init__(self,rawData=None):
@@ -117,21 +118,38 @@ def readSnapshot(database: str,collection: str,URI: str,plot=False):
     '''
     Read the oldest snapshot from mongoDB and provide dataframe with the elements
     '''
+    client, db, col = MongoConnect(database,collection,URI)
+    snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
+    _sens   = list(snap.keys())[2::]                        # sensors to iterate
+    print(snap[_sens[0]]['timeSerie'])
+    # if plot:
+    #     fig, axs = plt.subplots()
+    #     axs.plot(snap['Bearing 1 x'])
+    #     #plt.show()
+
+def MongoConnect(database: str,collection: str,URI: str):
+    '''
+    connect to a MongoDB server collection, return the client, the database and the collection.
+    this is meant to connect to an EXISTING colleciton!
+    return: client, database and collection
+    '''
     client  = MongoClient(URI)          # connect to MongoBD
-    db      = client[database]          # connect database
-    col     = db[collection]            # connect to collection
-    snap    = col.find().sort('timestamp',1).limit(1) # oldest record
-    snap    = pd.DataFrame.from_dict(snap) # convert to dataframe
-    if plot:
-        fig, axs = plt.subplots()
-        print(snap['Bearing 1 x','timeserie'])
-        plt.show()
+    if database in client.list_database_names():
+        db      = client[database]          # connect database
+    else:
+        raise ConnectionError(f'Database \'{database}\' not found @ \'{URI}\'')
+    if collection in db.list_collection_names():
+        col     = db[collection]            # connect to collection
+    else:
+        raise ConnectionError(f'Collection \'{collection}\' not found in Database \'{database}\' @ \'{URI}\'')
+    return client, db, col
+    
+
+        
 
 
     
 
 if __name__=='__main__': 
-    pass
     # just for testin, not useful as package functionality
-    readSnapshot('IMS','caccona','mongodb://localhost:27017',plot=True)
-
+    readSnapshot('IMS','RAW','mongodb://localhost:27017',plot=True)
