@@ -41,14 +41,18 @@ def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, pl
     _nodes=[node.path for node in _wp.get_level(_wp.maxlevel, 'natural')]                    # extract the lower level nodes
     _powers=[np.linalg.norm(_wp[index].data) for index in _nodes]                            # compute the l2 norm of coefs
     _coefs=[_wp[index].data for index in _nodes]
+    fig, axs   = plt.subplots()
     if plot:
-        fig, axs   = plt.subplots()
-        axs.bar(_nodes, _powers); plt.xticks(ticks=); plt.show()
-    return _coefs, _powers, _nodes, fig, axs
+        axs.bar(_nodes, _powers); axs.tick_params(axis='x',rotation = 90)
+        axs.set_ylabel('Power [-]')
+        axs.set_xlabel('Nodes [-]')
+        plt.show()
 
+    return _coefs, _powers, _nodes, fig, axs
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
     timeSerie=src.data.readSnapshot('IMS','RAW','mongodb://localhost:27017')['Bearing 1 x']['timeSerie']
-    coef, pows = packTrasform(timeSerie, plot=True)
+    coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
+    plt.show()
     
