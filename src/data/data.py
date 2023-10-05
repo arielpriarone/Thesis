@@ -3,7 +3,7 @@ import numpy as np
 from datetime import datetime
 import matplotlib.pyplot  as plt
 from pymongo import MongoClient
-
+import json
 from rich import print
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
@@ -27,6 +27,26 @@ class snapshot: #this should contain all the useful information about a snapshot
             else: # remove the unwanted culumns
                 self.rawData.drop(labels=i,axis=1, inplace=True) # axis 1  are columns
         self.rawData.insert(0,"time",np.linspace(0,__imsTimeInterval,int(len(self.rawData.index)))) # linspace prioritize endpoint, arange priorityze increment
+
+class DB_Manager:
+    '''
+    class for managing the whole Database system - upgrade from the loose functions previously used
+    '''
+    def __init__(self, configStr: str):
+        self.config = configStr    #  path to config file (json)
+        try:
+            Config = json.load(open(configStr))
+        except:
+            raise Exception(f'Error reading config file @ {configStr}')
+        self.client, self.db, self.col_back = mongoConnect(Config['Database'],Config['collection']['back'],Config['URI'])
+        _, _, self.col_raw = mongoConnect(Config['Database'],Config['collection']['raw'],Config['URI'])
+        _, _, self.col_unconsumed = mongoConnect(Config['Database'],Config['collection']['unconsumed'],Config['URI'])
+        _, _, self.col_healthy = mongoConnect(Config['Database'],Config['collection']['healthy'],Config['URI'])
+        _, _, self.col_quarantined = mongoConnect(Config['Database'],Config['collection']['quarantined'],Config['URI'])
+        _, _, self.col_faulty= mongoConnect(Config['Database'],Config['collection']['faulty'],Config['URI'])
+        _, _, self.col_models = mongoConnect(Config['Database'],Config['collection']['models'],Config['URI'])
+    
+
 
 def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',printout=True):
     '''
@@ -161,4 +181,7 @@ def mongoConnect(database: str,collection: str,URI: str):
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
-    print(readSnapshot('IMS','RAW','mongodb://localhost:27017'))
+    #print(readSnapshot('IMS','RAW','mongodb://localhost:27017'))
+    client, db, col = mongoConnect('IMS','RAW','mongodb://localhost:27017')
+    print(type(client),type(db),type(col))
+    DB_Manager= DB_Manager('config.json')
