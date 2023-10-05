@@ -3,6 +3,8 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 import pywt
 import matplotlib.pyplot as plt
+import time
+import multiprocessing
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
@@ -29,8 +31,14 @@ def FFT(array,samplFreq=1,preproc=None):
     return abs(_aux[range(int(len(_prepArray)/2))]), _frequencies, _prepArray
 
 
-def featExtraction():
-    pass
+def featExtraction(type:str, **kwargs):
+    '''
+    This function perform the feature extraction of a time series'''
+    match type:
+        case 'Wavelet':
+            return packTrasform(**kwargs)
+        case _:
+            raise ValueError('Invalid feature extraction type')
 
 def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, plot=False):
     '''perform the wavelet trasform of a time series:
@@ -49,6 +57,16 @@ def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, pl
         plt.show()
 
     return _coefs, _powers, _nodes, fig, axs
+
+class FA():
+    def __init__(self, stop_event):
+        self.stop_event = stop_event
+
+    def run(self, shared_variable):
+        while not self.stop_event.is_set():
+            # Your continuous loop logic goes here
+            print(f"Looping... Shared Variable: {shared_variable.value}")
+            time.sleep(1)  # Simulated work
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
