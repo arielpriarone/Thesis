@@ -1,7 +1,7 @@
 {
-    "Database": {
+    "Database": {                                       
         "URI": "mongodb://localhost:27017",
-        "db": "Turbine",
+        "db": "Shaft",
         "collection":{
             "back"          : "BACKUP",
             "raw"           : "RAW",
@@ -12,6 +12,7 @@
             "models"        : "MODELS"
         }
     },
+    "Features": ["WavPowers, Mean, Std"],
     "wavelet": {
         "type"              : "db10",
         "mode"              : "symmetric",

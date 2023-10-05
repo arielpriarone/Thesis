@@ -35,17 +35,43 @@ class DB_Manager:
     def __init__(self, configStr: str):
         self.config = configStr    #  path to config file (json)
         try:
+            self.Config = json.load(open(self.configStr))
+        except:
+            raise Exception(f'Error reading config file @ {self.configStr}')
+        self.client, self.db, self.col_back = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['back'],self.Config['Database']['URI'])
+        _, _, self.col_raw = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['raw'],self.Config['Database']['URI'])
+        _, _, self.col_unconsumed = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['unconsumed'],self.Config['Database']['URI'])
+        _, _, self.col_healthy = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['healthy'],self.Config['Database']['URI'])
+        _, _, self.col_quarantined = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['quarantined'],self.Config['Database']['URI'])
+        _, _, self.col_faulty= mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['faulty'],self.Config['Database']['URI'])
+        _, _, self.col_models = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['models'],self.Config['Database']['URI'])
+    @staticmethod
+    def createEmptyDB(configStr: str):
+        '''
+        create an empty database with the collections specified in the config file.
+        '''
+        try:
             Config = json.load(open(configStr))
         except:
             raise Exception(f'Error reading config file @ {configStr}')
-        self.client, self.db, self.col_back = mongoConnect(Config['Database'],Config['collection']['back'],Config['URI'])
-        _, _, self.col_raw = mongoConnect(Config['Database'],Config['collection']['raw'],Config['URI'])
-        _, _, self.col_unconsumed = mongoConnect(Config['Database'],Config['collection']['unconsumed'],Config['URI'])
-        _, _, self.col_healthy = mongoConnect(Config['Database'],Config['collection']['healthy'],Config['URI'])
-        _, _, self.col_quarantined = mongoConnect(Config['Database'],Config['collection']['quarantined'],Config['URI'])
-        _, _, self.col_faulty= mongoConnect(Config['Database'],Config['collection']['faulty'],Config['URI'])
-        _, _, self.col_models = mongoConnect(Config['Database'],Config['collection']['models'],Config['URI'])
-    
+        client  = MongoClient(Config['Database']['URI'])                                    # connect to MongoBD
+        if Config['Database']['db'] in client.list_database_names():
+            raise Exception(f'Database \'{Config["Database"]["db"]}\' already exists @ \'{Config["Database"]["URI"]}\'')
+        else:
+            db = client[Config['Database']['db']]                                           # create database
+            print(f'Created empty database \'{Config["Database"]["db"]}\' @ \'{Config["Database"]["URI"]}\'')
+            for cols in Config['Database']['collection'].values():
+                db.create_collection(cols)                                                  # create empty collections
+                print(f'Created empty collection \'{cols}\' @ \'{Config["Database"]["db"]}\'')
+        client.close()                                                                      # close connection
+
+        
+
+
+
+
+        
+
 
 
 def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',printout=True):
@@ -182,6 +208,7 @@ def mongoConnect(database: str,collection: str,URI: str):
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
     #print(readSnapshot('IMS','RAW','mongodb://localhost:27017'))
-    client, db, col = mongoConnect('IMS','RAW','mongodb://localhost:27017')
-    print(type(client),type(db),type(col))
-    DB_Manager= DB_Manager('config.json')
+    #client, db, col = mongoConnect('IMS','RAW','mongodb://localhost:27017')
+    #print(type(client),type(db),type(col))
+    #DB_Manager= DB_Manager('../config.json')
+    DB_Manager.createEmptyDB('../config.json')

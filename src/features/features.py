@@ -58,15 +58,14 @@ def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, pl
 
     return _coefs, _powers, _nodes, fig, axs
 
-class FA():
-    def __init__(self, stop_event):
-        self.stop_event = stop_event
-
-    def run(self, shared_variable):
-        while not self.stop_event.is_set():
-            # Your continuous loop logic goes here
-            print(f"Looping... Shared Variable: {shared_variable.value}")
-            time.sleep(1)  # Simulated work
+class FA(src.data.DB_Manager):
+    '''
+    empty the RAW collection and populate the Unconsumed collection with extracted features:
+    '''
+    def __init__(self, configStr: str):
+        super().__init__(configStr)
+    
+    
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality

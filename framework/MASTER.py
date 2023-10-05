@@ -10,6 +10,7 @@ from rich.table import Table
 from rich.progress import track
 from rich import print
 import multiprocessing
+import json
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 
 app = typer.Typer()
@@ -58,41 +59,17 @@ def IMS_converter(
         src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
-# @app.command()
-# def FeatureAgent_start(
-#     database    : str   = typer.Option(default='IMS',help='The name of the MongoDB database to read/write to'),
-#     collection_r: str   = typer.Option(default='RAW',help='The name of the MongoDB collection to read from (RAW)'),
-#     collection_w: str   = typer.Option(default='UNCONSUMED',help='The name of the MongoDB collection to write to (features)'),
-#     dirpath     : str   = typer.Option(default=r'C:\Users\ariel\Documents\Courses\Tesi\Code\data\raw\1st_test_IMSBearing',help='The path of the folder containing the files to read'),
-#     URI         : str   = typer.Option(default='mongodb://localhost:27017',help='The URI to connect to MongoDB')
-# ):
-#     """
-#     Pick the data from a raw data collection, extract the features, and dump the results in a new collection.
-#     EXAMPLE:\n
-#         ***
-#     """
-#     # Start the process
-#     loop_process.start()
-#     print("Feature agent process started...")
-
-
 @app.command()
-def FeatureAgent_start():
-    global shared_var
-    stop_event = multiprocessing.Event()
-    shared_var = multiprocessing.Value('i', 0)  # Create a shared variable
-    FA_instance = src.features.FA(stop_event)
-    FA_process = multiprocessing.Process(target=FA_instance.run, args=(shared_var,))
-    FA_process.start()
-    print("FA started.")
-
-@app.command()
-def FeatureAgent_stop():
-    global shared_var
-    if 'shared_var' in globals():
-        shared_var.value = 1  # Set the shared variable to signal stopping
-    else:
-        print("FA is not running.")
+def create_Empty_DB(configPath:str = typer.Option(default='../config.json',help='The path of the configuration file')):
+    """
+    Create an empty database in MongoDB. The database should not exist already. It is configured according with "config.json"
+    """
+    config=json.load(open(configPath))
+    print("You are about to create an empty database in MongoDB with the following configuration:")
+    print(config)
+    typer.confirm("Do you want to proceed?", abort=True)
+    src.data.DB_Manager.createEmptyDB(configPath)
+    
 
 @app.command()
 def dummy():
