@@ -11,6 +11,8 @@
             "faulty"        : "FAULTY",                     // Faulty data collection name
             "models"        : "MODELS"                      // Models collection name
         }
+        "sensors"           : ["Bearing 1 x",
+                                "Bearing 1 y"]              // Expected sensors in the database
     },
     "Features": {
         "types"             : ["WavPowers, Mean, Std"]      // Feature types

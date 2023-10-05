@@ -52,7 +52,7 @@ class FA(src.data.DB_Manager):
     '''
     empty the RAW collection and populate the Unconsumed collection with extracted features:
     '''
-    def __init__(self, configStr: str, order:str = 'latest'):
+    def __init__(self, configStr: str, order: str = 'latest'):
         super().__init__(configStr)
         if order not in ['latest','oldest']:
             raise ValueError('order must be either latest or oldest')
@@ -60,9 +60,12 @@ class FA(src.data.DB_Manager):
     
     def _readFromRaw(self):
         ''' Read the data from the RAW collection '''
-        snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
-        _sens  = list(snap.keys())[2::]                        # sensors to iterate
-        
+        self.snap    = self.col_raw.find().sort('timestamp',self.order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
+        sensors      = list(self.snap.keys())[2::]                                     # current sensors names
+        if not sensors in self.Config['sensors']:
+            raise ValueError(f'sensors found in the collection {self.col_unconsumed} not in the configuration file')
+        self.sensors  = list(self.snap.keys())[2::]                                     # current sensors names             
+
     def _extractFeatures(self):
         ''' extract features from the data '''
         pass
@@ -83,7 +86,9 @@ class FA(src.data.DB_Manager):
 
 if __name__=='__main__': 
     # just for testin, not useful as package functionality
-    timeSerie=src.data.readSnapshot('IMS','RAW','mongodb://localhost:27017')['Bearing 1 x']['timeSerie']
-    coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
+    # timeSerie=src.data.readSnapshot('IMS','RAW','mongodb://localhost:27017')['Bearing 1 x']['timeSerie']
+    # coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
+    FeatureAgent=FA("../config.json5")
+    FeatureAgent._readFromRaw()
     plt.show()
     

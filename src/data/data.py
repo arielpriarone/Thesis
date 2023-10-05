@@ -33,7 +33,7 @@ class DB_Manager:
     class for managing the whole Database system - upgrade from the loose functions previously used
     '''
     def __init__(self, configStr: str):
-        self.config = configStr    #  path to config file (json)
+        self.configStr = configStr    #  path to config file (json)
         try:
             self.Config = json.load(open(self.configStr))
         except:
@@ -66,14 +66,6 @@ class DB_Manager:
         client.close()                                                                      # close connection
 
         
-
-
-
-
-        
-
-
-
 def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',printout=True):
     '''
     ### author: Ariel Priarone - ariel.priarone@studenti.polito.it
@@ -174,8 +166,8 @@ def readSnapshot(database: str,collection: str,URI: str,timestamp='',plot=False)
         snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
     else:
         mydate  = datetime.fromisoformat(timestamp)
-        snap    = col.find({'timestamp': mydate})[0] #pick the right snapshot
-    _sens  = list(snap.keys())[2::]                        # sensors to iterate
+        snap    = col.find({'timestamp': mydate})[0]            #pick the right snapshot
+    _sens  = list(snap.keys())[2::]                             # sensors to iterate
     if plot:
         fig, axs = plt.subplots(len(_sens))
         for _i, _sen in enumerate(_sens):
@@ -211,4 +203,4 @@ if __name__=='__main__':
     #client, db, col = mongoConnect('IMS','RAW','mongodb://localhost:27017')
     #print(type(client),type(db),type(col))
     #DB_Manager= DB_Manager('../config.json')
-    DB_Manager.createEmptyDB('../config.json')
+    DB_Manager.createEmptyDB(r'C:\Users\ariel\Documents\Courses\Tesi\Code\config.json5')
