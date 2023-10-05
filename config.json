@@ -1,0 +1,21 @@
+{
+    "mongo": {
+        "URI": "mongodb://localhost:27017",
+        "db": "Turbine",
+        "collection":{
+            "back"          : "BACKUP",
+            "raw"           : "RAW",
+            "unconsumed"    : "UNCONSUMED",
+            "healthy"       : "HEALTHY",
+            "quarantined"   : "QUARANTINED",
+            "faulty"        : "FAULTY",
+            "models"        : "MODELS"
+        }
+    },
+    "wavelet": {
+        "type"              : "db10",
+        "mode"              : "symmetric",
+        "maxlevel"          : 6
+    }
+}
+
