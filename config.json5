@@ -1,0 +1,24 @@
+{
+    "Database": {                                           // Database configuration
+        "URI": "mongodb://localhost:27017",                 // MongoDB URI
+        "db": "Shaft",                                      // Database name                      
+        "collection":{                                      // Collection configuration
+            "back"          : "BACKUP",                     // Backup collection name
+            "raw"           : "RAW",                        // Raw data collection name
+            "unconsumed"    : "UNCONSUMED",                 // Unconsumed data collection name
+            "healthy"       : "HEALTHY",                    // Healthy data collection name
+            "quarantined"   : "QUARANTINED",                // Quarantined data collection name                  
+            "faulty"        : "FAULTY",                     // Faulty data collection name
+            "models"        : "MODELS"                      // Models collection name
+        }
+    },
+    "Features": {
+        "types"             : ["WavPowers, Mean, Std"]      // Feature types
+    },
+    "wavelet": {
+        "type"              : "db10",
+        "mode"              : "symmetric",
+        "maxlevel"          : 6
+    }
+}
+

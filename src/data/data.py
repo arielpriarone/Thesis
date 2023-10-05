@@ -3,7 +3,7 @@ import numpy as np
 from datetime import datetime
 import matplotlib.pyplot  as plt
 from pymongo import MongoClient
-import json
+import json5 as json
 from rich import print
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
@@ -155,7 +155,7 @@ def IMS_filepathToTimestamp(filepath=str):
     __splitted=filepath.split('\\')
     __splitted=__splitted[-1].split('.')
     __int=[int(__splitted[__i]) for __i in range(0,len(__splitted))] # converted in integer values
-    return(datetime.datetime(*__int,tzinfo=None))
+    return(datetime(*__int,tzinfo=None))
 
 def readSnapshot(database: str,collection: str,URI: str,timestamp='',plot=False):
     '''

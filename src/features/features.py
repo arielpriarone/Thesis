@@ -30,16 +30,6 @@ def FFT(array,samplFreq=1,preproc=None):
     _frequencies = np.arange(int(len(_prepArray)/2))/_timePeriod #frequencies array of fft
     return abs(_aux[range(int(len(_prepArray)/2))]), _frequencies, _prepArray
 
-
-def featExtraction(type:str, **kwargs):
-    '''
-    This function perform the feature extraction of a time series'''
-    match type:
-        case 'Wavelet':
-            return packTrasform(**kwargs)
-        case _:
-            raise ValueError('Invalid feature extraction type')
-
 def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, plot=False):
     '''perform the wavelet trasform of a time series:
     RETURN: coefs:  [list] coefficients of the decomposition
@@ -62,8 +52,32 @@ class FA(src.data.DB_Manager):
     '''
     empty the RAW collection and populate the Unconsumed collection with extracted features:
     '''
-    def __init__(self, configStr: str):
+    def __init__(self, configStr: str, order:str = 'latest'):
         super().__init__(configStr)
+        if order not in ['latest','oldest']:
+            raise ValueError('order must be either latest or oldest')
+        self.order  =   order                               # pick latest / oldest raw data available
+    
+    def _readFromRaw(self):
+        ''' Read the data from the RAW collection '''
+        snap    = col.find().sort('timestamp',1).limit(1)[0]    # oldest record - sort gives a cursor, the [0] is the dict
+        _sens  = list(snap.keys())[2::]                        # sensors to iterate
+        
+    def _extractFeatures(self):
+        ''' extract features from the data '''
+        pass
+    def _deleteFromraw(self):
+        ''' delete a record from the RAW collection '''
+        pass
+    def _writeToUnconsumed(self):
+        ''' write the extracted features to the Unconsumed collection '''
+
+    def run(self):
+        while True:
+            self._readFromRaw()
+            self._extractFeatures()
+            self._deleteFromraw()
+            self._writeToUnconsumed()
     
     
 
