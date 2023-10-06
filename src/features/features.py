@@ -5,6 +5,7 @@ import pywt
 import matplotlib.pyplot as plt
 import time
 import multiprocessing
+from rich import print
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
@@ -52,19 +53,20 @@ class FA(src.data.DB_Manager):
     '''
     empty the RAW collection and populate the Unconsumed collection with extracted features:
     '''
-    def __init__(self, configStr: str, order: str = 'latest'):
+    def __init__(self, configStr: str, order: int = 1):
         super().__init__(configStr)
-        if order not in ['latest','oldest']:
+        if order not in [-1,1]:
             raise ValueError('order must be either latest or oldest')
-        self.order  =   order                               # pick latest / oldest raw data available
+        self.order  =   order                                                           # pick -1=latest / 1=oldest raw data available
     
     def _readFromRaw(self):
         ''' Read the data from the RAW collection '''
         self.snap    = self.col_raw.find().sort('timestamp',self.order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
-        sensors      = list(self.snap.keys())[2::]                                     # current sensors names
-        if not sensors in self.Config['sensors']:
+        sensors      = list(self.snap.keys())[2::]                                      # current sensors names
+        if not set(sensors).issubset(set(self.Config['Database']['sensors'])):
             raise ValueError(f'sensors found in the collection {self.col_unconsumed} not in the configuration file')
-        self.sensors  = list(self.snap.keys())[2::]                                     # current sensors names             
+        self.sensors  = list(self.snap.keys())[2::]                                     # current sensors names      
+        print(f"Snapshot with timestamp {self.snap['timestamp']} read from {self.col_raw}")       
 
     def _extractFeatures(self):
         ''' extract features from the data '''
@@ -88,7 +90,9 @@ if __name__=='__main__':
     # just for testin, not useful as package functionality
     # timeSerie=src.data.readSnapshot('IMS','RAW','mongodb://localhost:27017')['Bearing 1 x']['timeSerie']
     # coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
-    FeatureAgent=FA("../config.json5")
+    # plt.show()
+    FeatureAgent=FA("../config.yaml")
+    print(FeatureAgent.Config)
     FeatureAgent._readFromRaw()
-    plt.show()
+
     
