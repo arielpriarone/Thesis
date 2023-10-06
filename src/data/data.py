@@ -40,8 +40,10 @@ class DB_Manager:
                 print("Loded the configuration:"); print(self.Config)
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
-        self.sensors = self.Config['Database']['sensors'].keys() # list of sensors
-        self.features = {key: {} for key in self.sensors}                                       # initialize the features dict
+        self.sensors = self.Config['Database']['sensors'].keys() # list of sensors4
+        self.features = {}                                                              # initialize the features dict
+        self.features["timestamp"] = None                                               # initialize the features dict with timestamp
+        self.features.update({key: {} for key in self.sensors})                         # initialize the features dict with sensors                              
         self.client, self.db, self.col_back = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['back'],self.Config['Database']['URI'])
         _, _, self.col_raw = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['raw'],self.Config['Database']['URI'])
         _, _, self.col_unconsumed = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['unconsumed'],self.Config['Database']['URI'])

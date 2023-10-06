@@ -66,30 +66,56 @@ class FA(src.data.DB_Manager):
     def _extractFeatures(self):
         ''' extract features from the data '''
         for sensor in self.sensors:                                                         # for each sensor (names are keys of the dict)
-            # if Wavelet is enabled
-            if self.Config['Database']['sensors'][sensor]['features']['wavPowers']:    
-                _, pows, nodes, _, _ = packTrasform(self.snap[sensor]['timeSerie'],     # perform the wavelet trasform
-                                                    wavelet=self.Config["wavelet"]["type"],
-                                                    mode=self.Config["wavelet"]["mode"],
-                                                    maxlevel=self.Config["wavelet"]["maxlevel"], 
-                                                    plot=False)
-                self.features[sensor].update(dict(zip(nodes, pows)))  # create a dictionary with nodes as keys and powers as values
-                print(f"Features extracted from [purple]{sensor}[/] with Wavelet trasform")
+            self.features["timestamp"] = self.snap["timestamp"]                             # add the timestamp to the features
+            self._extractTimeFeautures(sensor)                                                   # extract time domain features
+            self._extractFreqFeautures(sensor)                                                   # extract frequency domain features
+
+    def _extractTimeFeautures(self, sensor):
+        ''' extract time domain features '''
+        # if Mean Enabled
+        if self.Config['Database']['sensors'][sensor]['features']['mean']:
+            self.features[sensor].update({'mean':np.mean(self.snap[sensor]['timeSerie'])})
+            print(f"Mean extracted from [purple]{sensor}[/]")
+        # if RMS Enabled
+        if self.Config['Database']['sensors'][sensor]['features']['rms']:
+            self.features[sensor].update({'rms':np.sqrt(np.mean(np.square(self.snap[sensor]['timeSerie'])))})
+            print(f"RMS extracted from [purple]{sensor}[/]")
+        # if peak2peak Enabled
+        if self.Config['Database']['sensors'][sensor]['features']['peak']:
+            self.features[sensor].update({'peak2peak':np.ptp(self.snap[sensor]['timeSerie'])})
+            print(f"Peak2Peak extracted from [purple]{sensor}[/]")
+        # if std Enabled
+        if self.Config['Database']['sensors'][sensor]['features']['std']:
+            self.features[sensor].update({'std':np.std(self.snap[sensor]['timeSerie'])})
+            print(f"Standard deviation extracted from [purple]{sensor}[/]")
+
+    def _extractFreqFeautures(self, sensor):
+        # if Wavelet is enabled
+        if self.Config['Database']['sensors'][sensor]['features']['wavPowers']:    
+            _, pows, nodes, _, _ = packTrasform(self.snap[sensor]['timeSerie'],     # perform the wavelet trasform
+                                                wavelet=self.Config["wavelet"]["type"],
+                                                mode=self.Config["wavelet"]["mode"],
+                                                maxlevel=self.Config["wavelet"]["maxlevel"], 
+                                                plot=False)
+            self.features[sensor].update(dict(zip(nodes, pows)))  # create a dictionary with nodes as keys and powers as values
+            print(f"Wavelet coefs extracted from [purple]{sensor}[/]")
                 
-
-
     def _deleteFromraw(self):
-        ''' delete a record from the RAW collection '''
-        pass
+        ''' delete current snap record from the RAW collection '''
+        self.col_raw.delete_one({'_id':self.snap['_id']})
+        print(f"Deleted snapshot with timestamp {self.snap['timestamp']} from {self.col_raw}")
+
     def _writeToUnconsumed(self):
         ''' write the extracted features to the Unconsumed collection '''
+        __dummy=self.features.copy() # create a copy of the features dictionary
+        self.col_unconsumed.insert_one(__dummy) # insert the features in the Unconsumed collection, without changing the dictionary
 
     def run(self):
         while True:
             self._readFromRaw()
             self._extractFeatures()
-            self._deleteFromraw()
             self._writeToUnconsumed()
+            self._deleteFromraw()
     
     
 

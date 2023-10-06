@@ -6,6 +6,12 @@ import yaml
 # res=Collection.find({'timestamp': mydate})[0]
 # print(res)
 
-with open('config.yaml','r') as f:
-    config = yaml.safe_load(f)
-print(config)
+# with open('config.yaml','r') as f:
+#     config = yaml.safe_load(f)
+# print(config)
+
+# import pymongo
+# client = pymongo.MongoClient('mongodb://localhost:27017')
+# db = client['Shaft']
+# col = db['UNCONSUMED']
+# col.delete_many({}) # delete all documents in the collection
