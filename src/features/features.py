@@ -46,7 +46,6 @@ def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, pl
         axs.set_ylabel('Power [-]')
         axs.set_xlabel('Nodes [-]')
         plt.show()
-
     return _coefs, _powers, _nodes, fig, axs
 
 class FA(src.data.DB_Manager):
@@ -62,15 +61,23 @@ class FA(src.data.DB_Manager):
     def _readFromRaw(self):
         ''' Read the data from the RAW collection '''
         self.snap    = self.col_raw.find().sort('timestamp',self.order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
-        sensors      = list(self.snap.keys())[2::]                                      # current sensors names
-        if not set(sensors).issubset(set(self.Config['Database']['sensors'])):
-            raise ValueError(f'sensors found in the collection {self.col_unconsumed} not in the configuration file')
-        self.sensors  = list(self.snap.keys())[2::]                                     # current sensors names      
-        print(f"Snapshot with timestamp {self.snap['timestamp']} read from {self.col_raw}")       
+        print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {self.col_raw}")       
 
     def _extractFeatures(self):
         ''' extract features from the data '''
-        pass
+        for sensor in self.sensors:                                                         # for each sensor (names are keys of the dict)
+            # if Wavelet is enabled
+            if self.Config['Database']['sensors'][sensor]['features']['wavPowers']:    
+                _, pows, nodes, _, _ = packTrasform(self.snap[sensor]['timeSerie'],     # perform the wavelet trasform
+                                                    wavelet=self.Config["wavelet"]["type"],
+                                                    mode=self.Config["wavelet"]["mode"],
+                                                    maxlevel=self.Config["wavelet"]["maxlevel"], 
+                                                    plot=False)
+                self.features[sensor].update(dict(zip(nodes, pows)))  # create a dictionary with nodes as keys and powers as values
+                print(f"Features extracted from [purple]{sensor}[/] with Wavelet trasform")
+                
+
+
     def _deleteFromraw(self):
         ''' delete a record from the RAW collection '''
         pass
@@ -92,7 +99,6 @@ if __name__=='__main__':
     # coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
     # plt.show()
     FeatureAgent=FA("../config.yaml")
-    print(FeatureAgent.Config)
-    FeatureAgent._readFromRaw()
+    FeatureAgent.run()
 
     

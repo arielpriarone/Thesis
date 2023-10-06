@@ -10,13 +10,20 @@ Database:                           # Database configuration
     faulty: FAULTY                  # Faulty data collection name
     models: MODELS                  # Models collection name
   sensors:                          # Expected sensors in the database
-  - Bearing 1 x
-  - Bearing 1 y
-Features:                           # Features configuration
-  types:                            # Feature types - list
-  - WavPowers
-  - Mean
-  - Std
+    Bearing 1 x:                    # Sensor 1 name
+      features:                     # Features configuration
+        wavPowers: on               # Wavelet powers
+        mean:      on               # Mean value
+        peak:      on               # Peak value
+        std:       on               # Standard deviation
+        power:     on               # Power of time domain signal
+    Bearing 1 y:                    # Sensor 2 name
+      features:                     # Features configuration
+        wavPowers: on               # Wavelet powers
+        mean:      off              # Mean value
+        peak:      off              # Peak value
+        std:       off              # Standard deviation
+        power:     off              # Power of time domain signal
 wavelet:                            # Wavelet packet reasform configuration
   type: db10                        # type of wavelet to use
   mode: symmetric                   # mode of the packet transform

@@ -37,8 +37,11 @@ class DB_Manager:
         try:
             with open('config.yaml','r') as f:
                 self.Config = yaml.safe_load(f)
+                print("Loded the configuration:"); print(self.Config)
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
+        self.sensors = self.Config['Database']['sensors'].keys() # list of sensors
+        self.features = {key: {} for key in self.sensors}                                       # initialize the features dict
         self.client, self.db, self.col_back = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['back'],self.Config['Database']['URI'])
         _, _, self.col_raw = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['raw'],self.Config['Database']['URI'])
         _, _, self.col_unconsumed = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['unconsumed'],self.Config['Database']['URI'])
@@ -52,7 +55,8 @@ class DB_Manager:
         create an empty database with the collections specified in the config file.
         '''
         try:
-            Config = json.load(open(configStr))
+            with open('config.yaml','r') as f:
+                Config = yaml.safe_load(f)
         except:
             raise Exception(f'Error reading config file @ {configStr}')
         client  = MongoClient(Config['Database']['URI'])                                    # connect to MongoBD
