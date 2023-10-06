@@ -36,7 +36,7 @@ class DB_Manager:
         self.configStr = configStr    #  path to config file (json)
         try:
             with open('config.yaml','r') as f:
-                config = yaml.safe_load(f)
+                self.Config = yaml.safe_load(f)
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
         self.client, self.db, self.col_back = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['back'],self.Config['Database']['URI'])
