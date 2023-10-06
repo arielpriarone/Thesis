@@ -3,7 +3,7 @@ import numpy as np
 from datetime import datetime
 import matplotlib.pyplot  as plt
 from pymongo import MongoClient
-import json5 as json
+import yaml
 from rich import print
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
@@ -35,7 +35,8 @@ class DB_Manager:
     def __init__(self, configStr: str):
         self.configStr = configStr    #  path to config file (json)
         try:
-            self.Config = json.load(open(self.configStr))
+            with open('config.yaml','r') as f:
+                config = yaml.safe_load(f)
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
         self.client, self.db, self.col_back = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['back'],self.Config['Database']['URI'])

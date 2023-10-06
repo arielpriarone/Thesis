@@ -1,0 +1,23 @@
+Database:                           # Database configuration
+  URI: mongodb://localhost:27017    # MongoDB URI
+  db: Shaft                         # Database name
+  collection:                       # Collection configuration
+    back: BACKUP                    # Backup collection name
+    raw: RAW                        # Raw data collection name
+    unconsumed: UNCONSUMED          # Unconsumed data collection name
+    healthy: HEALTHY                # Healthy data collection name
+    quarantined: QUARANTINED        # Quarantined data collection name   
+    faulty: FAULTY                  # Faulty data collection name
+    models: MODELS                  # Models collection name
+  sensors:                          # Expected sensors in the database
+  - Bearing 1 x
+  - Bearing 1 y
+Features:                           # Features configuration
+  types:                            # Feature types - list
+  - WavPowers
+  - Mean
+  - Std
+wavelet:                            # Wavelet packet reasform configuration
+  type: db10                        # type of wavelet to use
+  mode: symmetric                   # mode of the packet transform
+  maxlevel: 6                       # max level -> num of features = 2^level
