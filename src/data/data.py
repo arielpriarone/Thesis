@@ -49,7 +49,7 @@ class DB_Manager:
                 print("Loded the configuration:"); print(self.Config)
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
-        self.sensors = self.Config['Database']['sensors'].keys() # list of sensors4
+        self.sensors: List[str] = list(self.Config['Database']['sensors'].keys()) # list of sensors4
         self.features = {}                                                              # initialize the features dict
         self.features["timestamp"] = None                                               # initialize the features dict with timestamp
         self.features.update({key: {} for key in self.sensors})                         # initialize the features dict with sensors                              
@@ -94,7 +94,7 @@ class DB_Manager:
         return Config                                                                     # close connection
 
         
-def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: Union[str, List[str]],URI='mongodb://localhost:27017',printout=True):
+def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: int,sensors: Union[str, List[str]],URI='mongodb://localhost:27017',printout=True):
     '''
     ### author: Ariel Priarone - ariel.priarone@studenti.polito.it
     ### Description

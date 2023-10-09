@@ -1,37 +1,41 @@
-from datetime import datetime
-import src
-import yaml
-from typing import Dict, Any
-# MongoClient, Database, Collection = src.data.mongoConnect('IMS','RAW','mongodb://localhost:27017')
-# mydate=datetime.fromisoformat('2003-10-22T12:09:13.000+00:00')
-# res=Collection.find({'timestamp': mydate})[0]
-# print(res)
+import matplotlib.pyplot as plt
+import numpy as np
 
-# with open('config.yaml','r') as f:
-#     config = yaml.safe_load(f)
-# print(config)
+# Sample data for two groups with shared features
+shared_labels = ['Feature A', 'Feature B', 'Feature C']
+group1_values = [10, 15, 8]
+group2_values = [18, 6]
 
-# import pymongo
-# client = pymongo.MongoClient('mongodb://localhost:27017')
-# db = client['Shaft']
-# col = db['UNCONSUMED']
-# col.delete_many({}) # delete all documents in the collection
+# Define colors for each group
+group1_color = 'b'
+group2_color = 'g'
 
+# Calculate the width for each bar group
+bar_width = 0.35
 
+# Create an array for the x-axis positions
+x = np.arange(len(shared_labels))
 
-existing_dict: Dict[str, Any] = {'timestamp': src.data.IMS_filepathToTimestamp('c')}
+# Create the figure and axes
+fig, ax = plt.subplots()
 
-# __update dictionary
-__varname = 'sensor3'  # Example sensor name
-__update = {
-    __varname: {
-        'sampFreq': 20000,
-        'timeSerie': [7, 8, 9],
-    }
-}
+# Plot the bars for the first group
+bar1 = ax.bar(x - bar_width/2, group1_values, bar_width, label='Group 1', color=group1_color)
 
-# Merge __update into existing_dict while keeping 'timestamp' key
-existing_dict.update(__update)
+# Plot the bars for the second group
+bar2 = ax.bar(x + bar_width/2, group2_values, bar_width, label='Group 2', color=group2_color)
 
-# Now existing_dict contains both 'timestamp' and the updated sensor information
-print(existing_dict)
+# Set the x-axis labels and their positions
+ax.set_xticks(x)
+ax.set_xticklabels(shared_labels)
+
+# Add a legend
+ax.legend()
+
+# Add labels and title
+ax.set_xlabel('Features')
+ax.set_ylabel('Values')
+ax.set_title('Bar Plot with Different Groups')
+
+# Show the plot
+plt.show()

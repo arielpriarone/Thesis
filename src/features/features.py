@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import time
 import multiprocessing
 from rich import print
+import pymongo
+import matplotlib.cm as cm
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
@@ -60,8 +62,13 @@ class FA(src.data.DB_Manager):
     
     def _readFromRaw(self):
         ''' Read the data from the RAW collection '''
-        self.snap    = self.col_raw.find().sort('timestamp',self.order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
-        print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {self.col_raw}")       
+        try:
+            self.snap    = self.col_raw.find().sort('timestamp',self.order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
+            print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {self.col_raw}")
+            return True    
+        except IndexError:
+            print(f"No data in collection {self.col_raw.full_name}, waiting for new data...")
+            return False
 
     def _extractFeatures(self):
         ''' extract features from the data '''
@@ -110,9 +117,32 @@ class FA(src.data.DB_Manager):
         __dummy=self.features.copy() # create a copy of the features dictionary
         self.col_unconsumed.insert_one(__dummy) # insert the features in the Unconsumed collection, without changing the dictionary
 
+    def barPlotFeatures(self, axs: plt.Axes):
+        try:
+            snap = self.col_unconsumed.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
+        except IndexError:
+            print('No data in collection, wait for new data...')
+            return
+        
+        tab10_cmap = cm.get_cmap("tab10")
+        ticks = []; 
+        bars = []
+        colors = []
+        labels = []
+        for sens in self.sensors:
+            for keys in snap[sens].keys():
+                ticks.append(keys)
+                bars.append(snap[sens][keys])
+                colors.append(tab10_cmap(self.sensors.index(sens)))
+                labels.append(sens)
+        axs.clear()  # Clear last data frame
+        axs.bar(ticks,bars,color=colors,label=labels)  # Plot new data frame
+        axs.legend()
+        return axs
+
     def run(self):
         while True:
-            self._readFromRaw()
+            while not self._readFromRaw(): pass  # wait for new data
             self._extractFeatures()
             self._writeToUnconsumed()
             self._deleteFromraw()
