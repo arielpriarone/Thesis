@@ -51,14 +51,14 @@ class DB_Manager:
         _, _, self.col_quarantined = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['quarantined'],self.Config['Database']['URI'])
         _, _, self.col_faulty= mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['faulty'],self.Config['Database']['URI'])
         _, _, self.col_models = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['models'],self.Config['Database']['URI'])
+    
     @staticmethod
     def createEmptyDB(configStr: str):
         '''
         create an empty database with the collections specified in the config file.
         '''
         try:
-            with open('config.yaml','r') as f:
-                Config = yaml.safe_load(f)
+            Config = DB_Manager.loadConfig(configStr)
         except:
             raise Exception(f'Error reading config file @ {configStr}')
         client  = MongoClient(Config['Database']['URI'])                                    # connect to MongoBD
@@ -70,7 +70,19 @@ class DB_Manager:
             for cols in Config['Database']['collection'].values():
                 db.create_collection(cols)                                                  # create empty collections
                 print(f'Created empty collection \'{cols}\' @ \'{Config["Database"]["db"]}\'')
-        client.close()                                                                      # close connection
+        client.close() 
+
+    @staticmethod
+    def loadConfig(configStr: str):
+        '''
+        load the configuration file
+        '''
+        try:
+            with open(configStr,'r') as f:
+                Config = yaml.safe_load(f)
+        except:
+            raise Exception(f'Error reading config file @ {configStr}')
+        return Config                                                                     # close connection
 
         
 def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',printout=True):

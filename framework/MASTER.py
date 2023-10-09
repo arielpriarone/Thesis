@@ -52,7 +52,7 @@ def IMS_converter(
     _console = Console()
     _console.print(_table)  
     
-    if not typer.confirm("do toy want to proceed importing the data from files to MongoDB?"):
+    if not typer.confirm("do you want to proceed importing the data from files to MongoDB?", abort=True):
         return
     for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
         path=os.path.join(dirpath, _fileName) # complete path including filename
@@ -60,20 +60,17 @@ def IMS_converter(
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
 @app.command()
-def create_Empty_DB(configPath:str = typer.Option(default='../config.json',help='The path of the configuration file')):
+def create_Empty_DB(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file')):
     """
     Create an empty database in MongoDB. The database should not exist already. It is configured according with "config.json"
     """
-    config=json.load(open(configPath))
+    configPath=os.path.abspath(configPath)
+    config=src.data.DB_Manager.loadConfig(configPath)
     print("You are about to create an empty database in MongoDB with the following configuration:")
     print(config)
     typer.confirm("Do you want to proceed?", abort=True)
     src.data.DB_Manager.createEmptyDB(configPath)
-    
-
-@app.command()
-def dummy():
-    pass
+    print("Empty database created!")
 
 if __name__ == "__main__":
     # RUN THE CLI APP
