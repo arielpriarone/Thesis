@@ -6,7 +6,7 @@ import matplotlib.animation as animation
 from functools import partial
 
 
-def animate(i, col: pymongo.collection.Collection):
+def animate(i, col: src.data.DB_Manager.col_raw):
     snap = col.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
     x = (snap['timestamp'])  # Append x value
     y = (snap['Bearing 1 x']["timeSerie"])  # Append y value

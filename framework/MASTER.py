@@ -56,7 +56,7 @@ def IMS_converter(
         return
     for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
         path=os.path.join(dirpath, _fileName) # complete path including filename
-        src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
+        src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=str(test),sensors=sensor,URI=URI,printout=False)
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
 @app.command()

@@ -5,6 +5,7 @@ import matplotlib.pyplot  as plt
 from pymongo import MongoClient
 import yaml
 from rich import print
+from typing import Union, List, Dict, Any
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
     def __init__(self,rawData=None):
@@ -13,6 +14,14 @@ class snapshot: #this should contain all the useful information about a snapshot
         __imsTimeInterval=1 # 1[s] intervals records
         # read a ims formatted file data - ref: The  data  was  generated  by  the  NSF  I/UCR  Center  for  Intelligent  Maintenance  Systems  
         # (IMS  – www.imscenter.net) with support from Rexnord Corp. in Milwaukee, WI. 
+        match n_of_test:
+            case 1:
+                __names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
+            case 2:
+                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+            case 3:
+                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+        __names = []
         match n_of_test:
             case 1:
                 __names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
@@ -85,7 +94,7 @@ class DB_Manager:
         return Config                                                                     # close connection
 
         
-def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: str,URI='mongodb://localhost:27017',printout=True):
+def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sensors: Union[str, List[str]],URI='mongodb://localhost:27017',printout=True):
     '''
     ### author: Ariel Priarone - ariel.priarone@studenti.polito.it
     ### Description
@@ -111,18 +120,11 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sens
     ### Return
     None
     '''
-    try:
-        type(filePath) == str and type(URI) == str and type(database) == str and type(collection) == str
-    except:
+    if not (isinstance(filePath, str) and isinstance(URI, str) and isinstance(database, str) and isinstance(collection, str)):
         raise Exception("'filePath', 'URI', 'database', 'collection', must all be a string")
-    try:
-        n_of_test in [1,2,3]
-    except:
+    if n_of_test not in [1,2,3]:
         raise Exception("'n_of_test' must be 1,2 or 3")
-    try:
-        all(__x in ["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y","Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
-            for __x in sensors)
-    except:
+    if not all(x in ["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y","Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"] for x in sensors):
         raise Exception("'sensors' must be a list subset of: \n 'Bearing 1 x'\n 'Bearing 1 y'\n 'Bearing 2 x'\n 'Bearing 2 y'\n'Bearing 3 x'\n 'Bearing 3 y'\n 'Bearing 4 x'\n 'Bearing 4 y'\n'Bearing 1' \n 'Bearing 2'\n 'Bearing 3'\n 'Bearing 4' ")
     
     match n_of_test:  # names formatting for IMS files
@@ -132,6 +134,8 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sens
             __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
         case 3:
             __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+        case _:
+            raise Exception("n_of_test must be 1, 2 or 3")
             
     __data=pd.read_csv(filePath,delimiter='\t',names=__names)
     for __i in __data.columns.values.tolist():
@@ -148,8 +152,12 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sens
         print(__name__ +' succesfully connected to the collection in MongoDB')
 
     # get the timestamp from filename
-    __sampleToAadd={'timestamp': IMS_filepathToTimestamp(filePath)} #initialize the dictionary with timestamp
+    __sampleToAadd: Dict[str, Any] = {'timestamp': IMS_filepathToTimestamp(filePath)} #initialize the dictionary with timestamp
+    if isinstance(sensors, str):
+        sensors = [sensors]  # convert to list if it's a string
     for __varname in sensors:
+        if __varname not in __data.columns:
+            raise ValueError(f"{__varname} is not a valid sensor name")
         __update={
         __varname:
         {
@@ -162,7 +170,7 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: str,sens
     if printout: 
         print('\n' + filePath + ' inserted in ' + database + ' ' + collection)
 
-def IMS_filepathToTimestamp(filepath=str):
+def IMS_filepathToTimestamp(filepath: str):
     __splitted=filepath.split('\\')
     __splitted=__splitted[-1].split('.')
     __int=[int(__splitted[__i]) for __i in range(0,len(__splitted))] # converted in integer values
