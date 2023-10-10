@@ -33,9 +33,9 @@ IMSDATA = pickle.load(filehandler)
 # %%
 sil_score=[]
 inertia=[]
-max_clusters=15
+max_clusters=100
 for n_blobs in range(1,max_clusters+1):
-    kmeans=KMeans(n_blobs)
+    kmeans=KMeans(n_blobs,n_init='auto',max_iter=1000)
     y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
     if n_blobs>1:
         sil_score.append(silhouette_score(IMSDATA['wavanaly_standardized_train'],y_pred_train))

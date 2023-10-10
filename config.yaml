@@ -35,3 +35,5 @@ wavelet:           # Wavelet packet reasform configuration
   type:               db10                        # Type of wavelet to use
   mode:               symmetric                   # Mode of the packet transform
   maxlevel:           6                           # Max level -> num of features = 2^level
+kmeans:            # kmean configuration
+  max_clusters:       100                         # Max number of clusters
