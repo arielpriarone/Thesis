@@ -8,6 +8,8 @@ import multiprocessing
 from rich import print
 import pymongo
 import matplotlib.cm as cm
+from itertools import chain
+from matplotlib.lines import Line2D
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
@@ -117,29 +119,50 @@ class FA(src.data.DB_Manager):
         __dummy=self.features.copy() # create a copy of the features dictionary
         self.col_unconsumed.insert_one(__dummy) # insert the features in the Unconsumed collection, without changing the dictionary
 
-    def barPlotFeatures(self, axs: plt.Axes):
+    def barPlotFeatures(self,axs: plt.Axes):
+        """
+        Plots a bar chart of the latest features for each sensor in the collection.
+
+        Parameters:
+        axs (matplotlib.axes.Axes): The axes on which to plot the bar chart.
+
+        Returns:
+        matplotlib.axes.Axes: The axes on which the bar chart was plotted.
+        """
         try:
             snap = self.col_unconsumed.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
         except IndexError:
             print('No data in collection, wait for new data...')
             return
-        
         tab10_cmap = cm.get_cmap("tab10")
-        ticks = []; 
-        bars = []
-        colors = []
-        labels = []
-        for sens in self.sensors:
-            for keys in snap[sens].keys():
-                ticks.append(keys)
-                bars.append(snap[sens][keys])
-                colors.append(tab10_cmap(self.sensors.index(sens)))
-                labels.append(sens)
-        axs.clear()  # Clear last data frame
-        axs.bar(ticks,bars,color=colors,label=labels)  # Plot new data frame
-        axs.legend()
+        colors = [tab10_cmap(indx)[:3] for indx, _ in enumerate(self.sensors)] # convert tuple to list
+        base_width = 0.8    # the width of the bars
+        features_list = []  # list of all features
+        for sensor in self.sensors:
+            features_list.append(list(snap[sensor].keys()))
+        features_list = list(chain.from_iterable(features_list))  # flatten list
+        features_list = list(dict.fromkeys(features_list))  # remove duplicates
+        feature_mask = {key: [False] * len(self.sensors) for key in features_list} # initialize dictionary
+        for sensor_number, sensor in enumerate(self.sensors):
+            for feature in features_list:
+                if feature in snap[sensor].keys():
+                    feature_mask[feature][sensor_number] = True
+        locator = np.arange(len(features_list))  # the x locations for the groups
+        for feature_number,feature in enumerate(features_list):
+            multiplicity = feature_mask[feature].count(True) # number of sensors that have this feature
+            width = base_width / multiplicity
+            for sensor_number, sensor in enumerate(self.sensors):
+                if feature_mask[feature][sensor_number]:
+                    axs.bar(locator[feature_number]+sensor_number*width, snap[sensor][feature], width, color=colors[sensor_number])
+        axs.set_xticks(locator,features_list)
+        custom_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
+        axs.tick_params(axis='x',rotation = 90)
+        axs.legend(custom_lines, self.sensors)
+        if __name__=='__main__':
+            plt.show()
         return axs
 
+                
     def run(self):
         while True:
             while not self._readFromRaw(): pass  # wait for new data
@@ -155,6 +178,8 @@ if __name__=='__main__':
     # coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
     # plt.show()
     FeatureAgent=FA("../config.yaml")
-    FeatureAgent.run()
+    # FeatureAgent.run()
+    fig, axs = plt.subplots()
+    FeatureAgent.barGraphPacker(axs)
 
     
