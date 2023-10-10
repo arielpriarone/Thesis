@@ -19,6 +19,6 @@ FA = src.features.FA("../config.yaml")
 animate_partial = partial(animate, FA=FA, axs = ax)
 
 # Matplotlib Animation Function that takes care of real-time plot.
-ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=800)  # interval in ms
-plt.tight_layout()
+ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=500)  # interval in ms
+
 plt.show()  # Keep Matplotlib plot persistent on the screen until it is closed

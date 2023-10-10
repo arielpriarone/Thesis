@@ -61,6 +61,7 @@ class FA(src.data.DB_Manager):
         if order not in [-1,1]:
             raise ValueError('order must be either latest or oldest')
         self.order  =   order                                                           # pick -1=latest / 1=oldest raw data available
+        self.__last_snap_timestamp = None                                               # timestamp of the last snapshot plotted
     
     def _readFromRaw(self):
         ''' Read the data from the RAW collection '''
@@ -134,9 +135,12 @@ class FA(src.data.DB_Manager):
         except IndexError:
             print('No data in collection, wait for new data...')
             return
+        if snap['timestamp'] == self.__last_snap_timestamp:
+            print('Latest data already plotted... waiting for new data...')
+            return
         tab10_cmap = cm.get_cmap("tab10")
         colors = [tab10_cmap(indx)[:3] for indx, _ in enumerate(self.sensors)] # convert tuple to list
-        base_width = 0.8    # the width of the bars
+        base_width = 0.9    # the width of the bars
         features_list = []  # list of all features
         for sensor in self.sensors:
             features_list.append(list(snap[sensor].keys()))
@@ -148,6 +152,7 @@ class FA(src.data.DB_Manager):
                 if feature in snap[sensor].keys():
                     feature_mask[feature][sensor_number] = True
         locator = np.arange(len(features_list))  # the x locations for the groups
+        axs.clear()  # Clear last data frame
         for feature_number,feature in enumerate(features_list):
             multiplicity = feature_mask[feature].count(True) # number of sensors that have this feature
             width = base_width / multiplicity
@@ -163,6 +168,10 @@ class FA(src.data.DB_Manager):
         axs.set_ylabel('Feature value [-]')
         axs.set_xlabel('Features [-]')
         axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")
+        axs.spines['left'].set_visible(True)
+        axs.spines['bottom'].set_visible(True)
+        plt.tight_layout()
+        self.__last_snap_timestamp = snap['timestamp']
         if __name__=='__main__':
             plt.show()
         return axs
