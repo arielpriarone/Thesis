@@ -24,6 +24,13 @@ Database:           # Database configuration
         rms:          off                         # Root mean square
         peak:         off                         # Peak to peak value
         std:          off                         # Standard deviation
+    Bearing 1 y:    # Sensor 3 name
+      features:     # Features configuration
+        wavPowers:    off                         # Wavelet powers
+        mean:         on                          # Mean value
+        rms:          off                         # Root mean square
+        peak:         off                         # Peak to peak value
+        std:          on                          # Standard deviation
 wavelet:           # Wavelet packet reasform configuration
   type:               db10                        # Type of wavelet to use
   mode:               symmetric                   # Mode of the packet transform
