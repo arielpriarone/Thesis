@@ -20,11 +20,11 @@ Database:           # Database configuration
     Bearing 1 y:    # Sensor 2 name
       features:     # Features configuration
         wavPowers:    on                          # Wavelet powers
-        mean:         off                         # Mean value
+        mean:         on                         # Mean value
         rms:          off                         # Root mean square
         peak:         off                         # Peak to peak value
         std:          off                         # Standard deviation
-    Bearing 1 y:    # Sensor 3 name
+    Bearing 2 x:    # Sensor 3 name
       features:     # Features configuration
         wavPowers:    off                         # Wavelet powers
         mean:         on                          # Mean value

@@ -13,12 +13,12 @@ def animate(i, FA : src.features.FA, axs):
 fig = plt.figure()  # Create Matplotlib plots fig is the 'higher level' plot window
 ax = fig.add_subplot(111)  # Add subplot to the main fig window
 
-FA = src.features.FA("../config.json")
+FA = src.features.FA("../config.yaml")
 
 # Create a partial function to pass the 'col' argument to animate
 animate_partial = partial(animate, FA=FA, axs = ax)
 
 # Matplotlib Animation Function that takes care of real-time plot.
-ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=100)
-
+ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=800)  # interval in ms
+plt.tight_layout()
 plt.show()  # Keep Matplotlib plot persistent on the screen until it is closed

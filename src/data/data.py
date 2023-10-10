@@ -44,7 +44,7 @@ class DB_Manager:
     def __init__(self, configStr: str):
         self.configStr = configStr    #  path to config file (json)
         try:
-            with open('config.yaml','r') as f:
+            with open(self.configStr,'r') as f:
                 self.Config = yaml.safe_load(f)
                 print("Loded the configuration:"); print(self.Config)
         except:

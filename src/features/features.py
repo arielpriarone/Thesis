@@ -151,13 +151,18 @@ class FA(src.data.DB_Manager):
         for feature_number,feature in enumerate(features_list):
             multiplicity = feature_mask[feature].count(True) # number of sensors that have this feature
             width = base_width / multiplicity
+            offset = 0
             for sensor_number, sensor in enumerate(self.sensors):
                 if feature_mask[feature][sensor_number]:
-                    axs.bar(locator[feature_number]+sensor_number*width, snap[sensor][feature], width, color=colors[sensor_number])
+                    axs.bar(locator[feature_number]+offset*width, snap[sensor][feature], width, color=colors[sensor_number])
+                    offset += 1
         axs.set_xticks(locator,features_list)
         custom_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
         axs.tick_params(axis='x',rotation = 90)
         axs.legend(custom_lines, self.sensors)
+        axs.set_ylabel('Feature value [-]')
+        axs.set_xlabel('Features [-]')
+        axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")
         if __name__=='__main__':
             plt.show()
         return axs
@@ -179,7 +184,6 @@ if __name__=='__main__':
     # plt.show()
     FeatureAgent=FA("../config.yaml")
     # FeatureAgent.run()
-    fig, axs = plt.subplots()
-    FeatureAgent.barGraphPacker(axs)
+
 
     

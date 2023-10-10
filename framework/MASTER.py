@@ -9,8 +9,9 @@ from rich.console import Console
 from rich.table import Table
 from rich.progress import track
 from rich import print
-import multiprocessing
+import subprocess
 import json
+import time
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 
 app = typer.Typer()
@@ -54,9 +55,12 @@ def IMS_converter(
     
     if not typer.confirm("do you want to proceed importing the data from files to MongoDB?", abort=True):
         return
+    _slow = typer.prompt('Do you want to slow down the import? (y/n)', default='n')
     for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
         path=os.path.join(dirpath, _fileName) # complete path including filename
         src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
+        if _slow:
+            time.sleep(1)
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
 @app.command()
@@ -71,6 +75,20 @@ def create_Empty_DB(configPath:str = typer.Option(default='../config.yaml',help=
     typer.confirm("Do you want to proceed?", abort=True)
     src.data.DB_Manager.createEmptyDB(configPath)
     print("Empty database created!")
+    
+@app.command()
+def plot_features():
+    """
+    Plot the features of the last snapshot in the UNCONSUMED collection
+    """
+    subprocess.run(["python", "RT_PlotFeatures.py"])
+
+@app.command()
+def run_feature_agent():
+    """
+    Run the Feature Agent - takes last snapshot from RAW collection, extract features and write them to UNCONSUMED collection
+    """
+    subprocess.run(["python", "FA.py"])
 
 if __name__ == "__main__":
     # RUN THE CLI APP
