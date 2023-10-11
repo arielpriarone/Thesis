@@ -1,1 +1,1 @@
-from .MLA import MLA
+from .models import MLA

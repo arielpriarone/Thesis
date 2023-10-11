@@ -50,14 +50,18 @@ class MLA(src.data.DB_Manager):
                 while self._read_features(self.col_healthy, pymongo.ASCENDING): #continue untill all are moved
                     # move it to the TRAIN database
                     self._write_features(self.col_healthy_train)
+                    self._standardize_features(self.col_healthy_train)
             case 'fault':
                 while self._read_features(self.col_faulty, pymongo.ASCENDING): #continue untill all are moved
                     # move it to the TRAIN database
                     self._write_features(self.col_faulty_train)
+                    self._standardize_features(self.col_healthy_train)
             case _:
                 raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
             
-        
+    def _standardize_features(self, col: Collection):
+        ''' Standardize the features in the collection '''
+        pass
         
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
         ''' Read the data from the collection '''
