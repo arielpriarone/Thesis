@@ -90,6 +90,27 @@ def run_feature_agent():
     """
     subprocess.run(["python", "FA.py"])
 
+@app.command()
+def run_machine_learning_agent():
+    """
+    Run the Machine Learning Agent
+    """
+    subprocess.run(["python", "MLA.py"])
+
+@app.command()
+def move_collection(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file'),
+                    fromCollection:str = typer.Option(default='UNCONSUMED',help='The name of the collection to move from'),
+                    toCollection:str = typer.Option(default='HEALTHY',help='The name of the collection to move to')):
+    """
+    Move all the documents from one collection to another
+    """
+    configPath=os.path.abspath(configPath)
+    print("You are about to move all the documents from "+fromCollection+" to "+toCollection)
+
+    typer.confirm("Do you want to proceed?", abort=True)
+    DB_Manager=src.data.DB_Manager(configPath)
+    DB_Manager.moveCollection(DB_Manager.db[fromCollection],DB_Manager.db[toCollection])
+
 if __name__ == "__main__":
     # RUN THE CLI APP
     app()

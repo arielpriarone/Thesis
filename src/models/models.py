@@ -10,6 +10,15 @@ class MLA(src.data.DB_Manager):
         super().__init__(configStr)
         self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
         self.__mode = self.Config['MLA']['mode']
+        match self.type:
+            case 'novelty':
+                self.col_features = self.col_healthy
+                self.col_train = self.col_healthy_train
+            case 'fault':
+                self.col_features = self.col_faulty
+                self.col_train = self.col_faulty_train
+            case _:
+                raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
 
     @property
     def mode(self):
@@ -37,28 +46,14 @@ class MLA(src.data.DB_Manager):
         pass
 
     def prepare_train_data(self):
-        '''
+        '''''
         Steps of the functions
-            - pick new samples from the HEALTY/FAULTY database
-            - move it to the TRAIN database
-            - continue untill all are moved
+            - move all documents from HEALTY to HEALTY_TRAIN collection
             - scale the features
         '''
-        match self.type:
-            case 'novelty':
-                # pick new samples from the HEALTY/FAULTY database
-                while self._read_features(self.col_healthy, pymongo.ASCENDING): #continue untill all are moved
-                    # move it to the TRAIN database
-                    self._write_features(self.col_healthy_train)
-                    self._standardize_features(self.col_healthy_train)
-            case 'fault':
-                while self._read_features(self.col_faulty, pymongo.ASCENDING): #continue untill all are moved
-                    # move it to the TRAIN database
-                    self._write_features(self.col_faulty_train)
-                    self._standardize_features(self.col_healthy_train)
-            case _:
-                raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
-            
+        # move all documents from feature to TRAIN collection
+        self.moveCollection(self.col_features, self.col_train)
+    
     def _standardize_features(self, col: Collection):
         ''' Standardize the features in the collection '''
         pass
