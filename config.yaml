@@ -6,8 +6,10 @@ Database:           # Database configuration
     raw:              RAW                         # Raw data collection name
     unconsumed:       UNCONSUMED                  # Unconsumed data collection name
     healthy:          HEALTHY                     # Healthy data collection name
+    healthy_train:    HEALTHY_TRAIN               # Healthy data collection name for training (some healthy data are not used if not novelty)
     quarantined:      QUARANTINED                 # Quarantined data collection name
     faulty:           FAULTY                      # Faulty data collection name
+    faulty_train:     FAULTY_TRAIN                # Faulty data collection name for training (some faulty data are not used if not fault novelty)
     models:           MODELS                      # Models collection name
   sensors:          # Expected sensors in the database
     Bearing 1 x:    # Sensor 1 name
