@@ -42,6 +42,7 @@ class MLA(src.data.DB_Manager):
             - pick new samples from the HEALTY/FAULTY database
             - move it to the TRAIN database
             - continue untill all are moved
+            - scale the features
         '''
         match self.type:
             case 'novelty':

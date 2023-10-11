@@ -1,10 +1,7 @@
-import time
 import src
-import pymongo
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from functools import partial
-
 
 def animate(i, FA : src.features.FA, axs):
     axs = FA.barPlotFeatures(axs)
@@ -13,7 +10,7 @@ def animate(i, FA : src.features.FA, axs):
 fig = plt.figure()  # Create Matplotlib plots fig is the 'higher level' plot window
 ax = fig.add_subplot(111)  # Add subplot to the main fig window
 
-FA = src.features.FA("../config.yaml")
+FA = src.features.FA(r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml")
 
 # Create a partial function to pass the 'col' argument to animate
 animate_partial = partial(animate, FA=FA, axs = ax)

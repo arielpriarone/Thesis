@@ -59,14 +59,14 @@ def IMS_converter(
     for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
         path=os.path.join(dirpath, _fileName) # complete path including filename
         src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
-        if _slow:
+        if _slow == 'y':
             time.sleep(1)
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
 @app.command()
 def create_Empty_DB(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file')):
     """
-    Create an empty database in MongoDB. The database should not exist already. It is configured according with "config.json"
+    Create an empty database in MongoDB. The database should not exist already. It is configured according with "config.yaml"
     """
     configPath=os.path.abspath(configPath)
     config=src.data.DB_Manager.loadConfig(configPath)

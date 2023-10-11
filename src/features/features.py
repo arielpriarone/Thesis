@@ -138,9 +138,9 @@ class FA(src.data.DB_Manager):
         if snap['timestamp'] == self.__last_snap_timestamp:
             print('Latest data already plotted... waiting for new data...')
             return
-        tab10_cmap = cm.get_cmap("tab10")
+        tab10_cmap = cm.get_cmap("Set1")
         colors = [tab10_cmap(indx)[:3] for indx, _ in enumerate(self.sensors)] # convert tuple to list
-        base_width = 0.9    # the width of the bars
+        base_width = 1.3     # the width of the bars
         features_list = []  # list of all features
         for sensor in self.sensors:
             features_list.append(list(snap[sensor].keys()))
@@ -154,13 +154,13 @@ class FA(src.data.DB_Manager):
         locator = np.arange(len(features_list))  # the x locations for the groups
         axs.clear()  # Clear last data frame
         for feature_number,feature in enumerate(features_list):
-            multiplicity = feature_mask[feature].count(True) # number of sensors that have this feature
-            width = base_width / multiplicity
-            offset = 0
+            width = base_width
+            offset = 0.0
             for sensor_number, sensor in enumerate(self.sensors):
                 if feature_mask[feature][sensor_number]:
-                    axs.bar(locator[feature_number]+offset*width, snap[sensor][feature], width, color=colors[sensor_number])
-                    offset += 1
+                    axs.bar(locator[feature_number]+offset, snap[sensor][feature], width, color=colors[sensor_number])
+                    offset += width
+            locator[feature_number+1:] = [x + offset for x in locator[feature_number+1:]]
         axs.set_xticks(locator,features_list)
         custom_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
         axs.tick_params(axis='x',rotation = 90)
@@ -170,6 +170,7 @@ class FA(src.data.DB_Manager):
         axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")
         axs.spines['left'].set_visible(True)
         axs.spines['bottom'].set_visible(True)
+        axs.grid(True,which='both',axis='x')
         plt.tight_layout()
         self.__last_snap_timestamp = snap['timestamp']
         if __name__=='__main__':
