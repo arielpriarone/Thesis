@@ -57,8 +57,10 @@ class DB_Manager:
         _, _, self.col_raw = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['raw'],self.Config['Database']['URI'])
         _, _, self.col_unconsumed = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['unconsumed'],self.Config['Database']['URI'])
         _, _, self.col_healthy = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['healthy'],self.Config['Database']['URI'])
+        _, _, self.col_healthy_train = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['healthy_train'],self.Config['Database']['URI'])
         _, _, self.col_quarantined = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['quarantined'],self.Config['Database']['URI'])
         _, _, self.col_faulty= mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['faulty'],self.Config['Database']['URI'])
+        _, _, self.col_faulty_train = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['faulty_train'],self.Config['Database']['URI'])
         _, _, self.col_models = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['models'],self.Config['Database']['URI'])
     
     @staticmethod

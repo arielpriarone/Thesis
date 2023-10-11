@@ -28,6 +28,7 @@ class MLA(src.data.DB_Manager):
             case 'evaluate':
                 self.evaluate()
             case 'train':
+                self.prepare_train_data()
                 self.train()
             case 'retrain':
                 self.retrain()
@@ -35,22 +36,27 @@ class MLA(src.data.DB_Manager):
     def evaluate(self):
         pass
 
-    def train(self):
+    def prepare_train_data(self):
         '''
         Steps of the functions
             - pick new samples from the HEALTY/FAULTY database
             - move it to the TRAIN database
             - continue untill all are moved
-            - train the model
         '''
-        # pick new samples from the HEALTY/FAULTY database
         match self.type:
             case 'novelty':
-                self._read_features(self.col_healthy, pymongo.ASCENDING)
+                # pick new samples from the HEALTY/FAULTY database
+                while self._read_features(self.col_healthy, pymongo.ASCENDING): #continue untill all are moved
+                    # move it to the TRAIN database
+                    self._write_features(self.col_healthy_train)
             case 'fault':
-                self._read_features(self.col_faulty, pymongo.DESCENDING)
+                while self._read_features(self.col_faulty, pymongo.ASCENDING): #continue untill all are moved
+                    # move it to the TRAIN database
+                    self._write_features(self.col_faulty_train)
             case _:
                 raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
+            
+        
         
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
         ''' Read the data from the collection '''
@@ -61,7 +67,14 @@ class MLA(src.data.DB_Manager):
         except IndexError:
             print(f"No data in collection {col.full_name}, waiting for new data...")
             return False
-    
+        
+    def _write_features(self, col: Collection):
+        ''' Write the data to the collection '''
+        col.insert_one(self.snap)
+        print(f"Inserted snapshot with timestamp {self.snap['timestamp']} into {col}")
+
+    def train(self):
+        pass
 
     def retrain(self):
         pass
