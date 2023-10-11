@@ -140,7 +140,8 @@ class FA(src.data.DB_Manager):
             return
         tab10_cmap = cm.get_cmap("Set1")
         colors = [tab10_cmap(indx)[:3] for indx, _ in enumerate(self.sensors)] # convert tuple to list
-        base_width = 1.3     # the width of the bars
+        base_width = 1.0     # the width of the bars
+        separator  = 0.5   # the space between the bars
         features_list = []  # list of all features
         for sensor in self.sensors:
             features_list.append(list(snap[sensor].keys()))
@@ -151,17 +152,19 @@ class FA(src.data.DB_Manager):
             for feature in features_list:
                 if feature in snap[sensor].keys():
                     feature_mask[feature][sensor_number] = True
-        locator = np.arange(len(features_list))  # the x locations for the groups
+        locator_bars = [0.0]  # the x locations for the groups
+        locator_ticks = []  # the x locations for the ticks
         axs.clear()  # Clear last data frame
-        for feature_number,feature in enumerate(features_list):
+        for feature in features_list:
             width = base_width
             offset = 0.0
             for sensor_number, sensor in enumerate(self.sensors):
                 if feature_mask[feature][sensor_number]:
-                    axs.bar(locator[feature_number]+offset, snap[sensor][feature], width, color=colors[sensor_number])
+                    axs.bar(locator_bars[-1]+offset, snap[sensor][feature], width, color=colors[sensor_number])
                     offset += width
-            locator[feature_number+1:] = [x + offset for x in locator[feature_number+1:]]
-        axs.set_xticks(locator,features_list)
+            locator_ticks.append(locator_bars[-1] + (offset-width) / 2 if offset > 0 else locator_bars[-1])
+            locator_bars.append(locator_bars[-1] + offset + separator)
+        axs.set_xticks(locator_ticks,features_list)
         custom_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
         axs.tick_params(axis='x',rotation = 90)
         axs.legend(custom_lines, self.sensors)
