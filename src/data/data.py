@@ -47,7 +47,6 @@ class DB_Manager:
         try:
             with open(self.configStr,'r') as f:
                 self.Config = yaml.safe_load(f)
-                print("Loded the configuration:"); print(self.Config)
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
         self.sensors: List[str] = list(self.Config['Database']['sensors'].keys()) # list of sensors4
@@ -64,6 +63,9 @@ class DB_Manager:
         _, _, self.col_faulty_train = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['faulty_train'],self.Config['Database']['URI'])
         _, _, self.col_models = mongoConnect(self.Config['Database']['db'],self.Config['Database']['collection']['models'],self.Config['Database']['URI'])
     
+    def __repr__(self) -> str:
+        return "Loded the configuration:\n" + str(self.Config)
+
     @staticmethod
     def createEmptyDB(configStr: str):
         '''

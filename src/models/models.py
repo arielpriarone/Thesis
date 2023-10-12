@@ -48,18 +48,22 @@ class MLA(src.data.DB_Manager):
     def prepare_train_data(self):
         '''''
         Steps of the functions
-            - move all documents from HEALTY to HEALTY_TRAIN collection
+            - pick the features from the collection
+            - append them in the train collection
+            - remove from original collection
             - scale the features
         '''
+        self.col_train.find_one({'_id': 'training set'})
         # move all documents from feature to TRAIN collection
-        self.moveCollection(self.col_features, self.col_train)
+        self._read_features(self.col_features, pymongo.ASCENDING) # read the oldest record
     
     def _standardize_features(self, col: Collection):
         ''' Standardize the features in the collection '''
         pass
         
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
-        ''' Read the data from the collection '''
+        ''' Read the data from the collection - put data in self.snap
+            return True if data are available, False otherwise '''
         try:
             self.snap    = col.find().sort('timestamp',order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
             print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {col}")
@@ -72,6 +76,11 @@ class MLA(src.data.DB_Manager):
         ''' Write the data to the collection '''
         col.insert_one(self.snap)
         print(f"Inserted snapshot with timestamp {self.snap['timestamp']} into {col}")
+
+    def _append_features(self, col: Collection):
+        ''' Append the features to the train collection '''
+        col.update_one({'_id': 'trainig set'}, {'$set': {}})
+    
 
     def train(self):
         pass
