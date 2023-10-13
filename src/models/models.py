@@ -6,6 +6,7 @@ import numpy as np
 from rich import print
 import pickle
 from typing import List, Dict, Tuple
+import typer
 
 
 class MLA(src.data.DB_Manager):
@@ -16,7 +17,6 @@ class MLA(src.data.DB_Manager):
         super().__init__(configStr)
         self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
         self.__mode = self.Config['MLA']['mode']
-        self.retrieve_StdScaler()
         match self.type:
             case 'novelty':
                 self.col_features = self.col_healthy
@@ -26,6 +26,10 @@ class MLA(src.data.DB_Manager):
                 self.col_train = self.col_faulty_train
             case _:
                 raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
+        try:
+            self.retrieve_StdScaler() # retrieve the scaler
+        except:
+            self.StdScaler: Dict[str, StandardScaler] = {} # if the scaler is not found, initialize it
 
     @property
     def mode(self):
@@ -59,62 +63,69 @@ class MLA(src.data.DB_Manager):
         self.save_StdScaler()
 
     def pack_train_data(self):
-        train_data = self.col_train.find_one({'_id': 'training set'})
-        if train_data is None:  # if the training set is empty, initialize it with the oldest snapshot
-            snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
-            snap['_id']='training set'                                                      # rename it for initializing the training set
-            self.col_train.insert_one(snap)                                                  # insert it in the training set   
+        __train_data = self.col_train.find_one({'_id': 'training set'})
+        if __train_data is None:  # if the training set is empty, initialize it with the oldest snapshot
+            try:
+                self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
+            except IndexError:
+                print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
+                if typer.confirm(f"Do you want to move all data from {self.col_unconsumed.name} to {self.col_features.name}?"):
+                    self.moveCollection(self.col_unconsumed, self.col_features)
+                else:
+                    print("Exiting...")
+                    raise Exception("No data in the collection, cannot initialize the training set")
+            self.snap['_id']='training set'                                                      # rename it for initializing the training set
+            self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
             print("Training set initialized") 
         else:                   # append healty documents to the dataset
             cursor = self.col_features.find().sort('timestamp',pymongo.ASCENDING)  # get the oldest snapshot
-            for snap in cursor:
-                if isinstance(train_data['timestamp'],list):                     # if the training set is a list, pass
+            for self.snap in cursor:
+                if isinstance(__train_data['timestamp'],list):                     # if the training set is a list, pass
                     pass
                 else:                                                            # convert everityng to list
-                    train_data['timestamp'] = [train_data['timestamp']]
+                    __train_data['timestamp'] = [__train_data['timestamp']]
                     for sensor in self.sensors:
-                        for feature in train_data[sensor].keys():
-                            train_data[sensor][feature] = [train_data[sensor][feature]]          
-                train_data['timestamp'].append(snap['timestamp'])                  # append the timestamp
+                        for feature in __train_data[sensor].keys():
+                            __train_data[sensor][feature] = [__train_data[sensor][feature]]          
+                __train_data['timestamp'].append(self.snap['timestamp'])                  # append the timestamp
                 for sensor in self.sensors:
-                    for feature in train_data[sensor].keys():
-                        train_data[sensor][feature].append(snap[sensor][feature])  # append the sensor data
-                self.col_features.delete_one({'_id': snap['_id']})                  # delete the snapshot from the features collection
+                    for feature in __train_data[sensor].keys():
+                        __train_data[sensor][feature].append(self.snap[sensor][feature])  # append the sensor data
+                self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
         
-            self.col_train.replace_one({'_id': 'training set'}, train_data)         # replace the training set with the updated one 
+            self.col_train.replace_one({'_id': 'training set'}, __train_data)         # replace the training set with the updated one 
             print("Training set updated")
 
     def standardize_features(self):
         # now this method scales the data
-        train_data = self.col_train.find_one({'_id': 'training set'})             # get the training set
-        if train_data is None:
+        __train_data = self.col_train.find_one({'_id': 'training set'})             # get the training set
+        if __train_data is None:
             raise Exception('Training set not initialized')
-        train_data_scaled = train_data.copy()                                   # copy the training set
-        train_data_scaled['_id'] = 'training set scaled'                        # rename it
+        __train_data_scaled = __train_data.copy()                                   # copy the training set
+        __train_data_scaled['_id'] = 'training set scaled'                        # rename it
         # scale the features
-        self.StdScaler: Dict[str, StandardScaler]= {}
         for sensor in self.sensors:
             self.StdScaler[sensor] = StandardScaler()
-            data = np.array(list(train_data[sensor].values()))      # the scaler wants the data in the form (n_samples, n_features)
-            self.StdScaler[sensor].fit(data.transpose())                              # fit the scaler
-            data_scaled = self.StdScaler[sensor].transform(data.transpose()).transpose()         # the scaler returns the data in the form (n_features, n_samples)
+            __data = np.array(list(__train_data[sensor].values()))      # the scaler wants the data in the form (n_samples, n_features)
+            self.StdScaler[sensor].fit(__data.transpose())                              # fit the scaler
+            data_scaled = self.StdScaler[sensor].transform(__data.transpose()).transpose()         # the scaler returns the data in the form (n_features, n_samples)
             data_scaled = data_scaled.tolist()                                  # convert the data to list    
 
-            for indx, feature in enumerate(train_data_scaled[sensor].keys()):
-                train_data_scaled[sensor][feature] = data_scaled[indx]         # the scaler returns the data in the form (n_features, n_samples)
+            for indx, feature in enumerate(__train_data_scaled[sensor].keys()):
+                __train_data_scaled[sensor][feature] = data_scaled[indx]         # the scaler returns the data in the form (n_features, n_samples)
         # save the scaled data
         self.col_train.delete_many({"_id": 'training set scaled'}) 
-        self.col_train.insert_one(train_data_scaled) 
+        self.col_train.insert_one(__train_data_scaled) 
         print("Training set scaled")
     
     def save_StdScaler(self):
         # save the scaler
-        pickled_data = pickle.dumps(self.StdScaler)
+        __pickled_data = pickle.dumps(self.StdScaler)
         try:
-            self.col_train.insert_one({'_id': 'StandardScaler_pickled', 'data': pickled_data})
+            self.col_train.insert_one({'_id': 'StandardScaler_pickled', 'data': __pickled_data})
         except:
             try:
-                self.col_train.replace_one({'_id': 'StandardScaler_pickled'}, {'_id': 'StandardScaler_pickled', 'data': pickled_data})
+                self.col_train.replace_one({'_id': 'StandardScaler_pickled'}, {'_id': 'StandardScaler_pickled', 'data': __pickled_data})
             except:
                 raise Exception('Error saving the StandardScaler')
     
@@ -123,7 +134,7 @@ class MLA(src.data.DB_Manager):
         if __retrieved_data is None:
             raise Exception('Scaler not found')
         else:
-            self.StdScaler: Dict[str, StandardScaler] = pickle.loads(__retrieved_data['data'])
+            self.StdScaler = pickle.loads(__retrieved_data['data'])
             print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
 
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
