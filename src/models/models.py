@@ -18,8 +18,8 @@ class MLA(src.data.DB_Manager):
     def __init__(self, configStr: str, type: str = 'novelty'):
         super().__init__(configStr)
         self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
-        self.__max_clusters = self.Config['MLA']['max_clusters']
-        self.__max_iter = self.Config['MLA']['max_iterations']
+        self.__max_clusters = self.Config['kmeans']['max_clusters']
+        self.__max_iter = self.Config['kmeans']['max_iterations']
         self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
@@ -46,7 +46,7 @@ class MLA(src.data.DB_Manager):
     @mode.setter
     def mode(self, value: str):
         if value not in ['evaluate', 'train', 'retrain']:
-            raise ValueError('Invalid state')
+            print('Mode not valid. It should be either "evaluate", "train" or "retrain", but it is: ' + value)
         else:
             self.__mode = value
 
@@ -57,10 +57,13 @@ class MLA(src.data.DB_Manager):
                 case 'evaluate':
                     self.evaluate()
                 case 'train':
-                    self.prepare_train_data()
+                    while not self.prepare_train_data():
+                        pass    # wait for data to be available
                     self.train()
                 case 'retrain':
                     self.retrain()
+                case _:
+                    self.mode = typer.prompt('Please select the mode of the MLA. The options are: "evaluate", "train" or "retrain"')
 
     def evaluate(self):
         pass
@@ -68,9 +71,10 @@ class MLA(src.data.DB_Manager):
     def prepare_train_data(self):
         ''' This method prepares the training data for the MLA '''
         if not self.pack_train_data(): # if the healthy/faulty set is empty, nothing to update
-            return
+            return False
         self.standardize_features()
         self.save_StdScaler()
+        return True
 
     def pack_train_data(self):
         __train_data = self.col_train.find_one({'_id': 'training set'})
@@ -78,20 +82,13 @@ class MLA(src.data.DB_Manager):
             try:
                 self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
             except IndexError:
-                print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
-                if typer.confirm(f"Do you want to move [purple] ALL data [/] from '{self.col_unconsumed.full_name}' to '{self.col_features.full_name}'?"):
-                    self.moveCollection(self.col_unconsumed, self.col_features)
-                    self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
-                else:
-                    print("Exiting...")
-                    raise Exception("No data in the collection, cannot initialize the training set")
+                self.__move_to_train()                                          # empty, ask to move all data from unconsumed to train dataset
             self.snap['_id']='training set'                                                      # rename it for initializing the training set
             self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
             print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
         else:                   # append healty documents to the dataset
             if self.col_features.count_documents({}) == 0:
-                print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
-                return False # return False if there is no data in the collection
+                self.__move_to_train()                                        # empty, ask to move all data from unconsumed to train dataset
             cursor = self.col_features.find().sort('timestamp',pymongo.ASCENDING)  # get the oldest snapshot
             for self.snap in cursor:
                 if isinstance(__train_data['timestamp'],list):                     # if the training set is a list, pass
@@ -110,6 +107,15 @@ class MLA(src.data.DB_Manager):
             self.col_train.replace_one({'_id': 'training set'}, __train_data)         # replace the training set with the updated one 
             print(f"Training set updated to '{self.col_train.full_name}' with '_id': 'training set' ")
             return True # return True if the training set has been updated
+
+    def __move_to_train(self):
+        print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
+        if typer.confirm(f"Do you want to move 'ALL' data  from '{self.col_unconsumed.full_name}' to '{self.col_features.full_name}'?",default=False):
+            self.moveCollection(self.col_unconsumed, self.col_features)
+            self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
+        else:
+            print("Exiting...")
+            raise Exception("No data in the collection, cannot initialize the training set")
 
     def standardize_features(self):
         # now this method scales the data
@@ -194,6 +200,7 @@ class MLA(src.data.DB_Manager):
         print("Please decide the number of cluster for the training. The silhouette and inertia plots will be shown.")
         print("The silhouette should be maximized, while the inertia should be in a Pareto optimal point.")
         print("close the plot to continue...")
+        plt.show()
         self.num_clusters=typer.prompt("Number of clusters", type=int)
 
         self.kmeans=KMeans(self.num_clusters,n_init='auto',max_iter=self.__max_iter) #reinitialize the kmeans
