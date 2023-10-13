@@ -3,11 +3,13 @@ import src
 from pymongo.collection import Collection
 from sklearn.preprocessing import StandardScaler
 import numpy as np
+from sklearn.metrics import silhouette_score, silhouette_samples
 from rich import print
 import pickle
 from typing import List, Dict, Tuple
 import typer
-
+from sklearn.cluster import KMeans 
+import matplotlib.pyplot as plt
 
 class MLA(src.data.DB_Manager):
     '''
@@ -17,6 +19,8 @@ class MLA(src.data.DB_Manager):
         super().__init__(configStr)
         self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
         self.__mode = self.Config['MLA']['mode']
+        self.__max_clusters = self.Config['MLA']['max_clusters']
+        self.__max_iter = self.Config['MLA']['max_iterations']
         match self.type:
             case 'novelty':
                 self.col_features = self.col_healthy
@@ -30,6 +34,10 @@ class MLA(src.data.DB_Manager):
             self.retrieve_StdScaler() # retrieve the scaler
         except:
             self.StdScaler: Dict[str, StandardScaler] = {} # if the scaler is not found, initialize it
+        try:
+            self.retrieve_Kmeans() # retrieve the Kmeans model
+        except:
+            self.kmeans=KMeans()
 
     @property
     def mode(self):
@@ -140,9 +148,17 @@ class MLA(src.data.DB_Manager):
     def retrieve_StdScaler(self):
         __retrieved_data: Collection | None = self.col_train.find_one({'_id': 'StandardScaler_pickled'})
         if __retrieved_data is None:
-            raise Exception('Scaler not found')
+            raise Exception('Scaler not found in collection ' + self.col_train.full_name)
         else:
             self.StdScaler = pickle.loads(__retrieved_data['data'])
+            print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
+
+    def retrieve_Kmeans(self):
+        __retrieved_data: Collection | None = self.col_models.find_one({'_id': 'Kmeans_pickled'})
+        if __retrieved_data is None:
+            raise Exception('Kmeans not found in collection ' + self.col_models.full_name)
+        else:
+            self.kmeans = pickle.loads(__retrieved_data['data'])
             print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
 
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
@@ -167,7 +183,53 @@ class MLA(src.data.DB_Manager):
     
 
     def train(self):
+        self.packFeaturesMatrix()       # pack the training features in a matrix
+        self.evaluate_silhouette()
+        self.evaluate_inertia()
+
+        fig, axs=plt.subplots(1,2)
+        fig.tight_layout()
+        self.__plot_silhouette(axs[0])
+        self.__plot_inertia(axs[1])
+        print("Please decide the number of cluster for the training. The silhouette and inertia plots will be shown.")
+        print("The silhouette should be maximized, while the inertia should be in a Pareto optimal point.")
+        print("close the plot to continue...")
+        self.num_clusters=typer.prompt("Number of clusters", type=int)
+
+    
+    def evaluate_silhouette(self):
+        ''' This method evaluates the silhouette score for the training set '''
+        self.__sil_score=[]
+        for n_blobs in range(2,self.__max_clusters+1):
+            __kmeans=KMeans(n_blobs,n_init='auto',max_iter=self.__max_iter)
+            __y_pred_train=__kmeans.fit_predict(self.trainMatrix )
+            self.__sil_score.append(silhouette_score(self.trainMatrix,__y_pred_train))
+
+    def packFeaturesMatrix(self):
+        ''' This method packs the training features in a matrix'''
+        __train_data = self.col_train.find_one({'_id': 'training set scaled'})             # get the training set
+        if __train_data is None:
+            raise Exception("'_id': 'training set scaled' not found in collection " + self.col_train.full_name)
+        __features_values = []
+        __features_names = []
+        for sensor in self.sensors:
+            for feature in __train_data[sensor].keys():
+                __features_names.append(sensor + '_' + feature)
+                __features_values.append(__train_data[sensor][feature])
+        self.features_names, self.trainMatrix = (__features_names, np.array(__features_values).transpose())
+
+    def evaluate_inertia(self):
         pass
+
+    def __plot_silhouette(self, ax):
+        ax.plot(range(2,self.__max_clusters+1),self.__sil_score)
+        ax.set_ylabel('Silhouette')
+        ax.set_xlabel('Num. of clusters')
+
+    def __plot_inertia(self, ax):
+        ax.plot(range(1,self.__max_clusters+1),inertia)
+        ax.set_ylabel('Inertia')
+        ax.set_xlabel('Num. of clusters')
 
     def retrain(self):
         pass
