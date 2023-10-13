@@ -117,6 +117,8 @@ class MLA(src.data.DB_Manager):
     def __move_to_train(self):
         print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
         if typer.confirm(f"Do you want to move 'ALL' data  from '{self.col_unconsumed.full_name}' to '{self.col_features.full_name}'?",default=False):
+            if self.col_unconsumed.count_documents({}) == 0:
+                raise Exception("No data in the collection, cannot initialize the training set")
             self.moveCollection(self.col_unconsumed, self.col_features)
             self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
         else:
