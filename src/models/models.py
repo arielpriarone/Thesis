@@ -18,9 +18,9 @@ class MLA(src.data.DB_Manager):
     def __init__(self, configStr: str, type: str = 'novelty'):
         super().__init__(configStr)
         self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
-        self.__mode = self.Config['MLA']['mode']
         self.__max_clusters = self.Config['MLA']['max_clusters']
         self.__max_iter = self.Config['MLA']['max_iterations']
+        self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
                 self.col_features = self.col_healthy
@@ -196,6 +196,10 @@ class MLA(src.data.DB_Manager):
         print("close the plot to continue...")
         self.num_clusters=typer.prompt("Number of clusters", type=int)
 
+        self.kmeans=KMeans(self.num_clusters,n_init='auto',max_iter=self.__max_iter) #reinitialize the kmeans
+        self.kmeans.fit(self.trainMatrix)
+        print("Kmeans trained with " + str(self.num_clusters) + " clusters")
+
     
     def evaluate_silhouette(self):
         ''' This method evaluates the silhouette score for the training set '''
@@ -204,6 +208,13 @@ class MLA(src.data.DB_Manager):
             __kmeans=KMeans(n_blobs,n_init='auto',max_iter=self.__max_iter)
             __y_pred_train=__kmeans.fit_predict(self.trainMatrix )
             self.__sil_score.append(silhouette_score(self.trainMatrix,__y_pred_train))
+    
+    def evaluate_inertia(self):
+        self.__inertia=[]
+        for n_blobs in range(1,self.__max_clusters+1):
+            kmeans=KMeans(n_blobs,n_init='auto',max_iter=1000)
+            kmeans.fit_predict(self.trainMatrix)
+            self.__inertia.append(kmeans.inertia_)
 
     def packFeaturesMatrix(self):
         ''' This method packs the training features in a matrix'''
@@ -218,16 +229,13 @@ class MLA(src.data.DB_Manager):
                 __features_values.append(__train_data[sensor][feature])
         self.features_names, self.trainMatrix = (__features_names, np.array(__features_values).transpose())
 
-    def evaluate_inertia(self):
-        pass
-
     def __plot_silhouette(self, ax):
         ax.plot(range(2,self.__max_clusters+1),self.__sil_score)
         ax.set_ylabel('Silhouette')
         ax.set_xlabel('Num. of clusters')
 
     def __plot_inertia(self, ax):
-        ax.plot(range(1,self.__max_clusters+1),inertia)
+        ax.plot(range(1,self.__max_clusters+1),self.__inertia)
         ax.set_ylabel('Inertia')
         ax.set_xlabel('Num. of clusters')
 
