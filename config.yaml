@@ -39,5 +39,4 @@ wavelet:           # Wavelet packet reasform configuration
   maxlevel:           6                           # Max level -> num of features = 2^level
 kmeans:            # kmean configuration
   max_clusters:       100                         # Max number of clusters
-MLA:               # machine learning agent settings
-  mode:               train                       # Mode of the agent (evaluate, train, retrain)
+
