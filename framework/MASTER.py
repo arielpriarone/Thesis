@@ -79,21 +79,21 @@ def plot_features():
     """
     Plot the features of the last snapshot in the UNCONSUMED collection
     """
-    subprocess.run(["python", "RT_PlotFeatures.py"])
+    subprocess.run(["python", "./scripts/RT_PlotFeatures.py"])
 
 @app.command()
 def run_feature_agent():
     """
     Run the Feature Agent - takes last snapshot from RAW collection, extract features and write them to UNCONSUMED collection
     """
-    subprocess.run(["python", "FA.py"])
+    subprocess.run(["python", "./scripts/FA.py"])
 
 @app.command()
 def run_machine_learning_agent():
     """
     Run the Machine Learning Agent
     """
-    subprocess.run(["python", "MLA.py"])
+    subprocess.run(["python", "./scripts/MLA.py"])
 
 @app.command()
 def move_collection(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file'),
