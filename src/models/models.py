@@ -44,21 +44,23 @@ class MLA(src.data.DB_Manager):
 
     def run(self):
         '''Run the MLA according to its state'''
-        match self.mode:
-            case 'evaluate':
-                self.evaluate()
-            case 'train':
-                self.prepare_train_data()
-                self.train()
-            case 'retrain':
-                self.retrain()
+        while True:
+            match self.mode:
+                case 'evaluate':
+                    self.evaluate()
+                case 'train':
+                    self.prepare_train_data()
+                    self.train()
+                case 'retrain':
+                    self.retrain()
 
     def evaluate(self):
         pass
 
     def prepare_train_data(self):
         ''' This method prepares the training data for the MLA '''
-        self.pack_train_data()
+        if not self.pack_train_data(): # if the healthy/faulty set is empty, nothing to update
+            return
         self.standardize_features()
         self.save_StdScaler()
 
@@ -69,15 +71,19 @@ class MLA(src.data.DB_Manager):
                 self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
             except IndexError:
                 print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
-                if typer.confirm(f"Do you want to move all data from {self.col_unconsumed.name} to {self.col_features.name}?"):
+                if typer.confirm(f"Do you want to move [purple] ALL data [/] from '{self.col_unconsumed.full_name}' to '{self.col_features.full_name}'?"):
                     self.moveCollection(self.col_unconsumed, self.col_features)
+                    self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
                 else:
                     print("Exiting...")
                     raise Exception("No data in the collection, cannot initialize the training set")
             self.snap['_id']='training set'                                                      # rename it for initializing the training set
             self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
-            print("Training set initialized") 
+            print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
         else:                   # append healty documents to the dataset
+            if self.col_features.count_documents({}) == 0:
+                print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
+                return False # return False if there is no data in the collection
             cursor = self.col_features.find().sort('timestamp',pymongo.ASCENDING)  # get the oldest snapshot
             for self.snap in cursor:
                 if isinstance(__train_data['timestamp'],list):                     # if the training set is a list, pass
@@ -94,7 +100,8 @@ class MLA(src.data.DB_Manager):
                 self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
         
             self.col_train.replace_one({'_id': 'training set'}, __train_data)         # replace the training set with the updated one 
-            print("Training set updated")
+            print(f"Training set updated to '{self.col_train.full_name}' with '_id': 'training set' ")
+            return True # return True if the training set has been updated
 
     def standardize_features(self):
         # now this method scales the data
@@ -116,7 +123,7 @@ class MLA(src.data.DB_Manager):
         # save the scaled data
         self.col_train.delete_many({"_id": 'training set scaled'}) 
         self.col_train.insert_one(__train_data_scaled) 
-        print("Training set scaled")
+        print(f"Training set scaled and saved into the collection '{self.col_train.full_name}' with '_id': 'training set scaled'")
     
     def save_StdScaler(self):
         # save the scaler
@@ -128,6 +135,7 @@ class MLA(src.data.DB_Manager):
                 self.col_train.replace_one({'_id': 'StandardScaler_pickled'}, {'_id': 'StandardScaler_pickled', 'data': __pickled_data})
             except:
                 raise Exception('Error saving the StandardScaler')
+        print(f"StandardScaler saved as picled data into '{self.col_train.full_name}' with '_id': 'StandardScaler_pickled'")
     
     def retrieve_StdScaler(self):
         __retrieved_data: Collection | None = self.col_train.find_one({'_id': 'StandardScaler_pickled'})
@@ -163,6 +171,10 @@ class MLA(src.data.DB_Manager):
 
     def retrain(self):
         pass
+
+if __name__ == '__main__':
+    NoveltyAgent = MLA(configStr=r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml", type='novelty')
+    NoveltyAgent.run()
 
     
 
