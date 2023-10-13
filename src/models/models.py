@@ -35,7 +35,7 @@ class MLA(src.data.DB_Manager):
         except:
             self.StdScaler: Dict[str, StandardScaler] = {} # if the scaler is not found, initialize it
         try:
-            self.retrieve_Kmeans() # retrieve the Kmeans model
+            self.retrieve_KMeans() # retrieve the Kmeans model
         except:
             self.kmeans=KMeans()
 
@@ -57,15 +57,20 @@ class MLA(src.data.DB_Manager):
                 case 'evaluate':
                     self.evaluate()
                 case 'train':
+                    if typer.confirm(f"The training procedure will take all the data from the collection '{self.col_features.full_name}' and pack it in the collection '{self.col_train.full_name}'. This will also ERASE the current training data, do you want to PROCEED?", abort=True):
+                        self.col_train.delete_many({})
                     while not self.prepare_train_data():
                         pass    # wait for data to be available
                     self.train()
+                    if typer.confirm("Do you want to change the 'mode' to 'evaluate'", abort=True):
+                        self.mode = 'evaluate'
                 case 'retrain':
                     self.retrain()
                 case _:
                     self.mode = typer.prompt('Please select the mode of the MLA. The options are: "evaluate", "train" or "retrain"')
 
     def evaluate(self):
+        self.retrieve_KMeans()
         pass
 
     def prepare_train_data(self):
@@ -85,6 +90,7 @@ class MLA(src.data.DB_Manager):
                 self.__move_to_train()                                          # empty, ask to move all data from unconsumed to train dataset
             self.snap['_id']='training set'                                                      # rename it for initializing the training set
             self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
+            self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
             print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
         else:                   # append healty documents to the dataset
             if self.col_features.count_documents({}) == 0:
@@ -151,20 +157,34 @@ class MLA(src.data.DB_Manager):
                 raise Exception('Error saving the StandardScaler')
         print(f"StandardScaler saved as picled data into '{self.col_train.full_name}' with '_id': 'StandardScaler_pickled'")
     
+    def save_KMeans(self):
+        # save the scaler
+        __pickled_data = pickle.dumps(self.kmeans)
+        __id ='KMeans_'+str(self.mode)+'_pickled'
+        try:
+            self.col_models.insert_one({'_id': __id, 'data': __pickled_data})
+        except:
+            try:
+                self.col_train.replace_one({'_id': 'KMeans_'+str(self.mode)+'_pickled'}, {'_id': __id, 'data': __pickled_data})
+            except:
+                raise Exception('Error saving the KMeans model')
+        print(f"KMeans model saved as picled data into '{self.col_models.full_name}' with '_id': {__id}")
+    
+    def retrieve_KMeans(self):
+        __id ='KMeans_'+str(self.mode)+'_pickled'
+        __retrieved_data: Collection | None = self.col_models.find_one({'_id': __id})
+        if __retrieved_data is None:
+            raise Exception('Scaler not found in collection ' + self.col_train.full_name)
+        else:
+            self.kmeans = pickle.loads(__retrieved_data['data'])
+            print(f"KMeans retrieved from picled data @ {__retrieved_data.full_name}")
+    
     def retrieve_StdScaler(self):
         __retrieved_data: Collection | None = self.col_train.find_one({'_id': 'StandardScaler_pickled'})
         if __retrieved_data is None:
             raise Exception('Scaler not found in collection ' + self.col_train.full_name)
         else:
             self.StdScaler = pickle.loads(__retrieved_data['data'])
-            print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
-
-    def retrieve_Kmeans(self):
-        __retrieved_data: Collection | None = self.col_models.find_one({'_id': 'Kmeans_pickled'})
-        if __retrieved_data is None:
-            raise Exception('Kmeans not found in collection ' + self.col_models.full_name)
-        else:
-            self.kmeans = pickle.loads(__retrieved_data['data'])
             print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
 
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
@@ -206,6 +226,7 @@ class MLA(src.data.DB_Manager):
         self.kmeans=KMeans(self.num_clusters,n_init='auto',max_iter=self.__max_iter) #reinitialize the kmeans
         self.kmeans.fit(self.trainMatrix)
         print("Kmeans trained with " + str(self.num_clusters) + " clusters")
+        self.save_KMeans()
 
     
     def evaluate_silhouette(self):
