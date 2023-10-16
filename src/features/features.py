@@ -191,7 +191,7 @@ class FA(src.data.DB_Manager):
             legend_labels.extend(minmax_legend)
         print(legend_labels)
         axs.tick_params(axis='x',rotation = 90)
-        axs.legend(legend_lines, legend_labels, loc='upper right', ncol=2)
+        axs.legend(legend_lines, legend_labels, loc='upper right',  ncol=len(self.sensors)*2)
         axs.set_ylabel('Feature value [-]')
         axs.set_xlabel('Features [-]')
         axs.spines['left'].set_visible(True)
