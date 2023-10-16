@@ -1,8 +1,10 @@
+from ast import Dict
 import src
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 import pywt
 import matplotlib.pyplot as plt
+import copy
 import time
 import multiprocessing
 from rich import print
@@ -10,6 +12,7 @@ import pymongo
 import matplotlib.cm as cm
 from itertools import chain
 from matplotlib.lines import Line2D
+from typing import Dict, List, Union, Optional, Tuple
 
 def FFT(array,samplFreq=1,preproc=None):
     # this function perform the FFT trasform of a signal with windowind preprocessing
@@ -139,9 +142,9 @@ class FA(src.data.DB_Manager):
             print('Latest data already plotted... waiting for new data...')
             return
         try:
-            MinMax=self.col_healthy_train.find({'_id': 'training set MIN/MAX'})[0]
+            MinMax = self.col_healthy_train.find({'_id': 'training set MIN/MAX'})[0]
         except IndexError:
-            MinMax=None
+            MinMax = None
         axs.clear()  # Clear last data frame
         axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")  # set title
         tab10_cmap = cm.get_cmap("Set1")
@@ -169,35 +172,37 @@ class FA(src.data.DB_Manager):
                     feature_mask[feature][sensor_number] = True
         locator_bars = [0.0]  # the x locations for the groups
         locator_ticks = []  # the x locations for the ticks
+        __minMax = [0.0,0.0]
         for feature in features_list:
             width = base_width
             offset = 0.0
-            alpha=0.3
+            alpha=0.5            
             for sensor_number, sensor in enumerate(self.sensors):
-                if feature_mask[feature][sensor_number]:
-                    yerr = None                        
-                    axs.bar(locator_bars[-1]+offset, snap[sensor][feature], width, color=colors[sensor_number])
+                if feature_mask[feature][sensor_number]:                        
+                    axs.bar(locator_bars[-1]+offset, snap[sensor][feature], width, color=colors[sensor_number], alpha=1)
                     if MinMax is not None:
                         axs.bar(locator_bars[-1]+offset, MinMax[sensor][feature], width, color=colors[sensor_number], alpha=alpha)
+                        __minMax[0] = min(__minMax[0], MinMax[sensor][feature][0])
+                        __minMax[1] = max(__minMax[1], MinMax[sensor][feature][1])
                     offset += width
             locator_ticks.append(locator_bars[-1] + (offset-width) / 2 if offset > 0 else locator_bars[-1])
             locator_bars.append(locator_bars[-1] + offset + separator)
         axs.set_xticks(locator_ticks,features_list)
         legend_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
-        legend_labels = self.sensors
+        legend_labels = copy.deepcopy(self.sensors)
         if MinMax is not None:
             legend_lines.extend([Line2D([0], [0], color=colors[indx], lw=4, alpha=alpha) for indx, sensor in enumerate(self.sensors)]) # type: ignore
             minmax_legend = [f"{sensor} min/max record" for sensor in self.sensors]
             legend_labels.extend(minmax_legend)
-        print(legend_labels)
+        
         axs.tick_params(axis='x',rotation = 90)
         axs.legend(legend_lines, legend_labels, loc='upper right',  ncol=len(self.sensors)*2)
         axs.set_ylabel('Feature value [-]')
+        axs.set_ylim(ymin=__minMax[0]*1.2, ymax=__minMax[1]*1.2) # type: ignore
         axs.set_xlabel('Features [-]')
         axs.spines['left'].set_visible(True)
         axs.spines['bottom'].set_visible(True)
         axs.grid(True,which='both',axis='x')
-        plt.tight_layout()
         self.__last_snap_timestamp = snap['timestamp']
         if __name__=='__main__':
             plt.show()
