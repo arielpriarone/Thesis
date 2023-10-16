@@ -138,6 +138,10 @@ class FA(src.data.DB_Manager):
         if snap['timestamp'] == self.__last_snap_timestamp:
             print('Latest data already plotted... waiting for new data...')
             return
+        try:
+            MinMax=self.col_healthy_train.find({'_id': 'training set MIN/MAX'})[0]
+        except IndexError:
+            MinMax=None
         axs.clear()  # Clear last data frame
         axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")  # set title
         tab10_cmap = cm.get_cmap("Set1")
@@ -146,12 +150,14 @@ class FA(src.data.DB_Manager):
         separator  = 0.5   # the space between the bars
         features_list = []  # list of all features
         Scaler = src.models.MLA.retrieve_StdScaler(col=self.col_healthy_train)
+
         if Scaler is not None:      # if the scaler is available, scale the data
             for sensor in self.sensors:
                 _data_to_scale = np.array(list(snap[sensor].values())).transpose().reshape(1,-1)
                 _data_scaled = Scaler[sensor].transform(_data_to_scale).transpose().tolist()
                 snap[sensor] = dict(zip(list(snap[sensor].keys()), _data_scaled))
                 axs.set_title(f"Latest standardized features for each sensor. Timestamp: {snap['timestamp']}")
+    
         for sensor in self.sensors:
             features_list.append(list(snap[sensor].keys()))
         features_list = list(chain.from_iterable(features_list))  # flatten list
@@ -166,16 +172,26 @@ class FA(src.data.DB_Manager):
         for feature in features_list:
             width = base_width
             offset = 0.0
+            alpha=0.3
             for sensor_number, sensor in enumerate(self.sensors):
                 if feature_mask[feature][sensor_number]:
+                    yerr = None                        
                     axs.bar(locator_bars[-1]+offset, snap[sensor][feature], width, color=colors[sensor_number])
+                    if MinMax is not None:
+                        axs.bar(locator_bars[-1]+offset, MinMax[sensor][feature], width, color=colors[sensor_number], alpha=alpha)
                     offset += width
             locator_ticks.append(locator_bars[-1] + (offset-width) / 2 if offset > 0 else locator_bars[-1])
             locator_bars.append(locator_bars[-1] + offset + separator)
         axs.set_xticks(locator_ticks,features_list)
-        custom_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
+        legend_lines = [Line2D([0], [0], color=colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
+        legend_labels = self.sensors
+        if MinMax is not None:
+            legend_lines.extend([Line2D([0], [0], color=colors[indx], lw=4, alpha=alpha) for indx, sensor in enumerate(self.sensors)]) # type: ignore
+            minmax_legend = [f"{sensor} min/max record" for sensor in self.sensors]
+            legend_labels.extend(minmax_legend)
+        print(legend_labels)
         axs.tick_params(axis='x',rotation = 90)
-        axs.legend(custom_lines, self.sensors)
+        axs.legend(legend_lines, legend_labels, loc='upper right', ncol=2)
         axs.set_ylabel('Feature value [-]')
         axs.set_xlabel('Features [-]')
         axs.spines['left'].set_visible(True)
