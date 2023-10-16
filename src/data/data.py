@@ -243,9 +243,10 @@ def mongoConnect(database: str,collection: str,URI: str):
 
 
 if __name__=='__main__': 
+    pass
     # just for testin, not useful as package functionality
     #print(readSnapshot('IMS','RAW','mongodb://localhost:27017'))
     #client, db, col = mongoConnect('IMS','RAW','mongodb://localhost:27017')
     #print(type(client),type(db),type(col))
     #DB_Manager= DB_Manager('../config.json')
-    DB_Manager.createEmptyDB(r'C:\Users\ariel\Documents\Courses\Tesi\Code\config.json5')
+    #DB_Manager.createEmptyDB(r'C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml')

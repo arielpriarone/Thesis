@@ -1,3 +1,4 @@
+import stat
 import pymongo
 import src
 from pymongo.collection import Collection
@@ -21,6 +22,7 @@ class MLA(src.data.DB_Manager):
         self.__max_clusters = self.Config['kmeans']['max_clusters']
         self.__max_iter = self.Config['kmeans']['max_iterations']
         self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
+        self.features_minmax : Dict[str, Dict[str, list]]        #  min and max values of the features
         match self.type:
             case 'novelty':
                 self.col_features = self.col_healthy
@@ -31,7 +33,7 @@ class MLA(src.data.DB_Manager):
             case _:
                 raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
         try:
-            self.retrieve_StdScaler() # retrieve the scaler
+            self.__retrieve_StdScaler() # retrieve the scaler
         except:
             self.StdScaler: Dict[str, StandardScaler] = {} # if the scaler is not found, initialize it
         try:
@@ -78,6 +80,7 @@ class MLA(src.data.DB_Manager):
         if not self.pack_train_data(): # if the healthy/faulty set is empty, nothing to update
             return False
         self.standardize_features()
+        self.save_features_limits()
         self.save_StdScaler()
         return True
 
@@ -142,11 +145,15 @@ class MLA(src.data.DB_Manager):
 
             for indx, feature in enumerate(__train_data_scaled[sensor].keys()):
                 __train_data_scaled[sensor][feature] = data_scaled[indx]         # the scaler returns the data in the form (n_features, n_samples)
+                self.features_minmax[sensor][feature] = [min(data_scaled[indx]), max(data_scaled[indx])]
         # save the scaled data
         self.col_train.delete_many({"_id": 'training set scaled'}) 
         self.col_train.insert_one(__train_data_scaled) 
         print(f"Training set scaled and saved into the collection '{self.col_train.full_name}' with '_id': 'training set scaled'")
-    
+
+    def save_features_limits(self):
+        self.col_train.update_one({'_id': 'features_limits'}, {'$set': self.features_minmax}, upsert=True)
+
     def save_StdScaler(self):
         # save the scaler
         __pickled_data = pickle.dumps(self.StdScaler)
@@ -162,32 +169,42 @@ class MLA(src.data.DB_Manager):
     def save_KMeans(self):
         # save the scaler
         __pickled_data = pickle.dumps(self.kmeans)
-        __id ='KMeans_'+str(self.mode)+'_pickled'
+        __id ='KMeans_'+str(self.type)+'_pickled'
         try:
             self.col_models.insert_one({'_id': __id, 'data': __pickled_data})
         except:
             try:
-                self.col_train.replace_one({'_id': 'KMeans_'+str(self.mode)+'_pickled'}, {'_id': __id, 'data': __pickled_data})
+                self.col_train.replace_one({'_id': __id}, {'_id': __id, 'data': __pickled_data})
             except:
                 raise Exception('Error saving the KMeans model')
         print(f"KMeans model saved as picled data into '{self.col_models.full_name}' with '_id': {__id}")
     
     def retrieve_KMeans(self):
-        __id ='KMeans_'+str(self.mode)+'_pickled'
+        __id ='KMeans_'+str(self.type)+'_pickled'
         __retrieved_data: Collection | None = self.col_models.find_one({'_id': __id})
         if __retrieved_data is None:
-            raise Exception('Scaler not found in collection ' + self.col_train.full_name)
+            raise Exception('KMeans model not found in collection ' + self.col_models.full_name + ' with _id: ' + __id)
         else:
             self.kmeans = pickle.loads(__retrieved_data['data'])
-            print(f"KMeans retrieved from picled data @ {__retrieved_data.full_name}")
+            print(f"KMeans retrieved from picled data @ {self.col_models.full_name}")
     
-    def retrieve_StdScaler(self):
+    def __retrieve_StdScaler(self):
         __retrieved_data: Collection | None = self.col_train.find_one({'_id': 'StandardScaler_pickled'})
         if __retrieved_data is None:
             raise Exception('Scaler not found in collection ' + self.col_train.full_name)
         else:
-            self.StdScaler = pickle.loads(__retrieved_data['data'])
+            self.StdScaler: Dict[str, StandardScaler] = pickle.loads(__retrieved_data['data'])
             print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
+
+    @staticmethod
+    def retrieve_StdScaler(col: Collection):
+        __retrieved_data: Collection | None = col.find_one({'_id': 'StandardScaler_pickled'})
+        scaler : Dict[str, StandardScaler] | None
+        if __retrieved_data is None:
+            scaler = None
+        else:
+            scaler = pickle.loads(__retrieved_data['data'])
+            return scaler
 
     def _read_features(self, col: Collection, order = pymongo.ASCENDING):
         ''' Read the data from the collection - put data in self.snap

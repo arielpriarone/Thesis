@@ -138,11 +138,20 @@ class FA(src.data.DB_Manager):
         if snap['timestamp'] == self.__last_snap_timestamp:
             print('Latest data already plotted... waiting for new data...')
             return
+        axs.clear()  # Clear last data frame
+        axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")  # set title
         tab10_cmap = cm.get_cmap("Set1")
         colors = [tab10_cmap(indx)[:3] for indx, _ in enumerate(self.sensors)] # convert tuple to list
         base_width = 1.0     # the width of the bars
         separator  = 0.5   # the space between the bars
         features_list = []  # list of all features
+        Scaler = src.models.MLA.retrieve_StdScaler(col=self.col_healthy_train)
+        if Scaler is not None:      # if the scaler is available, scale the data
+            for sensor in self.sensors:
+                _data_to_scale = np.array(list(snap[sensor].values())).transpose().reshape(1,-1)
+                _data_scaled = Scaler[sensor].transform(_data_to_scale).transpose().tolist()
+                snap[sensor] = dict(zip(list(snap[sensor].keys()), _data_scaled))
+                axs.set_title(f"Latest standardized features for each sensor. Timestamp: {snap['timestamp']}")
         for sensor in self.sensors:
             features_list.append(list(snap[sensor].keys()))
         features_list = list(chain.from_iterable(features_list))  # flatten list
@@ -154,7 +163,6 @@ class FA(src.data.DB_Manager):
                     feature_mask[feature][sensor_number] = True
         locator_bars = [0.0]  # the x locations for the groups
         locator_ticks = []  # the x locations for the ticks
-        axs.clear()  # Clear last data frame
         for feature in features_list:
             width = base_width
             offset = 0.0
@@ -170,7 +178,6 @@ class FA(src.data.DB_Manager):
         axs.legend(custom_lines, self.sensors)
         axs.set_ylabel('Feature value [-]')
         axs.set_xlabel('Features [-]')
-        axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")
         axs.spines['left'].set_visible(True)
         axs.spines['bottom'].set_visible(True)
         axs.grid(True,which='both',axis='x')
@@ -195,7 +202,9 @@ if __name__=='__main__':
     # timeSerie=src.data.readSnapshot('IMS','RAW','mongodb://localhost:27017')['Bearing 1 x']['timeSerie']
     # coef, pows, nodes, _, _ = packTrasform(timeSerie, plot=True)
     # plt.show()
-    FeatureAgent=FA("../config.yaml")
+    FeatureAgent=FA(r'C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml')
+    fig, ax = plt.subplots()
+    FeatureAgent.barPlotFeatures(ax)
     # FeatureAgent.run()
 
 
