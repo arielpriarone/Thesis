@@ -98,7 +98,7 @@ class DB_Manager:
             raise Exception(f'Error reading config file @ {configStr}')
         return Config                                                                     # close connection
     
-    def moveCollection(self,source_collection: Collection,destination_collection: Collection):
+    def moveCollection(self,source_collection: Collection,destination_collection: Collection, keep_source: bool = False):
         '''
         move all the documents from one collection to another   
         '''
@@ -107,9 +107,11 @@ class DB_Manager:
         # Iterate through the documents and insert them into the destination collection
         for document in documents_to_move:
             destination_collection.insert_one(document)
-        print(f'All documents copied from {source_collection.full_name} to {destination_collection.full_name}')  
-        source_collection.delete_many({}) # delete all the documents from the source collection
-        print(f'All documents deleted from {source_collection.full_name}') 
+        print(f'All documents copied from {source_collection.full_name} and inserted into {destination_collection.full_name}')  
+        if not keep_source:
+            source_collection.delete_many({}) # delete all the documents from the source collection
+            print(f'All documents deleted from {source_collection.full_name}') 
+    
 
         
 def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: int,sensors: Union[str, List[str]],URI='mongodb://localhost:27017',printout=True):

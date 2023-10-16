@@ -107,7 +107,21 @@ def move_collection(configPath:str = typer.Option(default='../config.yaml',help=
 
     typer.confirm("Do you want to proceed?", abort=True)
     DB_Manager=src.data.DB_Manager(configPath)
-    DB_Manager.moveCollection(DB_Manager.db[fromCollection],DB_Manager.db[toCollection])
+    DB_Manager.moveCollection(DB_Manager.db[fromCollection],DB_Manager.db[toCollection],keep_source=False)
+
+@app.command()
+def copy_collection(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file'),
+                    fromCollection:str = typer.Option(default='UNCONSUMED',help='The name of the collection to copy from'),
+                    toCollection:str = typer.Option(default='HEALTHY',help='The name of the collection to paste into')):
+    """
+    Move all the documents from one collection to another
+    """
+    configPath=os.path.abspath(configPath)
+    print("You are about to copy all the documents from "+fromCollection+" and paste them into "+toCollection)
+
+    typer.confirm("Do you want to proceed?", abort=True)
+    DB_Manager=src.data.DB_Manager(configPath)
+    DB_Manager.moveCollection(DB_Manager.db[fromCollection],DB_Manager.db[toCollection],keep_source=True)
 
 if __name__ == "__main__":
     # RUN THE CLI APP

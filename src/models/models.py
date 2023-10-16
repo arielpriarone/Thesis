@@ -1,4 +1,5 @@
 import stat
+import copy
 import pymongo
 import src
 from pymongo.collection import Collection
@@ -22,7 +23,6 @@ class MLA(src.data.DB_Manager):
         self.__max_clusters = self.Config['kmeans']['max_clusters']
         self.__max_iter = self.Config['kmeans']['max_iterations']
         self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
-        self.features_minmax : Dict[str, Dict[str, list]]        #  min and max values of the features
         match self.type:
             case 'novelty':
                 self.col_features = self.col_healthy
@@ -133,8 +133,13 @@ class MLA(src.data.DB_Manager):
         __train_data = self.col_train.find_one({'_id': 'training set'})             # get the training set
         if __train_data is None:
             raise Exception('Training set not initialized')
-        __train_data_scaled = __train_data.copy()                                   # copy the training set
-        __train_data_scaled['_id'] = 'training set scaled'                        # rename it
+        _train_data_scaled = copy.deepcopy(__train_data)                                   # copy the training set
+        _train_data_scaled['_id'] = 'training set scaled'                        # rename it
+        self.features_minmax = copy.deepcopy(__train_data)                                   # copy the training set
+        self.features_minmax['_id'] = 'training set MIN/MAX'                        # rename it
+        
+        print(id(__train_data), id(_train_data_scaled), id(self.features_minmax))
+        
         # scale the features
         for sensor in self.sensors:
             self.StdScaler[sensor] = StandardScaler()
@@ -142,17 +147,21 @@ class MLA(src.data.DB_Manager):
             self.StdScaler[sensor].fit(__data.transpose())                              # fit the scaler
             data_scaled = self.StdScaler[sensor].transform(__data.transpose()).transpose()         # the scaler returns the data in the form (n_features, n_samples)
             data_scaled = data_scaled.tolist()                                  # convert the data to list    
-
-            for indx, feature in enumerate(__train_data_scaled[sensor].keys()):
-                __train_data_scaled[sensor][feature] = data_scaled[indx]         # the scaler returns the data in the form (n_features, n_samples)
-                self.features_minmax[sensor][feature] = [min(data_scaled[indx]), max(data_scaled[indx])]
+            for indx, feature in enumerate(_train_data_scaled[sensor].keys()):
+                _train_data_scaled[sensor][feature] = data_scaled[indx]         # the scaler returns the data in the form (n_features, n_samples)
+                pass
+                pass
+                self.features_minmax[sensor][feature] = [float(np.min(data_scaled[indx])), float(np.max(data_scaled[indx]))]
+                pass
+                pass
         # save the scaled data
         self.col_train.delete_many({"_id": 'training set scaled'}) 
-        self.col_train.insert_one(__train_data_scaled) 
+        self.col_train.insert_one(_train_data_scaled) 
         print(f"Training set scaled and saved into the collection '{self.col_train.full_name}' with '_id': 'training set scaled'")
 
     def save_features_limits(self):
-        self.col_train.update_one({'_id': 'features_limits'}, {'$set': self.features_minmax}, upsert=True)
+        self.col_train.delete_many({"_id": 'training set MIN/MAX'}) 
+        self.col_train.insert_one(self.features_minmax)
 
     def save_StdScaler(self):
         # save the scaler
@@ -194,7 +203,7 @@ class MLA(src.data.DB_Manager):
             raise Exception('Scaler not found in collection ' + self.col_train.full_name)
         else:
             self.StdScaler: Dict[str, StandardScaler] = pickle.loads(__retrieved_data['data'])
-            print(f"StdScaler retrieved from picled data @ {__retrieved_data.full_name}")
+            print(f"StdScaler retrieved from picled data @ {self.col_train.full_name}")
 
     @staticmethod
     def retrieve_StdScaler(col: Collection):
@@ -275,6 +284,7 @@ class MLA(src.data.DB_Manager):
                 __features_names.append(sensor + '_' + feature)
                 __features_values.append(__train_data[sensor][feature])
         self.features_names, self.trainMatrix = (__features_names, np.array(__features_values).transpose())
+        print("Features packed in a matrix: " + str(self.trainMatrix.shape))
 
     def __plot_silhouette(self, ax):
         ax.plot(range(2,self.__max_clusters+1),self.__sil_score)
