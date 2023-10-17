@@ -171,11 +171,10 @@ class FA(src.data.DB_Manager):
         self.__legend_lines = [Line2D([0], [0], color=self.__colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
         self.__legend_labels = copy.deepcopy(self.sensors)
         if self.MinMax is not None:
-            self.__legend_lines.extend([Line2D([0], [0], color=self.__colors[indx], lw=4, alpha=1) for indx, sensor in enumerate(self.sensors)]) # type: ignore
+            self.__legend_lines.extend([Line2D([0], [0],marker=6, color='w',markerfacecolor=self.__colors[indx], lw=4, alpha=1) for indx, sensor in enumerate(self.sensors)]) # type: ignore
             minmax_legend = [f"{sensor} min/max record" for sensor in self.sensors]
             self.__legend_labels.extend(minmax_legend)
             axs.set_ylim(ymin=self.__minMax[0]*1.1, ymax=self.__minMax[1]*1.3) # type: ignore
-        
         return axs
 
     def barPlotFeatures(self,axs: plt.Axes):
@@ -225,6 +224,7 @@ class FA(src.data.DB_Manager):
         axs.spines['bottom'].set_visible(True)
         axs.grid(True,which='both',axis='x')
         self.__last_snap_timestamp = snap['timestamp']
+        plt.tight_layout()
         if __name__=='__main__':
             plt.show()
         return axs

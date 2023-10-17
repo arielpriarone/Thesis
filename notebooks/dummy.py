@@ -1,34 +1,28 @@
-
 import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
+from matplotlib.legend_handler import HandlerTuple
+from matplotlib.lines import Line2D
 
-labels = ['Label_{}'.format(i) for i in range(1, 65)]
-
-
-def custom_tick_locator(fig,n_ticks):
-    # Function to select the subset of tick locations based on the width of the plot
-    num_labels = len(labels)
-    tick_step = max(num_labels // n_ticks, 1)
-    return range(0, num_labels, tick_step)
+# Define a custom handler function to combine CARETUP and CARETDOWN markers
+def handler_tuple_caretup_caretdown():
+    handler_caretup = Line2D([0], [0], marker='^', color='r', markersize=10)
+    handler_caretdown = Line2D([0], [0], marker='v', color='b', markersize=10)
+    return (handler_caretup, handler_caretdown)
 
 # Create a figure and axis
-fig, ax = plt.subplots(figsize=(10, 5))  # Adjust figsize as needed
+fig, ax = plt.subplots()
 
-# Plot your data (replace 'data' with your actual data)
-data = [i**2 for i in range(1, 65)]
-ax.plot(data)
+# Plot some data points
+x = [1, 2, 3, 4, 5]
+y = [2, 3, 1, 4, 5]
 
-# Get the current figure width
-fig_width = fig.get_figwidth()
+ax.plot(x, y, 'bo', label='Data Points')
 
-# Set the x-axis tick locator
-ax.xaxis.set_major_locator(ticker.FixedLocator(custom_tick_locator(fig_width)))
+# Add a custom legend with combined CARETUP and CARETDOWN markers
+ax.legend([Line2D([0], [0], marker='^', color='r', markersize=10),
+            Line2D([0], [0], marker='v', color='b', markersize=10)],
+           ['CARETUP AND CARETDOWN'],
+           handler_map=( Line2D([0], [0], marker='^', color='r', markersize=10), Line2D([0], [0], marker='v', color='r', markersize=10)),
+           loc='upper right')
 
-# Set the tick labels using the subset of labels
-ax.set_xticklabels([labels[i] for i in custom_tick_locator(fig_width)])
-
-# Rotate the tick labels if needed
-plt.xticks(rotation=45)
-
-# Show the plot
+# Display the plot
 plt.show()
