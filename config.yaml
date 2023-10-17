@@ -40,4 +40,6 @@ wavelet:           # Wavelet packet reasform configuration
 kmeans:            # kmean configuration
   max_clusters:       100                         # Max number of clusters
   max_iterations:     1000                        # Max number of iterations
+  error_queue_size:   10                          # Size of the error queue for prediction
+  error_plot_size:    200                         # Size of the plotting queue
 

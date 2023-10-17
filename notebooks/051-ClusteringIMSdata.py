@@ -1,4 +1,5 @@
 # %%
+from turtle import distance
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 import matplotlib.pyplot as plt
@@ -149,7 +150,7 @@ axs.set_xlabel('Clusters')
 
 
 # %%
-# now i want to actually plot som ekind of error
+# now i want to actually plot some kind of error
 # the idea is to record the max silhouette score and compare it with new sample
 # the approach i want to try is to trasform the training dataset, and then, save the maximum distance found to each cluster, and then check 
 # how far the new samples fall over the maximun distance recorded for the assigned cluster
@@ -163,7 +164,8 @@ i=0; error=[]
 for snap in IMSDATA['wavanaly_standardized_train']:
     # print(np.shape(snap))
     y=kmeans.predict(np.array(snap).reshape(1, -1)) # predict the cluster for the new snap
-    error.append(kmeans.transform(np.array(snap).reshape(1, -1))[0,y]-max_dist[int(y)])
+    distance = kmeans.transform(np.array(snap).reshape(1, -1))[0,y]
+    error.append(distance-max_dist[int(y)])
     
 fig, axs=plt.subplots()
 fig.tight_layout()

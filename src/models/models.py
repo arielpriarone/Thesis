@@ -1,5 +1,5 @@
-import stat
 import copy
+from matplotlib import scale
 import pymongo
 import src
 from pymongo.collection import Collection
@@ -22,6 +22,9 @@ class MLA(src.data.DB_Manager):
         self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
         self.__max_clusters = self.Config['kmeans']['max_clusters']
         self.__max_iter = self.Config['kmeans']['max_iterations']
+        self.__error_queue_size = self.Config['kmeans']['error_queue_size']
+        self.__error_plot_size = self.Config['kmeans']['error_plot_size']
+        self.err_array = np.zeros(max(self.__error_queue_size,self.__error_plot_size)) # initialize the error array
         self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
@@ -72,8 +75,53 @@ class MLA(src.data.DB_Manager):
                     self.mode = typer.prompt('Please select the mode of the MLA. The options are: "evaluate", "train" or "retrain"')
 
     def evaluate(self):
-        self.retrieve_KMeans()
-        pass
+        self.retrieve_KMeans()      # retrieve the Kmeans model
+        self.num_clusters = self.kmeans.get_params()['n_clusters'] # get the number of clusters
+        self.packFeaturesMatrix()      # pack the training features in a matrix
+        while True:
+            self.calculate_train_cluster_dist() # calculate the maximum distance of each cluster in the train dataset
+            while not self._read_features(self.col_unconsumed): # read the features from the collection
+                pass    # wait for data to be available
+            self.scale_features()
+            if self.evaluate_error():      # evaluate the error
+                pass                        # if the error is positive, move to quarantine
+                raise Exception("Error is positive, NOVELTY DETECTED")
+            else:
+                pass                        # delete the snapshot from the unconsumed collection
+            print(f"Distance Novelty: {self.err_array[-1]}")
+            if self.err_array[-1] > 0:
+                raise Exception("Error is positive, NOVELTY DETECTED")
+            
+    def scale_features(self):
+        for sensor in self.sensors:
+            _data_to_scale = np.array(list(self.snap[sensor].values())).transpose().reshape(1,-1)
+            _data_scaled = self.StdScaler[sensor].transform(_data_to_scale).tolist()[0]
+            self.snap[sensor] = dict(zip(list(self.snap[sensor].keys()), _data_scaled))
+
+    def evaluate_error(self):
+        _features_values = []
+        for sensor in self.sensors:
+            _features_values.append([float(value) for value in self.snap[sensor].values()])
+        _features_values_flat = [item for sublist in _features_values for item in sublist] # flatten the list
+        y=self.kmeans.predict(np.array(_features_values_flat).reshape(1,-1)) # predict the cluster for the new snap
+        distance_to_assigned_center = self.kmeans.transform(np.array(_features_values_flat).reshape(1,-1))[0,y]
+        current_error = distance_to_assigned_center-self.train_cluster_dist[int(y)] # calculate the error
+        self.err_array = np.append(self.err_array[1:],current_error) # append the new error to the error array
+        print(f"Distance margin to the assigned cluster #{y}: {self.err_array[-1]}")
+        if self.err_array[-1] > 0:
+            print("NOVELTY DETECTED")
+            return True
+        else:
+            return False
+
+    def calculate_train_cluster_dist(self):
+        ''' This method computes the maximum distance of each cluster in the train dataset '''
+        self.labels_train_data  = self.kmeans.predict(self.trainMatrix) # predict the cluster of each sample in the train dataset
+        self.cluster_distances  = self.kmeans.transform(self.trainMatrix) # gives the distance of each sample to each cluster
+        self.train_cluster_dist=[] # maximum distance to eah cluster in the train dataset
+        for cluster in range(0,self.num_clusters):
+            self.train_cluster_dist.append(max(self.cluster_distances[self.labels_train_data==cluster,cluster])) # get the maximum distance of the samples in the train dataset to tjis cluster
+        
 
     def prepare_train_data(self):
         ''' This method prepares the training data for the MLA '''
@@ -150,11 +198,7 @@ class MLA(src.data.DB_Manager):
             data_scaled = data_scaled.tolist()                                  # convert the data to list    
             for indx, feature in enumerate(_train_data_scaled[sensor].keys()):
                 _train_data_scaled[sensor][feature] = data_scaled[indx]         # the scaler returns the data in the form (n_features, n_samples)
-                pass
-                pass
                 self.features_minmax[sensor][feature] = [float(np.min(data_scaled[indx])), float(np.max(data_scaled[indx]))]
-                pass
-                pass
         # save the scaled data
         self.col_train.delete_many({"_id": 'training set scaled'}) 
         self.col_train.insert_one(_train_data_scaled) 
@@ -195,7 +239,7 @@ class MLA(src.data.DB_Manager):
         if __retrieved_data is None:
             raise Exception('KMeans model not found in collection ' + self.col_models.full_name + ' with _id: ' + __id)
         else:
-            self.kmeans = pickle.loads(__retrieved_data['data'])
+            self.kmeans:KMeans = pickle.loads(__retrieved_data['data'])
             print(f"KMeans retrieved from picled data @ {self.col_models.full_name}")
     
     def __retrieve_StdScaler(self):
@@ -302,7 +346,7 @@ class MLA(src.data.DB_Manager):
 
 if __name__ == '__main__':
     NoveltyAgent = MLA(configStr=r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml", type='novelty')
-    NoveltyAgent.run()
+    NoveltyAgent.evaluate()
 
     
 
