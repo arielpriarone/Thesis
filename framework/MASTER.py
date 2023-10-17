@@ -1,7 +1,7 @@
 import os
 import src
 import importlib
-import numpy as np
+import os
 import typer
 from typing import List
 from rich.console import Console
@@ -79,6 +79,7 @@ def plot_features():
     """
     Plot the features of the last snapshot in the UNCONSUMED collection
     """
+    os.system('title Plotting features')
     subprocess.run(["python", "./scripts/RT_PlotFeatures.py"])
 
 @app.command()
@@ -86,6 +87,7 @@ def run_feature_agent():
     """
     Run the Feature Agent - takes last snapshot from RAW collection, extract features and write them to UNCONSUMED collection
     """
+    os.system('title Features Agent')
     subprocess.run(["python", "./scripts/FA.py"])
 
 @app.command()
@@ -93,6 +95,7 @@ def run_machine_learning_agent():
     """
     Run the Machine Learning Agent
     """
+    os.system('title Machine Learning Agent')
     subprocess.run(["python", "./scripts/MLA.py"])
 
 @app.command()

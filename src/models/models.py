@@ -91,9 +91,10 @@ class MLA(src.data.DB_Manager):
                 self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
             except IndexError:
                 self.__move_to_train()                                          # empty, ask to move all data from unconsumed to train dataset
+            __id_to_remove = copy.deepcopy(self.snap['_id'])                  # copy the id of the snapshot to remove
             self.snap['_id']='training set'                                                      # rename it for initializing the training set
             self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
-            self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
+            self.col_features.delete_one({'_id': __id_to_remove})                  # delete the snapshot from the features collection
             print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
         else:                   # append healty documents to the dataset
             if self.col_features.count_documents({}) == 0:

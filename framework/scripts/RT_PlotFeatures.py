@@ -12,10 +12,17 @@ ax = fig.add_subplot(111)  # Add subplot to the main fig window
 
 FA = src.features.FA(r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml")
 
+exit=False
+while not exit:
+    axs = FA.initialize_barPlotFeatures(ax)
+    if axs is not None:
+        print("Plot initialized")
+        exit=True
+
 # Create a partial function to pass the 'col' argument to animate
 animate_partial = partial(animate, FA=FA, axs = ax)
 
 # Matplotlib Animation Function that takes care of real-time plot.
-ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=500)  # interval in ms
+ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=20)  # interval in ms
 
 plt.show()  # Keep Matplotlib plot persistent on the screen until it is closed
