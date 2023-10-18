@@ -85,7 +85,7 @@ def plot_features():
 @app.command()
 def plot_kmeans_error():
     """
-    Plot the features of the last snapshot in the UNCONSUMED collection
+    This function plots the KMeans error by calling the RT_PlotKmeansError.py script.
     """
     os.system('title Plotting KMeans error')
     subprocess.run(["python", "./scripts/RT_PlotKmeansError.py"])

@@ -1,5 +1,7 @@
 from calendar import c
+from turtle import color
 from matplotlib import cm, lines
+from matplotlib import colors
 from matplotlib.colors import Colormap
 import matplotlib.pyplot as plt
 import src
@@ -27,11 +29,18 @@ class Plotter:
         self.tab10_cmap = cm.get_cmap("Set1")
         self.DB=src.data.DB_Manager(confstr)
     def plot_Kmeans_error(self,ax: plt.Axes):
-        Err_dict = self.DB.col_models.find({'_id': 'Kmeand cluster error dictionary'})[0]
+        try:
+            Err_dict = self.DB.col_models.find({'_id': 'Kmeand cluster error dictionary'})[0]
+        except IndexError:
+            print(f"No Kmeans error dictionary found in {self.DB.col_models.full_name}, waiting...")
+            return ax
+        __colors = [self.tab10_cmap(x) for x in Err_dict['assigned_cluster']]
         ax.clear()  # Clear last data frame
         ax.set_title(f"Latest {self.DB.Config['kmeans']['error_plot_size']} distance error.")  # set title
-        ax.scatter(Err_dict['timestamp'], Err_dict['value'], c=Err_dict['assigned_cluster'],Colormap=self.tab10_cmap)  # plot data
+        xlabels = [str(x) for x in Err_dict['timestamp']]
+        ax.scatter(xlabels, Err_dict['values'], c=__colors)  # plot data
         ax.axhline(self.DB.Config['kmeans']['novelty_threshold'],linestyle='-.',color='r')
+        ax.legend([f"cluster {i}" for i in range(max(Err_dict['assigned_cluster']))])
         return ax
 
     

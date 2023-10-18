@@ -30,9 +30,9 @@ class MLA(src.data.DB_Manager):
         self.novelty_threshold = self.Config['kmeans']['novelty_threshold']
         self.err_dict = {} # dictionary of the error
         self.err_dict['values'] = [0] *self.__error_plot_size # initialize the error array
-        self.err_dict['timestamps'] = [0] *self.__error_plot_size # initialize the timestamp array
+        self.err_dict['timestamp'] = [0] *self.__error_plot_size # initialize the timestamp array
         self.err_dict['assigned_cluster'] = [0] *self.__error_plot_size # initialize the assigned cluster array
-        self.err_dict['anomaly'] = [0] *self.__error_plot_size # initialize the anomaly array
+        self.err_dict['anomaly'] = [False] *self.__error_plot_size # initialize the anomaly array
         self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
@@ -88,8 +88,13 @@ class MLA(src.data.DB_Manager):
         self.packFeaturesMatrix()      # pack the training features in a matrix
         while True:
             self.calculate_train_cluster_dist() # calculate the maximum distance of each cluster in the train dataset
-            while not self._read_features(self.col_unconsumed): # read the features from the collection
-                pass    # wait for data to be available
+            evaluate=False
+            while not evaluate: # read the features from the collection
+                try:
+                    self.snap=self.col_unconsumed.find({'evaluated': {"$exists": False}}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest not evaluated snap
+                    evaluate=True
+                except IndexError:
+                    print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
             self.scale_features()
             if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
                 # if the error is positive, move to quarantine
@@ -97,17 +102,19 @@ class MLA(src.data.DB_Manager):
                 self._write_snap(self.col_quarantined) # move the snap to the quarantine collection
             self._mark_snap_evaluated() # mark the snap as evaluated
             self._delete_evaluate_snap() # delete the snap from the unconsumed collection
-            print(f"Distance Novelty: {self.err_dict}")
+            print(f"Distance Novelty: {self.err_dict['values'][-1]}")
     
     def _mark_snap_evaluated(self): # to leave at least one snap in the collection for plotting reasons
         self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
         self.snap['evaluated'] = True
         self._replace_snap(self.col_unconsumed) # mark the snap as evaluated
+        print(f"Snap '{self.snap['_id']}' marked as evaluated in the '{self.col_unconsumed.full_name}' collection")
     
     def _delete_evaluate_snap(self): # to leave at least one snap in the collection for plotting reasons
         while self.col_unconsumed.count_documents({'evaluated':True}) > 1: # while there are more than one snap to delete
-            snap_to_delete = self.col_unconsumed.find({'evaluated':True}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest snap to delete
+            snap_to_delete = self.col_unconsumed.find({'evaluated':True}).sort('timestamp',pymongo.DESCENDING).limit(1)[0] # get the oldest snap to delete
             self.col_unconsumed.delete_one({'_id': snap_to_delete['_id']}) # delete the snap from the collection
+            print(f"Snap '{snap_to_delete['_id']}' deleted from the '{self.col_unconsumed.full_name}' collection")
 
     def scale_features(self):
         for sensor in self.sensors:
@@ -122,9 +129,9 @@ class MLA(src.data.DB_Manager):
         _features_values_flat = [item for sublist in _features_values for item in sublist] # flatten the list
         y=self.kmeans.predict(np.array(_features_values_flat).reshape(1,-1)) # predict the cluster for the new snap
         distance_to_assigned_center = self.kmeans.transform(np.array(_features_values_flat).reshape(1,-1))[0,y]
-        current_error:float = (distance_to_assigned_center-self.train_cluster_dist[int(y)])/self.train_cluster_dist[int(y)] # calculate the error
+        current_error=float((distance_to_assigned_center-self.train_cluster_dist[int(y)])/self.train_cluster_dist[int(y)]) # calculate the error
         
-        anomaly = self.err_dict[-1] > self.novelty_threshold # check if the error is above the threshold
+        anomaly = self.err_dict['values'][-1] > self.novelty_threshold # check if the error is above the threshold
         
         self.err_dict['values'].append(current_error) # append the new error to the error array
         self.err_dict['values'] = self.err_dict['values'][1:] # remove the oldest error from the error array
@@ -138,7 +145,7 @@ class MLA(src.data.DB_Manager):
         print(f"Relative distance margin to the assigned cluster #{y}: {self.err_dict['values'][-1]}")
 
         # write the error to the database
-        self.col_models.update_one({'_id': 'Kmeand cluster error dictionary'}, {'$set': self.err_dict}, upsert=True)
+        self.col_models.replace_one({'_id': 'Kmeand cluster error dictionary'}, self.err_dict, upsert=True)
 
         if anomaly:
             print("NOVELTY DETECTED")
