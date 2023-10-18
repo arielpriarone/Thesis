@@ -83,6 +83,14 @@ def plot_features():
     subprocess.run(["python", "./scripts/RT_PlotFeatures.py"])
 
 @app.command()
+def plot_kmeans_error():
+    """
+    Plot the features of the last snapshot in the UNCONSUMED collection
+    """
+    os.system('title Plotting KMeans error')
+    subprocess.run(["python", "./scripts/RT_PlotKmeansError.py"])
+
+@app.command()
 def run_feature_agent():
     """
     Run the Feature Agent - takes last snapshot from RAW collection, extract features and write them to UNCONSUMED collection

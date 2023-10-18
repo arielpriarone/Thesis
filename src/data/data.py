@@ -6,6 +6,7 @@ from pymongo import MongoClient
 import yaml
 from rich import print
 from typing import Union, List, Dict, Any
+import pymongo
 from pymongo.collection import Collection
 
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
@@ -111,6 +112,36 @@ class DB_Manager:
         if not keep_source:
             source_collection.delete_many({}) # delete all the documents from the source collection
             print(f'All documents deleted from {source_collection.full_name}') 
+    
+    def _find_snap(self,_id:str, col: Collection):
+        ''' find the snapshot with the specified timestamp in the specified collection '''
+        self.snap = col.find({'_id': _id})[0]            #pick the right snapshot
+
+    def _read_features(self, col: Collection, order = pymongo.ASCENDING):
+        ''' Read the data from the collection - put data in self.snap
+            return True if data are available, False otherwise '''
+        try:
+            self.snap    = col.find().sort('timestamp',order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
+            print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {col}")
+            return True    
+        except IndexError:
+            print(f"No data in collection {col.full_name}, waiting for new data...")
+            return False
+        
+    def _write_snap(self, col: Collection):
+        ''' Write the data to the collection '''
+        col.insert_one(self.snap)
+        print(f"Inserted snapshot with timestamp {self.snap['timestamp']} into {col.full_name}")
+
+    def _replace_snap(self, col: Collection):
+        ''' Replace the data in the collection '''
+        col.replace_one({'_id': self.snap['_id']},self.snap)
+        print(f"Replaced snapshot with timestamp {self.snap['timestamp']} in {col.full_name}")
+    
+    def _delete_snap(self, col: Collection):
+        ''' delete the data from the collection '''
+        col.delete_one({'_id': self.snap['_id']})
+        print(f"Deleted snapshot with timestamp {self.snap['timestamp']} from {col.full_name}")
     
 
         
