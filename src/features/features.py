@@ -135,7 +135,7 @@ class FA(src.data.DB_Manager):
         except IndexError:
             self.MinMax = None
         tab10_cmap = cm.get_cmap("Set1")
-        self.__colors = [tab10_cmap(indx)[:3] for indx, _ in enumerate(self.sensors)] # convert tuple to list
+        self.__colors = [tab10_cmap(indx) for indx, _ in enumerate(self.sensors)] # convert tuple to list
         self.__base_width = 1.0     # the width of the bars
         self.__separator  = 0.5   # the space between the bars
         self.__features_list = []  # list of all features

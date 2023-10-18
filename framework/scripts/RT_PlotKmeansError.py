@@ -11,7 +11,7 @@ fig = plt.figure()  # Create Matplotlib plots fig is the 'higher level' plot win
 ax = fig.add_subplot(111)  # Add subplot to the main fig window
 
 PLTR = src.vis.Plotter(r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml")
-
+PLTR.plot_Kmeans_error_init(ax)
 # Create a partial function to pass the 'col' argument to animate
 animate_partial = partial(animate, PLTR=PLTR, axs = ax)
 
