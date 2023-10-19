@@ -10,6 +10,7 @@ from rich.progress import track
 from rich import print
 import subprocess
 import time
+from enum import Enum
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 
 app = typer.Typer()
@@ -96,15 +97,21 @@ def run_feature_agent():
     Run the Feature Agent - takes last snapshot from RAW collection, extract features and write them to UNCONSUMED collection
     """
     os.system('title Features Agent')
-    subprocess.run(["python", "./scripts/FA.py"])
+    FeatureAgent=src.features.FA(r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml")
+    FeatureAgent.run()
+
+class Types(str, Enum):
+    novelty = "novelty"
+    fault = "fault"
 
 @app.command()
-def run_machine_learning_agent():
+def run_machine_learning_agent(type : Types, config: str = typer.Option(default='../config.yaml',help='The path of the configuration file')):
     """
     Run the Machine Learning Agent
     """
     os.system('title Machine Learning Agent')
-    subprocess.run(["python", "./scripts/MLA.py"])
+    HealtyAgent = src.models.MLA(configStr=config, type=type)
+    HealtyAgent.run()
 
 @app.command()
 def move_collection(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file'),
