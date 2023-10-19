@@ -1,5 +1,5 @@
 from ast import Dict
-
+import os
 from matplotlib.markers import MarkerStyle
 import src
 import numpy as np
@@ -232,6 +232,7 @@ class FA(src.data.DB_Manager):
                 
     def run(self):
         while True:
+            os.system('clear')
             while not self._readFromRaw(): pass  # wait for new data
             self._extractFeatures()
             self._writeToUnconsumed()

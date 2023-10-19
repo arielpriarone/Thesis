@@ -84,12 +84,20 @@ def plot_features():
     subprocess.run(["python", "./scripts/RT_PlotFeatures.py"])
 
 @app.command()
-def plot_kmeans_error():
+def kmeans_fault_indicator():
     """
-    This function plots the KMeans error by calling the RT_PlotKmeansError.py script.
+    This function plots the KMeans fault indicator.
     """
-    os.system('title Plotting KMeans error')
-    subprocess.run(["python", "./scripts/RT_PlotKmeansError.py"])
+    os.system('title Plotting KMeans fault indicator')
+    subprocess.run(["python", "./scripts/RT_PlotKmeansFaultIndicator.py"])
+    
+@app.command()
+def kmeans_novelty_indicator():
+    """
+    This function plots the KMeans novelty indicator.
+    """
+    os.system('title Plotting KMeans novelty indicator')
+    subprocess.run(["python", "./scripts/RT_PlotKmeansNoveltyIndicator.py"])
 
 @app.command()
 def run_feature_agent():

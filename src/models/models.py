@@ -2,7 +2,7 @@ import copy
 from os import error
 import pymongo
 import src
-import datetime
+import os
 from pymongo.collection import Collection
 from sklearn.preprocessing import StandardScaler
 import numpy as np
@@ -66,6 +66,7 @@ class MLA(src.data.DB_Manager):
     def run(self):
         '''Run the MLA according to its state'''
         while True:
+            os.system('clear')
             match self.mode:
                 case 'evaluate':
                     self.evaluate()
@@ -87,6 +88,7 @@ class MLA(src.data.DB_Manager):
         self.num_clusters = self.kmeans.get_params()['n_clusters'] # get the number of clusters
         self.packFeaturesMatrix()      # pack the training features in a matrix
         while True:
+            os.system('clear')
             self.calculate_train_cluster_dist() # calculate the maximum distance of each cluster in the train dataset
             evaluate=False
             while not evaluate: # read the features from the collection
