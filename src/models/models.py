@@ -32,7 +32,7 @@ class MLA(src.data.DB_Manager):
         self.err_dict['values'] = [0] *self.__error_plot_size # initialize the error array
         self.err_dict['timestamp'] = [0] *self.__error_plot_size # initialize the timestamp array
         self.err_dict['assigned_cluster'] = [0] *self.__error_plot_size # initialize the assigned cluster array
-        self.err_dict['anomaly'] = [False] *self.__error_plot_size # initialize the anomaly array
+        self.err_dict['anomaly'] = [None] *self.__error_plot_size # initialize the anomaly array
         self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
@@ -66,7 +66,7 @@ class MLA(src.data.DB_Manager):
     def run(self):
         '''Run the MLA according to its state'''
         while True:
-            os.system('clear')
+            os.system('cls')
             match self.mode:
                 case 'evaluate':
                     self.evaluate()
@@ -88,7 +88,7 @@ class MLA(src.data.DB_Manager):
         self.num_clusters = self.kmeans.get_params()['n_clusters'] # get the number of clusters
         self.packFeaturesMatrix()      # pack the training features in a matrix
         while True:
-            os.system('clear')
+            os.system('cls')
             self.calculate_train_cluster_dist() # calculate the maximum distance of each cluster in the train dataset
             evaluate=False
             while not evaluate: # read the features from the collection
@@ -137,7 +137,7 @@ class MLA(src.data.DB_Manager):
         if self.type == 'fault':
             current_error = -1/current_error # if the type is fault, the error is negative
 
-        anomaly = self.err_dict['values'][-1] > self.novelty_threshold # check if the error is above the threshold
+        anomaly = current_error > self.novelty_threshold # check if the error is above the threshold
         
         self.err_dict['values'].append(current_error) # append the new error to the error array
         self.err_dict['values'] = self.err_dict['values'][1:] # remove the oldest error from the error array
@@ -151,7 +151,7 @@ class MLA(src.data.DB_Manager):
         print(f"Relative distance margin to the assigned cluster #{y}: {self.err_dict['values'][-1]}")
 
         # write the error to the database
-        self.col_models.replace_one({'_id': f'Kmeand cluster {self.type} indicator'}, self.err_dict, upsert=True)
+        self.col_models.replace_one({'_id': f'Kmeans cluster {self.type} indicator'}, self.err_dict, upsert=True)
 
         if anomaly:
             print("NOVELTY DETECTED")

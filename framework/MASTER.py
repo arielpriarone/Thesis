@@ -118,7 +118,7 @@ def run_machine_learning_agent(type : Types, config: str = typer.Option(default=
     Run the Machine Learning Agent
     """
     os.system('title Machine Learning Agent')
-    HealtyAgent = src.models.MLA(configStr=config, type=type)
+    HealtyAgent = src.models.MLA(configStr=config, type=type.value)
     HealtyAgent.run()
 
 @app.command()

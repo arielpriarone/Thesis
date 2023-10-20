@@ -125,6 +125,7 @@ class FA(src.data.DB_Manager):
         self.col_unconsumed.insert_one(__dummy) # insert the features in the Unconsumed collection, without changing the dictionary
 
     def initialize_barPlotFeatures(self,axs: plt.Axes):
+        src.vis.set_matplotlib_params()
         try:
             snap = self.col_unconsumed.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
         except IndexError:
@@ -232,7 +233,7 @@ class FA(src.data.DB_Manager):
                 
     def run(self):
         while True:
-            os.system('clear')
+            os.system('cls')
             while not self._readFromRaw(): pass  # wait for new data
             self._extractFeatures()
             self._writeToUnconsumed()
