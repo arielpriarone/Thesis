@@ -23,6 +23,6 @@ while not exit:
 animate_partial = partial(animate, FA=FA, axs = ax)
 
 # Matplotlib Animation Function that takes care of real-time plot.
-ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=20)  # interval in ms
+ani = animation.FuncAnimation(fig, animate_partial, cache_frame_data=False, interval=200)  # interval in ms
 
 plt.show()  # Keep Matplotlib plot persistent on the screen until it is closed

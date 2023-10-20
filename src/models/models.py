@@ -1,4 +1,5 @@
 import copy
+import datetime
 from os import error
 import pymongo
 import src
@@ -28,12 +29,13 @@ class MLA(src.data.DB_Manager):
         if self.__error_queue_size > self.__error_plot_size:
             raise ValueError('Error queue size cannot be bigger than the error plot size in "config.yaml"')
         self.novelty_threshold = self.Config['kmeans']['novelty_threshold']
-        self.err_dict = {} # dictionary of the error
-        self.err_dict['values'] = [0] *self.__error_plot_size # initialize the error array
-        self.err_dict['timestamp'] = [0] *self.__error_plot_size # initialize the timestamp array
-        self.err_dict['assigned_cluster'] = [0] *self.__error_plot_size # initialize the assigned cluster array
-        self.err_dict['anomaly'] = [None] *self.__error_plot_size # initialize the anomaly array
-        self.__mode: str | None = None              #  mode of the MLA (evaluate/train/retrain)
+        self.err_dict = {'values': List[float], 'timestamp': List[datetime.datetime],
+                         'assigned_cluster': List[int], 'anomaly': List[bool]} # dictionary of the error
+        self.err_dict['values'] = []  # initialize the error array
+        self.err_dict['timestamp'] = [] # initialize the timestamp array
+        self.err_dict['assigned_cluster'] = []  # initialize the assigned cluster array
+        self.err_dict['anomaly'] = []# initialize the anomaly array
+        self.__mode = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
                 self.col_features = self.col_healthy
@@ -140,16 +142,17 @@ class MLA(src.data.DB_Manager):
         anomaly = current_error > self.novelty_threshold # check if the error is above the threshold
         
         self.err_dict['values'].append(current_error) # append the new error to the error array
-        self.err_dict['values'] = self.err_dict['values'][1:] # remove the oldest error from the error array
         self.err_dict['timestamp'].append(self.snap['timestamp']) # append the new error to the timestamp array
-        self.err_dict['timestamp'] = self.err_dict['timestamp'][1:] # remove the oldest error from the  timestamp array
         self.err_dict['assigned_cluster'].append(int(y)) # append the new error to the assigned_cluster array
-        self.err_dict['assigned_cluster'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
         self.err_dict['anomaly'].append(anomaly) # append the new error to the assigned_cluster array
-        self.err_dict['anomaly'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
-        
-        print(f"Relative distance margin to the assigned cluster #{y}: {self.err_dict['values'][-1]}")
+        print(f"Relative distance margin to the assigned cluster #{y}: {current_error}")
 
+        if len(self.err_dict['values']) > self.__error_plot_size: # if the error array is bigger than the error queue size, remove the oldest error
+            self.err_dict['values'] = self.err_dict['values'][1:] # remove the oldest error from the error array
+            self.err_dict['timestamp'] = self.err_dict['timestamp'][1:] # remove the oldest error from the  timestamp array
+            self.err_dict['assigned_cluster'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
+            self.err_dict['anomaly'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
+            
         # write the error to the database
         self.col_models.replace_one({'_id': f'Kmeans cluster {self.type} indicator'}, self.err_dict, upsert=True)
 

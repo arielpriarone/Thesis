@@ -1,10 +1,18 @@
+import os
+from socket import RCVALL_SOCKETLEVELONLY
+import timeit
 from turtle import color
-from matplotlib import cm, lines, markers
+from matplotlib import cm, lines
 import matplotlib as mpl
 from matplotlib.colors import Colormap
 import matplotlib.pyplot as plt
 import src
 from matplotlib.lines import Line2D
+from datetime import datetime
+from typing import List
+import numpy as np
+import matplotlib.dates as mdates
+import timeit
 
 def set_matplotlib_params():
     font = {'family' : 'serif',
@@ -13,6 +21,7 @@ def set_matplotlib_params():
             }
     mpl.rc('font', **font)
     plt.rcParams["figure.figsize"] = (5.78851, 5.78851/16*9)
+    plt.rcParams["axes.formatter.use_mathtext"] = True
 
 
 def isNotebook() -> bool:
@@ -34,39 +43,49 @@ def custom_tick_locator(n_ticks,labels):
     return range(0, num_labels, tick_step)
 
 class Plotter:
-    def __init__(self,confstr:str,type:str) -> None:
+    def __init__(self,confstr:str,type_predict:str) -> None:
         self.tab10_cmap = cm.get_cmap("Set1")
         self.DB=src.data.DB_Manager(confstr)
+        self.type = type_predict
+        self.err_dict = {'values': List[float], 'timestamp': List[datetime],
+                         'assigned_cluster': List[int], 'anomaly': List[bool]} # dictionary of the error
+    
+    def load_indicator_data(self):
+        try:
+            self.Err_dict = self.DB.col_models.find({'_id': f'Kmeans cluster {self.type} indicator'})[0]
+        except IndexError:
+            os.system('cls' if os.name == 'nt' else 'clear')
+            print(f"No Kmeans error dictionary found in {self.DB.col_models.full_name}, waiting...")
+            return False
+        return True
 
     def plot_Kmeans_error_init(self,ax: plt.Axes):
-        try:
-            Err_dict = self.DB.col_models.find({'_id': 'Kmeand cluster {type} indicator'})[0]
-        except IndexError:
-            print(f"No Kmeans error dictionary found in {self.DB.col_models.full_name}, waiting...")
-            return ax
-        color_legend = [self.tab10_cmap(x) for x in range(max(Err_dict['assigned_cluster']))]
-        self.__legend_labels = [f"cluster {i}" for i in range(max(Err_dict['assigned_cluster']))]
-        self.__legend_lines = [Line2D([0], [0],marker='o', color='w',markerfacecolor=color_legend[indx], lw=4, alpha=1) for indx in range(max(Err_dict['assigned_cluster']))] # type: ignore
+        while not self.load_indicator_data():
+            return None # wait for data to be available
+        Err_dict= self.Err_dict
+        range_clusters = range(max(Err_dict['assigned_cluster'])+1)
+        color_legend = [self.tab10_cmap(x) for x in range_clusters]
+        self.__legend_labels = [f"cluster {i}" for i in range_clusters]
+        self.__legend_lines = [Line2D([0], [0],marker='o', color='w',markerfacecolor=color_legend[indx], lw=4, alpha=1) for indx in range_clusters] # type: ignore
         self.__legend_labels.append('novelty threshold')
-        self.__legend_lines.append(Line2D([0], [0], linestyle='-.', color='r'))
+        self.__legend_lines.append(Line2D([0], [0], linestyle='-.', color='k'))
+        return ax
 
     def plot_Kmeans_error(self,ax: plt.Axes):
-        try:
-            Err_dict = self.DB.col_models.find({'_id': 'Kmeand cluster error dictionary'})[0]
-        except IndexError:
-            print(f"No Kmeans error dictionary found in {self.DB.col_models.full_name}, waiting...")
-            return ax
+        self.load_indicator_data()
+        Err_dict= self.Err_dict
         ax.clear()  # Clear last data frame
         ax.set_title(f"Latest {self.DB.Config['kmeans']['error_plot_size']} distance error.")  # set title
         self.__colors = [self.tab10_cmap(x) for x in Err_dict['assigned_cluster']]
-        xlabels = [str(x) for x in Err_dict['timestamp']]
-        ax.scatter(xlabels, Err_dict['values'],marker='.', c=self.__colors)  # type: ignore #plot <data
+        xlocator=np.array([Err_dict['timestamp'][x].timestamp() for x in range(len(Err_dict['timestamp']))])
+        ax.scatter(xlocator, Err_dict['values'],marker='.', c=self.__colors)  # type: ignore #plot <data
         ax.axhline(self.DB.Config['kmeans']['novelty_threshold'],linestyle='-.',color='k')
+        ax.set_xlim(xlocator[0],xlocator[-1])
         ax.set_ylabel('Distance relative error [%]')
-        ax.set_xlabel('Timestamp')
-        ax.set_xticks(custom_tick_locator(18,xlabels))
+        ax.set_xlabel('Time [s]')
         ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
-        plt.xticks(rotation=45, ha='right')
+
+        # x locator and formatter
         plt.tight_layout()
         return ax
 
@@ -79,6 +98,8 @@ if __name__=='__main__':
     set_matplotlib_params()
     fig, ax = plt.subplots()
     PLTR = Plotter(r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml",'novelty')
-    PLTR.plot_Kmeans_error_init(ax)
-    PLTR.plot_Kmeans_error(ax)
+    while PLTR.plot_Kmeans_error_init(ax) is None:
+        pass
+    elapsed = timeit.timeit(lambda: PLTR.plot_Kmeans_error(ax), number=1)
+    print(f"Elapsed time: {elapsed:.6f} seconds")
     plt.show()
