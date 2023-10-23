@@ -77,10 +77,11 @@ class Plotter:
         ax.clear()  # Clear last data frame
         ax.set_title(f"Latest {self.DB.Config['kmeans']['error_plot_size']} distance error.")  # set title
         self.__colors = [self.tab10_cmap(x) for x in Err_dict['assigned_cluster']]
+
         xlocator=np.array([Err_dict['timestamp'][x].timestamp() for x in range(len(Err_dict['timestamp']))])
         ax.scatter(xlocator, Err_dict['values'],marker='.', c=self.__colors)  # type: ignore #plot <data
         ax.axhline(self.DB.Config['kmeans']['novelty_threshold'],linestyle='-.',color='k')
-        ax.set_xlim(xlocator[0],xlocator[-1])
+        ax.set_xlim(min(xlocator),max(xlocator))
         ax.set_ylabel('Distance relative error [%]')
         ax.set_xlabel('Time [s]')
         ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
