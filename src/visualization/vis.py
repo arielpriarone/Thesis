@@ -44,6 +44,7 @@ def custom_tick_locator(n_ticks,labels):
 
 class Plotter:
     def __init__(self,confstr:str,type_predict:str) -> None:
+        self.confstr = confstr
         self.tab10_cmap = cm.get_cmap("Set1")
         self.DB=src.data.DB_Manager(confstr)
         self.type = type_predict
@@ -62,8 +63,8 @@ class Plotter:
     def plot_Kmeans_error_init(self,ax: plt.Axes):
         while not self.load_indicator_data():
             return None # wait for data to be available
-        Err_dict= self.Err_dict
-        range_clusters = range(max(Err_dict['assigned_cluster'])+1)
+        __MLA = src.models.MLA(self.confstr, self.type)
+        range_clusters = range(__MLA.kmeans.get_params()['n_clusters'])
         color_legend = [self.tab10_cmap(x) for x in range_clusters]
         self.__legend_labels = [f"cluster {i}" for i in range_clusters]
         self.__legend_lines = [Line2D([0], [0],marker='o', color='w',markerfacecolor=color_legend[indx], lw=4, alpha=1) for indx in range_clusters] # type: ignore
@@ -76,7 +77,7 @@ class Plotter:
         self.load_indicator_data()
         Err_dict= self.Err_dict
         ax.clear()  # Clear last data frame
-        ax.set_title(f"Latest {self.DB.Config['kmeans']['error_plot_size']} distance error.")  # set title
+        ax.set_title(f"Latest {self.DB.Config['kmeans']['error_plot_size']} {self.type} indicator value.")  # set title
         self.__colors = [self.tab10_cmap(x) for x in Err_dict['assigned_cluster']]
 
         xlocator=np.array([Err_dict['timestamp'][x].timestamp() for x in range(len(Err_dict['timestamp']))])
