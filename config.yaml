@@ -42,6 +42,9 @@ kmeans:            # kmean configuration
   max_iterations:     1000                        # Max number of iterations
   error_queue_size:   10                          # Size of the error queue for prediction
   error_plot_size:    1700                        # Size of the plotting queue
-  novelty_threshold:  0.10                        # Threshold for novelty detection:
+
+novelty:           # Novelty/fault configuration
+  threshold:          0.10                        # Threshold for novelty / fault detection:
 #                                                   relative percentage of the distance to the cluster w.r.t the max distance
 #                                                   to the assigned cluster in the training set
+  n_fit:              50                          # Number of samples used to fit the prediction curve

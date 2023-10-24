@@ -69,6 +69,7 @@ class Plotter:
         self.__legend_lines = [Line2D([0], [0],marker='o', color='w',markerfacecolor=color_legend[indx], lw=4, alpha=1) for indx in range_clusters] # type: ignore
         self.__legend_labels.append('novelty threshold')
         self.__legend_lines.append(Line2D([0], [0], linestyle='-.', color='k'))
+        print(f"Plot Kmeans error initialized with {self.__legend_labels} and {self.__legend_lines}")
         return ax
 
     def plot_Kmeans_error(self,ax: plt.Axes):
@@ -80,10 +81,11 @@ class Plotter:
 
         xlocator=np.array([Err_dict['timestamp'][x].timestamp() for x in range(len(Err_dict['timestamp']))])
         ax.scatter(xlocator, Err_dict['values'],marker='.', c=self.__colors)  # type: ignore #plot <data
-        ax.axhline(self.DB.Config['kmeans']['novelty_threshold'],linestyle='-.',color='k')
+        ax.axhline(self.DB.Config['novelty']['threshold'],linestyle='-.',color='k')
         ax.set_xlim(min(xlocator),max(xlocator))
         ax.set_ylabel('Distance relative error [%]')
         ax.set_xlabel('Time [s]')
+        ax.set_xticklabels([datetime.fromtimestamp(ts).strftime(r'%d/%m/%Y, %H:%M:%S') for ts in ax.get_xticks()])
         ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
 
         # x locator and formatter

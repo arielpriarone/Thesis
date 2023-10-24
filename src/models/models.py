@@ -1,5 +1,6 @@
 import copy
 import datetime
+from gc import collect
 from os import error
 import pymongo
 import src
@@ -28,7 +29,7 @@ class MLA(src.data.DB_Manager):
         self.__error_plot_size = self.Config['kmeans']['error_plot_size']
         if self.__error_queue_size > self.__error_plot_size:
             raise ValueError('Error queue size cannot be bigger than the error plot size in "config.yaml"')
-        self.novelty_threshold = self.Config['kmeans']['novelty_threshold']
+        self.novelty_threshold = self.Config['novelty']['threshold']
         self.err_dict = {'values': List[float], 'timestamp': List[datetime.datetime],
                          'assigned_cluster': List[int], 'anomaly': List[bool]} # dictionary of the error
         self.err_dict['values'] = []  # initialize the error array
@@ -75,13 +76,21 @@ class MLA(src.data.DB_Manager):
                 case 'train':
                     if typer.confirm(f"The training procedure will take all the data from the collection '{self.col_features.full_name}' and pack it in the collection '{self.col_train.full_name}'. This will also ERASE the current training data, do you want to PROCEED?", abort=True):
                         self.col_train.delete_many({})
+                    if self.col_features.count_documents({}) == 0:
+                        self.__move_to_train(source=self.col_unconsumed)                                        # empty, ask to move all data from unconsumed to train dataset
                     while not self.prepare_train_data():
                         pass    # wait for data to be available
                     self.train()
                     if typer.confirm("Do you want to change the 'mode' to 'evaluate'", abort=True):
                         self.mode = 'evaluate'
                 case 'retrain':
-                    self.retrain()
+                    if self.col_features.count_documents({}) == 0:
+                        self.__move_to_train(source=self.col_quarantined)                                        # empty, ask to move all data from unconsumed to train dataset
+                    while not self.prepare_train_data():
+                        pass    # wait for data to be available
+                    self.train()
+                    if typer.confirm("Do you want to change the 'mode' to 'evaluate'", abort=True):
+                        self.mode = 'evaluate'
                 case _:
                     self.mode = typer.prompt('Please select the mode of the MLA. The options are: "evaluate", "train" or "retrain"')
 
@@ -181,49 +190,48 @@ class MLA(src.data.DB_Manager):
         return True
 
     def pack_train_data(self):
-        __train_data = self.col_train.find_one({'_id': 'training set'})
-        if __train_data is None:  # if the training set is empty, initialize it with the oldest snapshot
-            try:
+            """
+            Packs the training data by appending healthy documents to the dataset.
+            If the training set is empty, it is initialized with the oldest snapshot.
+            """
+            __train_data = self.col_train.find_one({'_id': 'training set'}) # find the training set
+            if __train_data is None:  # if the training set is empty, initialize it with the oldest snapshot
                 self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
-            except IndexError:
-                self.__move_to_train()                                          # empty, ask to move all data from unconsumed to train dataset
-            __id_to_remove = copy.deepcopy(self.snap['_id'])                  # copy the id of the snapshot to remove
-            self.snap['_id']='training set'                                                      # rename it for initializing the training set
-            self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
-            self.col_features.delete_one({'_id': __id_to_remove})                  # delete the snapshot from the features collection
-            print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
-        else:                   # append healty documents to the dataset
-            if self.col_features.count_documents({}) == 0:
-                self.__move_to_train()                                        # empty, ask to move all data from unconsumed to train dataset
-            cursor = self.col_features.find().sort('timestamp',pymongo.ASCENDING)  # get the oldest snapshot
-            for self.snap in cursor:
-                if isinstance(__train_data['timestamp'],list):                     # if the training set is a list, pass
-                    pass
-                else:                                                            # convert everityng to list
-                    __train_data['timestamp'] = [__train_data['timestamp']]
+                __id_to_remove = copy.deepcopy(self.snap['_id'])                  # copy the id of the snapshot to remove
+                self.snap['_id']='training set'                                                      # rename it for initializing the training set
+                self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
+                self.col_features.delete_one({'_id': __id_to_remove})                  # delete the snapshot from the features collection
+                print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
+            else:                   # append healty documents to the dataset
+                cursor = self.col_features.find().sort('timestamp',pymongo.ASCENDING)  # get the oldest snapshot
+                for self.snap in cursor:
+                    if isinstance(__train_data['timestamp'],list):                     # if the training set is a list, pass
+                        pass
+                    else:                                                            # convert everityng to list
+                        __train_data['timestamp'] = [__train_data['timestamp']]
+                        for sensor in self.sensors:
+                            for feature in __train_data[sensor].keys():
+                                __train_data[sensor][feature] = [__train_data[sensor][feature]]          
+                    __train_data['timestamp'].append(self.snap['timestamp'])                  # append the timestamp
                     for sensor in self.sensors:
                         for feature in __train_data[sensor].keys():
-                            __train_data[sensor][feature] = [__train_data[sensor][feature]]          
-                __train_data['timestamp'].append(self.snap['timestamp'])                  # append the timestamp
-                for sensor in self.sensors:
-                    for feature in __train_data[sensor].keys():
-                        __train_data[sensor][feature].append(self.snap[sensor][feature])  # append the sensor data
-                self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
-        
-            self.col_train.replace_one({'_id': 'training set'}, __train_data)         # replace the training set with the updated one 
-            print(f"Training set updated to '{self.col_train.full_name}' with '_id': 'training set' ")
-            return True # return True if the training set has been updated
+                            __train_data[sensor][feature].append(self.snap[sensor][feature])  # append the sensor data
+                    self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
+            
+                self.col_train.replace_one({'_id': 'training set'}, __train_data)         # replace the training set with the updated one 
+                print(f"Training set updated to '{self.col_train.full_name}' with '_id': 'training set' ")
+                return True # return True if the training set has been updated
 
-    def __move_to_train(self):
+    def __move_to_train(self,source:Collection):
         print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
-        if typer.confirm(f"Do you want to move 'ALL' data  from '{self.col_unconsumed.full_name}' to '{self.col_features.full_name}'?",default=False):
-            if self.col_unconsumed.count_documents({}) == 0:
+        if typer.confirm(f"Do you want to move 'ALL' data  from '{source.full_name}' to '{self.col_features.full_name}'?",default=False):
+            if source.count_documents({}) == 0:
                 raise Exception("No data in the collection, cannot initialize the training set")
-            self.moveCollection(self.col_unconsumed, self.col_features)
+            self.moveCollection(source, self.col_features)
             self.snap = self.col_features.find().sort('timestamp',pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
         else:
-            print("Exiting...")
-            raise Exception("No data in the collection, cannot initialize the training set")
+            print("No data in the collection, cannot initialize the training set...")
+            #raise Exception("No data in the collection, cannot initialize the training set")
 
     def standardize_features(self):
         # now this method scales the data
@@ -271,24 +279,40 @@ class MLA(src.data.DB_Manager):
     def save_KMeans(self):
         # save the scaler
         __pickled_data = pickle.dumps(self.kmeans)
-        __id ='KMeans_'+str(self.type)+'_pickled'
+        __id =f"KMeans_'{str(self.type)}'_pickled"
+        try:
+            self.col_models.delete_many({"_id": __id})
+        except:
+            pass # if the document is not found, pass
         try:
             self.col_models.insert_one({'_id': __id, 'data': __pickled_data})
         except:
-            try:
-                self.col_train.replace_one({'_id': __id}, {'_id': __id, 'data': __pickled_data})
-            except:
+            res = self.col_train.update_one({'_id': __id}, {'$set': {'_id': __id, 'data': __pickled_data}})
+            print(f"Document with _id {__id} modified with result counter: {res.modified_count}")
+            if res.modified_count == 0:
                 raise Exception('Error saving the KMeans model')
         print(f"KMeans model saved as picled data into '{self.col_models.full_name}' with '_id': {__id}")
     
     def retrieve_KMeans(self):
-        __id ='KMeans_'+str(self.type)+'_pickled'
-        __retrieved_data: Collection | None = self.col_models.find_one({'_id': __id})
-        if __retrieved_data is None:
-            raise Exception('KMeans model not found in collection ' + self.col_models.full_name + ' with _id: ' + __id)
-        else:
-            self.kmeans:KMeans = pickle.loads(__retrieved_data['data'])
-            print(f"KMeans retrieved from picled data @ {self.col_models.full_name}")
+            """
+            Retrieves a KMeans model from the MongoDB collection specified by `self.col_models` and with an ID
+            constructed from the model's `type` attribute. If the model is not found in the collection, an exception
+            is raised. Otherwise, the model is loaded from the pickled data and stored in `self.kmeans`. The method
+            also prints out the retrieved model's configuration.
+
+            Raises:
+                Exception: If the KMeans model is not found in the specified MongoDB collection.
+            """
+            __id =f"KMeans_'{str(self.type)}'_pickled"
+            __retrieved_data: Collection | None = self.col_models.find_one({'_id': __id})
+            if __retrieved_data is None:
+                raise Exception('KMeans model not found in collection ' + self.col_models.full_name + ' with _id: ' + __id)
+            else:
+                self.kmeans:KMeans = pickle.loads(__retrieved_data['data'])
+                print(f"KMeans retrieved from picled data @ {self.col_models.full_name}")
+                print(f"with config:\n {self.kmeans.get_params()}")
+                print(f"with n of features:\n {self.kmeans.n_features_in_}")
+                pass
     
     def __retrieve_StdScaler(self):
         __retrieved_data: Collection | None = self.col_train.find_one({'_id': 'StandardScaler_pickled'})
@@ -330,7 +354,7 @@ class MLA(src.data.DB_Manager):
 
         self.kmeans=KMeans(self.num_clusters,n_init='auto',max_iter=self.__max_iter) #reinitialize the kmeans
         self.kmeans.fit(self.trainMatrix)
-        print("Kmeans trained with " + str(self.num_clusters) + " clusters")
+        print(f"Kmeans trained with config:\n {self.kmeans.get_params()}")
         self.save_KMeans()
 
     
