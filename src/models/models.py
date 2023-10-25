@@ -160,7 +160,7 @@ class MLA(src.data.DB_Manager):
             self.err_dict['values'] = self.err_dict['values'][1:] # remove the oldest error from the error array
             self.err_dict['timestamp'] = self.err_dict['timestamp'][1:] # remove the oldest error from the  timestamp array
             self.err_dict['assigned_cluster'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
-            self.err_dict['anomaly'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
+            self.err_dict['anomaly'] = self.err_dict['anomaly'][1:] # remove the oldest error from the  assigned_cluster array
             
         # write the error to the database
         self.col_models.replace_one({'_id': f'Kmeans cluster {self.type} indicator'}, self.err_dict, upsert=True)

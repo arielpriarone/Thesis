@@ -47,4 +47,5 @@ novelty:           # Novelty/fault configuration
   threshold:          0.10                        # Threshold for novelty / fault detection:
 #                                                   relative percentage of the distance to the cluster w.r.t the max distance
 #                                                   to the assigned cluster in the training set
+  forecast_threshold: 0.8                         # Threshold for novelty / fault prediction
   n_fit:              50                          # Number of samples used to fit the prediction curve
