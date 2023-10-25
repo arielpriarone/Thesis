@@ -1,5 +1,7 @@
 import os
+import pickle
 from socket import RCVALL_SOCKETLEVELONLY
+import time
 import timeit
 from turtle import color
 from matplotlib import cm, lines
@@ -56,20 +58,23 @@ class Plotter:
             self.Err_dict = self.DB.col_models.find({'_id': f'Kmeans cluster {self.type} indicator'})[0]
         except IndexError:
             os.system('cls' if os.name == 'nt' else 'clear')
-            print(f"No Kmeans error dictionary found in {self.DB.col_models.full_name}, waiting...")
+            print(f"Document 'Kmeans cluster {self.type} indicator' not found in Collection {self.DB.col_models.full_name}, waiting...")
             return False
         return True
 
     def plot_Kmeans_error_init(self,ax: plt.Axes):
         while not self.load_indicator_data():
+            time.sleep(0.2)
             return None # wait for data to be available
         __MLA = src.models.MLA(self.confstr, self.type)
         range_clusters = range(__MLA.kmeans.get_params()['n_clusters'])
         color_legend = [self.tab10_cmap(x) for x in range_clusters]
         self.__legend_labels = [f"cluster {i}" for i in range_clusters]
         self.__legend_lines = [Line2D([0], [0],marker='o', color='w',markerfacecolor=color_legend[indx], lw=4, alpha=1) for indx in range_clusters] # type: ignore
+        self.__legend_labels.append('alarm threshold')
         self.__legend_labels.append('novelty threshold')
         self.__legend_lines.append(Line2D([0], [0], linestyle='-.', color='k'))
+        self.__legend_lines.append(Line2D([0], [0], linestyle='--', color='k'))
         print(f"Plot Kmeans error initialized with {self.__legend_labels} and {self.__legend_lines}")
         return ax
 
@@ -80,8 +85,19 @@ class Plotter:
         ax.set_title(f"Latest {self.DB.Config['kmeans']['error_plot_size']} {self.type} indicator value.")  # set title
         self.__colors = [self.tab10_cmap(x) for x in Err_dict['assigned_cluster']]
 
+        # plot indicator
         xlocator=np.array([Err_dict['timestamp'][x].timestamp() for x in range(len(Err_dict['timestamp']))])
         ax.scatter(xlocator, Err_dict['values'],marker='.', c=self.__colors)  # type: ignore #plot <data
+
+        # plot prediction
+        n_of_fits = len(Err_dict['pred_parameters'])
+        if n_of_fits > 0:
+            Err_dict['pred_parameters'] = [pickle.loads(Err_dict['pred_parameters'][x]) for x in range(n_of_fits)]
+            for curve_indx in range(n_of_fits):
+                x = np.linspace(min(xlocator), max(xlocator)+np.mean([min(xlocator),max(xlocator)]), 100)
+                y = src.data.f(x, *Err_dict['pred_parameters'][curve_indx])
+                ax.plot(x,y,linestyle='--',color='magenta')
+
         ax.axhline(self.DB.Config['novelty']['threshold'],linestyle='-.',color='k')
         ax.set_xlim(min(xlocator),max(xlocator))
         ax.set_ylabel('Distance relative error [%]')

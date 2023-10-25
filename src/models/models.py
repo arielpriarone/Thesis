@@ -1,6 +1,7 @@
 import copy
 import datetime
 from gc import collect
+from math import e
 from os import error
 import pymongo
 import src
@@ -15,6 +16,7 @@ from typing import List, Dict, Tuple
 import typer
 from sklearn.cluster import KMeans 
 import matplotlib.pyplot as plt
+import scipy.optimize as opt
 
 class MLA(src.data.DB_Manager):
     '''
@@ -30,12 +32,18 @@ class MLA(src.data.DB_Manager):
         if self.__error_queue_size > self.__error_plot_size:
             raise ValueError('Error queue size cannot be bigger than the error plot size in "config.yaml"')
         self.novelty_threshold = self.Config['novelty']['threshold']
+        self.forecast_threshold = self.Config['novelty']['forecast_threshold']
+        self.outlier_filter = self.Config['novelty']['outlier_filter']
+        self.n_fit = self.Config['novelty']['n_fit']
+        if self.n_fit > self.__error_plot_size:
+            raise ValueError('N_fit cannot be bigger than the error plot size in "config.yaml"')
         self.err_dict = {'values': List[float], 'timestamp': List[datetime.datetime],
                          'assigned_cluster': List[int], 'anomaly': List[bool]} # dictionary of the error
         self.err_dict['values'] = []  # initialize the error array
         self.err_dict['timestamp'] = [] # initialize the timestamp array
         self.err_dict['assigned_cluster'] = []  # initialize the assigned cluster array
         self.err_dict['anomaly'] = []# initialize the anomaly array
+        self.err_dict['pred_parameters'] = [] # initialize the pred_parameters array
         self.__mode = None              #  mode of the MLA (evaluate/train/retrain)
         match self.type:
             case 'novelty':
@@ -110,13 +118,27 @@ class MLA(src.data.DB_Manager):
                     print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
             self.scale_features()
             if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
-                # if the error is positive, move to quarantine
                 self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
                 self._write_snap(self.col_quarantined) # move the snap to the quarantine collection
+                self.predict() # predict the fault
             self._mark_snap_evaluated() # mark the snap as evaluated
             self._delete_evaluated_snap() # delete the snap from the unconsumed collection
             print(f"Distance Novelty: {self.err_dict['values'][-1]}")
     
+    def predict(self):
+        ''' This method predicts the fault '''
+        if len(self.err_dict['values']) < 4: # 4 are the number of parameters to estimate - at least 4 samples are needed
+            print("Not enough data to predict the fault")
+            return
+        start_fit = min(len(self.err_dict['timestamp']),self.n_fit) # start of the error samples to fit
+        range_to_fit = range(-start_fit,0) # range of the error samples to fit
+        x = np.array([self.err_dict['timestamp'][i].timestamp() for i in range_to_fit])
+        y = np.array(self.err_dict['values'][-self.n_fit:])
+        params, cv = opt.curve_fit(src.data.f, x, y, p0=[1,1,1,1]) #fitting
+        __pickled_data = pickle.dumps(params)
+        self.err_dict['pred_parameters'].append(__pickled_data)
+        self.err_dict['pred_parameters'] = self.err_dict['pred_parameters'][-self.__error_queue_size:]
+
     def _mark_snap_evaluated(self): # to leave at least one snap in the collection for plotting reasons
         self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
         self.snap['evaluated'] = True
@@ -161,15 +183,16 @@ class MLA(src.data.DB_Manager):
             self.err_dict['timestamp'] = self.err_dict['timestamp'][1:] # remove the oldest error from the  timestamp array
             self.err_dict['assigned_cluster'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
             self.err_dict['anomaly'] = self.err_dict['anomaly'][1:] # remove the oldest error from the  assigned_cluster array
-            
-        # write the error to the database
-        self.col_models.replace_one({'_id': f'Kmeans cluster {self.type} indicator'}, self.err_dict, upsert=True)
-
-        if anomaly:
-            print("NOVELTY DETECTED")
-            return True
+        
+        # save the error dictionary
+        self.col_models.replace_one({'_id': f'Kmeans cluster {self.type} indicator'}, self.err_dict, upsert=True) # update the error dictionary
+        n_anomaly = self.err_dict['anomaly'][-1-self.outlier_filter:] # get the last consecutive outlier_filter elements
+        n_anomaly_mask = [True]*(self.outlier_filter+1) # all the allowed elements are True
+        if n_anomaly == n_anomaly_mask: # if the number of anomalies is bigger than the outlier filter, move to quarantine
+            print("alarm - NOVELTY DETECTED")
+            return True  # return True if novelty detected - move to quarantine
         else:
-            return False
+            return False # return False if no novelty detected
 
     def calculate_train_cluster_dist(self):
         ''' This method computes the maximum distance of each cluster in the train dataset '''
