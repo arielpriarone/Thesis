@@ -107,15 +107,17 @@ class MLA(src.data.DB_Manager):
         self.num_clusters = self.kmeans.get_params()['n_clusters'] # get the number of clusters
         self.packFeaturesMatrix()      # pack the training features in a matrix
         while True:
-            os.system('cls')
             self.calculate_train_cluster_dist() # calculate the maximum distance of each cluster in the train dataset
             evaluate=False
+            printed=False
             while not evaluate: # read the features from the collection
                 try:
                     self.snap=self.col_unconsumed.find({'evaluated': {"$exists": False}}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest not evaluated snap
                     evaluate=True
                 except IndexError:
-                    print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
+                    if not printed:
+                        print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
+                        printed=True
             self.scale_features()
             if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
                 self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
@@ -126,16 +128,25 @@ class MLA(src.data.DB_Manager):
             print(f"Distance Novelty: {self.err_dict['values'][-1]}")
     
     def predict(self):
+        print("Predicting the fault...")
         ''' This method predicts the fault '''
-        if len(self.err_dict['values']) < 4: # 4 are the number of parameters to estimate - at least 4 samples are needed
+        if len(self.err_dict['values']) < src.data.f.__code__.co_argcount:
             print("Not enough data to predict the fault")
             return
         start_fit = min(len(self.err_dict['timestamp']),self.n_fit) # start of the error samples to fit
         range_to_fit = range(-start_fit,0) # range of the error samples to fit
         x = np.array([self.err_dict['timestamp'][i].timestamp() for i in range_to_fit])
+        xscale = float(max(x)-min(x))
+        xoffset = float(min(x))
+        x = (x-xoffset)/xscale # scale the x axis
         y = np.array(self.err_dict['values'][-self.n_fit:])
-        params, cv = opt.curve_fit(src.data.f, x, y, p0=[1,1,1,1]) #fitting
-        __pickled_data = pickle.dumps(params)
+        try:
+            params, cv = opt.curve_fit(src.data.f, x, y) #fitting
+        except:
+            print("Error in the fitting procedure of the prediction curve")
+            return
+        __pickled_data = pickle.dumps([xoffset, xscale, params])
+        print(f"Fault predicted with parameters: {params}")
         self.err_dict['pred_parameters'].append(__pickled_data)
         self.err_dict['pred_parameters'] = self.err_dict['pred_parameters'][-self.__error_queue_size:]
 

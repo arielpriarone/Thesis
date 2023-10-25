@@ -9,7 +9,6 @@ from typing import Union, List, Dict, Any
 import pymongo
 from pymongo.collection import Collection
 
-
 def f(x,a,b,c): #function to fit for novelty prediction
     return a*np.exp(b*x)+c
 

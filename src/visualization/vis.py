@@ -63,6 +63,7 @@ class Plotter:
         return True
 
     def plot_Kmeans_error_init(self,ax: plt.Axes):
+        set_matplotlib_params()
         while not self.load_indicator_data():
             time.sleep(0.2)
             return None # wait for data to be available
@@ -72,9 +73,11 @@ class Plotter:
         self.__legend_labels = [f"cluster {i}" for i in range_clusters]
         self.__legend_lines = [Line2D([0], [0],marker='o', color='w',markerfacecolor=color_legend[indx], lw=4, alpha=1) for indx in range_clusters] # type: ignore
         self.__legend_labels.append('alarm threshold')
-        self.__legend_labels.append('novelty threshold')
+        self.__legend_labels.append('novelty threshold')        
+        self.__legend_labels.append('prediction')
         self.__legend_lines.append(Line2D([0], [0], linestyle='-.', color='k'))
         self.__legend_lines.append(Line2D([0], [0], linestyle='--', color='k'))
+        self.__legend_lines.append(Line2D([0], [0], linestyle='--', color='magenta'))
         print(f"Plot Kmeans error initialized with {self.__legend_labels} and {self.__legend_lines}")
         return ax
 
@@ -91,16 +94,24 @@ class Plotter:
 
         # plot prediction
         n_of_fits = len(Err_dict['pred_parameters'])
+        x=xlocator
         if n_of_fits > 0:
             Err_dict['pred_parameters'] = [pickle.loads(Err_dict['pred_parameters'][x]) for x in range(n_of_fits)]
             for curve_indx in range(n_of_fits):
-                x = np.linspace(min(xlocator), max(xlocator)+np.mean([min(xlocator),max(xlocator)]), 100)
-                y = src.data.f(x, *Err_dict['pred_parameters'][curve_indx])
+                if not len(Err_dict['pred_parameters'][curve_indx]) == src.data.f.__code__.co_argcount-1:
+                    continue # if the parameter not have the right shape, skip
+                x = np.array(np.linspace(min(xlocator), max(xlocator)+np.mean([min(xlocator),max(xlocator)])-min(xlocator), 100))
+                offset = Err_dict['pred_parameters'][curve_indx][0]
+                scalex = Err_dict['pred_parameters'][curve_indx][1]
+                y = src.data.f((x-offset)/scalex, *Err_dict['pred_parameters'][curve_indx][2]) # because the first in the array is the scale
                 ax.plot(x,y,linestyle='--',color='magenta')
 
         ax.axhline(self.DB.Config['novelty']['threshold'],linestyle='-.',color='k')
-        ax.set_xlim(min(xlocator),max(xlocator))
+        ax.axhline(self.DB.Config['novelty']['forecast_threshold'],linestyle='--',color='k')
+        ax.set_xlim(min(xlocator),max(np.append(xlocator,x)))
+        # ax.set_ylim(min(Err_dict['values']),max(Err_dict['values']))
         ax.set_ylabel('Distance relative error [%]')
+
         ax.set_xlabel('Time [s]')
         ax.set_xticklabels([datetime.fromtimestamp(ts).strftime(r'%d/%m/%Y, %H:%M:%S') for ts in ax.get_xticks()])
         ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
