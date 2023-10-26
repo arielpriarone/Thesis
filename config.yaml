@@ -48,6 +48,6 @@ novelty:           # Novelty/fault configuration
 #                                                   relative percentage of the distance to the cluster w.r.t the max distance
 #                                                   to the assigned cluster in the training set
   forecast_threshold: 0.8                         # Threshold for novelty / fault prediction
-  n_fit:              40                          # Number of samples used to fit the prediction curve
+  n_fit:              50                          # Number of samples used to fit the prediction curve
   outlier_filter:     1                           # Number of consecutive outliers to filter (1 means two outliers will be considered as novelty/fault)
   

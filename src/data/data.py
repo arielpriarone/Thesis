@@ -12,6 +12,8 @@ from pymongo.collection import Collection
 def f(x,a,b,c): #function to fit for novelty prediction
     return a*np.exp(b*x)+c
 
+
+
 class snapshot: #this should contain all the useful information about a snapshot (axis, timastamp, features etc...)
     def __init__(self,rawData=None):
         self.rawData=rawData

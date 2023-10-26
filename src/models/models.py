@@ -144,7 +144,7 @@ class MLA(src.data.DB_Manager):
         x = (x-xoffset)/xscale # scale the x axis
         y = np.array(self.err_dict['values'][-self.n_fit:])
         try:
-            params, cv = opt.leastsq(src.data.f, x, y) #fitting
+            params, cv = opt.curve_fit(src.data.f, x, y) #fitting
         except:
             print("Error in the fitting procedure of the prediction curve")
             return
@@ -445,8 +445,8 @@ class MLA(src.data.DB_Manager):
 if __name__ == '__main__':
     NoveltyAgent = MLA(configStr=r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml", type='novelty')
     FaultAgent = MLA(configStr=r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml", type='fault')
-    FaultAgent.mode = 'train'
-    FaultAgent.run()
+    NoveltyAgent.mode = 'evaluate'
+    NoveltyAgent.run()
 
     
 
