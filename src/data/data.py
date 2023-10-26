@@ -133,8 +133,13 @@ class DB_Manager:
         
     def _write_snap(self, col: Collection):
         ''' Write the data to the collection '''
-        col.insert_one(self.snap)
-        print(f"Inserted snapshot with timestamp {self.snap['timestamp']} into {col.full_name}")
+        try:
+            col.insert_one(self.snap)
+            print(f"Inserted snapshot with timestamp {self.snap['timestamp']} into {col.full_name}")
+        except:
+            print(f"Error inserting snapshot with timestamp {self.snap['timestamp']} into {col.full_name}")
+
+        
 
     def _replace_snap(self, col: Collection):
         ''' Replace the data in the collection '''

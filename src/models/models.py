@@ -3,6 +3,7 @@ import datetime
 from gc import collect
 from math import e
 from os import error
+from xmlrpc.client import Fault
 import pymongo
 import src
 import os
@@ -112,7 +113,7 @@ class MLA(src.data.DB_Manager):
             printed=False
             while not evaluate: # read the features from the collection
                 try:
-                    self.snap=self.col_unconsumed.find({'evaluated': {"$exists": False}}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest not evaluated snap
+                    self.snap=self.col_unconsumed.find({f'{self.type} evaluated': {"$exists": False}}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest not evaluated snap
                     evaluate=True
                 except IndexError:
                     if not printed:
@@ -120,11 +121,13 @@ class MLA(src.data.DB_Manager):
                         printed=True
             self.scale_features()
             if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
-                self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
-                self._write_snap(self.col_quarantined) # move the snap to the quarantine collection
+                if self.type == 'novelty':
+                    self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
+                    self._write_snap(self.col_quarantined) # move the snap to the quarantine collection
                 self.predict() # predict the fault
             self._mark_snap_evaluated() # mark the snap as evaluated
-            self._delete_evaluated_snap() # delete the snap from the unconsumed collection
+            if self.type == 'novelty':
+                self._delete_evaluated_snap() # delete the snap from the unconsumed collection
             print(f"Distance Novelty: {self.err_dict['values'][-1]}")
     
     def predict(self):
@@ -141,7 +144,7 @@ class MLA(src.data.DB_Manager):
         x = (x-xoffset)/xscale # scale the x axis
         y = np.array(self.err_dict['values'][-self.n_fit:])
         try:
-            params, cv = opt.curve_fit(src.data.f, x, y) #fitting
+            params, cv = opt.leastsq(src.data.f, x, y) #fitting
         except:
             print("Error in the fitting procedure of the prediction curve")
             return
@@ -152,13 +155,13 @@ class MLA(src.data.DB_Manager):
 
     def _mark_snap_evaluated(self): # to leave at least one snap in the collection for plotting reasons
         self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
-        self.snap['evaluated'] = True
+        self.snap[f'{self.type} evaluated'] = True
         self._replace_snap(self.col_unconsumed) # mark the snap as evaluated
         print(f"Snap '{self.snap['_id']}' marked as evaluated in the '{self.col_unconsumed.full_name}' collection")
     
     def _delete_evaluated_snap(self): # to leave at least one snap in the collection for plotting reasons
-        while self.col_unconsumed.count_documents({'evaluated':True}) > 1: # while there are more than one snap to delete
-            snap_to_delete = self.col_unconsumed.find({'evaluated':True}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest snap to delete
+        while self.col_unconsumed.count_documents({'novelty evaluated': True, 'fault evaluated': True}) > 1: # while there are more than one snap to delete
+            snap_to_delete = self.col_unconsumed.find({'novelty evaluated': True, 'fault evaluated': True}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest snap to delete
             self.col_unconsumed.delete_one({'_id': snap_to_delete['_id']}) # delete the snap from the collection
             print(f"Snap '{snap_to_delete['_id']}' deleted from the '{self.col_unconsumed.full_name}' collection")
 
@@ -179,7 +182,11 @@ class MLA(src.data.DB_Manager):
         # the actual estimator of the error is the relative distance margin to the assigned cluster
         current_error=float((distance_to_assigned_center-self.train_cluster_dist[int(y)])/self.train_cluster_dist[int(y)]) # calculate the error
         if self.type == 'fault':
-            current_error = -1/current_error # if the type is fault, the error is negative
+            try:
+                current_error = float(-np.log(current_error+0.999)) # if the type is fault, the error is negative
+            except ZeroDivisionError:
+                float('inf')
+
 
         anomaly = current_error > self.novelty_threshold # check if the error is above the threshold
         
@@ -370,9 +377,9 @@ class MLA(src.data.DB_Manager):
         ''' Append the features to the collection collection '''
         col.update_one({'_id': 'trainig set'}, {'$set': {}})
     
-
     def train(self):
         self.packFeaturesMatrix()       # pack the training features in a matrix
+        self.__clusters_range = range(2,min(self.__max_clusters+1,self.trainMatrix.shape[0])) # range of clusters to evaluate
         self.evaluate_silhouette()
         self.evaluate_inertia()
 
@@ -395,14 +402,15 @@ class MLA(src.data.DB_Manager):
     def evaluate_silhouette(self):
         ''' This method evaluates the silhouette score for the training set '''
         self.__sil_score=[]
-        for n_blobs in range(2,self.__max_clusters+1):
+        for n_blobs in self.__clusters_range:
             __kmeans=KMeans(n_blobs,n_init='auto',max_iter=self.__max_iter)
             __y_pred_train=__kmeans.fit_predict(self.trainMatrix )
             self.__sil_score.append(silhouette_score(self.trainMatrix,__y_pred_train))
     
     def evaluate_inertia(self):
         self.__inertia=[]
-        for n_blobs in range(1,self.__max_clusters+1):
+        
+        for n_blobs in self.__clusters_range:
             kmeans=KMeans(n_blobs,n_init='auto',max_iter=1000)
             kmeans.fit_predict(self.trainMatrix)
             self.__inertia.append(kmeans.inertia_)
@@ -422,12 +430,12 @@ class MLA(src.data.DB_Manager):
         print("Features packed in a matrix: " + str(self.trainMatrix.shape))
 
     def __plot_silhouette(self, ax):
-        ax.plot(range(2,self.__max_clusters+1),self.__sil_score)
+        ax.plot(self.__clusters_range,self.__sil_score)
         ax.set_ylabel('Silhouette')
         ax.set_xlabel('Num. of clusters')
 
     def __plot_inertia(self, ax):
-        ax.plot(range(1,self.__max_clusters+1),self.__inertia)
+        ax.plot(self.__clusters_range,self.__inertia)
         ax.set_ylabel('Inertia')
         ax.set_xlabel('Num. of clusters')
 
@@ -436,7 +444,9 @@ class MLA(src.data.DB_Manager):
 
 if __name__ == '__main__':
     NoveltyAgent = MLA(configStr=r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml", type='novelty')
-    NoveltyAgent.evaluate()
+    FaultAgent = MLA(configStr=r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml", type='fault')
+    FaultAgent.mode = 'train'
+    FaultAgent.run()
 
     
 

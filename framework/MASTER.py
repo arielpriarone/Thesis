@@ -24,7 +24,7 @@ def IMS_converter(
                                        min=1,max=3),
     sensor      : List[str]  = typer.Option(default=['Bearing 1 x', 'Bearing 1 y'],help='The sensor names you want to read, can be repeated! (axcepted values:\nBearing 1 x\nBearing 1 y\nBearing 2 x\nBearing 2 y\nBearing 3 x\nBearing 3 y\nBearing 4 x\nBearing 4 y\nBearing 1\n Bearing 2\nBearing 3\nBearing 4)'),
     URI         : str   = typer.Option(default='mongodb://localhost:27017',help='The URI to connect to MongoDB'),
-    sleep       : float = typer.Option(default=1)
+    sleep       : float = typer.Option(default=None)
 ):
     """
     Transfer the data from the IMS textual files into the MongoDB database in a suitable way.
@@ -55,12 +55,11 @@ def IMS_converter(
     
     if not typer.confirm("do you want to proceed importing the data from files to MongoDB?", abort=True):
         return
-    _slow = typer.prompt('Do you want to slow down the import? (y/n)', default='n')
     for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
         path=os.path.join(dirpath, _fileName) # complete path including filename
         src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
-        if _slow == 'y':
-            time.sleep(sleep)
+    if sleep is not None:
+        time.sleep(sleep)
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
 @app.command()
@@ -126,11 +125,12 @@ def run_machine_learning_agent(type : Types, command: Modes,config: str = typer.
     os.system('title Machine Learning Agent')
     MLA = src.models.MLA(configStr=config, type=type.value)
     if command == Modes.train:
-        MLA.train()
+        MLA.mode = 'train'
     elif command == Modes.retrain:
-        MLA.retrain()
+        MLA.mode = 'retrain'
     elif command == Modes.evaluate:
-        MLA.evaluate()
+        MLA.mode = 'evaluate'
+    MLA.run()
 
 @app.command()
 def move_collection(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file'),

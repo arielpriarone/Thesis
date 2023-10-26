@@ -90,7 +90,7 @@ class Plotter:
 
         # plot indicator
         xlocator=np.array([Err_dict['timestamp'][x].timestamp() for x in range(len(Err_dict['timestamp']))])
-        ax.scatter(xlocator, Err_dict['values'],marker='.', c=self.__colors)  # type: ignore #plot <data
+        ax.scatter(xlocator, np.array(Err_dict['values'])*100,marker='.', c=self.__colors)  # type: ignore #plot <data
 
         # plot prediction
         n_of_fits = len(Err_dict['pred_parameters'])
@@ -104,12 +104,13 @@ class Plotter:
                 offset = Err_dict['pred_parameters'][curve_indx][0]
                 scalex = Err_dict['pred_parameters'][curve_indx][1]
                 y = src.data.f((x-offset)/scalex, *Err_dict['pred_parameters'][curve_indx][2]) # because the first in the array is the scale
-                ax.plot(x,y,linestyle='--',color='magenta')
+                ax.plot(x,np.array(y)*100,linestyle='--',color='magenta')
 
-        ax.axhline(self.DB.Config['novelty']['threshold'],linestyle='-.',color='k')
-        ax.axhline(self.DB.Config['novelty']['forecast_threshold'],linestyle='--',color='k')
+        ax.axhline(self.DB.Config['novelty']['threshold']*100,linestyle='-.',color='k')
+        ax.axhline(self.DB.Config['novelty']['forecast_threshold']*100,linestyle='--',color='k')
         ax.set_xlim(min(xlocator),max(np.append(xlocator,x)))
-        # ax.set_ylim(min(Err_dict['values']),max(Err_dict['values']))
+        ax.set_ylim(min(Err_dict['values'])*100-abs(min(Err_dict['values']))*50,
+                    max(Err_dict['values'])*100+abs(max(Err_dict['values']))*50)
         ax.set_ylabel('Distance relative error [%]')
 
         ax.set_xlabel('Time [s]')
