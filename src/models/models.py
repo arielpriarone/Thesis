@@ -1,5 +1,6 @@
 import copy
 import datetime
+import logging
 from gc import collect
 from math import e
 from os import error
@@ -38,6 +39,7 @@ class MLA(src.data.DB_Manager):
         self.n_fit = self.Config['novelty']['n_fit']
         if self.n_fit > self.__error_plot_size:
             raise ValueError('N_fit cannot be bigger than the error plot size in "config.yaml"')
+        self.regType = self.Config['novelty']['regressor']
         self.err_dict = {'values': List[float], 'timestamp': List[datetime.datetime],
                          'assigned_cluster': List[int], 'anomaly': List[bool]} # dictionary of the error
         self.err_dict['values'] = []  # initialize the error array
@@ -63,6 +65,8 @@ class MLA(src.data.DB_Manager):
             self.retrieve_KMeans() # retrieve the Kmeans model
         except:
             self.kmeans=KMeans()
+        # logger init
+        logging.basicConfig(filename=os.path.join(self.Config['miscellanea']["logpath"],'MLA.log'), filemode='w', format='%(asctime)s - %(message)s', level=logging.INFO)
 
     @property
     def mode(self):
@@ -143,9 +147,16 @@ class MLA(src.data.DB_Manager):
         xoffset = float(min(x))
         x = (x-xoffset)/xscale # scale the x axis
         y = np.array(self.err_dict['values'][-self.n_fit:])
-        try:
-            params, cv = opt.curve_fit(src.data.f, x, y) #fitting
-        except:
+        params = None
+        match self.regType:
+            case 'exp':
+                params = src.ExpRegressor(x,y) #fitting
+            case 'scipy':
+                try:
+                    params, cv = opt.curve_fit(src.data.f, x, y) #fitting
+                except:
+                    pass
+        if params is None:
             print("Error in the fitting procedure of the prediction curve")
             return
         __pickled_data = pickle.dumps([xoffset, xscale, params])
@@ -208,9 +219,14 @@ class MLA(src.data.DB_Manager):
         n_anomaly_mask = [True]*(self.outlier_filter+1) # all the allowed elements are True
         if n_anomaly == n_anomaly_mask: # if the number of anomalies is bigger than the outlier filter, move to quarantine
             print("alarm - NOVELTY DETECTED")
-            return True  # return True if novelty detected - move to quarantine
+            match self.type:
+                case 'novelty':
+                    logging.warning(f"alarm - NOVELTY DETECTED in the sample with timestamp '{self.snap['timestamp']}'")
+                case 'fault':
+                    logging.warning(f"alarm - FAULT DETECTED in the sample with timestamp '{self.snap['timestamp']}'")
+            return True  # return True if novelty/fault detected
         else:
-            return False # return False if no novelty detected
+            return False # return False if no novelty/fault detected
 
     def calculate_train_cluster_dist(self):
         ''' This method computes the maximum distance of each cluster in the train dataset '''

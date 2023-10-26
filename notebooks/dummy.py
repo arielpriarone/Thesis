@@ -67,7 +67,7 @@ MAT2=np.matrix([[A],[B]])
 RES=MAT1**(-1)*MAT2
 A2=RES[0]
 B2=RES[1]
-params = np.array([B2,c2,A2]).reshape(-1)
+params = np.array([B2,c2,A2]).reshape(-1).tolist()
 print(params)
 y_french = f(x,*params) #french method
 
