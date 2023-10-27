@@ -24,21 +24,16 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     auxpath='.'
 
 def dbscan_predict(model, X):
-
     nr_samples = X.shape[0]
-
     y_new = np.ones(shape=nr_samples, dtype=int) * -1
     dist_array = np.array([])
     for i in range(nr_samples):
         diff = model.components_ - X[i, :]  # NumPy broadcasting
-
         dist = np.linalg.norm(diff, axis=1)  # Euclidean distance
-
         shortest_dist_idx = np.argmin(dist)
         dist_array = np.append(dist_array, dist[shortest_dist_idx])
         if dist[shortest_dist_idx] < model.eps: # check if distance is smaller than epsilon
             y_new[i] = model.labels_[model.core_sample_indices_[shortest_dist_idx]]
-
     return y_new, dist_array
 
 # script settings
@@ -73,24 +68,19 @@ ax.set_ylabel('n_labels')
 
 # chose eps = 8
 db = DBSCAN(eps=8, min_samples=1).fit(IMSDATA['wavanaly_standardized_train'])
-    
 
 # predict only train dataset
 predictions_train_lab, predictions_train_dist = dbscan_predict(db,IMSDATA['wavanaly_standardized_train'])
-
 print(predictions_train_lab, predictions_train_dist)
 
 
 # %% predict with test dataset
-
 predictions_test_lab, predictions_test_dist = dbscan_predict(db,IMSDATA['wavanaly_standardized_test'])
-
 print(predictions_test_lab, predictions_test_dist)
 
 # %% predict with all dataset
 
 predictions_lab, predictions_dist = dbscan_predict(db,IMSDATA['wavanaly_standardized'])
-
 print(predictions_lab, predictions_dist)
 
 # %% plot
