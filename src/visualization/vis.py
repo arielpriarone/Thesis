@@ -115,7 +115,7 @@ class Plotter:
 
         ax.set_xlabel('Time [s]')
         ax.set_xticklabels([datetime.fromtimestamp(ts).strftime(r'%d/%m/%Y, %H:%M:%S') for ts in ax.get_xticks()])
-        ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
+        #ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
 
         # x locator and formatter
         plt.tight_layout()

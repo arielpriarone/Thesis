@@ -14,7 +14,7 @@ import pickle
 import os
 from sklearn.metrics import silhouette_score, silhouette_samples
 from rich import print
-from sklearn.cluster import DBSCAN
+from sklearn.mixture import GaussianMixture
 matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
@@ -23,27 +23,10 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
     auxpath='.'
 src.vis.set_matplotlib_params()
-def dbscan_predict(model, X):
-
-    nr_samples = X.shape[0]
-
-    y_new = np.ones(shape=nr_samples, dtype=int) * -1
-    dist_array = np.array([])
-    for i in range(nr_samples):
-        diff = model.components_ - X[i, :]  # NumPy broadcasting
-
-        dist = np.linalg.norm(diff, axis=1)  # Euclidean distance
-
-        shortest_dist_idx = np.argmin(dist)
-        dist_array = np.append(dist_array, dist[shortest_dist_idx])
-        if dist[shortest_dist_idx] < model.eps: # check if distance is smaller than epsilon
-            y_new[i] = model.labels_[model.core_sample_indices_[shortest_dist_idx]]
-
-    return y_new, dist_array
 
 # script settings
 modelpath     = auxpath + "./models/kmeans_model.pickle"   # folder path
-savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized_second.pickle") #file to save the analisys
+savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                             # empty dictionary to save data 
 
@@ -51,56 +34,79 @@ filehandler = open(savepath, 'rb')
 IMSDATA = pickle.load(filehandler)
 print(IMSDATA.keys())
 
-
 # %%
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
 ax.scatter(IMSDATA['wavanaly_standardized_train'][:,10],IMSDATA['wavanaly_standardized_train'][:,11],IMSDATA['wavanaly_standardized_train'][:,12],s=1,marker='.',c='black')
 
 # %% training
-print(IMSDATA['wavanaly_standardized_train'].shape)
 
-n_labels = []
-eps_range = np.linspace(1,20,100)
-for eps in eps_range:
-    db = DBSCAN(eps=eps, min_samples=1).fit(IMSDATA['wavanaly_standardized_train'])
-    n_labels.append(len(np.unique(db.labels_)))
+max_clusters=30
+BIC = [] # Bayesian Information Criterion
+AIC = [] # Akaike Information Criterion
+X = IMSDATA['wavanaly_standardized_train'] # data to fit in the model
+# for n_blobs in range(1,max_clusters+1):
+#     GM = GaussianMixture(n_components=n_blobs, covariance_type='full', random_state=0)
+#     GM.fit(X)
+#     print(f'Number of clusters: {n_blobs}: the mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
+#     BIC.append(GM.bic(X))
+#     AIC.append(GM.aic(X))
+# # plot BIC and AIC
+# fig, ax = plt.subplots()
+# ax.plot(range(1,max_clusters+1),BIC,label='BIC')
+# ax.plot(range(1,max_clusters+1),AIC,label='AIC')
+# ax.set_xlabel('Number of clusters')
+# ax.set_ylabel('Information Criterion')
+# ax.legend()
 
-fig, ax = plt.subplots()
-ax.scatter(eps_range,n_labels)
-ax.set_xlabel('eps')
-ax.set_ylabel('n_labels')
-
-# chose eps = 8
-db = DBSCAN(eps=8, min_samples=1).fit(IMSDATA['wavanaly_standardized_train'])
-    
-
-# predict only train dataset
-predictions_train_lab, predictions_train_dist = dbscan_predict(db,IMSDATA['wavanaly_standardized_train'])
-
-print(predictions_train_lab, predictions_train_dist)
-
+# %% fit model with 30 clusters
+GM = GaussianMixture(n_components=30, covariance_type='full', random_state=0)
+GM.fit(X)
+print(f'The mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
 
 # %% predict with test dataset
 
-predictions_test_lab, predictions_test_dist = dbscan_predict(db,IMSDATA['wavanaly_standardized_test'])
+scores = GM.score_samples(IMSDATA['wavanaly_standardized_test'])
+indicator = -scores/np.linalg.norm(scores)
+predictions = GM.predict(IMSDATA['wavanaly_standardized_test'])
 
-print(predictions_test_lab, predictions_test_dist)
+fig, ax = plt.subplots()
+ax.scatter(range(len(indicator)),indicator,c=predictions)
+ax.set_xlabel('sample')
+ax.set_ylabel('density')
+
 
 # %% predict with all dataset
+threshold = 0.005
+scores = GM.score_samples(IMSDATA['wavanaly_standardized'])
+indicator = -scores/np.linalg.norm(scores)
+predictions = GM.predict(IMSDATA['wavanaly_standardized'])
 
-predictions_lab, predictions_dist = dbscan_predict(db,IMSDATA['wavanaly_standardized'])
-
-print(predictions_lab, predictions_dist)
-
-# %% plot
 fig, ax = plt.subplots()
-threshold = 0.3
-cmap = cm.get_cmap("Set1")
-ax.scatter(range(len(predictions_dist)),predictions_dist,c=[cmap(x) for x in predictions_lab])
-ax.axhline(y=db.eps*(1+threshold), color='r', linestyle='-.')
+ax.scatter(range(len(indicator)),indicator,c=predictions,marker='.')
 ax.set_xlabel('sample')
-ax.set_ylabel('distance')
+ax.set_ylabel('density')
+ax.axhline(y=threshold, color='r', linestyle='-.')
+# ax.set_yscale('log')
+
+
+# check on second dataset
+savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized_second.pickle") #file to save the analisys
+decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
+IMSDATA={}                                              # empty dictionary to save data 
+filehandler = open(savepath, 'rb') 
+IMSDATA = pickle.load(filehandler)
+
+scores = GM.score_samples(IMSDATA['wavanaly_standardized'])
+indicator = -scores/np.linalg.norm(scores)
+predictions = GM.predict(IMSDATA['wavanaly_standardized'])
+
+fig, ax = plt.subplots()
+ax.scatter(range(len(indicator)),indicator,c=predictions)
+ax.set_xlabel('sample')
+ax.set_ylabel('density')
+ax.set_yscale('log')
+
 
 # %% if runas script show plots
 if not auxpath=='.':

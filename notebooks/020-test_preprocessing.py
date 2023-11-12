@@ -9,6 +9,7 @@ _ = importlib.reload(src)   # this make changes in the src package immediately e
 from IPython import get_ipython
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
+src.vis.set_matplotlib_params()
 
 # folder path
 dirPath = "./data/raw/1st_test_IMSBearing/"
@@ -48,7 +49,7 @@ FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,
 axes[0].plot(np.linspace(0,2*snap.rawData['time'].iloc[-1],len(prepSignal)), prepSignal, alpha=0.5,label='Flip and Reverse')
 axes[1].scatter(freqs, FFT,s=0.5, alpha=0.2)
 
-fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
+fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=2)
 plt.subplots_adjust(top=0.9)
 plt.show()
 # %%

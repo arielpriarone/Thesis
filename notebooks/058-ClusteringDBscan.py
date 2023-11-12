@@ -43,7 +43,7 @@ def dbscan_predict(model, X):
 
 # script settings
 modelpath     = auxpath + "./models/kmeans_model.pickle"   # folder path
-savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized_second.pickle") #file to save the analisys
+savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                             # empty dictionary to save data 
 
@@ -95,9 +95,9 @@ print(predictions_lab, predictions_dist)
 
 # %% plot
 fig, ax = plt.subplots()
-threshold = 0.3
+threshold = 0.4
 cmap = cm.get_cmap("Set1")
-ax.scatter(range(len(predictions_dist)),predictions_dist,c=[cmap(x) for x in predictions_lab])
+ax.scatter(range(len(predictions_dist)),predictions_dist,c=[cmap(x) for x in predictions_lab],marker='.')
 ax.axhline(y=db.eps*(1+threshold), color='r', linestyle='-.')
 ax.set_xlabel('sample')
 ax.set_ylabel('distance')

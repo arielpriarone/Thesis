@@ -8,11 +8,7 @@ from IPython import get_ipython
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
-})
+src.vis.set_matplotlib_params()
 
 samplFreq   = 10000 # Hz
 time        = np.arange(0, 5, 1/samplFreq) # Time points
@@ -56,7 +52,7 @@ FFT, freqs, prepSignal = src.features.FFT(ampUndisturbed,samplFreq,preproc='Flip
 axes[0].plot(np.linspace(0,2*time[-1],len(prepSignal)), prepSignal, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
 axes[1].scatter(freqs, FFT,s=0.5, alpha=1, color='orange')
 
-fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
+fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=2)
 plt.subplots_adjust(top=0.9)
 plt.show()
 # %%
@@ -92,7 +88,7 @@ FFT, freqs, prepSignal = src.features.FFT(ampReduced_multiplePeriod,samplFreq,pr
 axes[0].plot(np.linspace(time_reduced[0],time_reduced[0]+2*(time_reduced[-1]-time_reduced[0]),len(prepSignal)), prepSignal, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
 axes[1].scatter(freqs, FFT, alpha=1, color='orange', s=0.5)
 
-fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
+fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=2)
 plt.subplots_adjust(top=0.9)
 plt.show()
 
@@ -129,7 +125,7 @@ FFT, freqs, prepSignal = src.features.FFT(ampReduced_fractionedPeriod,samplFreq,
 axes[0].plot(np.linspace(time_reduced[0],time_reduced[0]+2*(time_reduced[-1]-time_reduced[0]),len(prepSignal)), prepSignal, alpha=1,label='Flip and Reverse', color='orange', linewidth=0.5)
 axes[1].scatter(freqs, FFT, alpha=1, color='orange', s=0.5)
 
-fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=4)
+fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=2)
 plt.subplots_adjust(top=0.9)
 plt.show()
 # %%

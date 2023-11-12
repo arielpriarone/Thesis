@@ -11,12 +11,8 @@ _ = importlib.reload(src)   # this make changes in the src package immediately e
 from IPython import get_ipython
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
+src.vis.set_matplotlib_params()
 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
-})
 # folder path
 dirPath = "./data/raw/1st_test_IMSBearing/"
 indx=0

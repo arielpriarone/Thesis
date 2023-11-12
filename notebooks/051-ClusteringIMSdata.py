@@ -19,7 +19,7 @@ auxpath='' # auxilliary path because interactive mode treat path differently
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
     auxpath='.'
-
+src.vis.set_matplotlib_params() # set matplotlib parameters to generate plots for the thesis
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath_data    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
@@ -31,7 +31,7 @@ filehandler = open(savepath_data, 'rb')
 IMSDATA = pickle.load(filehandler)
 
 
-# %%
+# %% train with different number of clusters
 sil_score=[]
 inertia=[]
 max_clusters=100

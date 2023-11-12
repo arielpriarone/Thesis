@@ -40,7 +40,7 @@ def dbscan_predict(model, X):
 
 # script settings
 modelpath     = auxpath + "./models/kmeans_model.pickle"   # folder path
-savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized_second.pickle") #file to save the analisys
+savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                             # empty dictionary to save data 
 
