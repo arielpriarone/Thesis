@@ -50,7 +50,7 @@ novelty:           # Novelty/fault configuration
   forecast_threshold: 0.8                         # Threshold for novelty / fault prediction
   n_fit:              250                          # Number of samples used to fit the prediction curve
   outlier_filter:     1                           # Number of consecutive outliers to filter (1 means two outliers will be considered as novelty/fault)
-  regressor:          exp                         # Regressor to use for prediction: exp, scipy. if exp uses custom function, if scipy uses scipy.optimize.curve_fit
+  regressor:          exp                         # Regressor to use for prediction: exp, scipy, poly. if exp uses custom function, if scipy uses scipy.optimize.curve_fit, if poly fit polinomial of degree
 
 miscellanea:
   logpath:            C:\Users\ariel\Documents\Courses\Tesi\Code\framework                        # Path to the logs
