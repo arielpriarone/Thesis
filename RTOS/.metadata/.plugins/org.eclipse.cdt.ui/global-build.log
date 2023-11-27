@@ -1,21 +1,14 @@
-16:58:50 **** Incremental Build of configuration Debug for project Novelty ****
+19:47:54 **** Incremental Build of configuration Debug for project Novelty ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/mylib.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/mylib.d" -MT"Core/Src/mylib.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mylib.o"
-arm-none-eabi-gcc -o "Novelty.elf" @"objects.list"   -mcpu=cortex-m7 -T"C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Novelty\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Novelty.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Novelty.elf
- 
 arm-none-eabi-size   Novelty.elf 
-arm-none-eabi-objdump -h -S  Novelty.elf  > "Novelty.list"
    text	   data	    bss	    dec	    hex	filename
-  16488	    340	   3236	  20064	   4e60	Novelty.elf
+  23644	    420	   3756	  27820	   6cac	Novelty.elf
 Finished building: default.size.stdout
  
-Finished building: Novelty.list
- 
-16:58:53 **** Incremental Build of configuration Debug for project Novelty ****
+19:47:57 **** Incremental Build of configuration Debug for project Novelty ****
 make -j8 all 
 arm-none-eabi-size   Novelty.elf 
    text	   data	    bss	    dec	    hex	filename
-  16488	    340	   3236	  20064	   4e60	Novelty.elf
+  23644	    420	   3756	  27820	   6cac	Novelty.elf
 Finished building: default.size.stdout
  

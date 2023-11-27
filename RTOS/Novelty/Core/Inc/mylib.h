@@ -15,3 +15,4 @@
 #endif /* INC_MYLIB_H_ */
 
 int add_int(int *start, int *len);
+void uint16ArrayToString(const uint16_t *uintArray, size_t length, char *result);

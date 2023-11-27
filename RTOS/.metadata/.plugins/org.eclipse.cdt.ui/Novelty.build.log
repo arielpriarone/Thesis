@@ -1,10 +1,10 @@
-16:58:53 **** Incremental Build of configuration Debug for project Novelty ****
+19:47:57 **** Incremental Build of configuration Debug for project Novelty ****
 make -j8 all 
 arm-none-eabi-size   Novelty.elf 
    text	   data	    bss	    dec	    hex	filename
-  16488	    340	   3236	  20064	   4e60	Novelty.elf
+  23644	    420	   3756	  27820	   6cac	Novelty.elf
 Finished building: default.size.stdout
  
 
-16:58:54 Build Finished. 0 errors, 0 warnings. (took 315ms)
+19:47:57 Build Finished. 0 errors, 0 warnings. (took 315ms)
 
