@@ -1,0 +1,10 @@
+18:01:54 **** Incremental Build of configuration Debug for project framework ****
+make -j8 all 
+arm-none-eabi-size   framework.elf 
+   text	   data	    bss	    dec	    hex	filename
+  16556	     20	   2996	  19572	   4c74	framework.elf
+Finished building: default.size.stdout
+ 
+
+18:01:54 Build Finished. 0 errors, 0 warnings. (took 314ms)
+

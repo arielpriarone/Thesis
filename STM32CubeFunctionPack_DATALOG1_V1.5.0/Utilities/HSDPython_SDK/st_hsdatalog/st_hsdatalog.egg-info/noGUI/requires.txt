@@ -1,6 +1,0 @@
-st_pnpl
-numpy
-pandas
-colorama
-click
-matplotlib

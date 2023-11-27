@@ -1,0 +1,10 @@
+16:42:43 **** Incremental Build of configuration Debug for project UART_HyperTerminal_IT ****
+make -j8 all 
+arm-none-eabi-size   NUCLEO-F767ZI.elf 
+   text	   data	    bss	    dec	    hex	filename
+   6684	    180	   1724	   8588	   218c	NUCLEO-F767ZI.elf
+Finished building: default.size.stdout
+ 
+
+16:42:43 Build Finished. 0 errors, 0 warnings. (took 214ms)
+
