@@ -3106,3 +3106,15 @@ java.io.IOException: Error reading from port (6)
 
 !ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2023-11-27 19:48:05.597
 !MESSAGE Existing sessions are:
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2023-11-27 20:02:18.103
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 37 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2023-11-27 20:02:18.104
+!MESSAGE Existing sessions are:
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2023-11-27 20:02:18.105
+!MESSAGE Error - No active DSF-Session. tmpSessionId = 37 (contextManager row 121)
+
+!ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2023-11-27 20:02:18.105
+!MESSAGE Existing sessions are:

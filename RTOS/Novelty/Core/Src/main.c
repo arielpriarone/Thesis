@@ -444,30 +444,15 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) { //what to do when the analogue acquisition end
 
-    // Calculate the length of the resulting string
-    size_t stringLength = ADC_BUF_LEN * 6; // Assuming up to 5 digits per number and 1 for the tab
-
-    // Allocate memory for the string
-    char *result = (char *)malloc(stringLength + 1); // +1 for the null terminator
-
-    if(result == NULL){
-    	Error_Handler();
-    }
-
-    // Convert uint16_t array to string
-    uint16ArrayToString(adc_buf, ADC_BUF_LEN, result);
-
-	if(HAL_UART_Transmit(&huart3, (const uint8_t *)result, stringLength , 100) != HAL_OK){
+	if(HAL_UART_Transmit(&huart3, (const uint8_t *)adc_buf, ADC_BUF_LEN , 100) != HAL_OK){
 			Error_Handler();
 		 }
-	if(HAL_UART_Transmit(&huart3, (const uint8_t *)"\r\n", strlen("\n") , 100) != HAL_OK){
+	if(HAL_UART_Transmit(&huart3, (const uint8_t *)"\n", strlen("\n") , 100) != HAL_OK){
 				Error_Handler();
 			 }
 		 HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
 
 
-	// Don't forget to free the allocated memory
-	free(result);
 }
 /* USER CODE END 4 */
 
