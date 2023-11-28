@@ -129,7 +129,6 @@ int main(void)
   MX_ETH_Init();
   /* USER CODE BEGIN 2 */
   RetargetInit(&huart3); // redirect the printf() and scanf() function to huart
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, ADC_BUF_LEN);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -137,9 +136,6 @@ int main(void)
 
   while (1)
   {
-	  printf("\r\nYour name: ");
-	  scanf("%s", buf);
-	  printf("\r\nHello, %s!\r\n", buf);
 
     /* USER CODE END WHILE */
 
@@ -420,7 +416,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : USER_Btn_Pin */
   GPIO_InitStruct.Pin = USER_Btn_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(USER_Btn_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LD1_Pin LD3_Pin LD2_Pin */
@@ -443,19 +439,27 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(USB_OverCurrent_GPIO_Port, &GPIO_InitStruct);
 
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // GPIO interrupt handler
+{
+	if(GPIO_Pin == 0x2000){ // if user btn is pressed
+		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, ADC_BUF_LEN);
+	}
+	else{
+		printf("Unknown GPIO interrupt happened");
+	}
+}
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) { //what to do when the analogue acquisition end
-
-/*	if(HAL_UART_Transmit(&huart3, (const uint8_t *)adc_buf, ADC_BUF_LEN , 100) != HAL_OK){
-			Error_Handler();
-		 }
-		 HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);*/
-
-
+	printf("ANALOG CONVERSION COMPLETED.\r\n");
+	printarray(&adc_buf,ADC_BUF_LEN);
 }
 /* USER CODE END 4 */
 
