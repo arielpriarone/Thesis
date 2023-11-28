@@ -3118,3 +3118,87 @@ java.io.IOException: Error reading from port (6)
 
 !ENTRY com.st.stm32cube.ide.mcu.debug 4 0 2023-11-27 20:02:18.105
 !MESSAGE Existing sessions are:
+!SESSION 2023-11-28 11:53:05.676 -----------------------------------------------
+eclipse.buildId=Version 1.13.2
+java.version=17.0.6
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-11-28 11:53:36.116
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-11-28 11:53:36.124
+!MESSAGE Log4j2 initialized with config file C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-11-28 11:53:51.770
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 11:54:54.457
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/updates/release/latest, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 11:54:54.959
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/drops/release/1.2.2/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+!SESSION 2023-11-28 12:00:55.769 -----------------------------------------------
+eclipse.buildId=Version 1.13.2
+java.version=17.0.6
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-11-28 12:01:04.484
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-11-28 12:01:04.486
+!MESSAGE Log4j2 initialized with config file C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-11-28 12:01:16.660
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 12:02:17.402
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/updates/release/latest, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 12:02:17.998
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/drops/release/1.2.2/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+!SESSION 2023-11-28 12:02:52.179 -----------------------------------------------
+eclipse.buildId=Version 1.13.2
+java.version=17.0.6
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-11-28 12:03:08.064
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-11-28 12:03:08.066
+!MESSAGE Log4j2 initialized with config file C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-11-28 12:03:20.005
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 12:04:21.403
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/updates/release/latest, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 12:04:21.860
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/drops/release/1.2.2/content.xml.xz, see CVE-2021-41033. Consider using https instead.
+!SESSION 2023-11-28 12:07:44.037 -----------------------------------------------
+eclipse.buildId=Version 1.13.2
+java.version=17.0.6
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 4 4 2023-11-28 12:07:54.034
+!MESSAGE CubeMX plugin appears to be active, Log4j initialization might be too late.
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2023-11-28 12:07:54.035
+!MESSAGE Log4j2 initialized with config file C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2023-11-28 12:08:06.182
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 12:09:06.314
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/updates/release/latest, see CVE-2021-41033. Consider using https instead.
+
+!ENTRY org.eclipse.equinox.p2.repository 2 0 2023-11-28 12:09:06.805
+!MESSAGE Using unsafe http transport to retrieve http://download.eclipse.org/usssdk/drops/release/1.2.2/content.xml.xz, see CVE-2021-41033. Consider using https instead.

@@ -25,6 +25,8 @@
 #include "mylib.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include "wavelib.h"
+#include "retarget.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,7 +101,7 @@ static void MX_ETH_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	char buf[100];
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -126,6 +128,7 @@ int main(void)
   MX_ADC1_Init();
   MX_ETH_Init();
   /* USER CODE BEGIN 2 */
+  RetargetInit(&huart3); // redirect the printf() and scanf() function to huart
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, ADC_BUF_LEN);
   /* USER CODE END 2 */
 
@@ -134,6 +137,9 @@ int main(void)
 
   while (1)
   {
+	  printf("\r\nYour name: ");
+	  scanf("%s", buf);
+	  printf("\r\nHello, %s!\r\n", buf);
 
     /* USER CODE END WHILE */
 
@@ -444,13 +450,10 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) { //what to do when the analogue acquisition end
 
-	if(HAL_UART_Transmit(&huart3, (const uint8_t *)adc_buf, ADC_BUF_LEN , 100) != HAL_OK){
+/*	if(HAL_UART_Transmit(&huart3, (const uint8_t *)adc_buf, ADC_BUF_LEN , 100) != HAL_OK){
 			Error_Handler();
 		 }
-	if(HAL_UART_Transmit(&huart3, (const uint8_t *)"\n", strlen("\n") , 100) != HAL_OK){
-				Error_Handler();
-			 }
-		 HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+		 HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);*/
 
 
 }
