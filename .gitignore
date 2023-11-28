@@ -1,3 +1,5 @@
 /data
 /demo_wavelet
-dummy
+/RTOS/00_DOCS
+/RTOS/.metadata
+/RTOS/wavelib
