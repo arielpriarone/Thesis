@@ -21,9 +21,13 @@ void uint16ArrayToString(const uint16_t *uintArray, size_t length, char *result)
 
 void printarray(const uint16_t *uintarray, size_t length){
 	for (int var = 0; var < length; ++var) {
-		printf("%d\t", &uintarray[var]);
+		printf("%u\r\n", uintarray[var]);
 	}
 	printf("\r\n");
 }
 
+SnapReadyCallback(const uint16_t *uintarray, size_t length){
+	printf("Snapshot acquired: \r\n");
+	printarray(uintarray, length);
+}
 

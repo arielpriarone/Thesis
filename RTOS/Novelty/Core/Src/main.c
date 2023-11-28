@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "mylib.h"
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include "wavelib.h"
@@ -36,7 +37,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define ADC_BUF_LEN 10
+#define ADC_BUF_LEN 1000
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -65,7 +66,6 @@ ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT] __attribute__((section(".TxDecr
 ETH_TxPacketConfig TxConfig;
 
 ADC_HandleTypeDef hadc1;
-DMA_HandleTypeDef hdma_adc1;
 
 ETH_HandleTypeDef heth;
 
@@ -77,12 +77,13 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
 uint16_t adc_buf[ADC_BUF_LEN]; // reserve a buffer for the analogue readings
+uint16_t timer_index;
+bool snap_flag;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_DMA_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_ADC1_Init(void);
@@ -104,8 +105,8 @@ static void MX_TIM6_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	char buf[100];
-	uint16_t timer_val; // timer counter aux
+	timer_index = 0;
+	snap_flag = true; // begin with inibiiton of acquisition, set to false later
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -126,28 +127,19 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
   MX_USART3_UART_Init();
   MX_USB_OTG_FS_PCD_Init();
   MX_ADC1_Init();
   MX_ETH_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start(&htim6);  // start the timer
-  timer_val = __HAL_TIM_GET_COUNTER(&htim6);	// Get current time [us]
+  HAL_TIM_Base_Start_IT(&htim6);  // start the timer
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  while (1)
-  {
-	  if(__HAL_TIM_GET_COUNTER(&htim6)-timer_val>=10000){
-		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-		  timer_val = __HAL_TIM_GET_COUNTER(&htim6);	// Get current time [us]
-	  }
-
-
+  while (1){
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -242,7 +234,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
@@ -331,9 +323,9 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 9600-1;
+  htim6.Init.Prescaler = 96-1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 65536-1;
+  htim6.Init.Period = 1000-1;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -422,22 +414,6 @@ static void MX_USB_OTG_FS_PCD_Init(void)
 }
 
 /**
-  * Enable DMA controller clock
-  */
-static void MX_DMA_Init(void)
-{
-
-  /* DMA controller clock enable */
-  __HAL_RCC_DMA2_CLK_ENABLE();
-
-  /* DMA interrupt init */
-  /* DMA2_Stream0_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
-
-}
-
-/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -500,15 +476,27 @@ static void MX_GPIO_Init(void)
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // GPIO interrupt handler
 {
 	if(GPIO_Pin == 0x2000){ // if user btn is pressed
-		HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_buf, ADC_BUF_LEN);
+		snap_flag = false; //request a snapshot
 	}
 	else{
 		printf("Unknown GPIO interrupt happened");
 	}
 }
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc) { //what to do when the analogue acquisition end
-	printf("ANALOG CONVERSION COMPLETED.\r\n");
-	printarray(&adc_buf,ADC_BUF_LEN);
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
+	if(htim == &htim6 && snap_flag == false){ // if the timer is the analog management and the conversion is not already done
+		// Get ADC value
+		    HAL_ADC_Start(&hadc1);
+		    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+		    adc_buf[timer_index]= HAL_ADC_GetValue(&hadc1); // save the value in the array
+		    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+		    timer_index ++;
+		    if(timer_index>=ADC_BUF_LEN){
+		    	timer_index=0;
+		    	SnapReadyCallback(adc_buf, ADC_BUF_LEN);
+		    	snap_flag = true; // conversion complete flag
+		    }
+	}
 }
 /* USER CODE END 4 */
 

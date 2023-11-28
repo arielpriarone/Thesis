@@ -17,3 +17,4 @@
 int add_int(int *start, int *len);
 void uint16ArrayToString(const uint16_t *uintArray, size_t length, char *result);
 void printarray(const uint16_t *uintarray, size_t length);
+void SnapReadyCallback(const uint16_t *uintarray, size_t length);
