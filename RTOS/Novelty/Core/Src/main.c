@@ -69,6 +69,8 @@ DMA_HandleTypeDef hdma_adc1;
 
 ETH_HandleTypeDef heth;
 
+TIM_HandleTypeDef htim6;
+
 UART_HandleTypeDef huart3;
 
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
@@ -85,6 +87,7 @@ static void MX_USART3_UART_Init(void);
 static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ETH_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -102,6 +105,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 	char buf[100];
+	uint16_t timer_val; // timer counter aux
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -117,7 +121,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
+  RetargetInit(&huart3); // redirect the printf() and scanf() function to huart
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -127,8 +131,10 @@ int main(void)
   MX_USB_OTG_FS_PCD_Init();
   MX_ADC1_Init();
   MX_ETH_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  RetargetInit(&huart3); // redirect the printf() and scanf() function to huart
+  HAL_TIM_Base_Start(&htim6);  // start the timer
+  timer_val = __HAL_TIM_GET_COUNTER(&htim6);	// Get current time [us]
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -136,6 +142,11 @@ int main(void)
 
   while (1)
   {
+	  if(__HAL_TIM_GET_COUNTER(&htim6)-timer_val>=10000){
+		  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
+		  timer_val = __HAL_TIM_GET_COUNTER(&htim6);	// Get current time [us]
+	  }
+
 
     /* USER CODE END WHILE */
 
@@ -299,6 +310,44 @@ static void MX_ETH_Init(void)
   /* USER CODE BEGIN ETH_Init 2 */
 
   /* USER CODE END ETH_Init 2 */
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 9600-1;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = 65536-1;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 
