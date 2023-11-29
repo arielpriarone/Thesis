@@ -37,7 +37,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define ADC_BUF_LEN 1000
+#define ADC_BUF_LEN 5000 // 5000 samples at 5kHz -> 1s snapshot
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -69,6 +69,8 @@ ADC_HandleTypeDef hadc1;
 
 ETH_HandleTypeDef heth;
 
+RTC_HandleTypeDef hrtc;
+
 TIM_HandleTypeDef htim6;
 
 UART_HandleTypeDef huart3;
@@ -89,6 +91,7 @@ static void MX_USB_OTG_FS_PCD_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_ETH_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_RTC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -132,6 +135,7 @@ int main(void)
   MX_ADC1_Init();
   MX_ETH_Init();
   MX_TIM6_Init();
+  MX_RTC_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim6);  // start the timer
   /* USER CODE END 2 */
@@ -140,6 +144,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   while (1){
+		int i, J, N, len;
+		int X, Y;
+		wave_object obj;
+		wtree_object wt;
+		double *inp, *oup;
+
+		char *name = "db3";
+		obj = wave_init(name);// Initialize the wavelet
+		N = 147;
+		inp = (double*)malloc(sizeof(double)* N);
+		for (i = 1; i < N + 1; ++i) {
+			inp[i - 1] = -0.25*i*i*i + 25 * i *i + 10 * i;
+		}
+		J = 3;
+
+		wt = wtree_init(obj, N, J);// Initialize the wavelet transform object
+		setWTREEExtension(wt, "sym");// Options are "per" and "sym". Symmetric is the default option
+
+		wtree(wt, inp);
+		wtree_summary(wt);
+		X = 3;
+		Y = 5;
+		len = getWTREENodelength(wt, X);
+		printf(" \r\n %d", len);
+		printf(" \r\n");
+		oup = (double*)malloc(sizeof(double)* len);
+
+		printf("Node [%d %d] Coefficients :  \r\n",X,Y);
+		getWTREECoeffs(wt, X, Y, oup, len);
+		for (i = 0; i < len; ++i) {
+			printf("%g ", oup[i]);
+		}
+		printf(" \r\n");
+
+		free(inp);
+		free(oup);
+		wave_free(obj);
+		wtree_free(wt);
+		while(1){}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -168,8 +211,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI|RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.HSEState = RCC_HSE_BYPASS;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 4;
@@ -243,7 +287,7 @@ static void MX_ADC1_Init(void)
 
   /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
   */
-  sConfig.Channel = ADC_CHANNEL_0;
+  sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
@@ -306,6 +350,69 @@ static void MX_ETH_Init(void)
 }
 
 /**
+  * @brief RTC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_RTC_Init(void)
+{
+
+  /* USER CODE BEGIN RTC_Init 0 */
+
+  /* USER CODE END RTC_Init 0 */
+
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
+  /* USER CODE BEGIN RTC_Init 1 */
+
+  /* USER CODE END RTC_Init 1 */
+
+  /** Initialize RTC Only
+  */
+  hrtc.Instance = RTC;
+  hrtc.Init.HourFormat = RTC_HOURFORMAT_24;
+  hrtc.Init.AsynchPrediv = 127;
+  hrtc.Init.SynchPrediv = 255;
+  hrtc.Init.OutPut = RTC_OUTPUT_DISABLE;
+  hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
+  hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
+  if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 15;
+  sTime.Minutes = 36;
+  sTime.Seconds = 0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
+  sDate.Month = RTC_MONTH_NOVEMBER;
+  sDate.Date = 29;
+  sDate.Year = 0;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN RTC_Init 2 */
+
+  /* USER CODE END RTC_Init 2 */
+
+}
+
+/**
   * @brief TIM6 Initialization Function
   * @param None
   * @retval None
@@ -323,9 +430,9 @@ static void MX_TIM6_Init(void)
 
   /* USER CODE END TIM6_Init 1 */
   htim6.Instance = TIM6;
-  htim6.Init.Prescaler = 96-1;
+  htim6.Init.Prescaler = 24-1;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 1000-1;
+  htim6.Init.Period = 800-1;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {

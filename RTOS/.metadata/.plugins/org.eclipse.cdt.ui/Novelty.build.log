@@ -1,37 +1,10 @@
-19:53:13 **** Incremental Build of configuration Debug for project Novelty ****
+16:08:30 **** Incremental Build of configuration Debug for project Novelty ****
 make -j8 all 
-arm-none-eabi-gcc "../Core/Src/mylib.c" -mcpu=cortex-m7 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F767xx -c -I../Core/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc -I../Drivers/STM32F7xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F7xx/Include -I../Drivers/CMSIS/Include -I"C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/Novelty/wavelib/header" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/mylib.d" -MT"Core/Src/mylib.o" --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mylib.o"
-../Core/Src/mylib.c: In function 'uint16ArrayToString':
-../Core/Src/mylib.c:17:27: warning: implicit declaration of function 'strlen' [-Wimplicit-function-declaration]
-   17 |                 result += strlen(result);
-      |                           ^~~~~~
-../Core/Src/mylib.c:4:1: note: include '<string.h>' or provide a declaration of 'strlen'
-    3 | #include <stdlib.h>
-  +++ |+#include <string.h>
-    4 | 
-../Core/Src/mylib.c:17:27: warning: incompatible implicit declaration of built-in function 'strlen' [-Wbuiltin-declaration-mismatch]
-   17 |                 result += strlen(result);
-      |                           ^~~~~~
-../Core/Src/mylib.c:17:27: note: include '<string.h>' or provide a declaration of 'strlen'
-../Core/Src/mylib.c: At top level:
-../Core/Src/mylib.c:29:1: warning: return type defaults to 'int' [-Wimplicit-int]
-   29 | SnapReadyCallback(const uint16_t *uintarray, size_t length){
-      | ^~~~~~~~~~~~~~~~~
-../Core/Src/mylib.c: In function 'SnapReadyCallback':
-../Core/Src/mylib.c:32:1: warning: control reaches end of non-void function [-Wreturn-type]
-   32 | }
-      | ^
-arm-none-eabi-gcc -o "Novelty.elf" @"objects.list"   -mcpu=cortex-m7 -T"C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Novelty\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Novelty.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: Novelty.elf
- 
 arm-none-eabi-size   Novelty.elf 
-arm-none-eabi-objdump -h -S  Novelty.elf  > "Novelty.list"
    text	   data	    bss	    dec	    hex	filename
-  26404	    432	   5728	  32564	   7f34	Novelty.elf
+  93060	    796	  13756	 107612	  1a45c	Novelty.elf
 Finished building: default.size.stdout
  
-Finished building: Novelty.list
- 
 
-19:53:15 Build Finished. 0 errors, 4 warnings. (took 1s.416ms)
+16:08:30 Build Finished. 0 errors, 0 warnings. (took 425ms)
 

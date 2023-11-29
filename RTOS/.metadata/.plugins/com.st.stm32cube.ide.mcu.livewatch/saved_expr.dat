@@ -1,2 +1,4 @@
 HAL_UART_Transmit
 adc_buf
+oup
+len
