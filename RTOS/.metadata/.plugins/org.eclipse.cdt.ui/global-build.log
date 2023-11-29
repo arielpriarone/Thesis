@@ -1,7 +1,14 @@
-16:08:30 **** Incremental Build of configuration Debug for project Novelty ****
+17:17:31 **** Incremental Build of configuration Debug for project Novelty ****
 make -j8 all 
 arm-none-eabi-size   Novelty.elf 
    text	   data	    bss	    dec	    hex	filename
-  93060	    796	  13756	 107612	  1a45c	Novelty.elf
+  44008	    796	  13756	  58560	   e4c0	Novelty.elf
+Finished building: default.size.stdout
+ 
+17:17:35 **** Incremental Build of configuration Debug for project Novelty ****
+make -j8 all 
+arm-none-eabi-size   Novelty.elf 
+   text	   data	    bss	    dec	    hex	filename
+  44008	    796	  13756	  58560	   e4c0	Novelty.elf
 Finished building: default.size.stdout
  

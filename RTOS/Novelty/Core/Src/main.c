@@ -81,6 +81,7 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 uint16_t adc_buf[ADC_BUF_LEN]; // reserve a buffer for the analogue readings
 uint16_t timer_index;
 bool snap_flag;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,6 +111,7 @@ int main(void)
   /* USER CODE BEGIN 1 */
 	timer_index = 0;
 	snap_flag = true; // begin with inibiiton of acquisition, set to false later
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -144,45 +146,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   while (1){
-		int i, J, N, len;
-		int X, Y;
-		wave_object obj;
-		wtree_object wt;
-		double *inp, *oup;
 
-		char *name = "db3";
-		obj = wave_init(name);// Initialize the wavelet
-		N = 147;
-		inp = (double*)malloc(sizeof(double)* N);
-		for (i = 1; i < N + 1; ++i) {
-			inp[i - 1] = -0.25*i*i*i + 25 * i *i + 10 * i;
-		}
-		J = 3;
-
-		wt = wtree_init(obj, N, J);// Initialize the wavelet transform object
-		setWTREEExtension(wt, "sym");// Options are "per" and "sym". Symmetric is the default option
-
-		wtree(wt, inp);
-		wtree_summary(wt);
-		X = 3;
-		Y = 5;
-		len = getWTREENodelength(wt, X);
-		printf(" \r\n %d", len);
-		printf(" \r\n");
-		oup = (double*)malloc(sizeof(double)* len);
-
-		printf("Node [%d %d] Coefficients :  \r\n",X,Y);
-		getWTREECoeffs(wt, X, Y, oup, len);
-		for (i = 0; i < len; ++i) {
-			printf("%g ", oup[i]);
-		}
-		printf(" \r\n");
-
-		free(inp);
-		free(oup);
-		wave_free(obj);
-		wtree_free(wt);
-		while(1){}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -361,9 +325,6 @@ static void MX_RTC_Init(void)
 
   /* USER CODE END RTC_Init 0 */
 
-  RTC_TimeTypeDef sTime = {0};
-  RTC_DateTypeDef sDate = {0};
-
   /* USER CODE BEGIN RTC_Init 1 */
 
   /* USER CODE END RTC_Init 1 */
@@ -378,31 +339,6 @@ static void MX_RTC_Init(void)
   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
   if (HAL_RTC_Init(&hrtc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /* USER CODE BEGIN Check_RTC_BKUP */
-
-  /* USER CODE END Check_RTC_BKUP */
-
-  /** Initialize RTC and set the Time and Date
-  */
-  sTime.Hours = 15;
-  sTime.Minutes = 36;
-  sTime.Seconds = 0;
-  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
-  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sDate.WeekDay = RTC_WEEKDAY_WEDNESDAY;
-  sDate.Month = RTC_MONTH_NOVEMBER;
-  sDate.Date = 29;
-  sDate.Year = 0;
-
-  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
   {
     Error_Handler();
   }
@@ -604,6 +540,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		    	snap_flag = true; // conversion complete flag
 		    }
 	}
+}
+
+void printTimestamp(){
+char timestamp[18];
+	RTC_TimeTypeDef sTime;
+	RTC_DateTypeDef sDate;
+	HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+	HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+	sprintf(timestamp,"%02d-%02d-%02d %02d:%02d:%02d",sDate.Year,sDate.Month,sDate.Date,sTime.Hours,sTime.Minutes,sTime.Seconds);
+	printf(timestamp);
 }
 /* USER CODE END 4 */
 

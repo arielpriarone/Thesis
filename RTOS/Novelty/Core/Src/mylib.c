@@ -28,8 +28,11 @@ void printarray(const uint16_t *uintarray, size_t length){
 }
 
 SnapReadyCallback(const uint16_t *uintarray, size_t length){
-	printf("Snapshot acquired: \r\n");
+	printf("Snapshot acquired. \r\nTimestamp: ");
+	printTimestamp();
+	printf(" \r\nStart data. \r\n");
 	printarray(uintarray, length);
+	printf("End data.");
 }
 
 
@@ -74,3 +77,4 @@ void PacketTrasform(){
 	wtree_free(wt);
 	return;
 }
+
