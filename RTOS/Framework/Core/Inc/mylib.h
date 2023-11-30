@@ -14,3 +14,5 @@
 
 #endif /* INC_MYLIB_H_ */
 
+void prinArray(double *array, int len);
+void printUint16_tArray(uint16_t *array, int len);
