@@ -22,7 +22,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "mylib.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include "wavelib.h"
+#include "retarget.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
