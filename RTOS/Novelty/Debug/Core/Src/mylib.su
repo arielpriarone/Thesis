@@ -1,8 +1,0 @@
-../Core/Src/mylib.c:11:5:add_int	24	static
-../Core/Src/mylib.c:19:6:uint16ArrayToString	32	static
-../Core/Src/mylib.c:29:6:printarray	24	static
-../Core/Src/mylib.c:37:6:printFloatArray	24	static
-../Core/Src/mylib.c:45:6:SnapReadyCallback	96	dynamic
-../Core/Src/mylib.c:60:9:packetCoeff	72	static
-../Core/Src/mylib.c:97:8:norm2	32	static
-../Core/Src/mylib.c:107:8:signal_power	32	static
