@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "mylib.h"
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -37,7 +38,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#define TREE_DEPTH 6 	// DEPTH OF THE PACKET TRASFORM: NODES BOTTOM LEVEL = 2^6 = 64
+#define TD_FEAT 2		// TIME-DOMAIN FEATURES (POWER, STD)
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -106,6 +108,9 @@ static void MX_RTC_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+	int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
+	double feat_array[feat_len];					// features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
+													//					time-domain		...		freq-domain
 
   /* USER CODE END 1 */
 
@@ -134,7 +139,7 @@ int main(void)
   MX_TIM6_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-
+  RetargetInit(&huart3); 		// redirect printf and scanf to huart
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -142,7 +147,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
+	  printf("HL");
+	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
