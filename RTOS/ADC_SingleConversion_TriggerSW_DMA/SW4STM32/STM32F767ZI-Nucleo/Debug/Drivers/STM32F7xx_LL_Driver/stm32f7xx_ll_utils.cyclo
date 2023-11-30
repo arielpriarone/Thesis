@@ -1,8 +1,0 @@
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:648:20:UTILS_PLL_IsBusy	1
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:218:6:LL_Init1msTick	1
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:234:6:LL_mDelay	4
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:311:6:LL_SetSystemCoreClock	1
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:326:13:LL_SetFlashLatency	22
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:683:20:UTILS_EnablePLLAndSwitchSystem	7
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:488:13:LL_PLL_ConfigSystemClock_HSI	4
-C:/Users/ariel/Documents/Courses/Tesi/Code/RTOS/ADC_SingleConversion_TriggerSW_DMA/Drivers/STM32F7xx_HAL_Driver/Src/stm32f7xx_ll_utils.c:546:13:LL_PLL_ConfigSystemClock_HSE	5

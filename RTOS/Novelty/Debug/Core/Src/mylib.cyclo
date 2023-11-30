@@ -1,7 +1,8 @@
-../Core/Src/mylib.c:10:5:add_int	2
-../Core/Src/mylib.c:18:6:uint16ArrayToString	2
-../Core/Src/mylib.c:28:6:printarray	2
-../Core/Src/mylib.c:36:6:printFloatArray	2
-../Core/Src/mylib.c:44:6:SnapReadyCallback	2
-../Core/Src/mylib.c:63:9:packetCoeff	2
-../Core/Src/mylib.c:101:8:norm2	2
+../Core/Src/mylib.c:11:5:add_int	2
+../Core/Src/mylib.c:19:6:uint16ArrayToString	2
+../Core/Src/mylib.c:29:6:printarray	2
+../Core/Src/mylib.c:37:6:printFloatArray	2
+../Core/Src/mylib.c:45:6:SnapReadyCallback	2
+../Core/Src/mylib.c:60:9:packetCoeff	2
+../Core/Src/mylib.c:97:8:norm2	2
+../Core/Src/mylib.c:107:8:signal_power	2

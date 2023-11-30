@@ -1,4 +1,4 @@
-17:13:15 **** Incremental Build of configuration Debug for project UART_Printf ****
+10:53:08 **** Incremental Build of configuration Debug for project UART_Printf ****
 make all 
 arm-none-eabi-size   STM32F767ZI-Nucleo.elf 
    text	   data	    bss	    dec	    hex	filename
@@ -6,5 +6,5 @@ arm-none-eabi-size   STM32F767ZI-Nucleo.elf
 Finished building: default.size.stdout
  
 
-17:13:16 Build Finished. 0 errors, 0 warnings. (took 417ms)
+10:53:09 Build Finished. 0 errors, 0 warnings. (took 272ms)
 

@@ -38,6 +38,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define ADC_BUF_LEN 5000 // 5000 samples at 5kHz -> 1s snapshot
+#define TREE_DEPTH 6 	// wavelet tree decomposiiton depth 6-> 2^6=64 features
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -536,7 +537,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
 		    timer_index ++;
 		    if(timer_index>=ADC_BUF_LEN){
 		    	timer_index=0;
-		    	SnapReadyCallback(adc_buf, ADC_BUF_LEN);
+		    	SnapReadyCallback(adc_buf, ADC_BUF_LEN, TREE_DEPTH);
 		    	snap_flag = true; // conversion complete flag
 		    }
 	}

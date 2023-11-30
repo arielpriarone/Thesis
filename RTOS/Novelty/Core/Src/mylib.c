@@ -5,7 +5,8 @@
 #include "wavelib.h"
 
 double norm2(double *array, int length);
-double* packetCoeff(double *inp, int length, int J);
+double *packetCoeff(double *inp, int length, int J, double *coefs);
+double signal_power(double *array, int length);
 
 int add_int(int *start, int *len){
 	int result = 0;
@@ -41,30 +42,25 @@ void printFloatArray(double *inp, size_t length){
 	return;
 }
 
-void SnapReadyCallback(const uint16_t *uintarray, size_t length){
+void SnapReadyCallback(const uint16_t *uintarray, size_t length, int three_depth){
 	// first convert the array to packet coef
-	int three_depth = 6; 		// depth of the decomposition tree
 	int out_len = round(pow(2,three_depth)); //the number of bottom level nodes
 	double snap_time_domain[length]; // alloc the double array
 	for (int i = 0; i < length; ++i) { // Cast each element from int to double
 		snap_time_domain[i] = (double)uintarray[i];
 	}
+	double out_alloc[out_len];
+	double *coefs = packetCoeff(snap_time_domain, (int)length, three_depth, out_alloc);
 
-	double *coefs = packetCoeff(snap_time_domain, (int)length, three_depth);
-	printf("Snapshot features acquired. \r\nTimestamp: ");
-	printTimestamp();
-	printf(" \r\nStart features. \r\n");
-	printFloatArray(coefs, out_len); kjfsalkl
-	printf("End features.");
+	// time domain features
 	return;
 }
 
 
-double* packetCoeff(double *inp, int length, int J) { // compute the power of each packet coefficient in the lowest level
+double *packetCoeff(double *inp, int length, int J, double *coefs) { // compute the power of each packet coefficient in the lowest level
 	int N, len;
 	int coef_len;
 	coef_len = round(pow(2,J)); // the nodes in the lowest level are 2^depth
-	double coefs[coef_len];
 
 	wave_object obj;
 	wtree_object wt;
@@ -83,7 +79,7 @@ double* packetCoeff(double *inp, int length, int J) { // compute the power of ea
 	printf(" \r\n %d", len);
 	printf(" \r\n");
 
-	double* oup = (double *)malloc(sizeof(double) * len);
+	double *oup = (double *)malloc(sizeof(double) * len);
 
 	for(int node_index = 0; node_index < coef_len; node_index++){
 		printf("Node [%d %d] Coefficients :  \r\n", J, node_index);
@@ -108,3 +104,12 @@ double norm2(double *array, int length) {
 	return sqrt(sum);
 }
 
+double signal_power(double *array, int length) {
+	double sum = 0.0;
+
+	for (int i = 0; i < length; ++i) {
+		sum += array[i] * array[i];
+	}
+
+	return sqrt(sum);
+}
