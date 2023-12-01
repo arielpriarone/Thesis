@@ -42,7 +42,7 @@
 #define FALSE 0				// FALSE value definition
 #define TRUE 1				// TRUE value definition
 #define TREE_DEPTH 6 		// DEPTH OF THE PACKET TRASFORM: NODES BOTTOM LEVEL = 2^6 = 64
-#define TD_FEAT 2			// TIME-DOMAIN FEATURES (POWER, STD)
+#define TD_FEAT 3			// TIME-DOMAIN FEATURES (MEAN, POWER, STD)
 #define ADC_BUF_LEN	5000	// SNAPSHOT TIME-DOMAIN LENGTH (5000 SANPLES AT 5KHZ -> 1S RECORDING)
 #define LED_RED GPIO_PIN_14 // RED LED ADDRESS AT GPIO B
 #define LED_BLU GPIO_PIN_7 	// RED LED ADDRESS AT GPIO B
@@ -91,6 +91,10 @@ bool snap_request 	= FALSE;					// set true to request a snapshot acquisition
 bool snap_recorded 	= FALSE;					// snap recording finished flag
 uint16_t adc_buf[ADC_BUF_LEN]; 					// reserve a buffer for the analogue readings
 uint16_t timer_index = 0;						// index for the timer interrupt analog conversion
+
+int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
+double *feat_array = NULL;					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
+																time-domain		...		freq-domain		*/
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,10 +122,9 @@ static void MX_RTC_Init(void);
 int main(void)
 {
 	/* USER CODE BEGIN 1 */
-	int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
-	double feat_array[feat_len];					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
+	int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 			// features array length
+	feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																	time-domain		...		freq-domain		*/
-
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -542,8 +545,10 @@ void snapReadyHandler(){
 	snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
 
 	/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
-	printf("the time-domain sampled signal is: \r\n");
+	feat_array = 0;
+	printf("the time-domain sampled signal is: \r\n\n");
 	printUint16_tArray(adc_buf, ADC_BUF_LEN);
+	printf(" \r\n\n the features are:");
 }
 
 void USR_BTN_handler(){							// handle the press of user button
