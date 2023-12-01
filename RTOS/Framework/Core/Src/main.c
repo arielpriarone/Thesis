@@ -158,6 +158,8 @@ int main(void)
 	printf(" \r\n Entering the superloop... \r\n");
 	while (1)
 	{
+		snapReadyHandler();
+
 		/* USER CODE END WHILE */
 
 		/* USER CODE BEGIN 3 */
@@ -527,26 +529,32 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void acquirePrintSnapshot(){
+void acquireSnapshot(){
 	snap_recorded = FALSE;						// clear ouput flag
 	snap_request = TRUE;						// request a snapshot
-	while(!snap_recorded){
-		problemone!!!
-	}						// wait completion of snapshot
+	return;
+}
+
+void snapReadyHandler(){
+	if(!snap_recorded){
+		return;
+	}
+	snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
+
+	/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
 	printf("the time-domain sampled signal is: \r\n");
 	printUint16_tArray(adc_buf, ADC_BUF_LEN);
-	return;
 }
 
 void USR_BTN_handler(){							// handle the press of user button
 	int c;
 	// while ((c = getchar()) != '\n' && c != EOF);// flush stdin - not working properly
-	printf(" \r\nPlease enter a command: \r\n1 = acquire and print a snapshot (time-domain) \r\n");
+	printf(" \r\nPlease enter a command: \r\n1 = acquire a snapshot (time-domain) \r\n");
 	int command;
 	scanf("%u", &command);
 	switch(command){
 	case 1:
-		acquirePrintSnapshot();
+		acquireSnapshot();
 	}
 	return;
 }
