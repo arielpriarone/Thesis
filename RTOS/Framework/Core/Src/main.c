@@ -89,6 +89,7 @@ uint16_t timer_index = 0;						// index for the timer interrupt analog conversio
 int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
 double *feat_array = NULL;					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																time-domain		...		freq-domain		*/
+char timestamp[13];										// timestamp string
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -119,6 +120,7 @@ int main(void)
 	int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 			// features array length
 	feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																	time-domain		...		freq-domain		*/
+
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -335,6 +337,9 @@ static void MX_RTC_Init(void)
 
 	/* USER CODE END RTC_Init 0 */
 
+	RTC_TimeTypeDef sTime = {0};
+	RTC_DateTypeDef sDate = {0};
+
 	/* USER CODE BEGIN RTC_Init 1 */
 
 	/* USER CODE END RTC_Init 1 */
@@ -349,6 +354,31 @@ static void MX_RTC_Init(void)
 	hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
 	hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
 	if (HAL_RTC_Init(&hrtc) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/* USER CODE BEGIN Check_RTC_BKUP */
+
+	/* USER CODE END Check_RTC_BKUP */
+
+	/** Initialize RTC and set the Time and Date
+	 */
+	sTime.Hours = 0x0;
+	sTime.Minutes = 0x0;
+	sTime.Seconds = 0x0;
+	sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+	if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+	{
+		Error_Handler();
+	}
+	sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+	sDate.Month = RTC_MONTH_JANUARY;
+	sDate.Date = 0x1;
+	sDate.Year = 0x0;
+
+	if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
 	{
 		Error_Handler();
 	}
@@ -526,6 +556,56 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void setRTCclock() {
+	RTC_TimeTypeDef sTime;
+	RTC_DateTypeDef sDate;
+
+	int year, month, day, hour, minute, second;
+
+	// Get date and time from the user
+	printf("Enter the date and time (YYYY MM DD hh mm ss): ");
+	scanf("%d %d %d %d %d %d", &year, &month, &day, &hour, &minute, &second);
+
+	// Set the Date
+	sDate.Year = year - 2000;
+	sDate.Month = month;
+	sDate.Date = day;
+	sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+
+	if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	// Set the Time
+	sTime.Hours = hour;
+	sTime.Minutes = minute;
+	sTime.Seconds = second;
+	sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+
+	if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	printf("RTC clock set successfully.\n");
+	return;
+}
+
+void get_time()
+{
+	RTC_DateTypeDef gDate;
+	RTC_TimeTypeDef gTime;
+	/* Get the RTC current Time */
+	HAL_RTC_GetTime(&hrtc, &gTime, RTC_FORMAT_BIN);
+	/* Get the RTC current Date */
+	HAL_RTC_GetDate(&hrtc, &gDate, RTC_FORMAT_BIN);
+	/* Display time Format: YYYYMMDDhhmmss */
+	sprintf(timestamp,"%04d%02d%02d%02d%02d%02d",2000 + gDate.Year,gDate.Month, gDate.Date,gTime.Hours, gTime.Minutes, gTime.Seconds);
+	return ;
+}
+
 void acquireSnapshot(){
 	snap_recorded = FALSE;						// clear ouput flag
 	snap_request = TRUE;						// request a snapshot
@@ -540,21 +620,26 @@ void snapReadyHandler(){
 
 	/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
 	feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array);
-	printf("the time-domain sampled signal is: \r\n\n");
-	printUint16_tArray(adc_buf, ADC_BUF_LEN);
-	printf(" \r\n\n the features are:");
+	myprintf("the time-domain sampled signal is: \r\n\n");
+	if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
+	get_time(timestamp);
+	printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
 	printDoubleArray(feat_array, feat_len);
+	printf(" \r\nEnd of features. \r\n");
 	return;
 }
 
 void USR_BTN_handler(){							// handle the press of user button
-	printf(" \r\nPlease enter a command: \r\n1 = acquire a snapshot (time-domain) \r\n");
+	printf(" \r\nPlease enter a command: \r\n1 = acquire a snapshot (time-domain) \r\n \r\n2 = set the clock \r\n");
 	int command;
-	// scanf("%u", &command); 					// temporarly disabled for debug
-	command = 1;
+	scanf("%u", &command); 					// temporarly disabled for debug
 	switch(command){
 	case 1:
 		acquireSnapshot();
+		break;
+	case 2:
+		setRTCclock();
+		break;
 	}
 	command = 0;								//	reset command
 	return;
