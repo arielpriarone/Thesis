@@ -25,3 +25,4 @@ double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 double *packetCoeff(double *inp, int length, int tree_depth, double *coefs); // compute the power of each packet coefficient in the lowest level
 
 double norm2(double *array, int length);
+void myprintf(const char* format, ...);

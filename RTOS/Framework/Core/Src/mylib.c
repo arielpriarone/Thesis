@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include "wavelib.h"
+#include "defines.h"
 
 void printDoubleArray(double *array, int len){
 	for (int i = 0; i < len; ++i) {
@@ -17,6 +18,17 @@ void printUint16_tArray(uint16_t *array, int len){
 		printf("%u\t",array[i]);
 	}
 	return;
+}
+
+void myprintf(const char* format, ...) {
+    // Check the global flag
+    if (VERBOSE) {
+        va_list args;
+        va_start(args, format);
+        vprintf(format, args);
+        va_end(args);
+    }
+    return;
 }
 
 /**
@@ -63,20 +75,20 @@ double *packetCoeff(double *inp, int length, int tree_depth, double *coefs) { //
 	setWTREEExtension(wt, "sym"); // Options are "per" and "sym". Symmetric is the default option
 
 	wtree(wt, inp);
-	wtree_summary(wt);
+	// wtree_summary(wt); too much information - reenable if needed
 
 	len = getWTREENodelength(wt, tree_depth); //because the lowest level is J
-	printf(" \r\n %d", len);
-	printf(" \r\n");
+	myprintf(" \r\n %d", len);
+	myprintf(" \r\n");
 
 	double *oup = (double *)malloc(sizeof(double) * len);
 
 	for(int node_index = 0; node_index < coef_len; node_index++){
-		printf("Node [%d %d] Coefficients :  \r\n", tree_depth, node_index);
+		myprintf("Node [%d %d] Coefficients :  \r\n", tree_depth, node_index);
 		getWTREECoeffs(wt, tree_depth, node_index, oup, len);
 		coefs[node_index] = norm2(oup,len);
 	}
-
+	free(oup);
 	free(inp);
 	wave_free(obj);
 	wtree_free(wt);
@@ -91,13 +103,21 @@ double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 							double *out_features_array)		// output array of features
 {
 	// cast the input array to double
-	double *time_array_double = (double *)malloc(sizeof(double) * len_time_array);
-	
+	double time_array_double[len_time_array];
+    for (int i = 0; i < len_time_array; ++i) {
+    	time_array_double[i] = (double)time_array[i];
+    }
+
+	myprintf("Time array converted to double: \r\n");
+    for(int i = 0; i<len_time_array; i++){
+        myprintf("%e\t",time_array_double[i]);
+    }
 	// compute the mean of the time-domain snapshot
 	double mean = 0;
 	for (int i = 0; i < len_time_array; ++i) {
 		mean += time_array_double[i];
 	}
+	mean /= (double) len_time_array;
 	// compute the energy of the time-domain snapshot
 	double energy = 0;
 	for (int i = 0; i < len_time_array; ++i) {
@@ -128,4 +148,5 @@ double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 
 	return out_features_array;
 }
+
 

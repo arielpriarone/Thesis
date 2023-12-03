@@ -30,6 +30,7 @@
 #include "mylib.h"
 #include "wavelib.h"
 #include "retarget.h"
+#include "defines.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -39,14 +40,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define FALSE 0				// FALSE value definition
-#define TRUE 1				// TRUE value definition
-#define TREE_DEPTH 6 		// DEPTH OF THE PACKET TRASFORM: NODES BOTTOM LEVEL = 2^6 = 64
-#define TD_FEAT 3			// TIME-DOMAIN FEATURES (MEAN, POWER, STD)
-#define ADC_BUF_LEN	5000	// SNAPSHOT TIME-DOMAIN LENGTH (5000 SANPLES AT 5KHZ -> 1S RECORDING)
-#define LED_RED GPIO_PIN_14 // RED LED ADDRESS AT GPIO B
-#define LED_BLU GPIO_PIN_7 	// RED LED ADDRESS AT GPIO B
-#define LED_GRE GPIO_PIN_0 	// RED LED ADDRESS AT GPIO B
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -545,22 +539,24 @@ void snapReadyHandler(){
 	snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
 
 	/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
-	feat_array = 0;
+	feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array);
 	printf("the time-domain sampled signal is: \r\n\n");
 	printUint16_tArray(adc_buf, ADC_BUF_LEN);
 	printf(" \r\n\n the features are:");
+	printDoubleArray(feat_array, feat_len);
+	return;
 }
 
 void USR_BTN_handler(){							// handle the press of user button
-	int c;
-	// while ((c = getchar()) != '\n' && c != EOF);// flush stdin - not working properly
 	printf(" \r\nPlease enter a command: \r\n1 = acquire a snapshot (time-domain) \r\n");
 	int command;
-	scanf("%u", &command);
+	// scanf("%u", &command); 					// temporarly disabled for debug
+	command = 1;
 	switch(command){
 	case 1:
 		acquireSnapshot();
 	}
+	command = 0;								//	reset command
 	return;
 }
 
