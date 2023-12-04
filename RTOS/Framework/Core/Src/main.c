@@ -31,6 +31,7 @@
 #include "wavelib.h"
 #include "retarget.h"
 #include "defines.h"
+#include "model.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,12 +84,15 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 /* USER CODE BEGIN PV */
 bool snap_request 	= FALSE;					// set true to request a snapshot acquisition
 bool snap_recorded 	= FALSE;					// snap recording finished flag
+bool evaluate_flag 	= FALSE;					// evaluate snap request flag
+bool transmit_flag 	= FALSE;					// evaluate snap request flag
 uint16_t adc_buf[ADC_BUF_LEN]; 					// reserve a buffer for the analogue readings
 uint16_t timer_index = 0;						// index for the timer interrupt analog conversion
 
 int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
 double *feat_array = NULL;					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																time-domain		...		freq-domain		*/
+double *feat_stdsd = NULL;
 char timestamp[13];										// timestamp string
 /* USER CODE END PV */
 
@@ -120,7 +124,7 @@ int main(void)
 	int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 			// features array length
 	feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																	time-domain		...		freq-domain		*/
-
+	feat_stdsd = (double *)malloc(sizeof(double) * feat_len); // standardised features
 	/* USER CODE END 1 */
 
 	/* MCU Configuration--------------------------------------------------------*/
@@ -612,6 +616,16 @@ void acquireSnapshot(){
 	return;
 }
 
+double calcSnapDistanceError(){
+
+}
+
+void std_sclr(){
+	for(int i=0; i<feat_len; i++){
+		feat_stdsd[i]=(feat_array[i]-means[i])/stds[i];
+	}
+}
+
 void snapReadyHandler(){
 	if(!snap_recorded){
 		return;
@@ -619,27 +633,41 @@ void snapReadyHandler(){
 	snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
 
 	/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
-	feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array);
-	myprintf("the time-domain sampled signal is: \r\n\n");
-	if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
-	get_time(timestamp);
-	printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
-	printDoubleArray(feat_array, feat_len);
-	printf(" \r\nEnd of features. \r\n");
+	if (transmit_flag){
+		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array);
+		myprintf("the time-domain sampled signal is: \r\n\n");
+		if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
+		get_time(timestamp);
+		printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
+		printDoubleArray(feat_array, feat_len);
+		printf(" \r\nEnd of features. \r\n");
+		transmit_flag = FALSE;
+	}
+	else if(evaluate_flag){
+		std_sclr();
+		double result = calcSnapDistanceError();
+		printf("%d",result);
+		evaluate_flag = FALSE;
+	}
 	return;
 }
 
 void USR_BTN_handler(){							// handle the press of user button
-	printf(" \r\nPlease enter a command: \r\n1 = acquire a snapshot (time-domain) \r\n \r\n2 = set the clock \r\n");
+	printf(" \r\nPlease enter a command: \r\n-1 = acquire and transmit a snapshot (time-domain) \r\n-2 = set the clock \r\n");
+	printf("-3 = acquire and evaluate a snapshot \r\n");
 	int command;
 	scanf("%u", &command); 					// temporarly disabled for debug
 	switch(command){
 	case 1:
 		acquireSnapshot();
+		transmit_flag = TRUE;
 		break;
 	case 2:
 		setRTCclock();
 		break;
+	case 3:
+		acquireSnapshot();
+		evaluate_flag = TRUE;
 	}
 	command = 0;								//	reset command
 	return;
