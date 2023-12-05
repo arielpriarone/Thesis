@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
+#include <float.h>
 #include "mylib.h"
 #include "wavelib.h"
 #include "retarget.h"
@@ -617,7 +618,19 @@ void acquireSnapshot(){
 }
 
 double calcSnapDistanceError(){
-
+	double distance_assgined_cluster = DBL_MAX; // initialise the minimum distance to MAX double possible, update it
+	// and than it is the distance to the assigned cluster
+	double distance, error;
+	int assigned_cluster = -1;	// initialise to impossible value
+	for (int i = 0; i < n_clusters; ++i) {
+		distance = eucDist(feat_stdsd, centers[i], feat_len); // compute the distance to all the centers (WARNING!!! - not sure if centers[i] works)
+		if(distance < distance_assgined_cluster){			// if found a new minimum, save it
+			assigned_cluster = i;	// assign a new cluster
+			distance_assgined_cluster = distance;			// assign the distance to current cluster
+		}
+	}
+	error = (distance_assgined_cluster-radiuses[assigned_cluster]);// /radiuses[assigned_cluster]; - removed because division by 0 problem
+	return error;
 }
 
 void std_sclr(){
@@ -626,35 +639,42 @@ void std_sclr(){
 	}
 }
 
+
+
 void snapReadyHandler(){
 	if(!snap_recorded){
 		return;
 	}
-	snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
+	else
+	{
+		snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
 
-	/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
-	if (transmit_flag){
-		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array);
-		myprintf("the time-domain sampled signal is: \r\n\n");
-		if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
-		get_time(timestamp);
-		printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
-		printDoubleArray(feat_array, feat_len);
-		printf(" \r\nEnd of features. \r\n");
-		transmit_flag = FALSE;
+		/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
+		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array); // extract the features
+		if (transmit_flag){
+			myprintf("the time-domain sampled signal is: \r\n\n");
+			if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
+			get_time(timestamp);
+			printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
+			printDoubleArray(feat_array, feat_len);
+			printf(" \r\nEnd of features. \r\n");
+			transmit_flag = FALSE;
+		}
+		if(evaluate_flag){ // evaluate the snaposhot
+			std_sclr();  	// standardise the snapshot
+			double indicator;
+			indicator = calcSnapDistanceError();
+			printf("%e",indicator);
+			evaluate_flag = FALSE;
+		}
+		return;
 	}
-	else if(evaluate_flag){
-		std_sclr();
-		double result = calcSnapDistanceError();
-		printf("%d",result);
-		evaluate_flag = FALSE;
-	}
-	return;
 }
 
 void USR_BTN_handler(){							// handle the press of user button
 	printf(" \r\nPlease enter a command: \r\n-1 = acquire and transmit a snapshot (time-domain) \r\n-2 = set the clock \r\n");
 	printf("-3 = acquire and evaluate a snapshot \r\n");
+	printf("-4 = acquire, evaluate and transmit a snapshot \r\n");
 	int command;
 	scanf("%u", &command); 					// temporarly disabled for debug
 	switch(command){
@@ -667,6 +687,10 @@ void USR_BTN_handler(){							// handle the press of user button
 		break;
 	case 3:
 		acquireSnapshot();
+		evaluate_flag = TRUE;
+	case 4:
+		acquireSnapshot();
+		transmit_flag = TRUE;
 		evaluate_flag = TRUE;
 	}
 	command = 0;								//	reset command

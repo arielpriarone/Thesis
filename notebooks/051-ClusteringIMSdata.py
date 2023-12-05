@@ -164,7 +164,7 @@ i=0; error=[]
 for snap in IMSDATA['wavanaly_standardized_train']:
     # print(np.shape(snap))
     y=kmeans.predict(np.array(snap).reshape(1, -1)) # predict the cluster for the new snap
-    distance = kmeans.transform(np.array(snap).reshape(1, -1))[0,y]
+    distance = kmeans.transform(np.array(snap).reshape(1, -1))[0,y] # distance to the predicted cluster
     error.append(distance-max_dist[int(y)])
     
 fig, axs=plt.subplots()

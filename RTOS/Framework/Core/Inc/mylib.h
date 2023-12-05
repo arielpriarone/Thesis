@@ -26,3 +26,4 @@ double *packetCoeff(double *inp, int length, int tree_depth, double *coefs); // 
 
 double norm2(double *array, int length);
 void myprintf(const char* format, ...);
+double eucDist(double *arr1, double *arr2, int len);

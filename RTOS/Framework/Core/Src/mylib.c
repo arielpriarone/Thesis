@@ -149,4 +149,14 @@ double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 	return out_features_array;
 }
 
+double eucDist(double *arr1, double *arr2, int len){ // calculate euclidian distance
+	//printDoubleArray(arr1, len);
+	//printDoubleArray(arr2, len);
+	double diff[len];
+	for(int i=0; i<len;i++){							// calculate difference
+		diff[i]=arr1[i]-arr2[i];
+	}
+	return norm2(diff,len);
+}
+
 
