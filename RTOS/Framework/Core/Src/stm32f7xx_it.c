@@ -56,6 +56,10 @@
 
 /* External variables --------------------------------------------------------*/
 extern TIM_HandleTypeDef htim6;
+<<<<<<< HEAD
+extern UART_HandleTypeDef huart3;
+=======
+>>>>>>> 4df7e2f7efc217df1f917c7779138fed22246abc
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -200,6 +204,23 @@ void SysTick_Handler(void)
 /******************************************************************************/
 
 /**
+<<<<<<< HEAD
+  * @brief This function handles USART3 global interrupt.
+  */
+void USART3_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART3_IRQn 0 */
+
+  /* USER CODE END USART3_IRQn 0 */
+  HAL_UART_IRQHandler(&huart3);
+  /* USER CODE BEGIN USART3_IRQn 1 */
+
+  /* USER CODE END USART3_IRQn 1 */
+}
+
+/**
+=======
+>>>>>>> 4df7e2f7efc217df1f917c7779138fed22246abc
   * @brief This function handles EXTI line[15:10] interrupts.
   */
 void EXTI15_10_IRQHandler(void)
