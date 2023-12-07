@@ -24,6 +24,6 @@ for amplitude, frequency in zip(amplitudes, frequencies):
 waveform /= np.max(np.abs(waveform))
 
 # Save the waveform as a .wav file
-wav.write('output_2.wav', sampling_rate, waveform)
+wav.write('data/output_2.wav', sampling_rate, waveform)
 
 
