@@ -94,12 +94,8 @@ int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
 double *feat_array = NULL;					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																time-domain		...		freq-domain		*/
 double *feat_stdsd = NULL;
-<<<<<<< HEAD
 char timestamp[13];								// timestamp string
 uint32_t tickmem = 0;							// for debluncing the INPUT
-=======
-char timestamp[13];										// timestamp string
->>>>>>> 4df7e2f7efc217df1f917c7779138fed22246abc
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -634,11 +630,7 @@ double calcSnapDistanceError(){
 			distance_assgined_cluster = distance;			// assign the distance to current cluster
 		}
 	}
-<<<<<<< HEAD
 	error = (distance_assgined_cluster-radiuses[assigned_cluster])/radiuses[assigned_cluster]; // removed because division by 0 problem - redone because now min cluster size = 2
-=======
-	error = (distance_assgined_cluster-radiuses[assigned_cluster]);// /radiuses[assigned_cluster]; - removed because division by 0 problem
->>>>>>> 4df7e2f7efc217df1f917c7779138fed22246abc
 	return error;
 }
 
@@ -681,7 +673,6 @@ void snapReadyHandler(){
 }
 
 void USR_BTN_handler(){							// handle the press of user button
-<<<<<<< HEAD
 	/* debounce the button */
 	uint16_t current_time = HAL_GetTick();
 	if ((tickmem + 100) > current_time){
@@ -691,18 +682,12 @@ void USR_BTN_handler(){							// handle the press of user button
 		tickmem = HAL_GetTick();
 	}
 
-=======
->>>>>>> 4df7e2f7efc217df1f917c7779138fed22246abc
 	printf(" \r\nPlease enter a command: \r\n-1 = acquire and transmit a snapshot (time-domain) \r\n-2 = set the clock \r\n");
 	printf("-3 = acquire and evaluate a snapshot \r\n");
 	printf("-4 = acquire, evaluate and transmit a snapshot \r\n");
 	int command;
-<<<<<<< HEAD
 	//scanf("%u", &command);
 	command = 4; // for testing
-=======
-	scanf("%u", &command); 					// temporarly disabled for debug
->>>>>>> 4df7e2f7efc217df1f917c7779138fed22246abc
 	switch(command){
 	case 1:
 		acquireSnapshot();
