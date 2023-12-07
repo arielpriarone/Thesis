@@ -1,6 +1,8 @@
 # %% TAKE DATA FROM UART, STANDARDIZE IT AN D PERFORM CLUSTERING
 # %% IMPORTS
-from math import ceil
+from datetime import date
+import datetime
+from math import ceil, floor
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy import cluster
@@ -9,15 +11,17 @@ from sklearn.metrics import silhouette_score
 import seaborn as sns
 import pandas as pd
 from sklearn.metrics import pairwise_distances_argmin_min
+from k_means_constrained import KMeansConstrained
 
 # %% global variables
 timestamps = np.array([])
 features_matrix = np.array([])
-snapshots_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\putty.log"  # Change this to your actual file path
+snapshots_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\Log_train_combined.log"  # Change this to your actual file path
 model_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Framework\Core\Inc\model.h"  # Change this to your actual file path
 min_cluster_size = 2   # minimum number of samples in a cluster
 
 # %% LOAD DATA
+i = 0
 with open(snapshots_filepath, 'r') as file:
     for line in file:
         data = line.strip()
@@ -25,6 +29,7 @@ with open(snapshots_filepath, 'r') as file:
             timestamp_value = np.array([data.split("Timestamp: ")[1].rstrip('\n')])
             timestamps=np.append(timestamps,timestamp_value,axis=0)
         elif data == "Features:":
+            i += 1
             features_line        = file.readline().strip()
             while features_line != "End of features.":
                 features_values  = np.array([float(value) for value in features_line.split('\t')]).reshape(-1,1)
@@ -64,9 +69,9 @@ else:
 # train with different number of clusters
 sil_score=[]
 inertia=[]
-max_clusters=min(100,features_matrix.shape[0]) # it's not possible to have more clusters than samples
+max_clusters=min(100,floor(features_matrix.shape[0]/min_cluster_size)) # it's not possible to have more clusters than samples/min_cluster_size
 for n_clusters in range(1,max_clusters+1):
-    kmeans=KMeans(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)
+    kmeans=KMeansConstrained(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10, size_min=min_cluster_size, size_max=features_matrix.shape[0])
     cluster_labels=kmeans.fit_predict(standardized_features_matrix)
     if 1<n_clusters<max_clusters:
         sil_score.append(silhouette_score(standardized_features_matrix,cluster_labels))
@@ -92,7 +97,7 @@ plt.show()
 n_clusters = input("Enter desired number of clusters: ")
 n_clusters = int(n_clusters)
 
-kmeans=KMeans(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)
+kmeans=KMeansConstrained(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)
 cluster_labels=kmeans.fit_predict(standardized_features_matrix) # y contains the assignments of each sample to a cluster
 
 range_feature_1=range(30, 33) # select features to plot vs next ones
@@ -113,27 +118,6 @@ for i in range_feature_1:
 
 plt.show()
 
-# %% force small clusters to merge with the closest cluster
-# Check the size of each cluster
-# cluster_sizes = np.bincount(cluster_labels)
-
-# # Identify clusters with fewer elements than the specified minimum
-# small_clusters = np.where(cluster_sizes < min_cluster_size)[0]
-
-# # Iterate over small clusters and reassign points to the nearest larger cluster
-# for small_cluster in small_clusters:
-#     # Find the indices of points in the small cluster
-#     indices = np.where(cluster_labels == small_cluster)[0]
-
-#     # Calculate pairwise distances to the centroids of other clusters
-#     distances = pairwise_distances_argmin_min(standardized_features_matrix[indices,:], kmeans.cluster_centers_)[0]
-
-#     # Find the nearest cluster with a sufficient number of elements
-#     nearest_large_cluster = np.argmin(cluster_sizes[cluster_sizes >= min_cluster_size])
-
-#     # Reassign points to the nearest large cluster
-#     cluster_labels[indices] = nearest_large_cluster
-
 # %% calculate radius of clusters
 cluster_distances=kmeans.transform(standardized_features_matrix)
 radiuses=[] # maximum distance to eah cluster in the train dataset
@@ -145,6 +129,9 @@ for cluster in range(0,n_clusters): # for every cluster calculate the radius
 
 # %% print results for implementation in C code to model file
 with open(model_filepath, 'w') as f:
+    # header
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    f.write(f"/* MODEL CREATED AUTOMATICALLY BY notebooks/080-embedded.py, timestamp: {timestamp} */\n\n")
     # n_clusters
     f.write("int n_clusters = "+str(n_clusters)+";\n")
 
