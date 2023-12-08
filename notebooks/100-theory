@@ -1,0 +1,50 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans
+import src
+src.vis.set_matplotlib_params()
+
+# Generate random blobs
+n_clusters = 2
+X, y = make_blobs(n_samples=400, centers=n_clusters, n_features=3, random_state=0)
+
+# Apply k-means clustering
+kmeans = KMeans(n_clusters=n_clusters, random_state=42)
+kmeans.fit(X)
+
+
+
+# Plot the blobs and cluster centers
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(X[:, 0], X[:, 1], X[:, 2], c=kmeans.labels_, cmap="tab10", marker='.')
+ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2], c='red', marker='x')
+ax.set_xlabel('Feature 1')
+ax.set_ylabel('Feature 2')
+ax.set_zlabel('Feature 3')
+
+# Calculate the radius of each cluster
+radii = []
+for i in range(n_clusters):
+    cluster_points = X[kmeans.labels_ == i]
+    centroid = kmeans.cluster_centers_[i]
+    distances = np.linalg.norm(cluster_points - centroid, axis=1)
+    radius = np.max(distances)
+    radii.append(radius)
+    print(f"Cluster {i+1} radius: {radius}")
+
+# Plot the spheres
+for i in range(n_clusters):
+    u, v = np.mgrid[0:2*np.pi:20j, 0:np.pi:10j]
+    x = radii[i] * np.cos(u)*np.sin(v) + kmeans.cluster_centers_[i][0]
+    y = radii[i] * np.sin(u)*np.sin(v) + kmeans.cluster_centers_[i][1]
+    z = radii[i] * np.cos(v) + kmeans.cluster_centers_[i][2]
+    ax.plot_wireframe(x, y, z, color="black", alpha=0.5)
+
+ax.set_aspect('equal')
+
+
+plt.tight_layout()
+plt.show()
