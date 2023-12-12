@@ -82,7 +82,7 @@ new_instance = np.array([-4,12,-6])
 
 # Assign the new instance to a cluster
 new_instance_cluster = kmeans.predict([new_instance])[0]
-ax.scatter(new_instance[0], new_instance[1], new_instance[2], c='magenta', marker='.', s=100, label=r'$\mathcal{I}_n$',zorder=5)
+ax.scatter(new_instance[0], new_instance[1], new_instance[2], c='magenta', marker='.', s=100, label=r'$\mathcal{S}_n$',zorder=5)
 
 # Plot an arrow from the center of the cluster to the new instance
 length = np.linalg.norm(new_instance - kmeans.cluster_centers_[new_instance_cluster])
