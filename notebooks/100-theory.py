@@ -15,7 +15,17 @@ from sklearn.cluster import KMeans
 import src
 from matplotlib.pyplot import cm # type: ignore
 from matplotlib.colors import LightSource
-import matplotlib as mpl
+import matplotlib as mpl 
+
+rc_fonts = {
+    "text.usetex": True,
+    #'text.latex.preview': True, # Gives correct legend alignment.
+    'mathtext.default': 'regular',
+}
+mpl.rcParams.update(rc_fonts)
+plt.rc('text.latex', preamble=r'\usepackage{bm}')
+import matplotlib.pylab as plt
+
 
 def plot_sphere(ax, radius, center, color='b', alpha=0.1):
     u = np.linspace(0, 2 * np.pi, 100)
@@ -54,9 +64,9 @@ right=0.709,
 hspace=0.2,
 wspace=0.2)
 ax = fig.add_subplot(111, projection='3d',computed_zorder=False)
-ax.scatter(cluster1[:, 0], cluster1[:, 1], cluster1[:, 2], color=cmap(0), marker='.', label=r'$\mathcal{C}_i$',zorder=2)
-ax.scatter(cluster2[:, 0], cluster2[:, 1], cluster2[:, 2], color=cmap(1), marker='.', label=r'$\mathcal{C}_j$',zorder=2)
-ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2],s=50, c='k', marker='x', label=r'$c_i$, $c_j$',zorder=2)
+ax.scatter(cluster1[:, 0], cluster1[:, 1], cluster1[:, 2], color=cmap(0), marker='.', label=r'$\bm{\mathcal{C}}_i$',zorder=2)
+ax.scatter(cluster2[:, 0], cluster2[:, 1], cluster2[:, 2], color=cmap(1), marker='.', label=r'$\bm{\mathcal{C}}_j$',zorder=2)
+ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2],s=50, c='k', marker='x', label=r'$\bm{c_i}$, $\bm{c}_j$',zorder=2)
 ax.set_xlabel('Feature 1')
 ax.set_ylabel('Feature 2')
 ax.set_zlabel('Feature 3')
@@ -82,19 +92,19 @@ new_instance = np.array([-4,12,-6])
 
 # Assign the new instance to a cluster
 new_instance_cluster = kmeans.predict([new_instance])[0]
-ax.scatter(new_instance[0], new_instance[1], new_instance[2], c='magenta', marker='.', s=100, label=r'$\mathcal{S}_n$',zorder=5)
+ax.scatter(new_instance[0], new_instance[1], new_instance[2], c='magenta', marker='.', s=100, label=r'$\bm{\mathcal{S}}_n$',zorder=5)
 
 # Plot an arrow from the center of the cluster to the new instance
 length = np.linalg.norm(new_instance - kmeans.cluster_centers_[new_instance_cluster])
 ax.quiver(kmeans.cluster_centers_[new_instance_cluster][0], kmeans.cluster_centers_[new_instance_cluster][1], kmeans.cluster_centers_[new_instance_cluster][2],
           new_instance[0] - kmeans.cluster_centers_[new_instance_cluster][0], new_instance[1] - kmeans.cluster_centers_[new_instance_cluster][1], new_instance[2] - kmeans.cluster_centers_[new_instance_cluster][2],
-          color=cmap(0), arrow_length_ratio=1.5/length, label=r'$d_{n,i}$',zorder=4)
+          color=cmap(0), arrow_length_ratio=1.5/length, label=r'$\bm{d}_{n,i}$',zorder=4)
 
 new_instance_cluster = 0 if new_instance_cluster == 1 else 1 # consider now the disccarded cluster
 length = np.linalg.norm(new_instance - kmeans.cluster_centers_[new_instance_cluster])
 ax.quiver(kmeans.cluster_centers_[new_instance_cluster][0], kmeans.cluster_centers_[new_instance_cluster][1], kmeans.cluster_centers_[new_instance_cluster][2],
           new_instance[0] - kmeans.cluster_centers_[new_instance_cluster][0], new_instance[1] - kmeans.cluster_centers_[new_instance_cluster][1], new_instance[2] - kmeans.cluster_centers_[new_instance_cluster][2],
-          color=cmap(1), arrow_length_ratio=1.5/length, label=r'$d_{n,j}$',zorder=4)
+          color=cmap(1), arrow_length_ratio=1.5/length, label=r'$\bm{d}_{n,j}$',zorder=4)
 
 # Find the instance in the first cluster that is farthest from the center
 cluster_points = X[kmeans.labels_ == 0]
@@ -107,7 +117,7 @@ farthest_instance = cluster_points[farthest_instance_index]
 length = np.linalg.norm(farthest_instance - kmeans.cluster_centers_[0])
 ax.quiver(kmeans.cluster_centers_[0][0], kmeans.cluster_centers_[0][1], kmeans.cluster_centers_[0][2],
           farthest_instance[0] - kmeans.cluster_centers_[0][0], farthest_instance[1] - kmeans.cluster_centers_[0][1], farthest_instance[2] - kmeans.cluster_centers_[0][2],
-          color="blue", arrow_length_ratio=1.5/length, label=r'$r_i$',zorder=4)
+          color="blue", arrow_length_ratio=1.5/length, label=r'$\bm{r}_i$',zorder=4)
 
 # Find the instance in the first cluster that is farthest from the center
 cluster_points = X[kmeans.labels_ == 1]
@@ -120,9 +130,12 @@ farthest_instance = cluster_points[farthest_instance_index]
 length = np.linalg.norm(farthest_instance - kmeans.cluster_centers_[1])
 ax.quiver(kmeans.cluster_centers_[1][0], kmeans.cluster_centers_[1][1], kmeans.cluster_centers_[1][2],
           farthest_instance[0] - kmeans.cluster_centers_[1][0], farthest_instance[1] - kmeans.cluster_centers_[1][1], farthest_instance[2] - kmeans.cluster_centers_[1][2],
-          color="red", arrow_length_ratio=1.5/length, label=r'$r_j$',zorder=4)
+          color="red", arrow_length_ratio=1.5/length, label=r'$\bm{r}_j$',zorder=4)
 
 ax.legend(loc='right',bbox_to_anchor=(1.7, 0.5)) 
 
 ax.set_aspect('equal')
+ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
 plt.show()

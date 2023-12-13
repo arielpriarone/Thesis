@@ -25,6 +25,7 @@ def set_matplotlib_params():
     plt.rcParams["figure.figsize"] = (5.78851, 5.78851/16*9)
     plt.rcParams["axes.formatter.use_mathtext"] = True
     plt.rcParams["mathtext.fontset"] = 'cm'
+    plt.rcParams["legend.fancybox"] = False
 
 
 def isNotebook() -> bool:
