@@ -22,8 +22,8 @@ The entities shown in the \autoref{fig:clust_spheres} are:
   \item $\vect{r}_{i(j)}$ is the radius of the $i$th ($j$th) cluster, it is defined as the distance between the centroid $\vect{c}_{i(j)}$ and the farthest point belonging to the cluster itself;
   \item $\vect{\mathcal{C}}_{i(j)}$ is the set of training snapshots belonging to the $i$th ($j$th) cluster, it has a centroid $\vect{c}_{i(j)}$ and a radius $\vect{r}_{i(j)}$;
   \item $\vect{\mathcal{S}}_n$ is the new snapshot to be evaluated;
-  \item $\vect{d}_{n,i}$ is the distance between $\vect{\mathcal{S}}_n$ and $\vect{c}_i$;
-  \item $\vect{d}_{n,j}$ is the distance between $\vect{\mathcal{S}}_n$ and $\vect{c}_j$;
+  \item $\vect{d}_{n,i}$ is the vector between $\vect{\mathcal{S}}_n$ and $\vect{c}_i$;
+  \item $\vect{d}_{n,j}$ is the vector between $\vect{\mathcal{S}}_n$ and $\vect{c}_j$;
   \item the semi-transparent spheres represent the clusters sizes, the radius of the spheres is the radius of the cluster itself, and the center is the centroid of the cluster;
 \end{itemize}
 
@@ -59,8 +59,35 @@ At this point the problem is that the user would have to define a threshold for 
 
 To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\vect{r}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version. 
 Obviously, the metric can be easily displayed as a percentege: $e_{n,\%} = e_n \cdot 100$.
+This value can be evaluated real-time, and plotted in a graph, so that the user can see the novelty metric behavior over time.
 
 \begin{equation}
   \label{eq:clust_eval_norm}
   e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\vect{d}_{n,i}}}{\norm{\vect{r}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
+
+\subsection{Evaluation procedure}
+all said in the previous sections can be summarized in the following procedure:
+
+\begin{algorithm}
+  \caption{Evaluation of a new snapshot}
+  \label{alg:eval_new_snapshot}
+  \begin{algorithmic}[1]
+  \Procedure{eval}{$\mathcal{M}_{\text{\texttt{k-means}}},\vect{\mathcal{S}}$}
+  \LineComment{$\mathcal{M}_{\text{\texttt{k-means}}}$ is the trained K-means model}
+  \LineComment{the model contain the centroids $\vect{c}_i$ and the radii $\vect{r}_i$ of the clusters}
+  \LineComment{$\vect{\mathcal{S}}$ is the new snapshot to be evaluated}
+  \State $k \gets \text{number of clusters in $\mathcal{M}_{\text{\texttt{k-means}}}$}$
+  \State min $\gets \infty$ \Comment {initialize the minimum distance}
+  \For{$i \gets 1$ to $k$}
+    \State $\vect{d}_{i} \gets \vect{\mathcal{S}} - \vect{c}_{i}$
+    \If {$\norm{\vect{d}_{i}} < \text{min}$}
+      \State min $\gets \norm{\vect{d}_{i}}$
+      \State $i_{\text{min}} \gets i$
+    \EndIf
+    \EndFor
+  \State \Return $e \gets \frac{\norm{\vect{d}_{i_{\text{min}}}}}{\norm{\vect{r}_{i_{\text{min}}}}} - 1$ \Comment {return the novelty metric}
+  \EndProcedure
+  %\end{small}
+  \end{algorithmic}
+  \end{algorithm}
