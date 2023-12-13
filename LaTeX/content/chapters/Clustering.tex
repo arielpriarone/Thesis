@@ -18,8 +18,11 @@ In the \autoref{fig:clust_spheres}, the training data are represented in the $3$
 \paragraph*{}
 The entities shown in the \autoref{fig:clust_spheres} are:
 \begin{itemize}
-  \item $\mathcal{C}_j$ is the set of training snapshots belonging to the $j$th cluster;
-  \item $\mathcal{C}_i$ is the set of training snapshots belonging to the $i$th cluster;
+  \item $\mathcal{C}_i$ is the set of training snapshots belonging to the $i$th cluster, it has a centroid $c_i$ and a radius $r_i$;
+  \item $\mathcal{C}_j$ is the set of training snapshots belonging to the $j$th cluster, it has a centroid $c_j$ and a radius $r_j$;
+  \item $\mathcal{S}_n$ is the new snapshot to be evaluated;
+  \item $d_{n,i}$ is the distance between $\mathcal{S}_n$ and $c_i$;
+  \item $d_{n,j}$ is the distance between $\mathcal{S}_n$ and $c_j$;
 \end{itemize}
 
 \subsection{Assign the new instance to a cluster}
