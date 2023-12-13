@@ -18,7 +18,7 @@ import timeit
 
 def set_matplotlib_params():
     font = {'family' : 'serif',
-            'size'   : 12,
+            'size'   : 10,
             'serif':  'cmr10'
             }
     mpl.rc('font', **font)
