@@ -36,17 +36,31 @@ The procedure for assigning the new snapshot $\vect{\mathcal{S}}_n$ to a cluster
 \end{equation}
 
 \subsection{Evaluation of the new instance}
-Once the new snapshot $\vect{\mathcal{S}}_n$ has been assigned to the right cluster $\vect{\mathcal{C}}_i$, some kind of measure linked to how novel this snapshot is need to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the disfference between the distance of $\vect{\mathcal{S}}_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
+Once the new snapshot $\vect{\mathcal{S}}_n$ has been assigned to the right cluster $\vect{\mathcal{C}}_i$, some kind of measure (metric) linked to how novel this snapshot is need to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the disfference between the distance of $\vect{\mathcal{S}}_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
 
 Few consideration about the resoult of the \autoref{eq:clust_eval}:
 \begin{itemize}
-  \item if $\vect{e}_{n} > 0$, the new snapshot $\vect{\mathcal{S}}_n$ is outside the sphere of radius $\vect{r}_i$ centered in $\vect{c}_i$, so it is probably a novel snapshot;
-  \item if $\vect{e}_{n} < 0$, the new snapshot $\vect{\mathcal{S}}_n$ is inside the sphere of radius $\vect{r}_i$, so it is probably a normal snapshot. In this case it is worth noticing that this assumption is reasonable only if the shape of the point cloud resambles a sphere, otherwise the radius $\vect{r}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \emph{This enpasises the importance of the standardization procedure applied to the features before the training phase};
+  \item if $e_{n} > 0$, the new snapshot $\vect{\mathcal{S}}_n$ is outside the sphere of radius $\vect{r}_i$ centered in $\vect{c}_i$, so it is probably a novel snapshot;
+  \item if $e_{n} < 0$, the new snapshot $\vect{\mathcal{S}}_n$ is inside the sphere of radius $\vect{r}_i$, so it is probably a normal snapshot. In this case it is worth noticing that this assumption is reasonable only if the shape of the point cloud resambles a sphere, otherwise the radius $\vect{r}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \emph{This enpasises the importance of the standardization procedure applied to the features before the training phase};
 \end{itemize}
 
 \begin{equation}
   \label{eq:clust_eval}
-  \vect{e}_{n} = ||\vect{d}_{n,i}||_2 - ||\vect{r}_{i}||_2, \text{ where $i$ is the of the assigned cluster}
+  e_{n} = ||\vect{d}_{n,i}||_2 - ||\vect{r}_{i}||_2, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
 
-The 
+Using this metric it is possible to define as novelty all the snapshots with $e_{n} > 0$, and as normal all the snapshots with $e_{n} < 0$. This approach is not very robust because s snapshot that is even slightly outside the sphere of radius $\vect{r}_i$ will be considered as novelty, but since the sphere is tuned the training \emph{measured} data, that have an aleatory component, this approach will probably detect some novelty even in normal snapshots.
+
+\subsection{Evaluation of the new instance with a threshold}
+In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\vect{\mathcal{C}}_i$, and use it to detect the if a snapshot is novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > \norm{\vect{r}_i}+ {t}_i$.
+
+\paragraph*{}
+At this point the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones.
+
+To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\vect{r}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version. 
+Obviously, the metric can be easily displayed as a percentege: $e_{n,\%} = e_n \cdot 100$.
+
+\begin{equation}
+  \label{eq:clust_eval_norm}
+  e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\vect{d}_{n,i}}}{\norm{\vect{r}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
+\end{equation}
