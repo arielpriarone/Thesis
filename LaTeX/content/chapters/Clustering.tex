@@ -1,6 +1,13 @@
 \chapter{Clustering}
+\label{ch:clustering}
 
-\section{Evaluation of a new instance}
+\section{K-means algorithm}
+
+One of the simplest clustering algorithm is the K-means algorithm.
+
+\label{sec:kmeans}
+
+\subsection{Evaluation of a new instance}
 
 At this point, with a model trained on the data, a generic $n$th new snapshot instance $\vect{\mathcal{S}}_n$ can be evaluated using the K-means algorithm.
 From a geometric point of view, the snapshot $\vect{\mathcal{S}}_n$ is a point in the ${F}$-dimensional space, where ${F}$ is the number of features used to train the model.
@@ -36,7 +43,7 @@ The procedure for assigning the new snapshot $\vect{\mathcal{S}}_n$ to a cluster
 \end{equation}
 
 \subsection{Evaluation of the new instance}
-Once the new snapshot $\vect{\mathcal{S}}_n$ has been assigned to the right cluster $\vect{\mathcal{C}}_i$, some kind of measure (metric) linked to how novel this snapshot is need to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the disfference between the distance of $\vect{\mathcal{S}}_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
+Once the new snapshot $\vect{\mathcal{S}}_n$ has been assigned to the right cluster $\vect{\mathcal{C}}_i$, some kind of measure (a.k.a. metric) linked to how novel this snapshot is need to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the disfference between the distance of $\vect{\mathcal{S}}_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
 
 Few consideration about the resoult of the \autoref{eq:clust_eval}:
 \begin{itemize}
