@@ -26,6 +26,7 @@ def set_matplotlib_params():
     plt.rcParams["axes.formatter.use_mathtext"] = True
     plt.rcParams["mathtext.fontset"] = 'cm'
     plt.rcParams["legend.fancybox"] = False
+    plt.rcParams["axes.titleweight"] = 'bold'
 
 
 def isNotebook() -> bool:

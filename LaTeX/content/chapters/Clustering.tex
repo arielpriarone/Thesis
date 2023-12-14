@@ -40,6 +40,20 @@ The naive kmeans algorith consist in a series of iterions. First, the centroids 
   \end{algorithmic}
 \end{algorithm}
 
+As an example, we can consider $F=2$ features, and generate some test points shaped like tree separated clusters. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iteration of the algorithm, and the final result. The K-means algorithm had $n=200$ snapshots, and $k=3$ clusters as input. The colors of the dots and the shaded areas represent the clusters, and the decision boundaries. The centroids are represented as black crosses. 
+The decision boundaries are a vornoi tessellation of the space, and they are defined as the set of points that are equidistant from the centroids of two different clusters. The algorithm itself does not compute the boundaies, but it is useful to plot them for visualization purposes.
+
+\paragraph{Unsupervided limitations}
+It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of clusters $k$ in advance. There are some methods to decide what is the best number of clusters, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is hardly automatable so, during the training phase, the user has to decide the number of clusters to be used.
+
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{images/Kmeans_vornoi.pdf}
+  \caption{K-means algorithm in the $2$-dimensional space}
+  \label{fig:kmeans_vornoi}
+\end{figure}
+
 \subsection{Evaluation of a new instance}
 
 At this point, with a model trained on the data, a generic $n$th new snapshot instance $\snapshot_n$ can be evaluated using the K-means algorithm.
