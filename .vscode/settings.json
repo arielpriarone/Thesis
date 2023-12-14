@@ -1,5 +1,11 @@
 {
     "cmake.sourceDirectory": "C:/Users/ariel/Documents/Courses/Tesi/Code/STM32CubeFunctionPack_DATALOG1_V1.5.0/Drivers/CMSIS/DSP/Examples/ARM/arm_variance_example",
     "python.analysis.typeCheckingMode": "basic",
-    "python.analysis.autoImportCompletions": true
+    "python.analysis.autoImportCompletions": true,
+    "grammarly.files.include": [
+        "**/readme.md",
+        "**/README.md",
+        "**/*.txt",
+        "**/*.tex"
+    ]
 }
