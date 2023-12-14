@@ -2,16 +2,21 @@
 \label{ch:clustering}
 
 \section{K-means algorithm}
+\label{sec:kmeans}
 
-The K-means algorithm was introduced in 
-
-Let's assume to have a collection of $n$ snapshots $\snapshot_i, i \in [1,n]$ (every snapshot is a vector of features). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This metric is equivalent to the variance of the clusters, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a collection of $n$ snapshots $\snapshot_i, i \in [1,n]$ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to find the centroids that minimize the variance of the clusters themeself, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
+  \argmin{\cluster}\sum_{i=1}^{k}\sum_{\snapshot_j \in \cluster_i} \norm{\snapshot_j - \vect{c}_i}^2 = \argmin{\cluster}\sum_{i=1}^{k}\abs{\cluster_i}\mathrm{Var}\cluster_i
 \label{eq:kmeans_problem}
 \end{equation}
 
-\label{sec:kmeans}
+Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time. 
+
+Anyway, clustering algorithms were already developed in the 1950s, and the most famous one was the K-means algorithm. The first appearence of the therm \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version in 1982 \cite{Lloyd1982}.
+
+Nowadays, the K-means algorithm is one of the most used clustering algorithms, and it is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}.
+
 
 \subsection{Evaluation of a new instance}
 
