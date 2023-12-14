@@ -4,7 +4,7 @@
 \section{K-means algorithm}
 \label{sec:kmeans}
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a collection of $n$ snapshots $\snapshot_i, i \in [1,n]$ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to find the centroids that minimize the variance of the clusters themeself, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\snapshot$ of $n$ snapshots $\snapshot_i, i \in [1,n], \snapshot_i \in \snapshot $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to find the centroids that minimize the variance of the clusters themeself, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
   \argmin{\cluster}\sum_{i=1}^{k}\sum_{\snapshot_j \in \cluster_i} \norm{\snapshot_j - \vect{c}_i}^2 = \argmin{\cluster}\sum_{i=1}^{k}\abs{\cluster_i}\mathrm{Var}\cluster_i
@@ -17,6 +17,28 @@ Anyway, clustering algorithms were already developed in the 1950s, and the most 
 
 Nowadays, the K-means algorithm is one of the most used clustering algorithms, and it is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}.
 
+\subsection{Training}
+The naive kmeans algorith consist in a series of iterions. First, the centroids $\vect{c}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated untill the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the following \autoref{alg:kmeans}.
+
+\begin{algorithm}
+  \caption{Training of the K-means model}
+  \label{alg:kmeans}
+  \begin{algorithmic}[1]
+  \Function{K-means.train}{$\snapshot, k$}
+  \LineComment{$\snapshot$ is the set of snapshots to be clustered}
+  \LineComment{$k$ is the number of clusters to be obtained}
+  \State $\vect{c}_i \gets \text{random initialization}, \forall i \in [1,k], \vect{c}_i \in \text{Domain of }\snapshot$
+  \Repeat
+  \LineComment{Every snapshot is assigned to the nearest centroid. Every centroid defines a cluster containing the assigned snapshots}
+  \State $\cluster_i \gets \left\{ \snapshot_p : \norm{\snapshot_p - \vect{c}_i}^2 \leq  \norm{\snapshot_p - \vect{c}_j}^2  \forall j \in [1,k] \right\} \forall i \in [1,k] $
+  \LineComment{The centroids are updated as the mean of their snapshots}
+  \State $\vect{c}_i \gets \frac{1}{\abs{\cluster_i}}\sum_{\snapshot_j \in \cluster_i} \snapshot_j, \forall i \in [1,k]$, \Comment{$\abs{\cluster_i}$ is the cluster size}
+  \Until{All the centroids do not change anymore, or max iterations reached}
+  \State $r_i \gets \max{\norm{\snapshot_j-\vect{c}_i}, \, \forall \snapshot_j \in \cluster_i}, \, \forall i \in [1,k]$ 
+  \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\vect{c}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
+  \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
 \subsection{Evaluation of a new instance}
 
@@ -85,7 +107,7 @@ This value can be evaluated in real-time, and plotted in a graph so that the use
 \end{equation}
 
 \subsection{Evaluation procedure}
-All said in the previous sections can be summarized in the following procedure:
+All said in the previous sections can be summarized in the following \autoref{alg:eval_new_snapshot}:
 
 \begin{algorithm}
   \caption{Evaluation of a new snapshot with a K-means model}

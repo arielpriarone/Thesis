@@ -29,6 +29,7 @@
 
 \let\dummy\autoref % This redefine autoref as dummy
 \def\autoref#1{\textbf{\dummy{#1}}} % this is like \autoref but in bold
+\newcommand{\algorithmautorefname}{Algorithm} % to make autoref work with algorithms
 
 \newcommand{\vect}[1]{\bm{#1}}  % for vectors
 \newcommand{\quoted}[1]{``#1''} % for quotes
