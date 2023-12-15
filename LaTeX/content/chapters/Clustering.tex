@@ -62,7 +62,7 @@ To compare the results of the different iterations, it is possible to use some m
 \paragraph*{Inertia}
 The inertia metric measure the total (sum) distance of each point belongigng to a cluster from the centroid of the cluster itself, as shown in the \autoref{eq:inertia}. This is called inertia because in the phisical sense it is the sub of the moment of inertia of each cluster if all the snapshots were considered as point masses (with unitary mass). This analogy is useful to understand that the lower the inertia, the more compact the clusters are.
 
-Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of $k$, on the previous dataset. The result is shown in the \autoref{fig:kmeans_inertia}. As expected, the inertia decreases as the number of clusters increases.
+Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of $k$, on the previous dataset. The result is shown in the \autoref{fig:kmeans_inertia}. As expected, the inertia decreases as the number of clusters increases. This is not a desirable behavior, if the aim is selecting the number of clusters, the best guess is to select (by eye or with some automatism) the Pareto optimal point (\acrshort{pof}) of the curve \cite{pareto}.
 
 \begin{equation}
   \label{eq:inertia}
