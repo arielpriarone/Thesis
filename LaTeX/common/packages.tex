@@ -25,9 +25,9 @@
 %\usepackage{glossaries} % to use acronyms and glossary, it has also glossaries-extra as extension, but commands are different
 \usepackage[%
     toc, % puts the link in the ToC
-    record = off, % to avoid use bib2gls
+    %record = on, % to avoid use bib2gls
     abbreviations, % to load abbreviations / acronyms
-    nonumberlist, % to avoid printing the numbers of the references in the acronyms page
+    %nonumberlist, % to avoid printing the numbers of the references in the acronyms page
 ]{glossaries-extra}
 \usepackage{graphicx}               %  post-script images
 %\usepackage{iwona} % extra fonts, substitute standard ones
@@ -52,7 +52,6 @@
 \usepackage{xcolor} % to define colors and use standard CSS names add dvipsnames as option, but it clashes with xcolor loaded in toptesi, pay attention that if it goes in conflict with tikz/beamer, simply use \documentclass[usenames,dvipsnames]{beamer}, along with other custom options when defining the document class
 
 % here ARIEL PRIARONE ADDED:
-\usepackage[utf8]{inputenc}
 \usepackage{pgf}
 \usepackage{pgfplots}
 \DeclareUnicodeCharacter{2212}{−}
