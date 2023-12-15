@@ -108,26 +108,13 @@ In this case, the best value for $k$ is $k=3$, because it is the value that maxi
   S_g = \frac{1}{n}\sum_{i=1}^{n} S_i
 \end{equation}
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\textwidth]{images/Kmeans_silhouette.pdf}
-  \caption{Silhouette score of the clusters for different values of $k$}
-  \label{fig:kmeans_silhouette}
-\end{figure}
-
-
-
-
-
-
-
 
 \subsection{Evaluation of a new instance}
 
 At this point, with a model trained on the data, a generic $n$th new snapshot instance $\snapshot_n$ can be evaluated using the K-means algorithm.
 From a geometric point of view, the snapshot $\snapshot_n$ is a point in the ${F}$-dimensional space, where ${F}$ is the number of features used to train the model.
 
-For demonstration purposes, in this section, it is considered an example with ${F}=3$ features.
+For demonstration purposes, in this section, since it is still feasible to show 3D plots, it is considered an example with ${F}=3$ features.
 
 \begin{figure}[htbp]
   \centering
@@ -219,3 +206,21 @@ All said in the previous sections can be summarized in the following \autoref{al
     %\end{small}
   \end{algorithmic}
 \end{algorithm}
+
+
+\subsection{Comment about selecting wrong value of $k$}
+\label{sec:wrong_k}
+A brief comment about what has been done in the experimental phase, in the cases where the number of clusters $k$ was difficult to define based on the silhouette plots. This happened when the maximum value of $k$ was shared between more than one value of $k$ (multiple peaks with similar values or a flat shape of the peak).
+
+In this case, the best choice is to select the maximum value of $k$ that is still compliant with the silhouette criterion. This is because the in scope of this thesis the final goal is to detect novelty. 
+Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and the a new snapshot that happens to be in the middle of the two clusters will not be detected as novelty. 
+
+In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters were $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new snapshot would not have been detected as novelty. On the other hand, selecting $k=4$, the algorithm would have correctly detected the novelty, even if onne cluster has been split in two.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\textwidth]{images/Kmeans_wrongk.pdf}
+  \caption{Novelty detection of a new $\snapshot_j$ with different values of $k$}
+  \label{fig:kmeans_wrongk}
+\end{figure}
+
