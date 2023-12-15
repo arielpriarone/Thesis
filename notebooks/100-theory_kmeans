@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from pandas import pivot
 from sklearn.datasets import make_blobs
 from sklearn.cluster import KMeans
 from scipy.spatial import Voronoi
@@ -194,5 +195,22 @@ axs[0,0].set_ylabel("Feature 2")
 axs[1,0].set_ylabel("Feature 2")
 axs[1,0].set_xlabel("Feature 1")
 axs[1,1].set_xlabel("Feature 1")
+
+
+# repeat for different k
+I = []
+
+for k in range(1, 10):
+    kmeans = KMeans(n_clusters=k, init='random', random_state=405, max_iter=100, n_init=1)
+    kmeans.fit(X)
+    I.append(kmeans.inertia_)
+
+fig, ax = plt.subplots()
+ax.plot(range(1,10), I, marker='o')
+ax.set_xlabel("Number of clusters")
+ax.set_ylabel("Inertia")
+
+ax.quiver(3.1,I[3]+100,-1,-1000, angles='xy', scale_units='xy', scale=1, color='k', pivot= 'tip')
+ax.text(4.2,1600, "Elbow point", ha='left', va='bottom')
 
 plt.show()

@@ -13,12 +13,20 @@ Let's assume to have extrapolated $F$ features from each of our signals, to prod
 
 Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time. 
 
-Anyway, clustering algorithms were already developed in the 1950s, and the most famous one was the K-means algorithm. The first appearence of the therm \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version in 1982 \cite{Lloyd1982}.
+Anyway, euristic clustering algorithms were already developed in the 1950s. The first appearence of the therm \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version in 1982 \cite{Lloyd1982}.
 
-Nowadays, the K-means algorithm is one of the most used clustering algorithms, and it is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}.
+Nowadays, the K-means algorithm is one of the most used clustering algorithms, and it is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementation try to minimise the probability of returning this sub-optimal result running the algorithm multiple times with different initializations, and then selecting the best result.
 
 \subsection{Training}
-The naive kmeans algorith consist in a series of iterions. First, the centroids $\vect{c}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated untill the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the following \autoref{alg:kmeans}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{images/Kmeans_vornoi.pdf}
+  \caption{K-means algorithm in the $2$-dimensional space}
+  \label{fig:kmeans_vornoi}
+\end{figure}
+
+\paragraph*{K-means} The naive kmeans algorith consist in a series of iterions. First, the centroids $\vect{c}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated untill the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the following \autoref{alg:kmeans}.
 
 \begin{algorithm}
   \caption{Training of the K-means model}
@@ -43,16 +51,33 @@ The naive kmeans algorith consist in a series of iterions. First, the centroids 
 As an example, we can consider $F=2$ features, and generate some test points shaped like tree separated clusters. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iteration of the algorithm, and the final result. The K-means algorithm had $n=200$ snapshots, and $k=3$ clusters as input. The colors of the dots and the shaded areas represent the clusters, and the decision boundaries. The centroids are represented as black crosses. 
 The decision boundaries are a vornoi tessellation of the space, and they are defined as the set of points that are equidistant from the centroids of two different clusters. The algorithm itself does not compute the boundaies, but it is useful to plot them for visualization purposes.
 
-\paragraph{Unsupervided limitations}
+\paragraph*{K-means \texttt{++}}
+\lipsum[1]
+
+\subsection{Selecting the number of clusters}
 It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of clusters $k$ in advance. There are some methods to decide what is the best number of clusters, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is hardly automatable so, during the training phase, the user has to decide the number of clusters to be used.
 
+To compare the results of the different iterations, it is possible to use some metrics on the data and the centroids. The most common metrics are the \emph{inertia} and the \emph{silhouette score}, described in the following paragraphs.
 
-\begin{figure}[htbp]
+\paragraph*{Inertia}
+The inertia metric measure the total (sum) distance of each point belongigng to a cluster from the centroid of the cluster itself, as shown in the \autoref{eq:inertia}. This is called inertia because in the phisical sense it is the sub of the moment of inertia of each cluster if all the snapshots were considered as point masses (with unitary mass). This analogy is useful to understand that the lower the inertia, the more compact the clusters are.
+
+Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of $k$, on the previous dataset. The result is shown in the \autoref{fig:kmeans_inertia}. As expected, the inertia decreases as the number of clusters increases.
+
+\begin{equation}
+  \label{eq:inertia}
+  I = \sum_{i=1}^{k}\sum_{\snapshot_j \in \cluster_i} \norm{\snapshot_j - \vect{c}_i}^2
+\end{equation}
+
+\begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{images/Kmeans_vornoi.pdf}
-  \caption{K-means algorithm in the $2$-dimensional space}
-  \label{fig:kmeans_vornoi}
+  \includegraphics[width=\textwidth]{images/Kmeans_inertia.pdf}
+  \caption{Inertia of the clusters for different values of $k$}
+  \label{fig:kmeans_inertia}
 \end{figure}
+
+
+
 
 \subsection{Evaluation of a new instance}
 
