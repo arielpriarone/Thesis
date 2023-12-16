@@ -2,7 +2,7 @@ import numpy as np
 import scipy.io.wavfile as wav
 from pydub import AudioSegment
 
-# Set the parameters
+# Set the parameters - first wave
 duration = 60*10  # Duration of the audio in seconds
 sampling_rate = 44100  # Number of samples per second
 frequencies =   [30,   70,  100, 300,   800,   1400]  # Base frequency of the waveform
