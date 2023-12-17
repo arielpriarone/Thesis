@@ -84,7 +84,7 @@ ax.plot(range(len(errors_wave1)+len(errors_wave2)+1,len(errors_wave1)+len(errors
 ax.hlines(10,0,len(errors_wave1)+len(errors_wave2)+len(errors_novelty)+1,linestyles='dashed',colors=['red'])
 ax.set_xlabel("Test number")
 ax.set_ylabel("Relative distance to closest cluster [%]")
-ax.legend(["First wave","Second wave","Armonic injection"])
+ax.legend(["First wave","Second wave","Harmonic injection","Threshold"])
 ax.grid(visible=True,which='both')
 
 

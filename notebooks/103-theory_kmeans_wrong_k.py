@@ -267,6 +267,7 @@ axs[0].set_title("$k$ too small\nFail to detect novelty")
 axs[1].set_title("$k$ right")
 axs[2].set_title("$k$ too large")
 
+
 # Add legend with custom elements
 fig.legend(handles=legend_elements, loc='outside lower center', ncol=4)
     
