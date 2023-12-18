@@ -62,7 +62,7 @@ main-build: Restored.elf secondary-outputs
 
 # Tool invocations
 Restored.elf Restored.map: $(OBJS) $(USER_OBJS) C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Restored\STM32F767ZITX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Restored.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Restored\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Restored.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+	arm-none-eabi-gcc -o "Restored.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m7 -T"C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Restored\STM32F767ZITX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Restored.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -u _printf_float -u _scanf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

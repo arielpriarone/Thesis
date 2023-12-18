@@ -86,7 +86,8 @@ PCD_HandleTypeDef hpcd_USB_OTG_FS;
 bool snap_request 	= FALSE;					// set true to request a snapshot acquisition
 bool snap_recorded 	= FALSE;					// snap recording finished flag
 bool evaluate_flag 	= FALSE;					// evaluate snap request flag
-bool transmit_flag 	= FALSE;					// evaluate snap request flag
+print_timeserie_flag = FALSE;					// transmit timeseries flag
+bool transmit_flag 	= FALSE;					// transmit snap features request flag
 uint16_t adc_buf[ADC_BUF_LEN]; 					// reserve a buffer for the analogue readings
 uint16_t timer_index = 0;						// index for the timer interrupt analog conversion
 
@@ -157,7 +158,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   RetargetInit(&huart3); 						// redirect printf and scanf to huart
   HAL_TIM_Base_Start_IT(&htim6);  			// start the timer 5 kHz
-  HAL_UART_Receive_IT(&huart3, Rx_data, 5); 	// start new data read from huart
+  HAL_UART_Receive_IT(&huart3, Rx_data, 1); 	// start new data read from huart
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -656,6 +657,11 @@ void snapReadyHandler(){
 		if (transmit_flag){
 			myprintf("the time-domain sampled signal is: \r\n\n");
 			if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
+			if(print_timeserie_flag){
+				print_timeserie_flag = FALSE;
+				myprintf("the time-domain sampled signal is: \r\n\n");
+				printUint16_tArray(adc_buf, ADC_BUF_LEN);
+			}
 			get_time(timestamp);
 			printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
 			printDoubleArray(feat_array, feat_len);
@@ -666,10 +672,10 @@ void snapReadyHandler(){
 			std_sclr();  	// standardise the snapshot
 			double indicator;
 			indicator = calcSnapDistanceError();
-			printf("%e",indicator);
+			printf("Novelty indicator: %e\n",indicator);
 			evaluate_flag = FALSE;
 		}
-		HAL_UART_Receive_IT(&huart3, Rx_data, 5); // start new data read from huart
+		HAL_UART_Receive_IT(&huart3, Rx_data, 1); // start new data read from huart
 		return;
 	}
 }
@@ -724,8 +730,24 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // GPIO interrupt handler
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   // this is executed when the data is received from HUART
-	printf(Rx_data);
-	HAL_UART_Receive_IT(&huart3, Rx_data, 5); 	// start new data read from huart
+	if(Rx_data[0] == '1'){ // this is for training purposes - transmit the features
+		acquireSnapshot();
+		transmit_flag = TRUE;
+	}
+	else if (Rx_data[0] == '2') { // this is for testing - transmit the features and the metric
+		acquireSnapshot();
+		transmit_flag = TRUE;
+		evaluate_flag = TRUE;
+	}
+	else if (Rx_data[0] == '3') { // for debug, transmit the timeserie, and the feature, and the metric
+		acquireSnapshot();
+		transmit_flag = TRUE;
+		evaluate_flag = TRUE;
+		print_timeserie_flag = TRUE;
+	}
+	else{
+		Error_Handler();
+	}
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
@@ -757,6 +779,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+	  HAL_GPIO_WritePin(GPIOB, LED_RED, GPIO_PIN_SET);
   }
   /* USER CODE END Error_Handler_Debug */
 }
