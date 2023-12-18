@@ -508,8 +508,8 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim6);  			// start the timer 5 kHz
  8000664:	4809      	ldr	r0, [pc, #36]	; (800068c <main+0x80>)
  8000666:	f004 fcb5 	bl	8004fd4 <HAL_TIM_Base_Start_IT>
-  HAL_UART_Receive_IT(&huart3, Rx_data, 4); 	// start new data read from huart
- 800066a:	2204      	movs	r2, #4
+  HAL_UART_Receive_IT(&huart3, Rx_data, 5); 	// start new data read from huart
+ 800066a:	2205      	movs	r2, #5
  800066c:	4908      	ldr	r1, [pc, #32]	; (8000690 <main+0x84>)
  800066e:	4806      	ldr	r0, [pc, #24]	; (8000688 <main+0x7c>)
  8000670:	f005 f951 	bl	8005916 <HAL_UART_Receive_IT>
@@ -1903,8 +1903,8 @@ void snapReadyHandler(){
  8000edc:	2200      	movs	r2, #0
  8000ede:	701a      	strb	r2, [r3, #0]
 		}
-		HAL_UART_Receive_IT(&huart3, Rx_data, 4); // start new data read from huart
- 8000ee0:	2204      	movs	r2, #4
+		HAL_UART_Receive_IT(&huart3, Rx_data, 5); // start new data read from huart
+ 8000ee0:	2205      	movs	r2, #5
  8000ee2:	490f      	ldr	r1, [pc, #60]	; (8000f20 <snapReadyHandler+0xcc>)
  8000ee4:	480f      	ldr	r0, [pc, #60]	; (8000f24 <snapReadyHandler+0xd0>)
  8000ee6:	f004 fd16 	bl	8005916 <HAL_UART_Receive_IT>
@@ -2082,8 +2082,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	printf(Rx_data);
  800100c:	4805      	ldr	r0, [pc, #20]	; (8001024 <HAL_UART_RxCpltCallback+0x20>)
  800100e:	f00a f8b5 	bl	800b17c <iprintf>
-	HAL_UART_Receive_IT(&huart3, Rx_data, 4); 	// start new data read from huart
- 8001012:	2204      	movs	r2, #4
+	HAL_UART_Receive_IT(&huart3, Rx_data, 5); 	// start new data read from huart
+ 8001012:	2205      	movs	r2, #5
  8001014:	4903      	ldr	r1, [pc, #12]	; (8001024 <HAL_UART_RxCpltCallback+0x20>)
  8001016:	4804      	ldr	r0, [pc, #16]	; (8001028 <HAL_UART_RxCpltCallback+0x24>)
  8001018:	f004 fc7d 	bl	8005916 <HAL_UART_Receive_IT>

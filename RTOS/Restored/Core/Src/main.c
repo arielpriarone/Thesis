@@ -157,7 +157,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   RetargetInit(&huart3); 						// redirect printf and scanf to huart
   HAL_TIM_Base_Start_IT(&htim6);  			// start the timer 5 kHz
-  HAL_UART_Receive_IT(&huart3, Rx_data, 4); 	// start new data read from huart
+  HAL_UART_Receive_IT(&huart3, Rx_data, 5); 	// start new data read from huart
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -669,7 +669,7 @@ void snapReadyHandler(){
 			printf("%e",indicator);
 			evaluate_flag = FALSE;
 		}
-		HAL_UART_Receive_IT(&huart3, Rx_data, 4); // start new data read from huart
+		HAL_UART_Receive_IT(&huart3, Rx_data, 5); // start new data read from huart
 		return;
 	}
 }
@@ -725,7 +725,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   // this is executed when the data is received from HUART
 	printf(Rx_data);
-	HAL_UART_Receive_IT(&huart3, Rx_data, 4); 	// start new data read from huart
+	HAL_UART_Receive_IT(&huart3, Rx_data, 5); 	// start new data read from huart
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
