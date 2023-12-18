@@ -91,11 +91,12 @@ uint16_t adc_buf[ADC_BUF_LEN]; 					// reserve a buffer for the analogue reading
 uint16_t timer_index = 0;						// index for the timer interrupt analog conversion
 
 int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
-double *feat_array = NULL;					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
+double *feat_array = NULL;						/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																time-domain		...		freq-domain		*/
 double *feat_stdsd = NULL;
 char timestamp[13];								// timestamp string
 uint32_t tickmem = 0;							// for debluncing the INPUT
+uint8_t Rx_data[10];  							//  creating a buffer of 10 bytes to hold the command from python
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -127,7 +128,6 @@ int main(void)
 		feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																		time-domain		...		freq-domain		*/
 		feat_stdsd = (double *)malloc(sizeof(double) * feat_len); // standardised features
-		uint8_t Rx_data[10];  //  creating a buffer of 10 bytes to hold the command from python
 	  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -669,7 +669,7 @@ void snapReadyHandler(){
 			printf("%e",indicator);
 			evaluate_flag = FALSE;
 		}
-		HAL_UART_Receive_IT(&huart2, Rx_data, 4); // start new data read from huart
+		HAL_UART_Receive_IT(&huart3, Rx_data, 4); // start new data read from huart
 		return;
 	}
 }
@@ -725,6 +725,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
   // this is executed when the data is received from HUART
 	printf(Rx_data);
+	HAL_UART_Receive_IT(&huart3, Rx_data, 4); 	// start new data read from huart
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
