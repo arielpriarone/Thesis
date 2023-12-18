@@ -2,7 +2,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <math.h>
-#include "wavelib.h"
+
+#include "../../../Restored/wavelib/header/wavelib.h"
 
 double norm2(double *array, int length);
 double *packetCoeff(double *inp, int length, int J, double *coefs);

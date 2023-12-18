@@ -127,6 +127,7 @@ int main(void)
 	feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																	time-domain		...		freq-domain		*/
 	feat_stdsd = (double *)malloc(sizeof(double) * feat_len); // standardised features
+	uint8_t Rx_data[10];  //  creating a buffer of 10 bytes to hold the command from python
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -154,8 +155,9 @@ int main(void)
   MX_TIM6_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-	RetargetInit(&huart3); 			// redirect printf and scanf to huart
-	HAL_TIM_Base_Start_IT(&htim6);  // start the timer 5 kHz
+	RetargetInit(&huart3); 						// redirect printf and scanf to huart
+	HAL_TIM_Base_Start_IT(&htim6);  			// start the timer 5 kHz
+	HAL_UART_Receive_IT(&huart2, Rx_data, 4); 	// start new data read from huart
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -668,6 +670,7 @@ void snapReadyHandler(){
 			printf("%e",indicator);
 			evaluate_flag = FALSE;
 		}
+		HAL_UART_Receive_IT(&huart2, Rx_data, 4); // start new data read from huart
 		return;
 	}
 }
@@ -717,6 +720,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // GPIO interrupt handler
 	else{
 		printf("Unknown GPIO interrupt happened");
 	}
+}
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  // this is executed when the data is received from HUART
+	printf(Rx_data);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){

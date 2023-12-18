@@ -1,0 +1,8 @@
+../wavelib/src/conv.c:10:5:factorf	6
+../wavelib/src/conv.c:30:5:findnext	2
+../wavelib/src/conv.c:42:5:findnexte	3
+../wavelib/src/conv.c:55:13:conv_init	1
+../wavelib/src/conv.c:76:6:conv_directx	5
+../wavelib/src/conv.c:93:6:conv_direct	12
+../wavelib/src/conv.c:145:6:conv_fft	6
+../wavelib/src/conv.c:206:6:free_conv	1

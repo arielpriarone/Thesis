@@ -1,0 +1,6 @@
+../wavelib/src/cwtmath.c:3:13:nsfft_fd	7
+../wavelib/src/cwtmath.c:66:13:nsfft_bk	8
+../wavelib/src/cwtmath.c:133:6:nsfft_exec	3
+../wavelib/src/cwtmath.c:141:15:fix	2
+../wavelib/src/cwtmath.c:150:5:nint	1
+../wavelib/src/cwtmath.c:158:8:cwt_gamma	16

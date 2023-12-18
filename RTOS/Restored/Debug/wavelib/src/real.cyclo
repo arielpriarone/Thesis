@@ -1,0 +1,4 @@
+../wavelib/src/real.c:11:17:fft_real_init	5
+../wavelib/src/real.c:33:6:fft_r2c_exec	4
+../wavelib/src/real.c:77:6:fft_c2r_exec	3
+../wavelib/src/real.c:106:6:free_real_fft	1

@@ -1,0 +1,7 @@
+../wavelib/src/cwt.c:11:8:factorial	3
+../wavelib/src/cwt.c:28:13:wave_function	22
+../wavelib/src/cwt.c:121:6:cwavelet	14
+../wavelib/src/cwt.c:229:6:psi0	9
+../wavelib/src/cwt.c:279:12:maxabs	3
+../wavelib/src/cwt.c:297:8:cdelta	10
+../wavelib/src/cwt.c:377:6:icwavelet	5

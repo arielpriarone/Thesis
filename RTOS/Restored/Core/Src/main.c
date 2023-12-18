@@ -22,13 +22,17 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "mylib.h"
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
+#include <float.h>
+#include "mylib.h"
+#include "wavelib.h"
 #include "retarget.h"
-
-#include "../../../Restored/wavelib/header/wavelib.h"
+#include "defines.h"
+#include "model.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,8 +42,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define ADC_BUF_LEN 5000 // 5000 samples at 5kHz -> 1s snapshot
-#define TREE_DEPTH 6 	// wavelet tree decomposiiton depth 6-> 2^6=64 features
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -80,10 +83,19 @@ UART_HandleTypeDef huart3;
 PCD_HandleTypeDef hpcd_USB_OTG_FS;
 
 /* USER CODE BEGIN PV */
-uint16_t adc_buf[ADC_BUF_LEN]; // reserve a buffer for the analogue readings
-uint16_t timer_index;
-bool snap_flag;
+bool snap_request 	= FALSE;					// set true to request a snapshot acquisition
+bool snap_recorded 	= FALSE;					// snap recording finished flag
+bool evaluate_flag 	= FALSE;					// evaluate snap request flag
+bool transmit_flag 	= FALSE;					// evaluate snap request flag
+uint16_t adc_buf[ADC_BUF_LEN]; 					// reserve a buffer for the analogue readings
+uint16_t timer_index = 0;						// index for the timer interrupt analog conversion
 
+int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
+double *feat_array = NULL;					/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
+																time-domain		...		freq-domain		*/
+double *feat_stdsd = NULL;
+char timestamp[13];								// timestamp string
+uint32_t tickmem = 0;							// for debluncing the INPUT
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -110,11 +122,13 @@ static void MX_RTC_Init(void);
   */
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
-	timer_index = 0;
-	snap_flag = true; // begin with inibiiton of acquisition, set to false later
-
-  /* USER CODE END 1 */
+	  /* USER CODE BEGIN 1 */
+		int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 			// features array length
+		feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
+																		time-domain		...		freq-domain		*/
+		feat_stdsd = (double *)malloc(sizeof(double) * feat_len); // standardised features
+		uint8_t Rx_data[10];  //  creating a buffer of 10 bytes to hold the command from python
+	  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -129,7 +143,7 @@ int main(void)
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-  RetargetInit(&huart3); // redirect the printf() and scanf() function to huart
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -141,14 +155,17 @@ int main(void)
   MX_TIM6_Init();
   MX_RTC_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim6);  // start the timer
+  RetargetInit(&huart3); 						// redirect printf and scanf to huart
+  HAL_TIM_Base_Start_IT(&htim6);  			// start the timer 5 kHz
+  HAL_UART_Receive_IT(&huart3, Rx_data, 4); 	// start new data read from huart
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-  while (1){
-
+  printf(" \r\n Entering the superloop... \r\n");
+  while (1)
+  {
+	  snapReadyHandler();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -327,6 +344,9 @@ static void MX_RTC_Init(void)
 
   /* USER CODE END RTC_Init 0 */
 
+  RTC_TimeTypeDef sTime = {0};
+  RTC_DateTypeDef sDate = {0};
+
   /* USER CODE BEGIN RTC_Init 1 */
 
   /* USER CODE END RTC_Init 1 */
@@ -341,6 +361,31 @@ static void MX_RTC_Init(void)
   hrtc.Init.OutPutPolarity = RTC_OUTPUT_POLARITY_HIGH;
   hrtc.Init.OutPutType = RTC_OUTPUT_TYPE_OPENDRAIN;
   if (HAL_RTC_Init(&hrtc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /* USER CODE BEGIN Check_RTC_BKUP */
+
+  /* USER CODE END Check_RTC_BKUP */
+
+  /** Initialize RTC and set the Time and Date
+  */
+  sTime.Hours = 0x0;
+  sTime.Minutes = 0x0;
+  sTime.Seconds = 0x0;
+  sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+  sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+  if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BCD) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+  sDate.Month = RTC_MONTH_JANUARY;
+  sDate.Date = 0x1;
+  sDate.Year = 0x0;
+
+  if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BCD) != HAL_OK)
   {
     Error_Handler();
   }
@@ -518,41 +563,186 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void setRTCclock() {
+	RTC_TimeTypeDef sTime;
+	RTC_DateTypeDef sDate;
+
+	int year, month, day, hour, minute, second;
+
+	// Get date and time from the user
+	printf("Enter the date and time (YYYY MM DD hh mm ss): ");
+	scanf("%d %d %d %d %d %d", &year, &month, &day, &hour, &minute, &second);
+
+	// Set the Date
+	sDate.Year = year - 2000;
+	sDate.Month = month;
+	sDate.Date = day;
+	sDate.WeekDay = RTC_WEEKDAY_MONDAY;
+
+	if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	// Set the Time
+	sTime.Hours = hour;
+	sTime.Minutes = minute;
+	sTime.Seconds = second;
+	sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
+	sTime.StoreOperation = RTC_STOREOPERATION_RESET;
+
+	if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+		/* Initialization Error */
+		Error_Handler();
+	}
+
+	printf("RTC clock set successfully.\n");
+	return;
+}
+
+void get_time()
+{
+	RTC_DateTypeDef gDate;
+	RTC_TimeTypeDef gTime;
+	/* Get the RTC current Time */
+	HAL_RTC_GetTime(&hrtc, &gTime, RTC_FORMAT_BIN);
+	/* Get the RTC current Date */
+	HAL_RTC_GetDate(&hrtc, &gDate, RTC_FORMAT_BIN);
+	/* Display time Format: YYYYMMDDhhmmss */
+	sprintf(timestamp,"%04d%02d%02d%02d%02d%02d",2000 + gDate.Year,gDate.Month, gDate.Date,gTime.Hours, gTime.Minutes, gTime.Seconds);
+	return ;
+}
+
+void acquireSnapshot(){
+	snap_recorded = FALSE;						// clear ouput flag
+	snap_request = TRUE;						// request a snapshot
+	return;
+}
+
+double calcSnapDistanceError(){
+	double distance_assgined_cluster = DBL_MAX; // initialise the minimum distance to MAX double possible, update it
+	// and than it is the distance to the assigned cluster
+	double distance, error;
+	int assigned_cluster = -1;	// initialise to impossible value
+	for (int i = 0; i < n_clusters; ++i) {
+		distance = eucDist(feat_stdsd, centers[i], feat_len); // compute the distance to all the centers (WARNING!!! - not sure if centers[i] works)
+		if(distance < distance_assgined_cluster){			// if found a new minimum, save it
+			assigned_cluster = i;	// assign a new cluster
+			distance_assgined_cluster = distance;			// assign the distance to current cluster
+		}
+	}
+	error = (distance_assgined_cluster-radiuses[assigned_cluster])/radiuses[assigned_cluster]; // removed because division by 0 problem - redone because now min cluster size = 2
+	return error;
+}
+
+void std_sclr(){
+	for(int i=0; i<feat_len; i++){
+		feat_stdsd[i]=(feat_array[i]-means[i])/stds[i];
+	}
+}
+
+
+
+void snapReadyHandler(){
+	if(!snap_recorded){
+		return;
+	}
+	else
+	{
+		snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
+
+		/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
+		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array); // extract the features
+		if (transmit_flag){
+			myprintf("the time-domain sampled signal is: \r\n\n");
+			if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
+			get_time(timestamp);
+			printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
+			printDoubleArray(feat_array, feat_len);
+			printf(" \r\nEnd of features. \r\n");
+			transmit_flag = FALSE;
+		}
+		if(evaluate_flag){ // evaluate the snaposhot
+			std_sclr();  	// standardise the snapshot
+			double indicator;
+			indicator = calcSnapDistanceError();
+			printf("%e",indicator);
+			evaluate_flag = FALSE;
+		}
+		HAL_UART_Receive_IT(&huart2, Rx_data, 4); // start new data read from huart
+		return;
+	}
+}
+
+void USR_BTN_handler(){							// handle the press of user button
+	/* debounce the button */
+	uint16_t current_time = HAL_GetTick();
+	if ((tickmem + 100) > current_time){
+		return;
+	}
+	else{
+		tickmem = HAL_GetTick();
+	}
+
+	printf(" \r\nPlease enter a command: \r\n-1 = acquire and transmit a snapshot (time-domain) \r\n-2 = set the clock \r\n");
+	printf("-3 = acquire and evaluate a snapshot \r\n");
+	printf("-4 = acquire, evaluate and transmit a snapshot \r\n");
+	int command;
+	//scanf("%u", &command);
+	command = 4; // for testing
+	switch(command){
+	case 1:
+		acquireSnapshot();
+		transmit_flag = TRUE;
+		break;
+	case 2:
+		setRTCclock();
+		break;
+	case 3:
+		acquireSnapshot();
+		evaluate_flag = TRUE;
+	case 4:
+		acquireSnapshot();
+		transmit_flag = TRUE;
+		evaluate_flag = TRUE;
+	}
+	command = 0;								//	reset command
+	return;
+}
+
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) // GPIO interrupt handler
 {
 	if(GPIO_Pin == 0x2000){ // if user btn is pressed
-		snap_flag = false; //request a snapshot
+		USR_BTN_handler();
 	}
 	else{
 		printf("Unknown GPIO interrupt happened");
 	}
 }
 
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+  // this is executed when the data is received from HUART
+	printf(Rx_data);
+}
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim){
-	if(htim == &htim6 && snap_flag == false){ // if the timer is the analog management and the conversion is not already done
+	if(htim == &htim6 && snap_request == TRUE){ // if the timer is the analog management and the conversion is REQUESTED
 		// Get ADC value
-		    HAL_ADC_Start(&hadc1);
-		    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-		    adc_buf[timer_index]= HAL_ADC_GetValue(&hadc1); // save the value in the array
-		    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_0);
-		    timer_index ++;
-		    if(timer_index>=ADC_BUF_LEN){
-		    	timer_index=0;
-		    	SnapReadyCallback(adc_buf, ADC_BUF_LEN, TREE_DEPTH);
-		    	snap_flag = true; // conversion complete flag
-		    }
+		HAL_ADC_Start(&hadc1);
+		HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+		adc_buf[timer_index]= HAL_ADC_GetValue(&hadc1); // save the value in the array
+		HAL_GPIO_TogglePin(GPIOB, LED_GRE);			// for debug purposes
+		timer_index ++;
+		if(timer_index>=ADC_BUF_LEN){					// if acquisition completed
+			timer_index=0;								// reset index for next time
+			snap_recorded = TRUE; 						// conversion complete flag
+			snap_request = 	FALSE;						// conversion completed, reset request
+		}
 	}
 }
 
-void printTimestamp(){
-char timestamp[18];
-	RTC_TimeTypeDef sTime;
-	RTC_DateTypeDef sDate;
-	HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
-	HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-	sprintf(timestamp,"%02d-%02d-%02d %02d:%02d:%02d",sDate.Year,sDate.Month,sDate.Date,sTime.Hours,sTime.Minutes,sTime.Seconds);
-	printf(timestamp);
-}
 /* USER CODE END 4 */
 
 /**
@@ -566,7 +756,6 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
-	  HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_14);
   }
   /* USER CODE END Error_Handler_Debug */
 }
