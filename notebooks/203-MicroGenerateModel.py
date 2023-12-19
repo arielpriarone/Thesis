@@ -17,12 +17,13 @@ timestamps = np.array([])                                                       
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
 train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"              # csv file with train data
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
-max_n_clusters = 10                                                                             # maximum number of clusters to try
+max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
 
 # %% LOAD DATA
 console.print("Loading data...", style="magenta")
-train_data = pd.read_csv(train_data_filepath, sep='\t', header=None)
+train_data = pd.read_csv(train_data_filepath, sep='\t', header=1)
+console.print(train_data.head(), style="magenta")
 timestamps = train_data.iloc[:,0].to_numpy()
 features_matrix = train_data.iloc[:,1:].to_numpy()
 console.print("Data loaded successfully.", style="magenta")
@@ -137,7 +138,7 @@ with open(model_filepath, 'w') as f:
         if i != n_clusters-1:
             aux += ", "
     f.write("double radiuses["+str(n_clusters)+"] = {"+aux+"};\n")
-print("Model file created successfully.")
+console.print("Model file created successfully.", style="magenta")
 
 # %% plot resulting clusters
 range_feature_1=range(30, 33) # select features to plot vs next ones

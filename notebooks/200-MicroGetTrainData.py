@@ -1,4 +1,5 @@
 # %% 
+import os
 from click import style
 import serial
 import time
@@ -9,13 +10,23 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 150      # number of snapshots to take for training
+n_train_snaps = 75          # number of snapshots to take for training
+n_features = 67             # number of features
 
 # Open the serial port
 ser = serial.Serial('COM5', 115200)
 
 # Open the csv file to save the snapshots
-snap_file = open("train_data.csv", "a")
+if os.path.exists("train_data.csv"):
+    snap_file = open("train_data.csv", "a")
+else:
+    snap_file = open("train_data.csv", "w")
+    snap_file.write("Timestamp\t")
+    for i in range(n_features):
+        snap_file.write(f"Feature {i+1}\t")
+    snap_file.write("\n")
+
+
 
 for i in range(n_train_snaps):
     # Send '1' to the serial port to start the acquisition and conversion of features
@@ -40,8 +51,8 @@ for i in range(n_train_snaps):
     floats_str = data[start_index:end_index].strip()
     current_features = [float(num) for num in floats_str.split()]
 
-    if np.size(current_features) != 67:
-        raise ValueError(f"The number of features received ({np.size(current_features)}) is not 67.")
+    if np.size(current_features) != n_features:
+        raise ValueError(f"The number of features received ({np.size(current_features)}) is not {n_features}.")
 
     # Use the current time as the timestamp because the micro reset every time it is powered on
     current_timestamp = str(datetime.datetime.now()).rsplit('.')[0]

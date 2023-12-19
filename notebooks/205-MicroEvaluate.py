@@ -6,16 +6,25 @@ import numpy as np
 from rich import print
 from rich.console import Console
 import datetime
+import os
 console = Console()
 
 # configurations
-n_train_snaps = 10      # number of snapshots to take for training
+n_train_snaps = 10          # number of snapshots to take for training
+n_features = 67             # number of features
 
 # Open the serial port
 ser = serial.Serial('COM5', 115200)
 
 # Open the csv file to save the snapshots
-snap_file = open("test_data.csv", "a")
+if os.path.exists("test_data.csv"):
+    snap_file = open("test_data.csv", "a")
+else:
+    snap_file = open("test_data.csv", "w")
+    snap_file.write("Timestamp\t")
+    for i in range(n_features):
+        snap_file.write(f"Feature {i+1}\t")
+    snap_file.write("\n")
 
 for i in range(n_train_snaps):
     # Send '2' to the serial port to start the acquisition evaluation of features
