@@ -1,29 +1,44 @@
+# %% 
+from click import style
 import serial
 import time
+import numpy as np
+from rich import print
+from rich.console import Console
+import datetime
+console = Console()
 
-# Open the COM port for writing
-com_port = serial.Serial('COM5', baudrate=115200)
+# Open the serial port
+ser = serial.Serial('COM5', 115200)
 
-# # Open a file for storing the received data
-# file_path = 'readfrommicro.txt'
-# file = open(file_path, 'w')
+# Send '1' to the serial port to start the acquisition and conversion of features
+ser.write(b'1')
 
-for i in range(10):
-    # Send the number 1 on the COM port
-    print('Sending 1 on the COM port')
-    com_port.write(b'1')
+# Wait for 5 seconds to have the features back
+time.sleep(5)
 
-    # Read the data from the COM port
-    data = com_port.readline().decode().strip()
-    print('Received data: {}'.format(data))
+# Read the data from the serial port
+data = ser.read_all().decode('utf-8')
 
-    # # Store the received data in the file
-    # file.write(data + '\n')
-    # file.flush()
+# Print the data
+console.print("Received data from microcontroller:", style="magenta")
+print(data)
+console.print("End of data from microcontroller:", style="magenta")
 
-    # Wait for 5 seconds
-    time.sleep(5)
+# Extract the array of features between the keywords "features:" and "end features"
+start_keyword = "Features: \r\n"
+end_keyword = "\t \r\nEnd of features."
+start_index = data.find(start_keyword) + len(start_keyword)
+end_index = data.find(end_keyword)
+floats_str = data[start_index:end_index].strip()
+current_features = [float(num) for num in floats_str.split()]
 
-# Close the file and the COM port
-# file.close()
-# com_port.close()
+# Use the current time as the timestamp because the micro reset every time it is powered on
+current_timestamp = str(datetime.datetime.now()).rsplit('.')[0]
+
+# Print the snapshot
+console.print(f"Timestamp: {current_timestamp}", style="magenta")
+console.print(f"Extracted features: {current_features}", style="magenta")
+
+# Close the serial port
+ser.close()
