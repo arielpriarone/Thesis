@@ -1,7 +1,0 @@
-../Core/Src/mylib.c:9:6:printDoubleArray	24	static
-../Core/Src/mylib.c:16:6:printUint16_tArray	24	static
-../Core/Src/mylib.c:23:6:myprintf	16	static
-../Core/Src/mylib.c:44:8:norm2	32	static
-../Core/Src/mylib.c:62:9:packetCoeff	72	static
-../Core/Src/mylib.c:100:9:featureExtractor	120	dynamic
-../Core/Src/mylib.c:152:8:eucDist	64	dynamic

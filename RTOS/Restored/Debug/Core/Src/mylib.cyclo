@@ -1,7 +1,0 @@
-../Core/Src/mylib.c:9:6:printDoubleArray	2
-../Core/Src/mylib.c:16:6:printUint16_tArray	2
-../Core/Src/mylib.c:23:6:myprintf	1
-../Core/Src/mylib.c:44:8:norm2	2
-../Core/Src/mylib.c:62:9:packetCoeff	2
-../Core/Src/mylib.c:100:9:featureExtractor	6
-../Core/Src/mylib.c:152:8:eucDist	2

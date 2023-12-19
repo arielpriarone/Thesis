@@ -1,7 +1,0 @@
-../wavelib/src/cwt.c:11:8:factorial	16	static
-../wavelib/src/cwt.c:28:13:wave_function	128	static
-../wavelib/src/cwt.c:121:6:cwavelet	176	static
-../wavelib/src/cwt.c:229:6:psi0	64	static
-../wavelib/src/cwt.c:279:12:maxabs	40	static
-../wavelib/src/cwt.c:297:8:cdelta	160	static
-../wavelib/src/cwt.c:377:6:icwavelet	88	static

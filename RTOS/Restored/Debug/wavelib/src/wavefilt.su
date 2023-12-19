@@ -1,6 +1,0 @@
-../wavelib/src/wavefilt.c:3135:5:filtlength	32	static
-../wavelib/src/wavefilt.c:3305:6:copy_reverse	32	static
-../wavelib/src/wavefilt.c:3312:6:qmf_wrev	32	static
-../wavelib/src/wavefilt.c:3324:6:qmf_even	32	static
-../wavelib/src/wavefilt.c:3336:6:copy	32	static
-../wavelib/src/wavefilt.c:3343:5:filtcoef	104	static
