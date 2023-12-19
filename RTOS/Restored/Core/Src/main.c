@@ -672,7 +672,7 @@ void snapReadyHandler(){
 			std_sclr();  	// standardise the snapshot
 			double indicator;
 			indicator = calcSnapDistanceError();
-			printf("Novelty indicator: %e\n",indicator);
+			printf("Novelty indicator: %.15e\n",indicator);
 			evaluate_flag = FALSE;
 		}
 		HAL_UART_Receive_IT(&huart3, Rx_data, 1); // start new data read from huart

@@ -8,7 +8,7 @@
 
 void printDoubleArray(double *array, int len){
 	for (int i = 0; i < len; ++i) {
-		printf("%e\t",array[i]);
+		printf("%.15e\t",array[i]);
 	}
 	return;
 }
@@ -110,7 +110,7 @@ double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 
 	myprintf("Time array converted to double: \r\n");
     for(int i = 0; i<len_time_array; i++){
-        myprintf("%e\t",time_array_double[i]);
+        myprintf("%.15e\t",time_array_double[i]);
     }
 	// compute the mean of the time-domain snapshot
 	double mean = 0;
