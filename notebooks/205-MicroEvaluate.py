@@ -9,17 +9,17 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 150      # number of snapshots to take for training
+n_train_snaps = 10      # number of snapshots to take for training
 
 # Open the serial port
 ser = serial.Serial('COM5', 115200)
 
 # Open the csv file to save the snapshots
-snap_file = open("train_data.csv", "a")
+snap_file = open("test_data.csv", "a")
 
 for i in range(n_train_snaps):
-    # Send '1' to the serial port to start the acquisition and conversion of features
-    ser.write(b'1')
+    # Send '2' to the serial port to start the acquisition evaluation of features
+    ser.write(b'2')
 
     # Wait 4 seconds for the microcontroller to send the data
     time.sleep(2.5)
@@ -40,20 +40,28 @@ for i in range(n_train_snaps):
     floats_str = data[start_index:end_index].strip()
     current_features = [float(num) for num in floats_str.split()]
 
-    if np.size(current_features) != 67:
-        raise ValueError(f"The number of features received ({np.size(current_features)}) is not 67.")
+    # Extract the novelty indicator between the keywords "novelty:" and "\n"
+    start_keyword = "Novelty indicator: "
+    end_keyword = "\n"
+    start_index = data.find(start_keyword) + len(start_keyword)
+    end_index = data.find(end_keyword, start_index)
+    novelty = float(data[start_index:end_index].strip())
 
+    # Check if the number of features is correct
+    if np.size(current_features) != 67:
+        raise ValueError(f"The number of features received ({np.size(current_features)}) is not 67.")   
+    
     # Use the current time as the timestamp because the micro reset every time it is powered on
     current_timestamp = str(datetime.datetime.now()).rsplit('.')[0]
 
     # Print the snapshot
     console.print(f"Timestamp: {current_timestamp}", style="magenta")
     console.print(f"Extracted features: {current_features}", style="magenta")
+    console.print(f"Novelty indicator: {novelty*100} %", style="magenta")
 
     # save snap to file .csv
     tab_sep_features = "\t".join([str(f) for f in current_features])
-    snap_file.write(f"{current_timestamp}\t{tab_sep_features}\n")
-    console.print(f"Snapshot {i+1} saved to file.", style="magenta")
+    snap_file.write(f"{current_timestamp}\t{tab_sep_features}\t{novelty}\n")
 
 # Close the serial port
 ser.close()

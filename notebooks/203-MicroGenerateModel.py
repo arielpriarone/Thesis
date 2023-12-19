@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from math import ceil, floor
 from sklearn.metrics import silhouette_score
 import datetime
+import matplotlib as mpl
 
 # %% init
 console = Console()
@@ -16,7 +17,7 @@ timestamps = np.array([])                                                       
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
 train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"              # csv file with train data
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
-max_n_clusters = 50                                                                             # maximum number of clusters to try
+max_n_clusters = 10                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
 
 # %% LOAD DATA
@@ -56,6 +57,7 @@ for n_clusters in range(1,max_clusters+1):
     if 1<n_clusters<max_clusters:
         sil_score.append(silhouette_score(standardized_features_matrix,cluster_labels))
     inertia.append(kmeans.inertia_)
+    console.print(f"Kmeans with {n_clusters} clusters completed.", style="magenta")
 
 # PLOT SILHOUETTE SCORE and INERTIA
 fig, axs=plt.subplots(2,1)
@@ -69,6 +71,8 @@ axs[1].sharex(axs[0])
 axs[0].set_xlabel('Num. of clusters')
 
 fig.tight_layout()
+
+console.print("Decide the number of clusters based on the plot, and close the plot window.", style="magenta")
 plt.show()
 
 # %% select number of clusters and plot results
@@ -79,24 +83,6 @@ n_clusters = int(n_clusters)
 
 kmeans=KMeansConstrained(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)
 cluster_labels=kmeans.fit_predict(standardized_features_matrix) # y contains the assignments of each sample to a cluster
-
-range_feature_1=range(30, 33) # select features to plot vs next ones
-range_feature_2=range(50, 53) # select features to plot vs previous ones
-
-fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
-fig.tight_layout()
-
-for i in range_feature_1: 
-    for j in range_feature_2:
-        if i!=j:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(standardized_features_matrix[:,i],standardized_features_matrix[:,j],s=1,marker='*',c=cluster_labels+1,cmap='Set1')
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c=range(1,n_clusters+1),cmap='Set1')
-        if i==range_feature_1[-1]:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
-        if j==range_feature_2[0]:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
-
-plt.show()
 
 # %% calculate radius of clusters
 cluster_distances=kmeans.transform(standardized_features_matrix)
@@ -152,4 +138,29 @@ with open(model_filepath, 'w') as f:
             aux += ", "
     f.write("double radiuses["+str(n_clusters)+"] = {"+aux+"};\n")
 print("Model file created successfully.")
+
+# %% plot resulting clusters
+range_feature_1=range(30, 33) # select features to plot vs next ones
+range_feature_2=range(50, 53) # select features to plot vs previous ones
+
+fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
+fig.tight_layout()
+cmap = mpl.colormaps['Set1']
+for i in range_feature_1: 
+    for j in range_feature_2:
+        if i!=j:
+            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(standardized_features_matrix[:,i],standardized_features_matrix[:,j],s=1,marker='*',c=cluster_labels+1,cmap='Set1')
+            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c=range(1,n_clusters+1),cmap='Set1')
+        if i==range_feature_1[-1]:
+            axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
+        if j==range_feature_2[0]:
+            axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
+        for cluster in range(0,n_clusters):
+            axs[i-range_feature_1[0],j-range_feature_2[0]].add_patch(plt.Circle((kmeans.cluster_centers_[cluster,i],kmeans.cluster_centers_[cluster,j]),radiuses[cluster],color=cmap(cluster),fill=False))
+
+        axs[i-range_feature_1[0],j-range_feature_2[0]].set_aspect('equal') # set aspect ratio to 1 to preserve circle shape
+f.close()   # close file
+
+plt.show()
+
 f.close()   # close file
