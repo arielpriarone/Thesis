@@ -19,6 +19,14 @@
 /RTOS/Novelty/Novelty Debug.launch
 /RTOS/Framework/Drivers
 /RTOS/Novelty/Drivers
+/RTOS/Restored/.settings
+/RTOS/Restored/Debug
+/RTOS/Restored/wavelib
+/RTOS/Restored/.cproject
+/RTOS/Restored/.mxproject
+/RTOS/Restored/.project
+/RTOS/Restored/Framework Debug.launch
+/RTOS/Restored/Drivers
 /LaTeX/thesis.synctex.gz
 /LaTeX/thesis.pdf
 /LaTeX/thesis.log
