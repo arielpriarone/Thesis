@@ -1,8 +1,11 @@
 \chapter{Unsupervsed learning}
 \label{ch:clustering}
 
-\section{K-means algorithm}
+\section{K-means problem}
 \label{sec:kmeans}
+Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used inscientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cithe this algorithm as first in the group of four most polular algorithms.
+
+This problem is called k-means because it aims to describe the \quoted{clustering} of data my separating the data into clusters ($\cluster$), and define each cluster with it's mean ($\vect{c}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
 
 Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\snapshot$ of $n$ snapshots $\snapshot_i, i \in [1,n], \snapshot_i \in \snapshot $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the variance of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
@@ -54,12 +57,44 @@ The decision boundaries are a Voronoi tessellation of the space, and they are de
 
 \subsection{Improvements to the K-means algorithm}
 \label{sec:kmeans_improvements}
-Finding the optimal solution of the k-means problem (\autoref{eq:kmeans_problem}) has a complexity $\mathcal{O}(n^2)$ \cite{Kmeans_ologn}. This means that the algorithm does not scale well as the number $n$ of snapshot increases. To address this problem, some improvements to the algorithm have been proposed in the last two decades.
+\paragraph*{Kmeans}
+Finding the optimal solution of the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
+To address this problem, some heuristics algorithm have been proposed in the last two decades simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that the most algorithms do not scale well as the number $n$ of snapshot increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
 
-\paragraph{K-means++} One first improvement could be to initialise the centroids $c_i$ not at random. This led to the algorithm \texttt{K-means++} \cite{Kmeanspp}. 
+It is worth noticing that an exact solution of the problem has been published \cite{Kmeans_vornoi_japan} with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of clusters and the number of features $F$.
 
-At some point cite \cite{Kmeanspp}
-\lipsum[1]
+\paragraph*{Lloyd's algorithm}
+The classic Lloyd algorithm \cite{Lloyd1982} has a complexity $\mathcal{O}(n\cdot k\cdot F )$.
+
+\paragraph*{Various improvements to the Lloyd's algorithm} Keeping the same basic idea, various modifications of the Lloyd algorithm have been proposed to improve the performances. For example, Kanugo \cite{kanungo2004local} proposed a local search algorithm that has a complexity $\mathcal{O}(n^3)$. Another result by Malay \cite{Kmeans_linear} has a linear complexity $\mathcal{O}(n)$. 
+
+Another inprovement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances (snapshots) and the centroids. This algorithm become convenient when number $k$ of clusters is large ($\geq 20$), and up to a dimensionality of $F=1000$ features.
+
+A variant of the Lloyd algorithm regarding both the speed of execution and the memory consumption has been proposed by Sculley \cite{Sculley2010}. This solution achieve a reduction of the execution time by orders of magnitude, and enables to perform the classification even for datasets that dont't fit in the memory of the machine. This is achieved by using a \emph{mini-batch} approach, where the centroids are updated after each batch of snapshots.
+
+With regard to the problem of converging to a local minimum, the most common approach is to run the algorithm multiple times with different initializations and then select the best result, this is avoided by Reddy \cite{Vornoi_Kmeans}, by using the vornoi tassellation of the hyperspace using the datapoints to generate the initialization for the centroid positions, this algorithm perform better in the sense that is less likely to get trapped in a local minima.
+
+
+\paragraph{K-means\texttt{++}} 
+The last improved algorithm reported in this section has it's own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the centroids $\vect{c}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the centroids, the first centroid $\vect{c}_1$ is chosen randomly from the snapshots, and then the other centroids are chosen from the remaining snapshots with a probability that depends from the distance of the candeìidate snapshot to the closest already chosen centroid. This approach is summarized in the \autoref{alg:kmeanspp}.
+
+\begin{algorithm}
+  \caption{K-means\texttt{++} algorithm}
+  \label{alg:kmeanspp}
+\begin{algorithmic}[1]
+  \Function{K-means\texttt{++}.train}{$\snapshots, k$}
+  \LineComment{$\snapshots = \{\snapshot_1,\snapshot_2, \dots , \snapshot_n\}$ is the set of snapshots to be clustered}
+  \LineComment{$k$ is the number of clusters to be obtained}
+  \State $\vect{c}_1 \gets \text{random initialization}, \vect{c}_1 \in \snapshots$
+  \For{$i \gets 2$ to $k$}
+  \LineComment{$D(\snapshot)$ is the distance of the snapshot $\snapshot$ from the closest centroid already chosen}
+  \State $c_i \gets \snapshot' \in \snapshots \text{ with probability } \frac{D(\snapshot')^2}{\Sigma_{\snapshot\in\snapshots}D(\snapshot)^2}$
+  \EndFor
+  \State perform the Lloyd algorithm using the calculated $\vect{c}_i, \forall i \in [1,k]$ as initialization, get the model.
+  \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\vect{c}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
+  \EndFunction
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Selecting the number of clusters}
 It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of clusters $k$ in advance. There are some methods to decide what is the best number of clusters, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is hardly automatable so, during the training phase, the user has to decide the number of clusters to be used.

@@ -251,7 +251,7 @@ keywords = {Clustering, -means, improved -means, Voronoi diagram, error rate},
 abstract = {K-Means algorithm is one of the famous partitioning clustering techniques that has been studied extensively. However, the major problem with this method that it cannot ensure the global optimum results due to the random selection of initial cluster centers. In this paper, we present a novel method that selects the initial cluster centers with the help of Voronoi diagram constructed from the given set of data points. The initial cluster centers are effectively selected from those points which lie on the boundary of higher radius Voronoi circles. As a result, the proposed method automates the selection of the initial cluster centers to supply them for K-means. The proposed method is experimented on various artificial (hand-made) as well as real world data sets of various dimensions. It is observed that it is able to produce better clustering results than the traditional K-means and the improved K-means.}
 }
 
-@INPROCEEDINGS{Kmeans_ologn,
+@INPROCEEDINGS{Kmeans_linear,
   author={Pakhira, Malay K.},
   booktitle={2014 International Conference on Computational Intelligence and Communication Networks}, 
   title={A Linear Time-Complexity k-Means Algorithm Using Cluster Shifting}, 
@@ -260,3 +260,103 @@ abstract = {K-Means algorithm is one of the famous partitioning clustering techn
   number={},
   pages={1047-1051},
   doi={10.1109/CICN.2014.220}}
+
+@inproceedings{Kmeans_vornoi_japan,
+author = {Inaba, Mary and Katoh, Naoki and Imai, Hiroshi},
+title = {Applications of Weighted Voronoi Diagrams and Randomization to Variance-Based k-Clustering: (Extended Abstract)},
+year = {1994},
+isbn = {0897916484},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/177424.178042},
+doi = {10.1145/177424.178042},
+abstract = {In this paper we consider thek-clustering problem for a set S of n points i=(xi) in thed-dimensional space with variance-based errors as clustering criteria, motivated from the color quantization problem of computing a color lookup table for frame buffer display. As the inter-cluster criterion to minimize, the sum on intra-cluster errors over every cluster is used, and as the intra-cluster criterion of a cluster Sj,|Sj|α-1 ΣpiϵSj || xi - x(Sj)||2is considered, where ||·|| is the L2 norm and x(Sj) is the centroid of points in Sj, i.e., (1/|Sj|)Σp ∈Sjxi. The cases of α=1,2 correspond to the sum of squared errors and the all-pairs sum of squared errors, respectively.The k-clustering problem under the criterion with α=1,2 are treated in a unified manner by characterizing the optimum solution to the kclustering problem by the ordinary Euclidean Voronoi diagram and the weighted Voronoi diagram with both multiplicative and additive weights. With this framework, the problem is related to the generalized primary shutter function for the Voronoi diagrams. The primary shutter function is shown to be O(nO(kd)), which implies that, for fixed k, this clustering problem can be solved in a polynomial time. For the problem with the most typical intra-cluster criterion of the sum of squared errors, we also present an efficient randomized algorithm which, roughly speaking, finds an ∈–approximate 2–clustering in O(n(1/∈)d) time, which is quite practical and may be used to real large-scale problems such as the color quantization problem.},
+booktitle = {Proceedings of the Tenth Annual Symposium on Computational Geometry},
+pages = {332–339},
+numpages = {8},
+location = {Stony Brook, New York, USA},
+series = {SCG '94}
+}
+
+@techreport{berkhin2002survey,
+  author = {Pavel Berkhin},
+  title = {Survey of clustering data mining techniques},
+  institution = {Accrue Software},
+  address = {San Jose, CA},
+  year = {2002}
+}
+
+@article{Abla2019survey,
+title = {A survey of clustering algorithms for an industrial context},
+journal = {Procedia Computer Science},
+volume = {148},
+pages = {291-302},
+year = {2019},
+note = {THE SECOND INTERNATIONAL CONFERENCE ON INTELLIGENT COMPUTING IN DATA SCIENCES, ICDS2018},
+issn = {1877-0509},
+doi = {https://doi.org/10.1016/j.procs.2019.01.022},
+url = {https://www.sciencedirect.com/science/article/pii/S1877050919300225},
+author = {Abla Chouni Benabdellah and Asmaa Benghabrit and Imane Bouhaddou},
+keywords = {Clustering algorithms, Unsupervised learning, Sparse dataset, Aircraft, Automotive, Logistics, Industrial datasets.}}
+
+@article{kanungo2004local,
+  author = {Tapas Kanungo and David M. Mount and Nathan S. Netanyahu and Christine D. Piatko and Ruth Silverman and Angela Y. Wu},
+  title = {A local search approximation algorithm for k-means clustering},
+  journal = {Comput. Geom.},
+  volume = {28},
+  number = {2-3},
+  pages = {89--112},
+  year = {2004}
+}
+
+@inproceedings{ostrovsky2006effectiveness,
+  author = {R. Ostrovsky and Y. Rabani and L. Schulman and C. Swamy},
+  title = {The Effectiveness of Lloyd-type Methods for the k-Means Problem},
+  booktitle = {Symposium on Foundations of Computer Science},
+  year = {2006}
+}
+
+@book{hands-on-geron2022,
+  author = {Aurelien Geron},
+  title = {Hands-On Machine Learning With Scikit-Learn, Keras \& TensorFlow},
+  publisher = {O'Reilly Media},
+  year = {2022},
+  binding = {Paperback / Softback},
+  pages = {850},
+  language = {English},
+  isbn = {9781098125974}
+}
+
+@inproceedings{kmeans-accelerated,
+author = {Elkan, Charles},
+title = {Using the Triangle Inequality to Accelerate K-Means},
+year = {2003},
+isbn = {1577351894},
+publisher = {AAAI Press},
+abstract = {The k-means algorithm is by far the most widely used method for discovering clusters in data. We show how to accelerate it dramatically, while still always computing exactly the same result as the standard algorithm. The accelerated algorithm avoids unnecessary distance calculations by applying the triangle inequality in two different ways, and by keeping track of lower and upper bounds for distances between points and centers. Experiments show that the new algorithm is effective for datasets with up to 1000 dimensions, and becomes more and more effective as the number k of clusters increases. For k ≥ 20 it is many times faster than the best previously known accelerated k-means method.},
+booktitle = {Proceedings of the Twentieth International Conference on International Conference on Machine Learning},
+pages = {147–153},
+numpages = {7},
+location = {Washington, DC, USA},
+series = {ICML'03}
+}
+
+@inproceedings{Sculley2010,
+author = {Sculley, D.},
+title = {Web-Scale k-Means Clustering},
+year = {2010},
+isbn = {9781605587998},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1772690.1772862},
+doi = {10.1145/1772690.1772862},
+abstract = {We present two modifications to the popular k-means clustering algorithm to address the extreme requirements for latency, scalability, and sparsity encountered in user-facing web applications. First, we propose the use of mini-batch optimization for k-means clustering. This reduces computation cost by orders of magnitude compared to the classic batch algorithm while yielding significantly better solutions than online stochastic gradient descent. Second, we achieve sparsity with projected gradient descent, and give a fast ε-accurate projection onto the L1-ball. Source code is freely available: http://code.google.com/p/sofia-ml},
+booktitle = {Proceedings of the 19th International Conference on World Wide Web},
+pages = {1177–1178},
+numpages = {2},
+keywords = {unsupervised clustering, sparse solutions, scalability},
+location = {Raleigh, North Carolina, USA},
+series = {WWW '10}
+}
+
+
