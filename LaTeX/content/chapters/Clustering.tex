@@ -1,4 +1,4 @@
-\chapter{Clustering}
+\chapter{Unsupervsed learning}
 \label{ch:clustering}
 
 \section{K-means algorithm}
@@ -13,7 +13,8 @@ Let's assume to have extrapolated $F$ features from each of our signals, to prod
 
 Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
 
-Anyway, heuristic clustering algorithms were already developed in the 1950s. The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version in 1982 \cite{Lloyd1982}.
+Anyway, heuristic clustering algorithms were already developed in the 1950s. 
+The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version  published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
 
 Nowadays, the K-means algorithm is one of the most used clustering algorithms, and it is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result.
 
@@ -26,7 +27,7 @@ Nowadays, the K-means algorithm is one of the most used clustering algorithms, a
   \label{fig:kmeans_vornoi}
 \end{figure}
 
-\paragraph*{K-means} The naive k-means algorithm consists of a series of iterations. First, the centroids $\vect{c}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally, the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated until the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the following \autoref{alg:kmeans}.
+ The naive k-means algorithm consists of a series of iterations. First, the centroids $\vect{c}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally, the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated until the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the \autoref{alg:kmeans}.
 
 \begin{algorithm}
   \caption{Training of the K-means model}
@@ -51,7 +52,12 @@ Nowadays, the K-means algorithm is one of the most used clustering algorithms, a
 As an example, we can consider $F=2$ features, and generate some test points shaped like three separated clusters. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iterations of the algorithm, and the final result. The K-means algorithm had $n=200$ snapshots, and $k=3$ clusters as input. The colors of the dots and the shaded areas represent the clusters and the decision boundaries. The centroids are represented as black crosses.
 The decision boundaries are a Voronoi tessellation of the space, and they are defined as the set of points that are equidistant from the centroids of two different clusters. The algorithm itself does not compute the boundaries, but it is useful to plot them for visualization purposes.
 
-\paragraph*{K-means \texttt{++}}
+\subsection{Improvements to the K-means algorithm}
+\label{sec:kmeans_improvements}
+Finding the optimal solution of the k-means problem (\autoref{eq:kmeans_problem}) has a complexity $\mathcal{O}(n^2)$ \cite{Kmeans_ologn}. This means that the algorithm does not scale well as the number $n$ of snapshot increases. To address this problem, some improvements to the algorithm have been proposed in the last two decades.
+
+\paragraph{K-means++} One first improvement could be to initialise the centroids $c_i$ not at random. This led to the algorithm \texttt{K-means++} \cite{Kmeanspp}. 
+
 At some point cite \cite{Kmeanspp}
 \lipsum[1]
 
@@ -109,6 +115,13 @@ In this case, the best value for $k$ is $k=3$, because it is the value that maxi
   S_g = \frac{1}{n}\sum_{i=1}^{n} S_i
 \end{equation}
 
+\subsection{Assignation of the new instance to a cluster}
+The procedure for assigning the new snapshot $\snapshot_n$ to a cluster is quite simple, it is sufficient to compute the distance between $\snapshot_n$ and the centroids $\vect{c}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\snapshot_n$ to the cluster with the minimum distance.
+
+\begin{equation}
+  \label{eq:clust_dist}
+  \vect{d}_{n,m} = ||\snapshot_{n,f} - \vect{c}_{m,f}||_2 = \sqrt{\sum_{f=1}^{F} (\snapshot_{n,f} - \vect{c}_{m,f})^2}
+\end{equation}
 
 \subsection{Evaluation of a new instance}
 
@@ -137,16 +150,10 @@ The entities shown in the \autoref{fig:clust_spheres} are:
   \item the semi-transparent spheres represent the cluster sizes, the radius of the spheres is the radius of the cluster itself, and the center is the centroid of the cluster;
 \end{itemize}
 
-\subsection{Assignation of the new instance to a cluster}
-The procedure for assigning the new snapshot $\snapshot_n$ to a cluster is quite simple, it is sufficient to compute the distance between $\snapshot_n$ and the centroids $\vect{c}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\snapshot_n$ to the cluster with the minimum distance.
 
-\begin{equation}
-  \label{eq:clust_dist}
-  \vect{d}_{n,m} = ||\snapshot_{n,f} - \vect{c}_{m,f}||_2 = \sqrt{\sum_{f=1}^{F} (\snapshot_{n,f} - \vect{c}_{m,f})^2}
-\end{equation}
 
-\subsection{Evaluation of the new instance}
-Once the new snapshot $\snapshot_n$ has been assigned to the right cluster $\cluster_i$, some kind of measure (a.k.a. metric) linked to how novel this snapshot is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\snapshot_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
+\subsection{Metric for the new instance evaluation}
+Once the new snapshot $\snapshot_n$ has been assigned to the right cluster $\cluster_i$ using \autoref{eq:clust_dist}, some kind of measure (a.k.a. metric) linked to how novel this snapshot is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\snapshot_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
 
 Few consideration about the resoult of the \autoref{eq:clust_eval}:
 \begin{itemize}
@@ -161,7 +168,7 @@ Few consideration about the resoult of the \autoref{eq:clust_eval}:
 
 Using this metric it is possible to define as \emph{novelty} all the snapshots with $e_{n} > 0$ and as \emph{normal} all the snapshots with $e_{n} < 0$. This approach is not very robust because s snapshot that is even slightly outside the sphere of radius $\vect{r}_i$ will be considered as novelty, but since the sphere is tuned the training \emph{measured} data, that have an aleatory component, this approach will probably detect some novelty even in normal snapshots.
 
-\subsection{Evaluation of the new instance with a threshold}
+\subsection{Introducing a threshold for the metric evaluation}
 In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\cluster_i$ and use it to detect if a snapshot is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > \norm{\vect{r}_i}+ {t}_i$.
 
 \paragraph*{}
@@ -177,7 +184,7 @@ This value can be evaluated in real-time and plotted in a graph so that the user
 \end{equation}
 
 \subsection{Evaluation procedure}
-All said in the previous sections can be summarized in the following \autoref{alg:eval_new_snapshot}:
+The evaluation procedure developed to address the novelty/fault detection scope of this thesis can be summarized in the \autoref{alg:eval_new_snapshot}.
 
 \begin{algorithm}
   \caption{Evaluation of a new snapshot with a K-means model}
