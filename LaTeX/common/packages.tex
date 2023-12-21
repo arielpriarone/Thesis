@@ -27,6 +27,9 @@
     toc, % puts the link in the ToC
     %record = on, % to avoid use bib2gls
     abbreviations, % to load abbreviations / acronyms
+    symbols, % to load symbols  A.P.
+    acronyms, % to load acronyms A.P.
+    automake, % to make the glossaries automatically A.P.
     %nonumberlist, % to avoid printing the numbers of the references in the acronyms page
 ]{glossaries-extra}
 \usepackage{graphicx}               %  post-script images
@@ -61,6 +64,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{layouts}
+\usepackage{dsfont}
 %\usepackage{fontspec}
 \def \thesisAxisWidth {\linewidth}
 \def \thesisFigFontsize {8}
