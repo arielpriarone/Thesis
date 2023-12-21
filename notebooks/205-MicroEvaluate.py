@@ -7,6 +7,8 @@ from rich import print
 from rich.console import Console
 import datetime
 import os
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 console = Console()
 
 # configurations
@@ -15,6 +17,11 @@ n_features = 67             # number of features
 
 # Open the serial port
 ser = serial.Serial('COM5', 115200)
+
+# variables to store the data
+timestamps = []
+features = []
+novelties = []
 
 # Open the csv file to save the snapshots
 if os.path.exists("test_data.csv"):
@@ -54,7 +61,7 @@ for i in range(n_train_snaps):
     end_keyword = "\n"
     start_index = data.find(start_keyword) + len(start_keyword)
     end_index = data.find(end_keyword, start_index)
-    novelty = float(data[start_index:end_index].strip())
+    current_novelty = float(data[start_index:end_index].strip())
 
     # Check if the number of features is correct
     if np.size(current_features) != 67:
@@ -66,11 +73,32 @@ for i in range(n_train_snaps):
     # Print the snapshot
     console.print(f"Timestamp: {current_timestamp}", style="magenta")
     console.print(f"Extracted features: {current_features}", style="magenta")
-    console.print(f"Novelty indicator: {novelty*100} %", style="magenta")
+    console.print(f"Novelty indicator: {current_novelty*100} %", style="magenta")
 
     # save snap to file .csv
     tab_sep_features = "\t".join([str(f) for f in current_features])
-    snap_file.write(f"{current_timestamp}\t{tab_sep_features}\t{novelty}\n")
+    snap_file.write(f"{current_timestamp}\t{tab_sep_features}\t{current_novelty}\n")
+
+    # update variables
+    timestamps.append(current_timestamp)
+    features.append(current_features)
+    novelties.append(current_novelty)
 
 # Close the serial port
 ser.close()
+
+# plot the data
+fig, axs = plt.subplots()
+
+
+# Format timestamps as HH.MM.SS
+formatted_timestamps = [datetime.datetime.strptime(ts, "%Y-%m-%d %H:%M:%S").strftime("%H.%M.%S") for ts in timestamps]
+
+axs.plot(formatted_timestamps,novelties)
+axs.set_xlabel("Time")
+axs.set_ylabel("Novelty indicator")
+axs.set_xticklabels(formatted_timestamps, rotation=45)
+
+plt.show()
+
+
