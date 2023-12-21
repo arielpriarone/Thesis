@@ -5,9 +5,9 @@
 \label{sec:kmeans}
 Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used inscientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cithe this algorithm as first in the group of four most polular algorithms.
 
-This problem is called k-means because it aims to describe the \quoted{clustering} of data my separating the data into clusters ($\cluster$), and define each cluster with it's mean ($\vect{c}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
+This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into clusters ($\cluster$), and define each cluster with it's mean ($\vect{c}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\snapshot$ of $n$ snapshots $\snapshot_i, i \in [1,n], \snapshot_i \in \snapshot $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the variance of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\snapshots$ of $n$ snapshots $\snapshot_i, i \in [1,n], \snapshot_i \in \snapshots $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\cluster$ of $k$ clusters ($k \leq n$) $\cluster_i, i \in [1,k], \cluster_i \in \cluster$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the variance of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
   \argmin{\cluster}\sum_{i=1}^{k}\sum_{\snapshot_j \in \cluster_i} \norm{\snapshot_j - \vect{c}_i}^2 = \argmin{\cluster}\sum_{i=1}^{k}\abs{\cluster_i}\mathrm{Var}\cluster_i
@@ -36,10 +36,10 @@ Nowadays, the K-means algorithm is one of the most used clustering algorithms, a
   \caption{Training of the K-means model}
   \label{alg:kmeans}
   \begin{algorithmic}[1]
-    \Function{K-means.train}{$\snapshot, k$}
-    \LineComment{$\snapshot$ is the set of snapshots to be clustered}
+    \Function{K-means.train}{$\snapshots, k$}
+    \LineComment{$\snapshots$ is the set of snapshots to be clustered}
     \LineComment{$k$ is the number of clusters to be obtained}
-    \State $\vect{c}_i \gets \text{random initialization}, \forall i \in [1,k], \vect{c}_i \in \text{Domain of }\snapshot$
+    \State $\vect{c}_i \gets \text{random initialization}, \forall i \in [1,k], \vect{c}_i \in \text{Domain of }\snapshots$
     \Repeat
     \LineComment{Every snapshot is assigned to the nearest centroid. Every centroid defines a cluster containing the assigned snapshots}
     \State $\cluster_i \gets \left\{ \snapshot_p : \norm{\snapshot_p - \vect{c}_i}^2 \leq  \norm{\snapshot_p - \vect{c}_j}^2  \forall j \in [1,k] \right\} \forall i \in [1,k] $
