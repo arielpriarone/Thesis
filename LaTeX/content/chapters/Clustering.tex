@@ -5,12 +5,12 @@
 \label{sec:kmeans}
 Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used inscientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cithe this algorithm as first in the group of four most polular algorithms.
 
-This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into clusters ($\gls{sym:cluster}$), and define each cluster with it's mean ($\vect{c}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
+This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into clusters ($\gls{sym:cluster}$), and define each cluster with it's mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ snapshots $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the snapshots and the centroids $\vect{c}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the variance of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ snapshots $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the snapshots and the centroids $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the variance of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
-  \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \vect{c}_i}^2 = \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\abs{\gls{sym:cluster}_i}\mathrm{Var}\gls{sym:cluster}_i
+  \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \gls{sym:cent}_i}^2 = \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\abs{\gls{sym:cluster}_i}\mathrm{Var}\gls{sym:cluster}_i
   \label{eq:kmeans_problem}
 \end{equation}
 
@@ -30,7 +30,7 @@ Nowadays, the K-means algorithm is one of the most used clustering algorithms, a
   \label{fig:kmeans_vornoi}
 \end{figure}
 
- The naive k-means algorithm consists of a series of iterations. First, the centroids $\vect{c}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally, the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated until the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the \autoref{alg:kmeans}.
+ The naive k-means algorithm consists of a series of iterations. First, the centroids $\gls{sym:cent}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally, the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated until the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the \autoref{alg:kmeans}.
 
 \begin{algorithm}
   \caption{Training of the K-means model}
@@ -39,15 +39,15 @@ Nowadays, the K-means algorithm is one of the most used clustering algorithms, a
     \Function{K-means.train}{$\gls{sym:snapset}, k$}
     \LineComment{$\gls{sym:snapset}$ is the set of snapshots to be clustered}
     \LineComment{$k$ is the number of clusters to be obtained}
-    \State $\vect{c}_i \gets \text{random initialization}, \forall i \in [1,k], \vect{c}_i \in \text{Domain of }\gls{sym:snapset}$
+    \State $\gls{sym:cent}_i \gets \text{random initialization}, \forall i \in [1,k], \gls{sym:cent}_i \in \text{Domain of }\gls{sym:snapset}$
     \Repeat
     \LineComment{Every snapshot is assigned to the nearest centroid. Every centroid defines a cluster containing the assigned snapshots}
-    \State $\gls{sym:cluster}_i \gets \left\{ \gls{sym:snap}_p : \norm{\gls{sym:snap}_p - \vect{c}_i}^2 \leq  \norm{\gls{sym:snap}_p - \vect{c}_j}^2  \forall j \in [1,k] \right\} \forall i \in [1,k] $
+    \State $\gls{sym:cluster}_i \gets \left\{ \gls{sym:snap}_p : \norm{\gls{sym:snap}_p - \gls{sym:cent}_i}^2 \leq  \norm{\gls{sym:snap}_p - \gls{sym:cent}_j}^2  \forall j \in [1,k] \right\} \forall i \in [1,k] $
     \LineComment{The centroids are updated as the mean of their snapshots}
-    \State $\vect{c}_i \gets \frac{1}{\abs{\gls{sym:cluster}_i}}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \gls{sym:snap}_j, \forall i \in [1,k]$, \Comment{$\abs{\gls{sym:cluster}_i}$ is the cluster size}
+    \State $\gls{sym:cent}_i \gets \frac{1}{\abs{\gls{sym:cluster}_i}}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \gls{sym:snap}_j, \forall i \in [1,k]$, \Comment{$\abs{\gls{sym:cluster}_i}$ is the cluster size}
     \Until{All the centroids do not change anymore, or max iterations reached}
-    \State $r_i \gets \max{\norm{\gls{sym:snap}_j-\vect{c}_i}, \, \forall \gls{sym:snap}_j \in \gls{sym:cluster}_i}, \, \forall i \in [1,k]$
-    \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\vect{c}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
+    \State $r_i \gets \max{\norm{\gls{sym:snap}_j-\gls{sym:cent}_i}, \, \forall \gls{sym:snap}_j \in \gls{sym:cluster}_i}, \, \forall i \in [1,k]$
+    \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
@@ -76,7 +76,7 @@ With regard to the problem of converging to a local minimum, the most common app
 
 
 \paragraph{K-means\texttt{++}} 
-The last improved algorithm reported in this section has it's own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the centroids $\vect{c}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the centroids, the first centroid $\vect{c}_1$ is chosen randomly from the snapshots, and then the other centroids are chosen from the remaining snapshots with a probability that depends from the distance of the candeìidate snapshot to the closest already chosen centroid. This approach is summarized in the \autoref{alg:kmeanspp}.
+The last improved algorithm reported in this section has it's own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the centroids $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the centroids, the first centroid $\gls{sym:cent}_1$ is chosen randomly from the snapshots, and then the other centroids are chosen from the remaining snapshots with a probability that depends from the distance of the candeìidate snapshot to the closest already chosen centroid. This approach is summarized in the \autoref{alg:kmeanspp}.
 
 \begin{algorithm}
   \caption{K-means\texttt{++} algorithm}
@@ -85,13 +85,13 @@ The last improved algorithm reported in this section has it's own paragraph beca
   \Function{K-means\texttt{++}.train}{$\gls{sym:snapset}, k$}
   \LineComment{$\gls{sym:snapset} = \{\gls{sym:snap}_1,\gls{sym:snap}_2, \dots , \gls{sym:snap}_n\}$ is the set of snapshots to be clustered}
   \LineComment{$k$ is the number of clusters to be obtained}
-  \State $\vect{c}_1 \gets \text{random initialization}, \vect{c}_1 \in \gls{sym:snapset}$
+  \State $\gls{sym:cent}_1 \gets \text{random initialization}, \gls{sym:cent}_1 \in \gls{sym:snapset}$
   \For{$i \gets 2$ to $k$}
   \LineComment{$D(\gls{sym:snap})$ is the distance of the snapshot $\gls{sym:snap}$ from the closest centroid already chosen}
   \State $c_i \gets \gls{sym:snap}' \in \gls{sym:snapset} \text{ with probability } \frac{D(\gls{sym:snap}')^2}{\Sigma_{\gls{sym:snap}\in\gls{sym:snapset}}D(\gls{sym:snap})^2}$
   \EndFor
-  \State perform the Lloyd algorithm using the calculated $\vect{c}_i, \forall i \in [1,k]$ as initialization, get the model.
-  \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\vect{c}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
+  \State perform the Lloyd algorithm using the calculated $\gls{sym:cent}_i, \forall i \in [1,k]$ as initialization, get the model.
+  \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
   \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -108,7 +108,7 @@ Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of 
 
 \begin{equation}
   \label{eq:inertia}
-  I = \sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \vect{c}_i}^2
+  I = \sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \gls{sym:cent}_i}^2
 \end{equation}
 
 \begin{figure}
@@ -151,11 +151,11 @@ In this case, the best value for $k$ is $k=3$, because it is the value that maxi
 \end{equation}
 
 \subsection{Assignation of the new instance to a cluster}
-The procedure for assigning the new snapshot $\gls{sym:snap}_n$ to a cluster is quite simple, it is sufficient to compute the distance between $\gls{sym:snap}_n$ and the centroids $\vect{c}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\gls{sym:snap}_n$ to the cluster with the minimum distance.
+The procedure for assigning the new snapshot $\gls{sym:snap}_n$ to a cluster is quite simple, it is sufficient to compute the distance between $\gls{sym:snap}_n$ and the centroids $\gls{sym:cent}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\gls{sym:snap}_n$ to the cluster with the minimum distance.
 
 \begin{equation}
   \label{eq:clust_dist}
-  \vect{d}_{n,m} = ||\gls{sym:snap}_{n,f} - \vect{c}_{m,f}||_2 = \sqrt{\sum_{f=1}^{F} (\gls{sym:snap}_{n,f} - \vect{c}_{m,f})^2}
+  \gls{sym:dist}_{n,m} = ||\gls{sym:snap}_{n,f} - \gls{sym:cent}_{m,f}||_2 = \sqrt{\sum_{f=1}^{F} (\gls{sym:snap}_{n,f} - \gls{sym:cent}_{m,f})^2}
 \end{equation}
 
 \subsection{Evaluation of a new instance}
@@ -176,46 +176,46 @@ In the \autoref{fig:clust_spheres}, the training data are represented in the $3$
 \paragraph*{}
 The entities shown in the \autoref{fig:clust_spheres} are:
 \begin{itemize}
-  \item $\vect{c}_{i(j)}$ is the centroid of the $i$th ($j$th) cluster;
-  \item $\vect{r}_{i(j)}$ is the radius of the $i$th ($j$th) cluster, it is defined as the distance between the centroid $\vect{c}_{i(j)}$ and the farthest point belonging to the cluster itself;
-  \item $\gls{sym:cluster}_{i(j)}$ is the set of training snapshots belonging to the $i$th ($j$th) cluster, it has a centroid $\vect{c}_{i(j)}$ and a radius $\vect{r}_{i(j)}$;
+  \item $\gls{sym:cent}_{i(j)}$ is the centroid of the $i$th ($j$th) cluster;
+  \item $\gls{sym:radius}_{i(j)}$ is the radius of the $i$th ($j$th) cluster, it is defined as the distance between the centroid $\gls{sym:cent}_{i(j)}$ and the farthest point belonging to the cluster itself;
+  \item $\gls{sym:cluster}_{i(j)}$ is the set of training snapshots belonging to the $i$th ($j$th) cluster, it has a centroid $\gls{sym:cent}_{i(j)}$ and a radius $\gls{sym:radius}_{i(j)}$;
   \item $\gls{sym:snap}_n$ is the new snapshot to be evaluated;
-  \item $\vect{d}_{n,i}$ is the vector between $\gls{sym:snap}_n$ and $\vect{c}_i$;
-  \item $\vect{d}_{n,j}$ is the vector between $\gls{sym:snap}_n$ and $\vect{c}_j$;
+  \item $\gls{sym:dist}_{n,i}$ is the vector between $\gls{sym:snap}_n$ and $\gls{sym:cent}_i$;
+  \item $\gls{sym:dist}_{n,j}$ is the vector between $\gls{sym:snap}_n$ and $\gls{sym:cent}_j$;
   \item the semi-transparent spheres represent the cluster sizes, the radius of the spheres is the radius of the cluster itself, and the center is the centroid of the cluster;
 \end{itemize}
 
 
 
 \subsection{Metric for the new instance evaluation}
-Once the new snapshot $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (a.k.a. metric) linked to how novel this snapshot is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\gls{sym:snap}_n$ from the centroid $\vect{c}_i$ and the radius $\vect{r}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
+Once the new snapshot $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (a.k.a. metric) linked to how novel this snapshot is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\gls{sym:snap}_n$ from the centroid $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
 
 Few consideration about the resoult of the \autoref{eq:clust_eval}:
 \begin{itemize}
-  \item if $e_{n} > 0$, the new snapshot $\gls{sym:snap}_n$ is outside the sphere of radius $\vect{r}_i$ centered in $\vect{c}_i$, so it is probably a novel snapshot;
-  \item if $e_{n} < 0$, the new snapshot $\gls{sym:snap}_n$ is inside the sphere of radius $\vect{r}_i$, so it is probably a normal snapshot. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\vect{r}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \emph{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
+  \item if $e_{n} > 0$, the new snapshot $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centered in $\gls{sym:cent}_i$, so it is probably a novel snapshot;
+  \item if $e_{n} < 0$, the new snapshot $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal snapshot. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \emph{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
 \end{itemize}
 
 \begin{equation}
   \label{eq:clust_eval}
-  e_{n} = ||\vect{d}_{n,i}||_2 - ||\vect{r}_{i}||_2, \text{ where $i$ is the of the assigned cluster}
+  e_{n} = ||\gls{sym:dist}_{n,i}||_2 - ||\gls{sym:radius}_{i}||_2, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
 
-Using this metric it is possible to define as \emph{novelty} all the snapshots with $e_{n} > 0$ and as \emph{normal} all the snapshots with $e_{n} < 0$. This approach is not very robust because s snapshot that is even slightly outside the sphere of radius $\vect{r}_i$ will be considered as novelty, but since the sphere is tuned the training \emph{measured} data, that have an aleatory component, this approach will probably detect some novelty even in normal snapshots.
+Using this metric it is possible to define as \emph{novelty} all the snapshots with $e_{n} > 0$ and as \emph{normal} all the snapshots with $e_{n} < 0$. This approach is not very robust because s snapshot that is even slightly outside the sphere of radius $\gls{sym:radius}_i$ will be considered as novelty, but since the sphere is tuned the training \emph{measured} data, that have an aleatory component, this approach will probably detect some novelty even in normal snapshots.
 
 \subsection{Introducing a threshold for the metric evaluation}
-In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\gls{sym:cluster}_i$ and use it to detect if a snapshot is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > \norm{\vect{r}_i}+ {t}_i$.
+In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\gls{sym:cluster}_i$ and use it to detect if a snapshot is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > \norm{\gls{sym:radius}_i}+ {t}_i$.
 
 \paragraph*{}
 At this point, the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones.
 
-To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\vect{r}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version.
+To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\gls{sym:radius}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version.
 Obviously, the metric can be easily displayed as a percentage: $e_{n,\%} = e_n \cdot 100$.
 This value can be evaluated in real-time and plotted in a graph so that the user can see the novelty metric behavior over time.
 
 \begin{equation}
   \label{eq:clust_eval_norm}
-  e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\vect{d}_{n,i}}}{\norm{\vect{r}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
+  e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
 
 \subsection{Evaluation procedure}
@@ -227,19 +227,19 @@ The evaluation procedure developed to address the novelty/fault detection scope 
   \begin{algorithmic}[1]
     \Procedure{eval}{$\mathcal{M}_{\text{\texttt{k-means}}},\gls{sym:snap}, t$}
     \LineComment{$\mathcal{M}_{\text{\texttt{k-means}}}$ is the trained K-means model}
-    \LineComment{the model contain the centroids $\vect{c}_i$ and the radii $\vect{r}_i$ of the clusters}
+    \LineComment{the model contain the centroids $\gls{sym:cent}_i$ and the radii $\gls{sym:radius}_i$ of the clusters}
     \LineComment{$\gls{sym:snap}$ is the new snapshot to be evaluated}
     \LineComment{$t$ is the threshold for the novelty detection}
     \State $k \gets \text{number of clusters in $\mathcal{M}_{\text{\texttt{k-means}}}$}$
     \State min $\gets \infty$ \Comment {initialize the minimum distance}
     \For{$i \gets 1$ to $k$}
-    \State $\vect{d}_{i} \gets \gls{sym:snap} - \vect{c}_{i}$
-    \If {$\norm{\vect{d}_{i}} < \text{min}$}
-    \State min $\gets \norm{\vect{d}_{i}}$
+    \State $\gls{sym:dist}_{i} \gets \gls{sym:snap} - \gls{sym:cent}_{i}$
+    \If {$\norm{\gls{sym:dist}_{i}} < \text{min}$}
+    \State min $\gets \norm{\gls{sym:dist}_{i}}$
     \State $i_{\text{min}} \gets i$
     \EndIf
     \EndFor
-    \State$e \gets \frac{\norm{\vect{d}_{i_{\text{min}}}}}{\norm{\vect{r}_{i_{\text{min}}}}} - 1$ \Comment {compute the novelty metric}
+    \State$e \gets \frac{\norm{\gls{sym:dist}_{i_{\text{min}}}}}{\norm{\gls{sym:radius}_{i_{\text{min}}}}} - 1$ \Comment {compute the novelty metric}
     \If {$e > t$}
     \State \Return novelty  \Comment {the snapshot is novelty}
     \Else
@@ -266,4 +266,17 @@ In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of cluste
   \caption{Novelty detection of a new $\gls{sym:snap}_j$ with different values of $k$}
   \label{fig:kmeans_wrongk}
 \end{figure}
+
+
+\subsection{Limits of the kmeans algorithm}
+This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and it is well scalable. But it has also some limits, the most important are \cite[p273]{hands-on-geron2022}:
+\begin{itemize}
+  \item it perform poorely if the clusters are not spherical;
+  \item it performs poorly if the clusters have very different sizes;
+  \item it performs poorly if the clusters have different densities.
+\end{itemize}
+
+For this reason it is very important to perform a good preconditioning of the data. In this thesis, the data are \gls{glo:std} before the training phase, this makes the clusters more spherical and with similar sizes. 
+
+
 
