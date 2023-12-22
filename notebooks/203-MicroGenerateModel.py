@@ -15,7 +15,7 @@ console = Console()
 # %% global variables
 timestamps = np.array([])                                                                       # timestamps.shape = (n_samples,)
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
-train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"              # csv file with train data
+train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\notebooks\train_data.csv"    # csv file with train data
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
 max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
@@ -139,6 +139,7 @@ with open(model_filepath, 'w') as f:
             aux += ", "
     f.write("double radiuses["+str(n_clusters)+"] = {"+aux+"};\n")
 console.print("Model file created successfully.", style="magenta")
+f.close()   # close file
 
 # %% plot resulting clusters
 range_feature_1=range(30, 33) # select features to plot vs next ones
@@ -156,12 +157,9 @@ for i in range_feature_1:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
         if j==range_feature_2[0]:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
-        for cluster in range(0,n_clusters):
-            axs[i-range_feature_1[0],j-range_feature_2[0]].add_patch(plt.Circle((kmeans.cluster_centers_[cluster,i],kmeans.cluster_centers_[cluster,j]),radiuses[cluster],color=cmap(cluster),fill=False))
-
+#        for cluster in range(0,n_clusters):
+#            axs[i-range_feature_1[0],j-range_feature_2[0]].add_patch(plt.Circle((kmeans.cluster_centers_[cluster,i],kmeans.cluster_centers_[cluster,j]),radiuses[cluster],color=cmap(cluster),fill=False))
         axs[i-range_feature_1[0],j-range_feature_2[0]].set_aspect('equal') # set aspect ratio to 1 to preserve circle shape
-f.close()   # close file
+fig.tight_layout()
 
 plt.show()
-
-f.close()   # close file
