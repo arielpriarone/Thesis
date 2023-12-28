@@ -1,10 +1,8 @@
-\section{K-means problem}
+\section{K-means}
 \label{sec:kmeans}
-Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used inscientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cithe this algorithm as first in the group of four most polular algorithms.
-
 This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into clusters ($\gls{sym:cluster}$), and define each cluster with it's mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ snapshots $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the snapshots and the centroids $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the variance of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ snapshots $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the snapshots and the centroids $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
   \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \gls{sym:cent}_i}^2 = \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\abs{\gls{sym:cluster}_i}\mathrm{Var}\gls{sym:cluster}_i
@@ -13,10 +11,12 @@ Let's assume to have extrapolated $F$ features from each of our signals, to prod
 
 Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
 
-Anyway, heuristic clustering algorithms were already developed in the 1950s. 
+Anyway, {\gls{glo:heuristic}} clustering algorithms were already developed in the 1950s. 
 The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version  published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
 
-Nowadays, the K-means algorithm is one of the most used clustering algorithms, and it is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result.
+Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used inscientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cithe this algorithm as first in the group of four most polular algorithms.
+
+Nowadays, the K-means algorithm is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result, so the problem of getting a sub-optimal resulti is not a common issue in practice.
 
 \subsection{Training}
 
@@ -56,7 +56,7 @@ The decision boundaries are a Voronoi tessellation of the space, and they are de
 \label{sec:kmeans_improvements}
 \paragraph*{Kmeans}
 Finding the optimal solution of the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
-To address this problem, some heuristics algorithm have been proposed in the last two decades simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that the most algorithms do not scale well as the number $n$ of snapshot increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
+To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that the most algorithms do not scale well as the number $n$ of snapshot increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
 
 It is worth noticing that an exact solution of the problem has been published \cite{Kmeans_vornoi_japan} with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of clusters and the number of features $F$.
 
@@ -73,7 +73,9 @@ With regard to the problem of converging to a local minimum, the most common app
 
 
 \paragraph{K-means\texttt{++}} 
-The last improved algorithm reported in this section has it's own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the centroids $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the centroids, the first centroid $\gls{sym:cent}_1$ is chosen randomly from the snapshots, and then the other centroids are chosen from the remaining snapshots with a probability that depends from the distance of the candeìidate snapshot to the closest already chosen centroid. This approach is summarized in the \autoref{alg:kmeanspp}.
+The last improved algorithm reported in this section has it's own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the centroids $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the centroids, the first centroid $\gls{sym:cent}_1$ is chosen randomly from the snapshots, and then the other centroids are chosen from the remaining snapshots with a probability that depends from the distance of the candidate snapshot to the closest already chosen centroid. This approach is summarized in the \autoref{alg:kmeanspp}.
+
+For the development of the framework of this thesis, the K-means\texttt{++} algorithm has been implemented in \texttt{Python}, using the \texttt{scikit-learn} library. The library function has been modified, adding a method that returns the radii of the clusters, this information is crucial for our scope, as it will be needed for evaluating if a new snapshot is a novelty, normal or fault, as it will be explained in the \autoref{sec:clust_metric} and \autoref{sec:clust_threshold}.
 
 \begin{algorithm}
   \caption{K-means\texttt{++} algorithm}
@@ -99,7 +101,7 @@ It is important to notice that, even being an \emph{unsupervised} learning algor
 To compare the results of the different iterations, it is possible to use some metrics on the data and the centroids. The most common metrics are the \emph{inertia} and the \emph{silhouette score}, described in the following paragraphs.
 
 \paragraph*{Inertia}
-The inertia metric measures the total (sum) distance of each point belonging to a cluster from the centroid of the cluster itself, as shown in the \autoref{eq:inertia}. This is called inertia because, in the physical sense, it is the sub of the moment of inertia of each cluster if all the snapshots were considered as point masses (with unitary mass). This analogy is useful to understand that the lower the inertia, the more compact the clusters are.
+The inertia metric measures the total (sum) distance of each point belonging to a cluster from the centroid of the cluster itself, as shown in the \autoref{eq:inertia}. This is called inertia because, in the physical sense, it is the sum of the moment of inertia of each cluster if all the snapshots were considered as point masses (with unitary mass). This analogy is useful to understand that the lower the inertia, the more compact the clusters are.
 
 Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of $k$, on the previous dataset. The result is shown in the \autoref{fig:kmeans_inertia}. As expected, the inertia decreases as the number of clusters increases. This is not a desirable behavior, if the aim is selecting the number of clusters, the best guess is to select (by eye or with some automatism) the Pareto optimal point (\glsxtrshort{pof}) of the curve \cite{pareto}. 
 
@@ -185,27 +187,32 @@ The entities shown in the \autoref{fig:clust_spheres} are:
 
 
 \subsection{Metric for the new instance evaluation}
-Once the new snapshot $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (a.k.a. metric) linked to how novel this snapshot is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\gls{sym:snap}_n$ from the centroid $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
-
-Few consideration about the resoult of the \autoref{eq:clust_eval}:
-\begin{itemize}
-  \item if $e_{n} > 0$, the new snapshot $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centered in $\gls{sym:cent}_i$, so it is probably a novel snapshot;
-  \item if $e_{n} < 0$, the new snapshot $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal snapshot. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \emph{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
-\end{itemize}
+\label{sec:clust_metric}
+Once the new snapshot $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (\gls{aka} metric) linked to how novel this snapshot is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\gls{sym:snap}_n$ from the centroid $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current snapshot, so it is possible to use that as a novelty measure.
 
 \begin{equation}
   \label{eq:clust_eval}
   e_{n} = ||\gls{sym:dist}_{n,i}||_2 - ||\gls{sym:radius}_{i}||_2, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
 
+Few consideration about the resoult of the \autoref{eq:clust_eval}:
+\begin{itemize}
+  \item if $e_{n} > 0$, the new snapshot $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centered in $\gls{sym:cent}_i$, so it is probably a novel snapshot;
+  \item if $e_{n} < 0$, the new snapshot $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal snapshot. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \textbf{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
+\end{itemize}
+
+
+
 Using this metric it is possible to define as \emph{novelty} all the snapshots with $e_{n} > 0$ and as \emph{normal} all the snapshots with $e_{n} < 0$. This approach is not very robust because s snapshot that is even slightly outside the sphere of radius $\gls{sym:radius}_i$ will be considered as novelty, but since the sphere is tuned the training \emph{measured} data, that have an aleatory component, this approach will probably detect some novelty even in normal snapshots.
 
 \subsection{Introducing a threshold for the metric evaluation}
-In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\gls{sym:cluster}_i$ and use it to detect if a snapshot is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > \norm{\gls{sym:radius}_i}+ {t}_i$.
+\label{sec:clust_threshold}
+In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\gls{sym:cluster}_i$ and use it to detect if a snapshot is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > {t}_i$.
 
 \paragraph*{}
-At this point, the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones.
+At this point, the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones. Moreover, most of the times, the clusters shape and sized will not have a phisical meaning, and the act of manually define a threshold for each cluster would be against our goal of designing a fully unsupervised framework.
 
+\paragraph*{}
 To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\gls{sym:radius}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version.
 Obviously, the metric can be easily displayed as a percentage: $e_{n,\%} = e_n \cdot 100$.
 This value can be evaluated in real-time and plotted in a graph so that the user can see the novelty metric behavior over time.
@@ -253,7 +260,8 @@ The evaluation procedure developed to address the novelty/fault detection scope 
 A brief comment about what has been done in the experimental phase, in the cases where the number of clusters $k$ was difficult to define based on the silhouette plots. This happened when the maximum value of $k$ was shared between more than one value of $k$ (multiple peaks with similar values or a flat shape of the peak).
 
 In this case, the best choice is to select the maximum value of $k$ that is still compliant with the silhouette criterion. This is because the in scope of this thesis the final goal is to detect novelty. 
-Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and the a new snapshot that happens to be in the middle of the two clusters will not be detected as novelty. 
+
+For display purposes, let's consider an example in the plane ($F$ = 2), with a dataset that clearly have three distinct clusters. Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and the a new snapshot that happens to be in the middle of the two clusters will not be detected as novelty. 
 
 In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters were $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new snapshot would not have been detected as novelty. On the other hand, selecting $k=4$, the algorithm would have correctly detected the novelty, even if onne cluster has been split in two.
 
