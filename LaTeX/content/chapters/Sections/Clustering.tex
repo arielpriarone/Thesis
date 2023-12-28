@@ -2,7 +2,7 @@
 \label{sec:kmeans}
 This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into clusters ($\gls{sym:cluster}$), and define each cluster with it's mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ snapshots $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every snapshot is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the snapshots and the centroids $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the centroids $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the centroids that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
   \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \gls{sym:cent}_i}^2 = \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\abs{\gls{sym:cluster}_i}\mathrm{Var}\gls{sym:cluster}_i
@@ -27,7 +27,7 @@ Nowadays, the K-means algorithm is implemented in many libraries, such as \textt
   \label{fig:kmeans_vornoi}
 \end{figure}
 
- The naive k-means algorithm consists of a series of iterations. First, the centroids $\gls{sym:cent}_i$ are initialized randomly, then the snapshots are assigned to the nearest centroid, and finally, the centroids are updated as the mean of the snapshots assigned to them. These steps are repeated until the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the \autoref{alg:kmeans}.
+ The naive k-means algorithm consists of a series of iterations. First, the centroids $\gls{sym:cent}_i$ are initialized randomly, then the {\gls{glo:snap}}s are assigned to the nearest centroid, and finally, the centroids are updated as the mean of the {\gls{glo:snap}}s assigned to them. These steps are repeated until the position of the centroids does not change anymore, or a defined maximum number of iterations is reached. This naive algorithm is summarized in the \autoref{alg:kmeans}.
 
 \begin{algorithm}
   \caption{Training of the K-means model}
@@ -221,6 +221,20 @@ This value can be evaluated in real-time and plotted in a graph so that the user
   \label{eq:clust_eval_norm}
   e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
+
+\subsection{Trasformation of the metric for the fault detection}
+\label{sec:clust_fault}
+In the previous \autoref{sec:clust_threshold} it has been proposed a metric to detect how novel a snapshot is.
+
+Let's assume now to have trained the model on a dataset of snapshots collected in a period in wich the system was having a known malfunction. In this case, the metric applied to any future snapshot will carry the information of \quoted{how faulty} the system is, or better \quoted{how similarly the system is behaving \gls{wrt} a known malfunction}.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{images/metric_trasform.pdf}
+  \caption{Logarithmic Trasformation applied to the metric in case the model is working in fault detection mode}
+  \label{fig:kmeans_fault}
+\end{figure}
+
 
 \subsection{Evaluation procedure}
 The evaluation procedure developed to address the novelty/fault detection scope of this thesis can be summarized in the \autoref{alg:eval_new_snapshot}.
