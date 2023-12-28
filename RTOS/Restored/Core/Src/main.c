@@ -695,7 +695,7 @@ void USR_BTN_handler(){							// handle the press of user button
 	printf("-4 = acquire, evaluate and transmit a snapshot \r\n");
 	int command;
 	//scanf("%u", &command);
-	command = 4; // for testing
+	command = 1; // for testing
 	switch(command){
 	case 1:
 		acquireSnapshot();

@@ -30,7 +30,7 @@ else:
 
 for i in range(n_train_snaps):
     # Send '1' to the serial port to start the acquisition and conversion of features
-    ser.write(b'1')
+    ser.write(b'3')
 
     # Wait 4 seconds for the microcontroller to send the data
     time.sleep(2.5)
