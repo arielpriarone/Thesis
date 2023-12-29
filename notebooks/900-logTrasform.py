@@ -12,12 +12,12 @@ src.vis.set_matplotlib_params()
 # mpl.rcParams['text.usetex'] = True
 # mpl.rcParams['text.latex.preamble'] = r'\usepackage{{amsmath}}'
 
-x = np.logspace(np.log(0.01), np.log(51), 500)-1
+x = np.logspace(np.log(0.0000000001), np.log(51), 500)-1
 
-y = -np.log(x+1+1e-6)
+y = -np.log(x*(1-1e-6)+1)
 
 fig, ax = plt.subplots()
-ax.plot(x, y, label=r'$y = -\log(x+1.000001)$',color='r')
+ax.plot(x, y, label=r'$y = -\log(x(1-10^{-6})+1)$',color='r')
 
 ax.set_xlabel('x')
 ax.set_ylabel('y')
