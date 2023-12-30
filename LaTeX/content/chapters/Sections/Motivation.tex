@@ -1,0 +1,25 @@
+\section{Motivation}
+\label{sec:motivation}
+Imagine being the owner of a piece of technology. It can be any phisical device. Without maintanence, it is unavoidable that, after a certain amount of time of usage, it will have some sort of malfunction.
+To overcome this problem, usually maintenance work is planned and performed by a team of skilled technicians. 
+
+The simplest way of executing maintenance is to fix the device when it breaks. This is called \emph{reactive maintenance} (\gls{rm}). This has been done since forever, and it is still a very popular approach today, but it has a lot of drawbaks, rangign with the high downtime for repair, and the logistic of the spare parts etc.
+
+The other family of maintenance techniques is called \emph{proactive maintenance} (\gls{pm}). All those techniques share the property of being applied before the device show a malfunction. This is a very broad category, and it includes a lot of different techniques, most of wich will be described in this thesis.
+
+Back to the example, the owner of the device may want to avoid to fix it when it breaks as much as possible, so the next best thing is to perform maintenance periodically (on a shcedule). This is called \emph{preventive maintenance} (\gls{pvm}). It's basically the same approach that every car owner uses to minimise the risk of the vehicle breaking down in the middle of the road. 
+The owner may want to take the technique a step further, and seek some sort of guidance on deciding when to perform maintenance. A very intuitive approach is to simply ask the skilled technicians to inspect all the devices very often to try to understand if something is wrong without interfering with the normal operation of the device.
+
+If a technician has enough experience, he may be able to detect the vast majority of the problems before they become critical. He may do that simply using his senses, for example by listening to the sound of the device, or by touching it to feel how much it vibrate. 
+As a real life example, during the commissioning of a new power plant, I remember that the commissioning manager (that is a chemist) was able to detect if the demineralized water was pure enough by simply tasting it, before the necessary instruments were installed.
+This naive approach can be enhanced by using a large number of sensors to monitor the most critical parameters of the device. In this case the technician will train himself more on the data of the sensors, rather than on inspecting the device directly. 
+
+At this point, the next logical step would be to use the data from the sensor to train an algorithm, that will detect some patterns in the data that are not easily detectable by a human. This is called \emph{condition based maintenance} (\gls{cbm}). This is the most common approach to \gls{pm} today.
+
+
+\begin{figure}[htbp]
+    \centering
+    \input{images/maintthechniques.tex}
+    \caption{Maintenance techniques}
+    \label{fig:maintthechniques}
+\end{figure}
