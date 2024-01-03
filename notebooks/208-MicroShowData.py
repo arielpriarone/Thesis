@@ -1,3 +1,4 @@
+from calendar import c
 from turtle import color
 from matplotlib.colors import Colormap
 import pandas as pd
@@ -15,16 +16,20 @@ df_timeseries = pd.read_csv(r"C:\Users\ariel\Documents\Courses\Tesi\Code\timeser
 df_features.iloc[:, 1:] = (df_features.iloc[:, 1:] - df_features.iloc[:, 1:].mean()) / df_features.iloc[:, 1:].std()
 
 # Create a plot for dataframe of features
-fig1 = plt.figure()
-ax1 = fig1.add_subplot(111)
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
 colormap = cm.get_cmap('cool')
 i=0
 for timestamp in df_features['Timestamp'].unique():
     df_features_timestamp = df_features[df_features['Timestamp'] == timestamp]
-    if i < 10:
+    if i < 20:
         color = 'blue'
-    else:
+    elif i < 40:
         color = 'red'
+    elif i < 60:
+         color = 'green'
+    else:
+        color = 'orange'  
     ax1.plot(df_features_timestamp.columns[1:], df_features_timestamp.values[0, 1:], label=timestamp, color = color)
     i+=1
 ax1.set_xlabel('Timestamp')
@@ -33,11 +38,22 @@ ax1.tick_params(labelrotation=45)
 ax1.legend()
 
 #Create a plot for dataframe of timeseries
-fig2 = plt.figure()
-ax2 = fig2.add_subplot(111)
+fig = plt.figure()
+ax2 = fig.add_subplot(111)
+i=0
 for timestamp in df_timeseries['Timestamp'].unique():
+    if i < 20:
+        color = 'blue'
+    elif i < 40:
+        color = 'red'
+    elif i < 60:
+         color = 'green'
+    else:
+        color = 'orange'  
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
-    ax2.plot(df_timeseries_timestamp.columns[1:], df_timeseries_timestamp.values[0, 1:], label=timestamp)
+    ax2.plot(df_timeseries_timestamp.columns[1:], df_timeseries_timestamp.values[0, 1:], label=timestamp, color = color)
+    i+=1
+fig.tight_layout()
 
 # plot the spectrum of the timeseries
 fig, axs = plt.subplots()
@@ -45,10 +61,14 @@ sampling_rate = 5000 # Hz
 N=6000 # number of samples
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 10:
+    if i < 20:
         color = 'blue'
-    else:
+    elif i < 40:
         color = 'red'
+    elif i < 60:
+         color = 'green'
+    else:
+        color = 'orange'   
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     # normalize the timeseries
     fourier_timeserie = (df_timeseries_timestamp.values[0, 1:]-np.mean(df_timeseries_timestamp.values[0, 1:]))

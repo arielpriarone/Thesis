@@ -15,7 +15,7 @@ console = Console()
 # %% global variables
 timestamps = np.array([])                                                                       # timestamps.shape = (n_samples,)
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
-train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\notebooks\train_data.csv"    # csv file with train data
+train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"    # csv file with train data
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
 max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
