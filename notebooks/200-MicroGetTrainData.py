@@ -26,21 +26,19 @@ else:
         snap_file.write(f"Feature {i+1}\t")
     snap_file.write("\n")
 
-
-
 for i in range(n_train_snaps):
     # Send '1' to the serial port to start the acquisition and conversion of features
     ser.write(b'1')
 
-    # Wait 4 seconds for the microcontroller to send the data
-    time.sleep(2.5)
-
-    # Read the data from the serial port
-    data = ser.read_all().decode('utf-8')
-
-    # Print the data
+    data = ''
+    # Read data from the serial port until the keyword "Transmission finished"
     console.print("Received data from microcontroller:", style="magenta")
-    print(data)
+    while True:  
+        line = ser.readline().decode("UTF-8")
+        print(line)
+        data += (line)
+        if "Transmission finished" in line:
+            break
     console.print("End of data from microcontroller:", style="magenta")
 
     # Extract the array of features between the keywords "features:" and "end features"

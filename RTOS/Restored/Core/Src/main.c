@@ -659,8 +659,9 @@ void snapReadyHandler(){
 			if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}
 			if(print_timeserie_flag){
 				print_timeserie_flag = FALSE;
-				myprintf("the time-domain sampled signal is: \r\n\n");
+				printf(" \r\nthe time-domain sampled signal is: \r\n");
 				printUint16_tArray(adc_buf, ADC_BUF_LEN);
+				printf(" \r\ntime-domain end");
 			}
 			get_time(timestamp);
 			printf(" \r\nSnapshot recorded. \r\nTimestamp: %s \r\nFeatures: \r\n",timestamp);
@@ -675,6 +676,7 @@ void snapReadyHandler(){
 			printf("Novelty indicator: %.15e\n",indicator);
 			evaluate_flag = FALSE;
 		}
+		printf(" \r\nTransmission finished \r\n");
 		HAL_UART_Receive_IT(&huart3, Rx_data, 1); // start new data read from huart
 		return;
 	}
