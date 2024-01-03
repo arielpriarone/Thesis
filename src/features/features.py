@@ -15,29 +15,38 @@ from itertools import chain
 from matplotlib.lines import Line2D
 from typing import Dict, List, Union, Optional, Tuple
 
-def FFT(array,samplFreq=1,preproc=None):
-    # this function perform the FFT trasform of a signal with windowind preprocessing
-    # it return the FFT array (freq domain), the frequency points (freq domain)
-    # and the windowed array (time domaint) preprocessing the data
-    array=np.asarray(array)
+def FFT(array, samplFreq=1, preproc=None):
+    """
+    Perform the FFT transform of a signal with windowing preprocessing.
+
+    Parameters:
+    array (array-like): The input signal.
+    samplFreq (float, optional): The sampling frequency of the signal. Default is 1.
+    preproc (str, optional): The type of preprocessing to apply. Options are 'Hann', 'Hamming', 'Flip', or None. Default is None.
+
+    Returns:
+    tuple: A tuple containing the FFT array (frequency domain), the frequency points (frequency domain), and the preprocessed array (time domain).
+    """
+    array = np.asarray(array)
     match preproc:
         case 'Hann':
             window = np.hanning(len(array))
-            _prepArray=np.multiply(array,window) #preprocessed array
+            _prepArray = np.multiply(array, window)  # preprocessed array
         case 'Hamming':
             window = np.hamming(len(array))
-            _prepArray=np.multiply(array,window) #preprocessed array
+            _prepArray = np.multiply(array, window)  # preprocessed array
         case 'Flip':
-            np.flip(array[0:len(array)-1])
-            _prepArray=np.concatenate((array, np.flip(array[0:len(array)-1])), axis=0)
+            np.flip(array[0:len(array) - 1])
+            _prepArray = np.concatenate((array, np.flip(array[0:len(array) - 1])), axis=0)
         case _:
-            _prepArray=array
-    _aux = np.fft.fft(_prepArray)/len(_prepArray)          # Normalize amplitude
-    if preproc=='Flip':
-        _aux=_aux[::2] # if flip the number of point doubled, now i drop the odd numbers
-    _timePeriod  = len(_prepArray)/samplFreq
-    _frequencies = np.arange(int(len(_prepArray)/2))/_timePeriod #frequencies array of fft
-    return abs(_aux[range(int(len(_prepArray)/2))]), _frequencies, _prepArray
+            _prepArray = array
+    _aux = np.fft.fft(_prepArray) / len(_prepArray)  # Normalize amplitude
+    if preproc == 'Flip':
+        _aux = _aux[::2]  # if flip the number of point doubled, now i drop the odd numbers
+    _timePeriod = len(_prepArray) / samplFreq
+    _frequencies = np.arange(int(len(_prepArray) / 2)) / _timePeriod  # frequencies array of fft
+    return abs(_aux[range(int(len(_prepArray) / 2))]), _frequencies, _prepArray
+
 
 def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, plot=False):
     '''perform the wavelet trasform of a time series:

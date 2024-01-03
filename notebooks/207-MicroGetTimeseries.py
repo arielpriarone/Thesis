@@ -10,7 +10,7 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 5           # number of snapshots to take for training
+n_train_snaps = 20           # number of snapshots to take for training
 n_features = 67             # number of features
 n_samples = 6000            # number of samples per snapshot
 
@@ -29,13 +29,13 @@ else:
 
 # Open the csv file to save the timeseries
 if os.path.exists("timeseries_data.csv"):
-    snap_file = open("timeseries_data.csv", "a")
+    timeserie_file = open("timeseries_data.csv", "a")
 else:
-    snap_file = open("timeseries_data.csv", "w")
-    snap_file.write("Timestamp\t")
+    timeserie_file = open("timeseries_data.csv", "w")
+    timeserie_file.write("Timestamp\t")
     for i in range(n_samples):
-        snap_file.write(f"t_{i+1}\t")
-    snap_file.write("\n")
+        timeserie_file.write(f"t_{i+1}\t")
+    timeserie_file.write("\n")
     
 for i in range(n_train_snaps):
     # Send '1' to the serial port to start the acquisition and conversion of features
@@ -86,7 +86,7 @@ for i in range(n_train_snaps):
 
     # save the time series to file .csv
     tab_sep_line = "\t".join([str(f) for f in current_timeserie])
-    snap_file.write(f"{current_timestamp}\t{tab_sep_line}\n")
+    timeserie_file.write(f"{current_timestamp}\t{tab_sep_line}\n")
     console.print(f"Timeserie {i+1} saved to file.", style="magenta")
 
 
