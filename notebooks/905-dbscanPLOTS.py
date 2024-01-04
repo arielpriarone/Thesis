@@ -26,9 +26,6 @@ scale=0.6
 transformation = np.dot(transformation, np.array([[scale, 0],[0,  scale]]))
 X_aniso = np.concatenate((X_aniso, np.dot(X, transformation)), axis = 0)
 
-
-
-
 # clustewring
 db = DBSCAN(eps=0.7, min_samples=10).fit(X_aniso)
 labels = db.labels_
@@ -46,7 +43,7 @@ unique_labels = set(labels)
 core_samples_mask = np.zeros_like(labels, dtype=bool)
 core_samples_mask[db.core_sample_indices_] = True
 
-cmap = plt.get_cmap()
+cmap = plt.get_cmap('Set1')
 colors = [cmap(each) for each in np.linspace(0, 1, len(unique_labels))]
 print(colors)
 for k, col in zip(unique_labels, colors):
@@ -95,6 +92,7 @@ ax.scatter(X_aniso[:, 0], X_aniso[:, 1],marker=".", c='k',label='datapoints')
 ax.legend(loc='center left',bbox_to_anchor=(1, 0.5))
 fig.tight_layout()
 ax.set_position(bbox)
+
 
 
 plt.show()

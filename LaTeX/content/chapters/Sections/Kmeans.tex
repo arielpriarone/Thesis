@@ -23,7 +23,7 @@ Nowadays, the K-means algorithm is implemented in many libraries, such as \textt
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/Kmeans_vornoi.pdf}
+  \includegraphics[width=\textwidth]{images/Kmeans/Kmeans_vornoi.pdf}
   \caption{K-means algorithm in the $2$-dimensional space}
   \label{fig:kmeans_vornoi}
 \end{figure}
@@ -113,12 +113,12 @@ Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of 
 
 \begin{figure}
   \begin{subfigure}{\textwidth}
-    \includegraphics[width=\textwidth]{images/Kmeans_inertia.pdf}
+    \includegraphics[width=\textwidth]{images/Kmeans/Kmeans_inertia.pdf}
     \caption{Inertia of the clusters for different values of $k$}
     \label{fig:kmeans_inertia}
   \end{subfigure}
   \begin{subfigure}{\textwidth}
-    \includegraphics[width=\textwidth]{images/Kmeans_silhouette.pdf}
+    \includegraphics[width=\textwidth]{images/Kmeans/Kmeans_silhouette.pdf}
     \caption{Silhouette score of the clusters for different values of $k$}
     \label{fig:kmeans_silhouette}
   \end{subfigure}
@@ -167,7 +167,7 @@ For demonstration purposes, in this section, since it is still feasible to show 
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/Spheres_2.pdf}
+  \includegraphics[width=\textwidth]{images/Kmeans/Spheres_2.pdf}
   \caption{Cluster model in the $3$-dimensional space, with new snapshot $\gls{sym:snap}_n$}
   \label{fig:clust_spheres}
 \end{figure}
@@ -248,7 +248,7 @@ In practice, to avoid numerical representation problems, it is need to avoid map
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{images/metric_trasform.pdf}
+  \includegraphics[width=\textwidth]{images/kmeans/metric_trasform.pdf}
   \caption{Logarithmic Trasformation applied to the metric in case the model is working in fault detection mode}
   \label{fig:kmeans_fault}
 \end{figure}
@@ -302,7 +302,7 @@ In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of cluste
 
 \begin{figure}
   \centering
-  \includegraphics[width=\textwidth]{images/Kmeans_wrongk.pdf}
+  \includegraphics[width=\textwidth]{images/Kmeans/Kmeans_wrongk.pdf}
   \caption{Novelty detection of a new $\gls{sym:snap}_j$ with different values of $k$}
   \label{fig:kmeans_wrongk}
 \end{figure}
