@@ -1,5 +1,6 @@
 \section{K-means}
 \label{sec:kmeans}
+
 This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each cluster with it's mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
 
 Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
@@ -307,8 +308,8 @@ In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of cluste
 \end{figure}
 
 
-\subsection{Limits of the kmeans algorithm}
-This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and it is well scalable. But it has also some limits, the most important are \cite[p273]{hands-on-geron2022}:
+\subsection{Limits of the k-means algorithm}
+This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and it is well scalable. But it has also some limits, the most important are \citepage{hands-on-geron2022}{273}:
 \begin{itemize}
   \item it perform poorely if the clusters are not spherical;
   \item it performs poorly if the clusters have very different sizes;

@@ -27,6 +27,7 @@
 \def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
 \makeatother
 
+%% *** ARIEL PRIARONE ***
 \let\dummy\autoref % This redefine autoref as dummy
 \def\autoref#1{\textbf{\dummy{#1}}} % this is like \autoref but in bold
 \newcommand{\algorithmautorefname}{Algorithm} % to make autoref work with algorithms
@@ -35,4 +36,5 @@
 \newcommand{\quoted}[1]{``#1''} % for quotes
 \newcommand{\argmin}[1]{\mathrm{arg}\,\underset{#1}{\mathrm{min}}}
 \newcommand{\argmax}[1]{\mathrm{arg}\,\underset{#1}{\mathrm{max}}}
+\newcommand{\citepage}[2]{\cite[p.~#2]{#1}}
 
