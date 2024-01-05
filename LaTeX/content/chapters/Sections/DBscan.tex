@@ -1,16 +1,89 @@
 \section{DBSCAN}
 \label{sec:dbscan}
 
+\subsection{Overview}
+
 \begin{figure}[htbp]
     \centering
     \begin{subfigure}{\textwidth}
     \includegraphics[width=\textwidth]{images/DBSCAN/Figure_1.pdf}
     \caption{training data}
+    \label{fig:dbscandata}
     \end{subfigure}
     \begin{subfigure}{\textwidth}
     \includegraphics[width=\textwidth]{images/DBSCAN/Figure_2.pdf}
     \caption{training result}
+    \label{fig:dbscanresult}
     \end{subfigure}
     \caption{DBSCAN clustering}
     \label{fig:dbscan}
 \end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/DBSCAN/Figure_3.pdf}
+    \caption{Example of core and border points}
+    \label{fig:dbscanparams}
+\end{figure}
+
+Looking at \autoref{fig:dbscandata} we can see that the data are clearly divided in $3$ clusters, but a simple K-means will fail to cluster correctly the data, because the cluster are very streched. 
+But how we human see that there are $3$ clusters? We instictevly look at the density of the points, and we can see that there are $3$ areas with high density of points, and the rest of the space is empty. \gls{dbscan} is a clustering algorithm that tries to mimic this behaviour.
+
+\gls{dbscan} is a density-based clustering designed by Martin Ester, Hans-Peter Kriegel, Jörg Sander and Xiaowei Xu in 1996 \cite{dbscan}. The algorithm is based on the definition of what a  \emph{core point} is, and what a \emph{density-reachable} point is.
+
+
+The algorithm inputs are:
+\begin{itemize}
+    \item $D$: the dataset
+    \item $\varepsilon$: the radius of the neighbourhood
+    \item $MinPts$: the minimum number of points to form a cluster
+\end{itemize}
+
+The basic idea is that if a point has a sufficient number of other points ($MinPts$) in its neighbourhood of radius $\varepsilon$, then it is a \emph{core point}. Chosen a core point, all the other core points in its neighbourhood are assigned to the same cluster, and the process is repeated for all the core points in the neighbourhood of the just assigned ones and so on. At a certain poin there will be a cluster of core points that are not near to any other core point, when this happens the idea is to include to the cluster also the points that are not core points but are in the neighbourhood of the core points of the cluster. 
+
+To better visualize the process, \autoref{fig:dbscanparams} shows some datapoints. Let's assume $MinPts = 5$ The point $p_1$ is a core point because in its neighbourhood of radius $\varepsilon$ there are $7>MinPts$ points. The point $p_2$ is not a core point because in its neighbourhood there are only $3<MinPts$ points. even if it is not a core point, it may be assigned to a cluster, dependign if there is a core point in its neighbourhood. If a point is not a core point and there is not a core point in its neighbourhood, then it is a noise point and it is not assigned to any cluster. 
+
+Some of the definitions presented in \cite{dbscan} can be resumed for our purpose as follows:
+\begin{itemize}
+    \item $N_\varepsilon(p) = {q\in D : \norm{\gls{sym:dist}\le \varepsilon}}$ is the set of points in the $\varepsilon$-neighbourhood of $p$;
+    \item a point $p$ is a \emph{core point} if there are at least $MinPts$ points in the $\varepsilon$-neighbourhood of $p$;
+    \item a point $p$ is \emph{directly density-reachable} from $q$ if $p$ is in the $\varepsilon$-neighbourhood of $q$ and $q$ is a core point;
+    \item a point $p$ is \emph{density-reachable} from $q$ if there is a chain of points $p_1, \dots, p_n$ such that $p_1 = q$ and $p_n = p$ and $p_{i+1}$ is directly density-reachable from $p_i$;
+    \item a point $p$ is \emph{density-connected} to $q$ if there is a point $o$ such that both $p$ and $q$ are density-reachable from $o$;
+\end{itemize}
+
+In the paper \cite{dbscan} the authors proside a detailed pseudocode of the algorithm, \autoref{alg:dbscan} is a more abstract version of it.
+\begin{algorithm}
+    \caption{Train DBSCAN}
+  \label{alg:dbscan}
+  \begin{algorithmic}[1]
+    \Procedure{DBSCAN}{$D, \varepsilon, MinPts$}
+    \For {$p \in D$}
+        \If {$abs{N_\varepsilon(p)} \ge MinPts$}
+            \State mark $p$ as a core point
+        \EndIf
+    \EndFor
+    \State $i \gets 0$ \Comment{cluster index}
+    \While{there are unassigned points}
+        \State $\gls{glo:clust}_i \gets \emptyset $
+        \State choose an unassigned point $p$
+        \State $\gls{glo:clust}_i \gets \gls{glo:clust}_i \cup p $ \Comment{add $p$ to the cluster}
+        \For {$ q \in $ all reachable points from $p$}
+            \LineComment{all density-reachable points from $p$ are added to the cluster}
+            \State $\gls{glo:clust}_i \gets \gls{glo:clust}_i \cup q  $ \Comment{add $q$ to the cluster}
+        \EndFor
+        \If {there are not unassigned core point}
+            \State drop all unassigned points from $D$ \Comment{they are noise}
+            \EndIf
+        \State $i \gets i + 1$
+    \EndWhile
+    \EndProcedure
+  \end{algorithmic}
+\end{algorithm}
+
+\subsection{Exampole of DBSCAN clustering}
+Running the algorithm implemented in the \texttt{sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.7$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ clusters, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
+
+\subsection{Chosing the parameters}
+Even being the \gls{dbscan} an unsupervised algorithm, it has some parameters that need to be set by the user.
+The first parameter is $\varepsilon$, the radius of the neighbourhood. This gives a measure of the density we expect from the clusters. As seen for the K-means in \autoref{sec:kmeans}, we can try to find the best $\varepsilon$ by using the silhouette score.

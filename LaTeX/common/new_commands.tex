@@ -30,7 +30,15 @@
 %% *** ARIEL PRIARONE ***
 \let\dummy\autoref % This redefine autoref as dummy
 \def\autoref#1{\textbf{\dummy{#1}}} % this is like \autoref but in bold
-\newcommand{\algorithmautorefname}{Algorithm} % to make autoref work with algorithms
+\newcommand{\algorithmautorefname}{algorithm} % to make autoref work with algorithms
+\addto\extrasenglish{\def\figureautorefname{figure}}%
+\addto\extrasenglish{\def\chapterautorefname{chapter}}%
+\addto\extrasenglish{\def\sectionautorefname{section}}%
+\addto\extrasenglish{\def\subsectionautorefname{subsection}}%
+\addto\extrasenglish{\def\subsubsectionautorefname{subsubsection}}%
+\addto\extrasenglish{\def\paragraphautorefname{paragraph}}%
+\addto\extrasenglish{\def\tableautorefname{table}}%
+\addto\extrasenglish{\def\equationautorefname{equation}}%
 
 \newcommand{\vect}[1]{\bm{#1}}  % for vectors
 \newcommand{\quoted}[1]{``#1''} % for quotes

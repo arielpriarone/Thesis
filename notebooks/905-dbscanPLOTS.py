@@ -81,6 +81,8 @@ legend_elements = [
     Patch(color=colors[2], label='Clust. 2'),
     Patch(color=colors[3], label='Clust. 3'),
 ]
+ax.set_xlabel('Feature 1')
+ax.set_ylabel('Feature 2')
 ax.legend(handles=legend_elements, loc='center left',bbox_to_anchor=(1, 0.5))
 fig.tight_layout()
 
@@ -90,8 +92,11 @@ bbox = ax.get_position()
 fig, ax = plt.subplots()
 ax.scatter(X_aniso[:, 0], X_aniso[:, 1],marker=".", c='k',label='datapoints')
 ax.legend(loc='center left',bbox_to_anchor=(1, 0.5))
+ax.set_xlabel('Feature 1')
+ax.set_ylabel('Feature 2')
 fig.tight_layout()
 ax.set_position(bbox)
+
 
 
 
