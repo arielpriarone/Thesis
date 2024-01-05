@@ -61,15 +61,25 @@ ax.scatter(IMSDATA['wavanaly_standardized_train'][:,10],IMSDATA['wavanaly_standa
 print(IMSDATA['wavanaly_standardized_train'].shape)
 
 n_labels = []
+sil_score = []
+inertia = []
 eps_range = np.linspace(1,20,100)
 for eps in eps_range:
     db = DBSCAN(eps=eps, min_samples=1).fit(IMSDATA['wavanaly_standardized_train'])
-    n_labels.append(len(np.unique(db.labels_)))
+    labels = [x for x in db.labels_ if x >=0] # drop the noise samples
+    n_labels.append(len(np.unique(labels)))
+    try:
+        sil_score.append(silhouette_score(IMSDATA['wavanaly_standardized_train'], db.labels_))
+    except:
+        sil_score.append(0)
 
-fig, ax = plt.subplots()
-ax.scatter(eps_range,n_labels)
-ax.set_xlabel('eps')
-ax.set_ylabel('n_labels')
+
+fig, ax = plt.subplots(2,1,sharex=True)
+ax[0].scatter(eps_range,n_labels)
+ax[0].set_ylabel('n sclusters')
+ax[1].scatter(eps_range,sil_score)
+ax[1].set_ylabel('silhouette score')
+ax[1].set_xlabel('eps')
 
 # chose eps = 8
 db = DBSCAN(eps=8, min_samples=1).fit(IMSDATA['wavanaly_standardized_train'])

@@ -10,6 +10,7 @@ from matplotlib import colormaps
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from matplotlib.colors import to_rgba
+from sklearn.metrics import silhouette_score, silhouette_samples
 
 # settings
 src.vis.set_matplotlib_params()
@@ -27,7 +28,7 @@ transformation = np.dot(transformation, np.array([[scale, 0],[0,  scale]]))
 X_aniso = np.concatenate((X_aniso, np.dot(X, transformation)), axis = 0)
 
 # clustewring
-db = DBSCAN(eps=0.7, min_samples=10).fit(X_aniso)
+db = DBSCAN(eps=0.78, min_samples=10).fit(X_aniso)
 labels = db.labels_
 
 # Number of clusters in labels, ignoring noise if present.
@@ -97,7 +98,35 @@ ax.set_ylabel('Feature 2')
 fig.tight_layout()
 ax.set_position(bbox)
 
+# plot clustering with silhouette
+n_labels = []
+sil_score = []
+inertia = []
+eps_range = np.linspace(0.3,1,100)
+for eps in eps_range:
+    db = DBSCAN(eps=eps, min_samples=10).fit(X_aniso)
+    labels = [x for x in db.labels_ if x >=0] # drop the noise samples
+    n_labels.append(len(np.unique(labels))) # only count clusters
+    try:
+        sil_score.append(silhouette_score(X_aniso, db.labels_))
+    except:
+        sil_score.append(0)
+src.vis.set_matplotlib_params() # reset the values
+fig, ax = plt.subplots(2,1,sharex=True)
+ax[0].plot(eps_range,n_labels)
+ax[0].set_ylabel('$n$ of sclusters')
+ax[1].plot(eps_range,sil_score)
+ax[1].set_ylabel('silhouette score')
+ax[1].set_xlabel(r'$\varepsilon$')
 
+ax[0].annotate(r'coresponding to $3$ clusters', xy=(0.78, 3), xytext=(0.6, 1),
+            arrowprops=dict(arrowstyle="->", connectionstyle="arc3"),
+            )
+ax[1].annotate(r'max for $\varepsilon \approx 0.78$', xy=(0.78, 0.55), xytext=(0.6, 0.3),
+            arrowprops=dict(arrowstyle="->", connectionstyle="arc3"),
+            )
+
+fig.tight_layout()
 
 
 plt.show()

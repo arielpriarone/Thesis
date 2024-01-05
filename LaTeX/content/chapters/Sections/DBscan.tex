@@ -29,7 +29,7 @@
 Looking at \autoref{fig:dbscandata} we can see that the data are clearly divided in $3$ clusters, but a simple K-means will fail to cluster correctly the data, because the cluster are very streched. 
 But how we human see that there are $3$ clusters? We instictevly look at the density of the points, and we can see that there are $3$ areas with high density of points, and the rest of the space is empty. \gls{dbscan} is a clustering algorithm that tries to mimic this behaviour.
 
-\gls{dbscan} is a density-based clustering designed by Martin Ester, Hans-Peter Kriegel, Jörg Sander and Xiaowei Xu in 1996 \cite{dbscan}. The algorithm is based on the definition of what a  \emph{core point} is, and what a \emph{density-reachable} point is.
+\gls{dbscan} is a density-based clustering designed by Martin Ester, Hans-Peter Kriegel, Jörg Sander and Xiaowei Xu \cite{dbscan}. The algorithm is based on the definition of what a  \emph{core point} is, and what a \emph{density-reachable} point is.
 
 
 The algorithm inputs are:
@@ -81,9 +81,36 @@ In the paper \cite{dbscan} the authors proside a detailed pseudocode of the algo
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Exampole of DBSCAN clustering}
-Running the algorithm implemented in the \texttt{sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.7$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ clusters, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
+\subsection{Example of gls{dbscan} clustering}
+Running the algorithm implemented in the \texttt{sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.78$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ clusters, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
 
 \subsection{Chosing the parameters}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/DBSCAN/Figure_4.pdf}
+    \caption{Silhouette score for different values of $\varepsilon$}
+    \label{fig:dbscansilhouette}
+\end{figure}
+
 Even being the \gls{dbscan} an unsupervised algorithm, it has some parameters that need to be set by the user.
 The first parameter is $\varepsilon$, the radius of the neighbourhood. This gives a measure of the density we expect from the clusters. As seen for the K-means in \autoref{sec:kmeans}, we can try to find the best $\varepsilon$ by using the silhouette score.
+
+Let's plot the silhouette score for different values of $\varepsilon$ to confirm that using $\varepsilon = 0.78$ is a good choice. In the \autoref{fig:dbscansilhouette} are shown the results that link the best $\varepsilon$ value to $3$ cluster being generated.
+
+\subsection{Evaluation of a new instance}
+Assume now that the training of the \gls{dbscan} is compete, and a new \gls{glo:snap} $\gls{sym:snap}_n$ is generated from the sensor data. How can we evaluate if the new snapshot is novel or not?
+The \gls{dbscan} algorithm is not able to predict the cluster of a new instance. But the task of this project is novelty detection, not classification.
+To do that, as has been done for the K-means, we need to provide a metric linked to how novel a new snapshot is. 
+
+The idea used previously to compute the distance to a centroid and normalizing it by the radius of the cluster is not applicable here, because the \gls{dbscan} do not use centroids to define clusters. A naive idea for our purpose is to compute the distance of the new snapshot from the closest snapshot in the train dataset.
+If the distance is greater than a threshold, then the new snapshot is considered novel.
+
+And now the questions: if we use the distance of a new $\gls{sym:snap}_n$ from the closest $\gls{sym:snap}_i$ in the train dataset (spanning the whole dataset to compute it) why did we train a model in the first place? Wouldn't it to just apply this metric to the train dataset without clustering it? As far as concerns scope of this thesis, performing the clustering first has two main advantages:
+\begin{itemize}
+    \item $varepsilon$ has been chosen running the \gls{dbscan}, so nobody had to guess it. This is a big advantage because the choice of $\varepsilon$ would be very difficult to do with limited knowledge of the monitored system. Normalizing the computed distance by $\varepsilon$ we can obtain a measure of how novel a snapshot is for wich we can set a threshold without tuning it on the specific system;
+    \item during the training phase, the \gls{dbscan} has discarded the noise points. This inproves the quality of the metric, because the distance from a noise point is not meaningful.
+\end{itemize}
+
+\subsection{Limitations of \gls{dbscan}}
+talk about density and complexity
