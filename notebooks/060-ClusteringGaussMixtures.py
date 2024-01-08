@@ -45,22 +45,22 @@ max_clusters=30
 BIC = [] # Bayesian Information Criterion
 AIC = [] # Akaike Information Criterion
 X = IMSDATA['wavanaly_standardized_train'] # data to fit in the model
-# for n_blobs in range(1,max_clusters+1):
-#     GM = GaussianMixture(n_components=n_blobs, covariance_type='full', random_state=0)
-#     GM.fit(X)
-#     print(f'Number of clusters: {n_blobs}: the mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
-#     BIC.append(GM.bic(X))
-#     AIC.append(GM.aic(X))
-# # plot BIC and AIC
-# fig, ax = plt.subplots()
-# ax.plot(range(1,max_clusters+1),BIC,label='BIC')
-# ax.plot(range(1,max_clusters+1),AIC,label='AIC')
-# ax.set_xlabel('Number of clusters')
-# ax.set_ylabel('Information Criterion')
-# ax.legend()
+for n_blobs in range(1,max_clusters+1):
+    GM = GaussianMixture(n_components=n_blobs, covariance_type='full', random_state=0)
+    GM.fit(X)
+    print(f'Number of clusters: {n_blobs}: the mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
+    BIC.append(GM.bic(X))
+    AIC.append(GM.aic(X))
+# plot BIC and AIC
+fig, ax = plt.subplots()
+ax.plot(range(1,max_clusters+1),BIC,label='BIC')
+ax.plot(range(1,max_clusters+1),AIC,label='AIC')
+ax.set_xlabel('Number of clusters')
+ax.set_ylabel('Information Criterion')
+ax.legend()
 
 # %% fit model with 30 clusters
-GM = GaussianMixture(n_components=30, covariance_type='full', random_state=0)
+GM = GaussianMixture(n_components=3, covariance_type='full', random_state=0)
 GM.fit(X)
 print(f'The mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
 

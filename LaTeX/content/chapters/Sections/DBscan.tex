@@ -81,8 +81,10 @@ In the paper \cite{dbscan} the authors proside a detailed pseudocode of the algo
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Example of gls{dbscan} clustering}
+\subsection{Example of \gls{dbscan} clustering}
 Running the algorithm implemented in the \texttt{sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.78$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ clusters, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
+
+Note that the \gls{dbscan} is able to identify clusters with arbitrary shapes, even if they are not convex and are not \gls{glo:lin-sep}. This is a big advantage over the K-means, that is not able to identify clusters with arbitrary shapes.
 
 \subsection{Chosing the parameters}
 
@@ -108,9 +110,11 @@ If the distance is greater than a threshold, then the new snapshot is considered
 
 And now the questions: if we use the distance of a new $\gls{sym:snap}_n$ from the closest $\gls{sym:snap}_i$ in the train dataset (spanning the whole dataset to compute it) why did we train a model in the first place? Wouldn't it to just apply this metric to the train dataset without clustering it? As far as concerns scope of this thesis, performing the clustering first has two main advantages:
 \begin{itemize}
-    \item $varepsilon$ has been chosen running the \gls{dbscan}, so nobody had to guess it. This is a big advantage because the choice of $\varepsilon$ would be very difficult to do with limited knowledge of the monitored system. Normalizing the computed distance by $\varepsilon$ we can obtain a measure of how novel a snapshot is for wich we can set a threshold without tuning it on the specific system;
+    \item $\varepsilon$ has been chosen running the \gls{dbscan}, so nobody had to guess it. This is a big advantage because the choice of $\varepsilon$ would be very difficult to do with limited knowledge of the monitored system. Normalizing the computed distance by $\varepsilon$ we can obtain a measure of how novel a snapshot is for wich we can set a threshold without tuning it on the specific system;
     \item during the training phase, the \gls{dbscan} has discarded the noise points. This inproves the quality of the metric, because the distance from a noise point is not meaningful.
 \end{itemize}
 
 \subsection{Limitations of \gls{dbscan}}
-talk about density and complexity
+The first limitation of \gls{dbscan} is about cluster density: since $\varepsilon$ is fixed, the algorithm is not able to identify clusters with different densities. In this case it will split low density clusters in multiple clusters. For our purpose this is not a problem, because we are interested in the novelty detection, so even if a cluster is misidentified as multiple clusters, the new snapshot will be considered novel. To increase the sensitivity of the novelty detection $\varepsilon$ can be decreased, but this will increase the number of noise points.
+
+The oter main limitation of \gls{dbscan} is that it has a complexity of roughly $\mathcal{O}(m^2)$, where $m$ is the number of points in the dataset. This means that the algorithm is not scalable to large datasets \citepage{hands-on-geron2022}{281}. There exist improvements to the algorithm that reduce the complexity to $\mathcal{O}(m\log m)$, like the FDBSCAN developed by Bing Liu \cite{dbscanlogm}. The complexity remains linear \gls{wrt} the number of features.
