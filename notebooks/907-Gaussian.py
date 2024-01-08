@@ -9,6 +9,7 @@ import src
 from matplotlib.lines import Line2D
 from sklearn.mixture import GaussianMixture
 from rich import print
+from scipy.stats import norm
 
 src.vis.set_matplotlib_params()
 
@@ -75,5 +76,39 @@ ax.set_aspect
 cbar=fig.colorbar(plot)
 cbar.ax.set_ylabel('Probability density')
 fig.tight_layout()
+
+# %% bell shape
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.stats import norm
+
+# Define mean and standard deviation
+mu, sigma = 0, 1
+
+# Generate x values
+x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
+
+# Calculate the PDF using the normal distribution
+pdf = norm.pdf(x, mu, sigma)
+
+# Plot the Gaussian distribution PDF
+# Define mean and standard deviation
+mu, sigma = 0.8, 0.3
+
+# Generate x values
+x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
+
+# Calculate the PDF using the normal distribution
+pdf = norm.pdf(x, mu, sigma)
+fig, ax = plt.subplots()
+ax.plot(x, pdf)
+ax.set_xlabel('x')
+ax.set_ylabel('Probability density')
+ax.set_title(r'Normal Distribution PDF: $\mu=0.8$, $\sigma=0.3$')
+
+
+
+
+
 plt.show()
 # %%

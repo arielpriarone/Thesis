@@ -39,6 +39,12 @@
 \newacronym{pof}{POF}{Pareto Optimal Front}
 \newacronym{dbscan}{DBSCAN}{Density-Based Spatial Clustering of Applications with Noise}
 \newacronym{gmm}{GMM}{Gaussian Mixture Model}
+\newacronym{bgmm}{BGMM}{Gaussian Mixture Model}
+\newacronym{em}{EM}{Expetaion Maximization}
+\newacronym{pdf}{PDF}{Probability Density Function}
+\newacronym{aic}{AIC}{Akaike Information Criterion}
+\newacronym{bic}{BIC}{Bayesian Information Criterion}
+
 
 %Symbols
 \glsxtrnewsymbol[
@@ -57,7 +63,7 @@
     {\ensuremath{\vect{\mathbf{S}}}}
 
 \glsxtrnewsymbol[
-    description={\textbf{Distance} Vector difference between two spoints in the features space.}]
+    description={\textbf{Distance} Vector difference between two points in the features space.}]
     {sym:dist}
     {\ensuremath{\vect{d}}}
 
@@ -71,6 +77,17 @@
     {sym:cent}
     {\ensuremath{\vect{c}}}
 
+\glsxtrnewsymbol[
+    description={\textbf{Features} A set of metrics that describe the state of a system.}]
+    {sym:feat}
+    {\ensuremath{\vect{f}}}
+
+\glsxtrnewsymbol[
+    description={\textbf{Feature number} The number of features that describe the state of a system.}]
+    {sym:feats}
+    {\ensuremath{F}}
+
+
 
 %Glossary
 \newglossaryentry{glo:std}{
@@ -79,7 +96,7 @@
 
 \newglossaryentry{glo:snap}{
     name={snapshot},
-    description={an array of features that describe the state of a system in a specific time period. It's filled with any metric (time domanin, frequency domain, etc.)}}
+    description={an array of features that describe the state of a system in a specific time period. It's filled with any metric (time domain, frequency domain, etc.)}}
 
 \newglossaryentry{glo:heuristic}{
     name={heuristic},
@@ -92,7 +109,7 @@
 
 \newglossaryentry{glo:cent}{
     name={centroid},
-    description={The center of a cluster. It's the point that minimize the sum of the distances between itself and all the points in the cluster. From a phisical point of view, it's the center of mass of the cluster, if all the points of the cluster are treated as equal point masses.}}
+    description={The center of a cluster. It's the point that minimizes the sum of the distances between itself and all the points in the cluster. From a phisical point of view, it's the center of mass of the cluster, if all the points of the cluster are treated as equal point masses.}}
 
 \newglossaryentry{glo:edge}{
     name={edge computing},
@@ -100,8 +117,12 @@
 
 \newglossaryentry{glo:clust}{
     name={cluster},
-    description={In a set of data points, a cluster is a subset of the former that are more similar to each other than to the rest of the data points. This is a broad definition that leave to the alrithm applied to perform the clustering the freedom to define what \quoted{similar} means.}}
+    description={In a set of data points, a cluster is a subset of the former that are more similar to each other than to the rest of the data points. This is a broad definition that leaves to the algorithm applied to perform the clustering the freedom to define what \quoted{similar} means.}}
 
 \newglossaryentry{glo:lin-sep}{
     name={linearly separable},
-    description={Two sets of data points in a two dimensional space are said to be linearly separable when they can be completely separable by a single straight line. In general, two groups of data points are separable in a n-dimensional space if they can be separated by an n-1 dimensional hyperplane.\cite{lazar2009linearly}}}
+    description={Two sets of data points in a two-dimensional space are said to be linearly separable when they can be completely separable by a single straight line. In general, two groups of data points are separable in a n-dimensional space if they can be separated by an (n-1)-dimensional hyperplane.\cite{lazar2009linearly}}}
+
+\newglossaryentry{glo:likelihood}{
+    name={likelihood function},
+    description={The likelihood function is a measure of how likely is it that a given parametric model would generate the observed data.}}

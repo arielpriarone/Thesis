@@ -14,7 +14,7 @@ import pickle
 import os
 from sklearn.metrics import silhouette_score, silhouette_samples
 from rich import print
-from sklearn.mixture import GaussianMixture
+from sklearn.mixture import BayesianGaussianMixture
 matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
@@ -40,27 +40,11 @@ ax = fig.add_subplot(projection='3d')
 ax.scatter(IMSDATA['wavanaly_standardized_train'][:,10],IMSDATA['wavanaly_standardized_train'][:,11],IMSDATA['wavanaly_standardized_train'][:,12],s=1,marker='.',c='black')
 
 # %% training
-
-max_clusters=30
-BIC = [] # Bayesian Information Criterion
-AIC = [] # Akaike Information Criterion
 X = IMSDATA['wavanaly_standardized_train'] # data to fit in the model
-for n_blobs in range(1,max_clusters+1):
-    GM = GaussianMixture(n_components=n_blobs, covariance_type='full', random_state=0)
-    GM.fit(X)
-    print(f'Number of clusters: {n_blobs}: the mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
-    BIC.append(GM.bic(X))
-    AIC.append(GM.aic(X))
-# plot BIC and AIC
-fig, ax = plt.subplots()
-ax.plot(range(1,max_clusters+1),BIC,label='BIC')
-ax.plot(range(1,max_clusters+1),AIC,label='AIC')
-ax.set_xlabel('Number of clusters')
-ax.set_ylabel('Information Criterion')
-ax.legend()
+print(np.shape(X))
 
-# %% fit model with 30 clusters
-GM = GaussianMixture(n_components=3, covariance_type='full', random_state=0)
+# %% fit model 
+GM = BayesianGaussianMixture(n_components=np.shape(X)[0], covariance_type='full', random_state=0)
 GM.fit(X)
 print(f'The mixture model has converged: {GM.converged_}, with {GM.n_iter_} iterations')
 
