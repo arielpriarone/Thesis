@@ -32,12 +32,12 @@ transformation = np.dot(transformation, np.array([[scale, 0],[0,  scale]]))
 X_aniso = np.concatenate((X_aniso, np.dot(X, transformation)), axis = 0)
 
 # %% fit model
-svm = OneClassSVM(kernel='rbf', nu=0.02)
+svm = OneClassSVM(kernel='rbf', nu=0.002)
 svm.fit(X_aniso)
 
 # %% plot the densities
 x, y = np.meshgrid(np.linspace(-4,4,100),np.linspace(-5,5,100))
-Z = np.exp(svm.decision_function(np.concatenate((x.reshape(-1,1),y.reshape(-1,1)),axis=1)))
+Z = svm.decision_function(np.concatenate((x.reshape(-1,1),y.reshape(-1,1)),axis=1))
 
 print("Shape:",Z.shape)
 print("Max dec. funct:",np.max(Z))

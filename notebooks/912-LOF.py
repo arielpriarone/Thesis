@@ -31,12 +31,12 @@ transformation = np.dot(transformation, np.array([[scale, 0],[0,  scale]]))
 X_aniso = np.concatenate((X_aniso, np.dot(X, transformation)), axis = 0)
 
 # %% fit model
-lof = LocalOutlierFactor(n_neighbors=20, novelty=True, contamination=0.005)
+lof = LocalOutlierFactor(n_neighbors=30, novelty=True, contamination=0.05)
 lof.fit(X_aniso)
 
 # %% plot the densities
 x, y = np.meshgrid(np.linspace(-4,4,100),np.linspace(-5,5,100))
-Z = np.exp(lof.decision_function(np.concatenate((x.reshape(-1,1),y.reshape(-1,1)),axis=1)))
+Z = lof.decision_function(np.concatenate((x.reshape(-1,1),y.reshape(-1,1)),axis=1))
 
 print("Shape:",Z.shape)
 print("Max dec. funct:",np.max(Z))
@@ -54,20 +54,6 @@ ax.set_aspect
 cbar=fig.colorbar(plot)
 cbar.ax.set_ylabel('Decision function')
 fig.tight_layout()
-
-# %% bell shape
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import norm
-
-# Define mean and standard deviation
-mu, sigma = 0, 1
-
-# Generate x values
-x = np.linspace(mu - 3*sigma, mu + 3*sigma, 100)
-
-# Calculate the PDF using the normal distribution
-pdf = norm.pdf(x, mu, sigma)
 
 
 plt.show()
