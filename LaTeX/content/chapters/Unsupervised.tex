@@ -11,8 +11,10 @@ The most common unsupervised task is dimensionality reduction \citepage{hands-on
 Clustering is the task of grouping together similar instances. The definition of \emph{similar} depends on the algorithm used. The most common algorithms are {k-means} and \gls{dbscan}. The former is a \gls{glo:cent}-based algorithm, it is fast to evaluate a new instance and produce a light-weigth model but perform porely in some conditions that will be descri in detail. The latter is a density-based algorithm, it performs better in the condition where k-means fails, but has the drawbacks of being much slower to evaluate a new instance, and to perform novelty detection, the proposed solution has to keep all the train data in memory. Both will be described in detail in the following \autoref{sec:kmeans} and \autoref{sec:dbscan}.
 
 \paragraph[]{Gaussian mixture models}
-The last considered approach to novelty detection is the use of gaussian mixture models (\gls{gmm}). This approach is based on the assumption that the data is generated from a mixture of several gaussian distributions with unknown parameters \citepage{hands-on-geron2022}{283}. Then the distribution model can be used for novelty detection. This approach will be described in detail in the following \autoref{sec:gaussian}.
+The second approach to novelty detection is the use of gaussian mixture models (\gls{gmm}). This approach is based on the assumption that the data is generated from a mixture of several gaussian distributions with unknown parameters \citepage{hands-on-geron2022}{283}. Then the distribution model can be used for novelty detection. This approach will be described in detail in the following \autoref{sec:gaussian}.
 
+\paragraph{Other approaches}
+At the end of the chapter, some other approaches will be briefly described and tested on the same dataset used for demostrating clustering and \gls{gmm}. These approaches are: \gls{iforest}, \gls{lof} and $\nu$-\gls{svm}. The first two are based on the assumption that outliers are instances that are isolated from the rest of the data, while the latter is based on a kernelized \gls{svm} algorithm. 
 
 \input{content/chapters/Sections/Kmeans.tex}
 \input{content/chapters/Sections/DBscan.tex}
