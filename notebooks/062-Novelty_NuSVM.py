@@ -15,7 +15,7 @@ import pickle
 import os
 from sklearn.metrics import silhouette_score, silhouette_samples
 from rich import print
-from sklearn.mixture import BayesianGaussianMixture
+
 matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython

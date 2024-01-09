@@ -12,6 +12,7 @@ from rich import print
 from scipy.stats import norm
 
 src.vis.set_matplotlib_params()
+matplotlib.rcParams['figure.figsize'] = (matplotlib.rcParams['figure.figsize'][0], matplotlib.rcParams['figure.figsize'][1]*0.8) # set size of plots
 
 n_samples = 120
 
