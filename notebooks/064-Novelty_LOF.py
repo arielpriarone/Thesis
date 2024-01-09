@@ -1,9 +1,10 @@
 # %%
-# this don't work well because the cluster have differnt sizes
+from math import inf
 from matplotlib import projections
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 import matplotlib.pyplot as plt
 import matplotlib.colors as color
 import scipy as sp
@@ -44,22 +45,18 @@ X_full = IMSDATA['wavanaly_standardized'] # data to fit in the model
 print(np.shape(X_full))
 
 # %% fit model 
-clf = IsolationForest(random_state=0,verbose=True,max_samples=np.shape(X)[0])
-clf.fit(X)
-
-
+lof = LocalOutlierFactor(n_neighbors=20, novelty=True, contamination=0.005)
+lof.fit(X)
 
 # %% predict with all dataset
 threshold = 0.005
-scores = clf.decision_function(IMSDATA['wavanaly_standardized'])
+scores = lof.decision_function(IMSDATA['wavanaly_standardized'])
 metric = - scores
 
 fig, ax = plt.subplots()
 ax.scatter(range(len(metric)),metric,c='k',marker='.')
-ax.set_xlabel('sample')
-ax.set_ylabel('density')
+ax.set_xlabel('snapshot')
+ax.set_ylabel('LOF')
 ax.axhline(y=threshold, color='r', linestyle='-.')
-
-
 
 plt.show()
