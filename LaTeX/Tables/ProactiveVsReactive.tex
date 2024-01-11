@@ -1,19 +1,17 @@
-% \usepackage{array}
-% \usepackage{booktabs}
-
-
+% \usepackage{tabularray}
 \begin{table}
     \centering
     \caption{Advantages and disadvantages of \gls{rm} and \gls{pm} maintenance \cite{Lost_Opport_Cost}}
-    \resizebox{0.999999\textwidth}{!}{%
-    \begin{tabular}{>{\hspace{0pt}}m{0.2\linewidth}>{\hspace{0pt}}m{0.344\linewidth}>{\hspace{0pt}}m{0.39\linewidth}} 
-    \toprule
-    \textbf{Maintenance} & \textbf{Advantages}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  & \textbf{Disadvantages}                                                                                                                                                                                                               \\ 
-    \hline
-    Reactive             & \begin{tabular}{@{\labelitemi\hspace{\dimexpr\labelsep+0.5\tabcolsep}}l@{}}low setup cost\\easy to setup\end{tabular}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                & \begin{tabular}{@{\labelitemi\hspace{\dimexpr\labelsep+0.5\tabcolsep}}l@{}}unscheduled downtime\\increased labour costs\\unoptimized resources\\\begin{tabular}[c]{@{}l@{}}Increased manufacturing\\costs\end{tabular}\end{tabular}  \\ 
-    \hline
-    Proactive            & \begin{tabular}{@{}l@{}}{\labelitemi}\hspace{\dimexpr\labelsep+0.5\tabcolsep}\begin{tabular}[c]{@{}l@{}}increases system\\availability\end{tabular}\\{\labelitemi}\hspace{\dimexpr\labelsep+0.5\tabcolsep}\begin{tabular}[c]{@{}l@{}}minimizes logistical\\downtime\end{tabular}\\{\labelitemi}\hspace{\dimexpr\labelsep+0.5\tabcolsep}\begin{tabular}[c]{@{}l@{}}reduces unscheduled\\downtime\end{tabular}\\{\labelitemi}\hspace{\dimexpr\labelsep+0.5\tabcolsep}~decreases costs\\\hspace{0.5\leftmargin}{\labelitemii}\hspace{\dimexpr\labelsep+0.5\tabcolsep}optimizes parts\\\hspace{0.5\leftmargin}{\labelitemii}\hspace{\dimexpr\labelsep+0.5\tabcolsep}optimizes labour\\{\labelitemi}\hspace{\dimexpr\labelsep+0.5\tabcolsep}\begin{tabular}[c]{@{}l@{}}maintenance events\\planned\end{tabular}\\{\labelitemi}\hspace{\dimexpr\labelsep+0.5\tabcolsep}\begin{tabular}[c]{@{}l@{}}optimize logistical\\support~~\end{tabular}\end{tabular} & \begin{tabular}{@{\labelitemi\hspace{\dimexpr\labelsep+0.5\tabcolsep}}l@{}}high setup cost\\\begin{tabular}[c]{@{}l@{}}savings not seen\\immediately\end{tabular}\\not feasible forall equipment~\end{tabular}                       \\
-    \bottomrule
-    \end{tabular}
+    \label{tab:PM_vs_RM}
+    \resizebox{\linewidth}{!}{%
+    \begin{tblr}{
+      cells = {t},
+      hlines,
+      hline{1,4} = {-}{0.08em},
+    }
+    \textbf{Maintenance} & \textbf{Advantages} & \textbf{Disadvantages}\\
+    \textbf{Reactive} & {low setup costs\\easy to setup} & {unscheduled downtime\\increases labour costs\\unoptimized resources\\increases manufacturing costs}\\
+    \textbf{Proactive} & {increases system availability\\minimizes logistical downtime\\reduces unscheduled downtime\\decreases costs\\\labelitemi\hspace{\dimexpr\labelsep+0.5\tabcolsep}optimizes parts\\\labelitemi\hspace{\dimexpr\labelsep+0.5\tabcolsep}optimizes labour\\maintenance is planned\\optimizes logistical support} & {high setup costs\\savings not seen immediately\\not feasible for all equipment}
+    \end{tblr}
     }
     \end{table}
