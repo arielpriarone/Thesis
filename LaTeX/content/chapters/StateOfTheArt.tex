@@ -8,6 +8,18 @@
     \label{fig:ind40}    
 \end{figure}
 
+The invention of the modern steam engine in the $18^{th}$ century, marked the beginning of the first industrial revolution. The second industrial revolution, in the $19^{th}$ century, was characterized by the introduction of mass production and the assembly line. The third industrial revolution, in the $20^{th}$ century, was characterized by the introduction of computers and automation. We are currently living in the $4^{th}$ industrial revolution, that embraces the industry $4.0$ vision. State of the art industries have small decentralized smart networks that make decisions automously. This is possible thanks to the \emph{Internet of Things} (\gls{iot}), smart sensors and actuators, and \emph{Big Data} analysis (\autoref{fig:ind40}). 
+The data to be monitored, varies \gls{wrt} the field of application. The most common are \cite{State_Art_Coanda_2020}:
+\begin{itemize}
+    \item Vibration Analysis - Efficient method for detecting issues in rotating equipment.
+    \item Acoustic Analysis - Detects or monitors cracks in pipes and other structures.
+    \item Lubrication Oils Analysis - Analyzes particles in oils to assess component wear.
+    \item Particle Analysis in Working Environment - Applied to equipment operating in fluid environments.
+    \item Corrosive Analysis - Ultrasound measurements to determine corrosion in various structures.
+    \item Thermal Analysis - Identifies overheating in mechanical and electrical systems.
+    \item Performance Analysis - Efficient technique for pinpointing operational problems in the system.
+\end{itemize}
+
 
 
 \paragraph*{Standard terminology}
@@ -41,3 +53,11 @@ The former approach leads to very high downtime \gls{wrt} the latter \cite{NIST}
 \gls{pdm} techniques can be divided also into \emph{passive} and \emph{active}. The former uses existing sensors or add new sensors to the system and this data are just analyzed. The latter, instead, uses actuators to perturb the system and then analyzes the response. The former is more common, because it is less expensive and less invasive. The latter, instead, is more accurate but it's application is limited to special applications. The mosto common field of application of active \gls{pdm} is electrical systems, where the perturbation can be applied by injecting a current or a voltage \cite{State_Art_Hasemian_2011}.
 
 In \cite{State_Art_Hasemian_2011}, the author gives also, as an example of active \gls{pdm}, the use the Loop Current Step Response \gls{lcsr} technique. In this test, an electrical signal in the form of a step change is sent to the sensor using a Wheatstone bridge, causing heating in the \gls{rtd} sensing element. The resulting exponential transient at the bridge output is analyzed to determine the \gls{rtd}'s response time. Beyond measuring response time, the \gls{lcsr} test can serve other purposes, such as detecting water levels in a pipe and ensuring the proper installation of temperature sensors in thermowells. Moreover, it aids in verifying timely responses to temperature changes and identifying potential degradation due to aging.
+
+\paragraph*{Models of degradation}
+In \cite{Pred_Maint_Tech_Grall}, the authors proposes a decision model that optimizes the inspection schedule and replacement time to minimize the cost of failure and the unavailability. This procedure is based on two variables: the \emph{replacement threshold} and the \emph{inspection schedule}. Most of the non \gls{cbm} policy are can be emulated with specific valuaes of these two variables. This is applied to gradually deteriorating single-unit systems. The degradation is simulated with a random model that also consider the time to perform maintenance for an arbitrary period.
+
+\paragraph*{Cloud based \gls{pdm}}
+A relatevly new structure for \gls{pdm} is proposed in \cite{CloudBased_Wang}. The authors investigates a low cost cloud based paradigm based on the concept of \emph{mobile agents}, implemented in embedded Linux \gls{os} with open sources libraries. Compared to the traditional client-server paradigm, this approach enhances the scalability and the flexibility of the system, reducing also the need for transmission of heavy raw data.
+
+The concept of mobile agents used in this implementation can be resumed as antonomous software entities that can migrate from one host to another, carrying their data and state \cite{CUCURULL2009712}.
