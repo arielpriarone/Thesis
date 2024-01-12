@@ -7,6 +7,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import numpy as np
 from scipy.fft import rfft, rfftfreq
+import matplotlib.ticker as ticker
 
 # Read the CSV files into dataframes
 df_features = pd.read_csv(r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv", sep='\t').dropna(axis=1)
@@ -22,7 +23,7 @@ colormap = cm.get_cmap('cool')
 i=0
 for timestamp in df_features['Timestamp'].unique():
     df_features_timestamp = df_features[df_features['Timestamp'] == timestamp]
-    if i < 20:
+    if i < 4:
         color = 'blue'
     elif i < 40:
         color = 'red'
@@ -42,7 +43,7 @@ fig = plt.figure()
 ax2 = fig.add_subplot(111)
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 20:
+    if i < 3:
         color = 'blue'
     elif i < 40:
         color = 'red'
@@ -53,7 +54,12 @@ for timestamp in df_timeseries['Timestamp'].unique():
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     ax2.plot(df_timeseries_timestamp.columns[1:], df_timeseries_timestamp.values[0, 1:], label=timestamp, color = color)
     i+=1
+ax2.xaxis.set_major_locator(ticker.AutoLocator())
+ax2.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+ax2.set_xlabel('time')
+ax2.set_ylabel('voltage')
 fig.tight_layout()
+
 
 # plot the spectrum of the timeseries
 fig, axs = plt.subplots()
@@ -81,6 +87,9 @@ for timestamp in df_timeseries['Timestamp'].unique():
 axs.set_xlabel('Frequency[Hz]')
 axs.set_ylabel('Amplitude')
 axs.set_yscale('log')
+
+mean_value = df_timeseries.iloc[:, 1:].mean().mean()
+print(mean_value)
 
 # Show the plots
 plt.show()

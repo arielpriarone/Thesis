@@ -10,7 +10,7 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 20           # number of snapshots to take for training
+n_train_snaps = 1           # number of snapshots to take for training
 n_features = 67             # number of features
 n_samples = 6000            # number of samples per snapshot
 
@@ -59,13 +59,15 @@ for i in range(n_train_snaps):
     floats_str = data[start_index:end_index].strip()
     current_features = [float(num) for num in floats_str.split()]
 
-    # Extract the array of features between the keywords "features:" and "end features"
+    # Extract the array of timeserie between the keywords
     start_keyword = "the time-domain sampled signal is: \r\n"
     end_keyword = "\t \r\ntime-domain end"
     start_index = data.find(start_keyword) + len(start_keyword)
     end_index = data.find(end_keyword)
     floats_str = data[start_index:end_index].strip()
-    current_timeserie = [float(num) for num in floats_str.split()]
+    current_timeserie = [(float(num)/4096)*3.3 for num in floats_str.split()] # scaling to volts
+    current_timeserie = [((float(num)/4096)*3300-1249.2058422851564)/193 for num in floats_str.split()] # scaling to g
+
 
     if np.size(current_features) != n_features:
         raise ValueError(f"The number of features received ({np.size(current_features)}) is not {n_features}.")
@@ -82,12 +84,12 @@ for i in range(n_train_snaps):
     # save snap to file .csv
     tab_sep_line = "\t".join([str(f) for f in current_features])
     snap_file.write(f"{current_timestamp}\t{tab_sep_line}\n")
-    console.print(f"Snapshot {i+1} saved to file.", style="magenta")
+    console.print(f"Snapshot {i+1}/{n_train_snaps} saved to file.", style="magenta")
 
     # save the time series to file .csv
     tab_sep_line = "\t".join([str(f) for f in current_timeserie])
     timeserie_file.write(f"{current_timestamp}\t{tab_sep_line}\n")
-    console.print(f"Timeserie {i+1} saved to file.", style="magenta")
+    console.print(f"Timeserie {i+1}/{n_train_snaps} saved to file.", style="magenta")
 
 
 # Close the serial port
