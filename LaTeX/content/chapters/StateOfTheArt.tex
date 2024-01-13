@@ -8,7 +8,7 @@
     \label{fig:ind40}    
 \end{figure}
 
-The invention of the modern steam engine in the $18^{th}$ century, marked the beginning of the first industrial revolution. The second industrial revolution, in the $19^{th}$ century, was characterized by the introduction of mass production and the assembly line. The third industrial revolution, in the $20^{th}$ century, was characterized by the introduction of computers and automation. We are currently living in the $4^{th}$ industrial revolution, that embraces the industry $4.0$ vision. State of the art industries have small decentralized smart networks that make decisions automously. This is possible thanks to the \emph{Internet of Things} (\gls{iot}), smart sensors and actuators, and \emph{Big Data} analysis (\autoref{fig:ind40}). 
+The invention of the modern steam engine in the $18^{th}$ century, marked the beginning of the first industrial revolution. The second industrial revolution, in the $19^{th}$ century, was characterized by the introduction of mass production and the assembly line. The introduction of computers and automation in factories, in the $20^{th}$ century, enabled the third industrial revolution. Nowadays, we are currently living in the $4^{th}$ industrial revolution, that embraces the industry $4.0$ vision. State of the art industries have small decentralized smart networks that make decisions automously. This is possible thanks to the \emph{Internet of Things} (\gls{iot}), smart sensors and actuators, and \emph{Big Data} analysis (\autoref{fig:ind40}). 
 The data to be monitored, varies \gls{wrt} the field of application. The most common are \cite{State_Art_Coanda_2020}:
 \begin{itemize}
     \item Vibration Analysis - Efficient method for detecting issues in rotating equipment.
@@ -22,7 +22,7 @@ The data to be monitored, varies \gls{wrt} the field of application. The most co
 
 
 
-\paragraph*{Standard terminology}
+\paragraph{Standard terminology}
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/StateArt/EN13306.png}
@@ -35,7 +35,7 @@ A standard terminology used for industrial maintenance is provided by european c
 The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{\gls{glo:onistemaintenance}}. All this definitions are reported in the {glossary}
 
 
-\paragraph*{\gls{rm} vs \gls{pm}}
+\paragraph{\gls{rm} vs \gls{pm}}
 \begin{figure}
     \centering
     \includegraphics[scale=0.9]{images/StateArt/lost_opportunities.pdf}
@@ -43,21 +43,33 @@ The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{
     \label{fig:lost_opportunities}
 \end{figure}
 
-As anticipated in the introduction, the two main approaches are \textbf{reactive maintenance} (\gls{glo:correctivemaintenance} for the standard), which restores system functionality, and \textbf{proactive maintenance} (\gls{glo:correctivemaintenance} for the standard), which preserves system functionality \cite{Rely_maint_book}.
+As anticipated in the introduction, the two main approaches are \textbf{reactive maintenance} (\gls{aka} \gls{glo:correctivemaintenance}), which restores system functionality, and \textbf{proactive maintenance} (\gls{aka} \gls{glo:preventivemaintenance}), which preserves system functionality \cite{Rely_maint_book}.
 
 The former approach leads to very high downtime \gls{wrt} the latter \cite{NIST}. For all the time a system is down, the company forfeits the opportunity to make a profit. This is called \emph{lost opportunity cost}. In reality, the total costs of downtime are even higher, because there are other costs associated with labor overhead and materials \cite{Lost_Opport_Cost}. The second approach optimizes both the pre-repair and post-repair logistics and, acting before the failure, can reduce also the total downtime. This benefit is shown in \autoref{fig:lost_opportunities}. Other than the downtime, a more complete comparison between the advantages and disadvantages of the two approaches is shown in \autoref{tab:PM_vs_RM}.
 
 \input{Tables/ProactiveVsReactive.tex}
 
-\paragraph*{Passive vs active maintenance}
+\paragraph{Passive vs active maintenance}
 \gls{pdm} techniques can be divided also into \emph{passive} and \emph{active}. The former uses existing sensors or add new sensors to the system and this data are just analyzed. The latter, instead, uses actuators to perturb the system and then analyzes the response. The former is more common, because it is less expensive and less invasive. The latter, instead, is more accurate but it's application is limited to special applications. The mosto common field of application of active \gls{pdm} is electrical systems, where the perturbation can be applied by injecting a current or a voltage \cite{State_Art_Hasemian_2011}.
 
 In \cite{State_Art_Hasemian_2011}, the author gives also, as an example of active \gls{pdm}, the use the Loop Current Step Response \gls{lcsr} technique. In this test, an electrical signal in the form of a step change is sent to the sensor using a Wheatstone bridge, causing heating in the \gls{rtd} sensing element. The resulting exponential transient at the bridge output is analyzed to determine the \gls{rtd}'s response time. Beyond measuring response time, the \gls{lcsr} test can serve other purposes, such as detecting water levels in a pipe and ensuring the proper installation of temperature sensors in thermowells. Moreover, it aids in verifying timely responses to temperature changes and identifying potential degradation due to aging.
 
-\paragraph*{Models of degradation}
+\paragraph{Models of degradation}
 In \cite{Pred_Maint_Tech_Grall}, the authors proposes a decision model that optimizes the inspection schedule and replacement time to minimize the cost of failure and the unavailability. This procedure is based on two variables: the \emph{replacement threshold} and the \emph{inspection schedule}. Most of the non \gls{cbm} policy are can be emulated with specific valuaes of these two variables. This is applied to gradually deteriorating single-unit systems. The degradation is simulated with a random model that also consider the time to perform maintenance for an arbitrary period.
 
-\paragraph*{Cloud based \gls{pdm}}
+Another approach for caracterizing the degradation of a system is to use a stochastic model hypotesizing the use of an imperfect monitoring system. The data from the sensors are used to update the model with a Bayesian approach. The study is tested on simulated data that emulate a decaying system using Markov chains \cite{CURCURU2010989}\cite{GALANTE19981361}\cite{State_Art_Coanda_2020}.
+
+\paragraph{Cloud based \gls{pdm}}
 A relatevly new structure for \gls{pdm} is proposed in \cite{CloudBased_Wang}. The authors investigates a low cost cloud based paradigm based on the concept of \emph{mobile agents}, implemented in embedded Linux \gls{os} with open sources libraries. Compared to the traditional client-server paradigm, this approach enhances the scalability and the flexibility of the system, reducing also the need for transmission of heavy raw data.
 
 The concept of mobile agents used in this implementation can be resumed as antonomous software entities that can migrate from one host to another, carrying their data and state \cite{CUCURULL2009712}.
+
+The authors \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analysed by the system are: broken bar, bowed rotor, unbalanced rotor, stator winding defect, defective bearing.
+
+\paragraph{Thermal imaging}
+Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being non invasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify 11 features of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, that has been enhanced to $84\%$ performing a graph cut.
+
+\paragraph{Algorithms for \gls{pdm}}
+To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two bain category of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}.
+
+\input{Tables/ML_algorithms.tex}

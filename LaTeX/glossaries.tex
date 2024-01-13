@@ -35,6 +35,8 @@
 \newacronym{uml}{UML}{Unsupervised Machine Learining}
 \newacronym{svm}{SVM}{Support Vector Machine}
 \newacronym{iforest}{iForest}{Isolation Forest}
+\newacronym{mlp}{MLP}{Multilayered Perceptront}
+\newacronym{dl}{DL}{\gls{glo:deep}}
 
 \newacronym{pc}{PC}{Personal Computer} %% miscellanea
 \newacronym{lcm}{LCM}{Least Common Multiple}
@@ -129,7 +131,7 @@
 
 \newglossaryentry{glo:lin-sep}{
     name={linearly separable},
-    description={Two sets of data points in a two-dimensional space are said to be linearly separable when they can be completely separable by a single straight line. In general, two groups of data points are separable in a n-dimensional space if they can be separated by an (n-1)-dimensional hyperplane.\cite{lazar2009linearly}}}
+    description={Two sets of data points in a two-dimensional space are said to be linearly separable when they can be completely separable by a single straight line. In general, two groups of data points are separable in a n-dimensional space if they can be separated by an (n-1)-dimensional hyperplane \cite{lazar2009linearly}.}}
 
 \newglossaryentry{glo:likelihood}{
     name={likelihood function},
@@ -137,57 +139,57 @@
 
 \newglossaryentry{glo:preventivemaintenance}{
     name={Preventive Maintenance},
-    description={Maintenance carried out at predetermined intervals or according to prescribed criteria. Intended to reduce the probability of failure or the degradation of the functioning of an item. \cite{EN13306:2018}}
+    description={Maintenance carried out at predetermined intervals or according to prescribed criteria. Intended to reduce the probability of failure or the degradation of the functioning of an item \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:predeterminedmaintenance}{
     name={Predetermined Maintenance},
-    description={Preventive maintenance carried out at established intervals of time or number of units of use, without previous condition investigation. \emph{Note: Intervals of times or number of unit of use may be established from knowledge of the failure mechanisms of the item.} \cite{EN13306:2018}}
+    description={Preventive maintenance carried out at established intervals of time or number of units of use, without previous condition investigation. \emph{Note: Intervals of times or number of unit of use may be established from knowledge of the failure mechanisms of the item\cite{EN13306:2018}.}}
 }
 
 \newglossaryentry{glo:conditionbasedmaintenance}{
     name={Condition Based Maintenance},
-    description={Preventive maintenance including a combination of condition monitoring, inspection, testing, analysis, and ensuing maintenance actions. \emph{Note: Condition monitoring and/or inspection and/or testing may be scheduled, on request, or continuous.} \cite{EN13306:2018}}
+    description={Preventive maintenance including a combination of condition monitoring, inspection, testing, analysis, and ensuing maintenance actions. \emph{Note: Condition monitoring and/or inspection and/or testing may be scheduled, on request, or continuous \cite{EN13306:2018}.} }
 }
 
 \newglossaryentry{glo:predictivemaintenance}{
     name={Predictive Maintenance},
-    description={Condition-based maintenance carried out following a forecast derived from repeated analysis or known characteristics and evaluation of the significant parameters of the degradation of the item. \cite{EN13306:2018}}
+    description={Condition-based maintenance carried out following a forecast derived from repeated analysis or known characteristics and evaluation of the significant parameters of the degradation of the item \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:correctivemaintenance}{
     name={Corrective Maintenance},
-    description={Maintenance carried out after fault recognition and intended to put an item into a state in which it can perform a required function. \cite{EN13306:2018}}
+    description={Maintenance carried out after fault recognition and intended to put an item into a state in which it can perform a required function \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:deferredcorrectivemaintenance}{
     name={Deferred Corrective Maintenance},
-    description={Corrective maintenance not immediately carried out after fault detection but is delayed in accordance with given rules. \cite{EN13306:2018}}
+    description={Corrective maintenance not immediately carried out after fault detection but is delayed in accordance with given rules \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:immediatecorrectivemaintenance}{
     name={Immediate Corrective Maintenance},
-    description={Corrective maintenance carried out without delay after a fault has been detected to avoid unacceptable consequences. \cite{EN13306:2018}}
+    description={Corrective maintenance carried out without delay after a fault has been detected to avoid unacceptable consequences \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:scheduledmaintenance}{
     name={Scheduled Maintenance},
-    description={Maintenance carried out in accordance with an established time schedule or established number of units of use. \emph{Note: Corrective deferred maintenance may also be scheduled.} \cite{EN13306:2018}}
+    description={Maintenance carried out in accordance with an established time schedule or established number of units of use. \emph{Note: Corrective deferred maintenance may also be scheduled \cite{EN13306:2018}.} }
 }
 
 \newglossaryentry{glo:remotemaintenance}{
     name={Remote Maintenance},
-    description={Maintenance of an item carried out without physical access by personnel to the item. \cite{EN13306:2018}}
+    description={Maintenance of an item carried out without physical access by personnel to the item \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:onlinemaintenance}{
     name={On Line Maintenance},
-    description={Maintenance carried out on the item while it is operating and without impact on its performance. \emph{Note: In this type of maintenance, it is important that all safety procedures are followed.} \cite{EN13306:2018}}
+    description={Maintenance carried out on the item while it is operating and without impact on its performance. \emph{Note: In this type of maintenance, it is important that all safety procedures are followed \cite{EN13306:2018}.} }
 }
 
 \newglossaryentry{glo:onistemaintenance}{
     name={On Site Maintenance},
-    description={Maintenance carried out at the location where the item is normally located. \cite{EN13306:2018}}
+    description={Maintenance carried out at the location where the item is normally located \cite{EN13306:2018}.}
 }
 
 \newglossaryentry{glo:operatormaintenance}{
@@ -197,6 +199,16 @@
 
 \newglossaryentry{glo:maintenancelevel}{
     name={Maintenance Level},
-    description={Level of maintenance. Maintenance task categorization by complexity. \cite{EN13306:2018}}
+    description={Level of maintenance. M \cite{EN13306:2018}.aintenance task categorization by complexity \cite{EN13306:2018}.}
+}
+
+\newglossaryentry{glo:deep}{
+    name={Deep Learning},
+    description={a class of algorithms which are based on artificial neural networks optimized to work with unstructured data such as images, voice, videos and text \cite{KOTU2019307}.}
+}
+
+\newglossaryentry{glo:trad_ml}{
+    name={Traditional \gls{ml}},
+    description={algorithm learning from data  to perform a task without being explicitly programmed, excluding deep learning algorithms.}
 }
     
