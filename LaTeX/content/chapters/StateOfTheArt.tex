@@ -45,7 +45,7 @@ The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{
 
 As anticipated in the introduction, the two main approaches are \textbf{reactive maintenance} (\gls{aka} \gls{glo:correctivemaintenance}), which restores system functionality, and \textbf{proactive maintenance} (\gls{aka} \gls{glo:preventivemaintenance}), which preserves system functionality \cite{Rely_maint_book}.
 
-The former approach leads to very high downtime \gls{wrt} the latter \cite{NIST}. For all the time a system is down, the company forfeits the opportunity to make a profit. This is called \emph{lost opportunity cost}. In reality, the total costs of downtime are even higher, because there are other costs associated with labor overhead and materials \cite{Lost_Opport_Cost}. The second approach optimizes both the pre-repair and post-repair logistics and, acting before the failure, can reduce also the total downtime. This benefit is shown in \autoref{fig:lost_opportunities}. Other than the downtime, a more complete comparison between the advantages and disadvantages of the two approaches is shown in \autoref{tab:PM_vs_RM}.
+The former approach leads to very high downtime \gls{wrt} the latter \cite{NIST}. For all the time a system is down, the company forfeits the opportunity to make a profit. This is called \emph{lost opportunity cost}. In reality, the total costs of downtime are even higher, because there are other costs associated with labor overhead and materials \cite{Lost_Opport_Cost}. The second approach optimizes both the pre-repair and post-repair logistics and, acting before the failure, can reduce also the total downtime. A qualitative diagram of this benefits is shown in \autoref{fig:lost_opportunities}. Other than the downtime, a more complete comparison between the advantages and disadvantages of the two approaches is shown in \autoref{tab:PM_vs_RM}.
 
 \input{Tables/ProactiveVsReactive.tex}
 
@@ -67,9 +67,27 @@ The concept of mobile agents used in this implementation can be resumed as anton
 The authors \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analysed by the system are: broken bar, bowed rotor, unbalanced rotor, stator winding defect, defective bearing.
 
 \paragraph{Thermal imaging}
-Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being non invasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify 11 features of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, that has been enhanced to $84\%$ performing a graph cut.
+Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being non invasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify $11$~features of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, that has been enhanced to $84\%$ performing a graph cut.
 
 \paragraph{Algorithms for \gls{pdm}}
-To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two bain category of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}.
+To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two bain category of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}. \gls{ann}, \gls{dt}, \gls{svm}, \gls{knn}, \gls{pf}, \gls{art} and \gls{som} are \gls{ml} algorithms, whlile \gls{ae}, \gls{cnn}, \gls{rnn}, \gls{dbn}, \gls{gan}, \gls{tl} and \gls{dlr} are deep learnign algorithms. The most common field of application of each algorithm is also reported in the table.
 
 \input{Tables/ML_algorithms.tex}
+
+\paragraph*{Fault / Novelty detection}
+\subparagraph*{Fault detection}
+If there is a knowledge of the peculiar features of most faults, the algorithms can be trained to detect them. As anticipated, this is called \emph{fault detection} (\gls{fd}). For example, if the monitored system is a ball bearing, it is well known in the leterature that there are four distinct fault modes, each of which has a specific frequency signature illustrated in \autoref{fig:bearing_faults} \cite{RollingSignature}:
+
+\begin{eqnarray}
+    \text{Ballpass frequency, outer race (\gls{bpfo})}&=& \frac{n\cdot f_r}{2}\left\{1-\frac{d}{D} \cos \phi \right\}\\
+    \text{Ballpass frequency, inner race (\gls{bpfi})}&=& \frac{n\cdot f_r}{2}\left\{1+\frac{d}{D} \cos \phi \right\}\\
+    \text{Fundamental train frequency, cage speed (\gls{ftf})}&=& \frac{f_r}{2}\left\{1-\frac{d}{D} \cos \phi \right\}\\
+    \text{Ball (roller) spin frequency (\gls{bsf})}&=& \frac{D}{2\cdot d}\left\{1-(\frac{d}{D} \cos \phi )^2\right\}
+\end{eqnarray}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=.9\textwidth]{images/StateArt/bearing.jpg}
+    \caption{Typycal bearing fault signals \cite{RollingSignature}}
+    \label{fig:bearing_faults}
+\end{figure}
