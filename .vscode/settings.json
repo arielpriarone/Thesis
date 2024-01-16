@@ -7,5 +7,6 @@
         "**/README.md",
         "**/*.txt",
         "**/*.tex"
-    ]
+    ],
+    "grammarly.config.suggestionCategories.missingSpaces": "off"
 }
