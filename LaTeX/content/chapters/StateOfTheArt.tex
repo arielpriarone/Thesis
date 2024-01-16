@@ -30,7 +30,7 @@ The data to be monitored varies \gls{wrt} the field of application. The most com
     \label{fig:standard_terminology}
 \end{figure}
 
-A standard terminology used for industrial maintenance is provided by the European committee for standardization with the standard \texttt{EN13306:2018} \cite{EN13306:2018}. The terminology is summarized in \autoref{fig:standard_terminology}. The most advanced maintenance technique family is \textbf{\gls{glo:conditionbasedmaintenance}}. This category includes the most modern \textbf{\gls{glo:predictivemaintenance}}. Note that the definition does not imply that the \quoted{monitoring} of the system must be continuous, it may also be scheduled or not even scheduled.
+A standard terminology used for industrial maintenance is provided by the European committee for standardization with the standard \texttt{EN13306:2018} \cite{EN13306:2018}. The terminology is summarized in \autoref{fig:standard_terminology}. The most advanced maintenance technique family is \textbf{\gls{glo:conditionbasedmaintenance}}. This category includes the most modern \textbf{\gls{glo:predictivemaintenance}}. Note that the definition does not imply that the \quoted{monitoring} of the system must be continuous, it may also be scheduled or not even scheduled, and performed both manually of by a program.
 
 The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{\gls{glo:onistemaintenance}}. All these definitions are reported in the {glossary}
 
@@ -57,14 +57,14 @@ In \cite{State_Art_Hasemian_2011}, the author gives also, as an example of activ
 \paragraph{Models of degradation}
 In \cite{Pred_Maint_Tech_Grall}, the authors propose a decision model that optimizes the inspection schedule and replacement time to minimize the cost of failure and unavailability. This procedure is based on two variables: the \emph{replacement threshold} and the \emph{inspection schedule}. Most of the non \gls{cbm} policy can be emulated with specific values of these two variables. This is applied to gradually deteriorating single-unit systems. The degradation is simulated with a random model that also considers the time to perform maintenance for an arbitrary period.
 
-Another approach for characterizing the degradation of a system is to use a stochastic model hypothesizing the use of an imperfect monitoring system. The data from the sensors are used to update the model with a Bayesian approach. The study is tested on simulated data that emulate a decaying system using Markov chains \cite{CURCURU2010989}\cite{GALANTE19981361}\cite{State_Art_Coanda_2020}.
+Another approach for characterizing the degradation of a system is to use a stochastic model hypothesizing the use of an imperfect monitoring system. The data from the sensors are used to update the model with a Bayesian approach. The study is tested on simulated data that emulate a decaying system using Markov chains \cite{CURCURU2010989}\cite{GALANTE19981361}.
 
 \paragraph{Cloud based \gls{pdm}}
 A relatively new structure for \gls{pdm} is proposed in \cite{CloudBased_Wang}. The authors investigate a low-cost cloud-based paradigm based on the concept of \emph{mobile agents}, implemented in embedded Linux \gls{os} with open-source libraries. Compared to the traditional client-server paradigm, this approach enhances the scalability and flexibility of the system, reducing also the need for transmission of heavy raw data.
 
 The concept of mobile agents used in this implementation can be resumed as autonomous software entities that can migrate from one host to another, carrying their data and state \cite{CUCURULL2009712}.
 
-The authors \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exhibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analyzed by the system are: broken bar, bowed rotor, unbalanced rotor, stator winding defect, and defective bearing.
+The authors of \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exhibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analyzed by the system are: broken bar, bowed rotor, unbalanced rotor, stator winding defect, and defective bearing.
 
 In the study \cite{calabreseRUL}, a cloud-based \gls{pdm} system is proposed and tested on a gearbox in a bench test. This study performs anomaly detection, fault detection, and \gls{rul} prediction. Thw \gls{rul} predictions are made by selecting a health indicator that is strongly correlated with the remaining life of the component.
 
@@ -136,7 +136,7 @@ The first two terminologies are adopted also in the technical review on methods 
 
 The three distinct concepts are illustrated in \autoref{fig:pattern_types}.
 
-The task of detecting the novelty is often associated with the task of predicting the remaining useful life (\gls{rul}), before the fault becomes fatal for the component.
+The task of detecting the novelty is often associated with the task of predicting the \gls{glo:rul} (\gls{rul}), before the fault becomes fatal for the component.
 
 \begin{figure}
     \centering
@@ -144,6 +144,24 @@ The task of detecting the novelty is often associated with the task of predictin
     \caption{Types of patterns \cite{NoveltyTech}}
     \label{fig:pattern_types}
 \end{figure}
+
+A novel framework for performing \gls{nd}, \gls{fd} and \gls{rul} predictions has been proposed by researchers at PIC4SeR\footnote{\url{https://pic4ser.polito.it/}} in \cite{Umberto}. It is based on several autonomous agents working together on a database.  The authors aimed to perform \gls{pdm} in a scenario in which there is no physical knowledge and no prior data collections about the maintained system. The framework is meant to be set in a \emph{training phase} on a new machine, to collect the \emph{normal} data and train the \gls{ml} model. After that, it will continuously work in \emph{testing mode}: the framework will compute a prediction error on the current data that is used as a novelty metric.
+
+The features are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Rree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the framework can decide which regressor to use in each specific case. 
+
+The model can be retrained after a novelty has been detected, to update the model with the new data. Even if the framework is meant to be trained on a new machine, it can be used also on a machine that has been in service for years: the faults already present will be part of the training database, but the predictions will still be useful because of the tendency of the faults to worsen over time.
+
+The \gls{rul} predictions are made by averaging the prediction error in two time intervals, and then performing a linear regression on the two points. 
+
+This framework has been successfully tested on:  
+\begin{itemize}
+    \item a synthetic dataset that the authors created to emulate a bearing fault (using the definitions of the 4 typical faults \cite{RollingSignature}).
+    \item a real dataset of bearing faults provided by the Center for Intelligent Maintenance Systems \cite{IMSpaper}
+    \item a laboratory test on spring probes
+\end{itemize}
+
+In the first two cases, the framework was able to detect the novelty and predict the \gls{rul}, in the laboratory test, it was able to recognise the new data as \emph{healthy} because the probes were not yet damaged.
+
 
 \paragraph*{Clustering}
 The most common unsupervised task is clustering. In recent years, the volume of data collected in a typical factory has increased dramatically. Clustering is a collection of tools to extract information from huge amounts of unlabeled data. 

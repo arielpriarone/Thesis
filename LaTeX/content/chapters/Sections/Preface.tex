@@ -1,19 +1,19 @@
 \section{Preface}
 \label{sec:preface}
 
-Imagine being the owner of a piece of technology. It can be any physical device. Without maintenance, it is unavoidable that, after a certain amount of time of usage, it will have some sort of malfunction.
-To overcome this problem, usually maintenance work is planned and performed by a team of skilled technicians. 
+Imagine being the owner of a piece of technology. It can be any physical device. Without maintenance, it is unavoidable that, after a certain amount of time of usage it will have some sort of malfunction.
+To overcome this problem, usually, maintenance work is planned and performed by a team of skilled technicians. 
 
 The simplest way of executing maintenance is to fix the device when it breaks. This is called \emph{reactive maintenance} (\gls{rm}). This has been done since forever, and it is still a very popular approach today, but it has a lot of drawbacks, ranging from the high downtime for repair, and the logistics of the spare parts etc.
 
-The other family of maintenance techniques is called \emph{proactive maintenance} (\gls{pm}). All those techniques share the property of being applied before the device shows a malfunction. This is a very broad category, and it includes a lot of different techniques, most of which will be described in this thesis.
+The other family of maintenance techniques is called \emph{preventive (or proactive) maintenance} (\gls{pvm}). All those techniques share the property of being applied before the device shows a malfunction. This is a very broad category, and it includes a lot of different techniques, most of which will be described in this thesis.
 
-Back to the example, the owner of the device may want to avoid fixing it when it has already failed as much as possible, so the first improvement could be to perform maintenance periodically (on a schedule). This is called \emph{preventive maintenance} (\gls{pvm}). It's basically the same approach that every car owner uses to minimize the risk of the vehicle breaking down in the middle of the road. 
+Back to the example, the owner of the device may want to avoid fixing it when it has already failed as much as possible, so the first improvement could be to perform maintenance periodically (on a schedule). This is called \emph{predetermined maintenance}. It's basically the same approach that every car owner uses to minimize the risk of the vehicle breaking down in the middle of the road. 
 The owner may want to take the technique a step further and seek some sort of guidance on deciding when to perform maintenance. A very intuitive approach is to simply ask the skilled technicians to inspect all the devices very often to try to understand if something is wrong without interfering with the normal operation of the device.
 
 If a technician has enough experience, he may be able to detect the vast majority of the problems before they become critical. He may do that simply using his senses, for example by listening to the sound of the device, or by touching it to feel how much it vibrates, how hot is it and so on. 
 
-I would like to share, as a real-life example, what I witnessed during the commissioning of a new power plant. I remember that the commissioning manager (that is a chemist) was able to detect if the demineralization unit was working properly or not by simply tasting the water it produced, before the necessary instruments were installed.
+\maskk{I would like to share, as a real-life example, what I witnessed during the commissioning of a new power plant. I remember that the commissioning manager (that is a chemist) was able to detect if the demineralization unit was working properly or not by simply tasting the water it produced, before the necessary instruments were installed.}
 
 This naive approach can be enhanced by using a large number of sensors to monitor the most critical parameters of the device. In this case, the technician will train himself more on the data of the sensors, rather than on inspecting the device directly. 
 
@@ -27,7 +27,7 @@ A workaround to this problem is to apply an Unsupervised Machine Learning (\gls{
 \paragraph*{}
 To visualize this evolution of maintenance approaches, let's have a look to \autoref{fig:earlysteamengine}. This is a purely mechanical device, so the only way to detect a malfunction before it causes a failure is by trusting the \quoted{gut feeling} of the operator. Moving on, the device in \autoref{fig:modernsteamengine} is also a steam engine, but it is equipped with some analogue gauges. In this case is it possible to define some thresholds for the readings that are indicative of a malfunction and look at the time evolution of the values. The measure of the sensor is immediatly displayed to the operator. Moving into present days, the device in \autoref{fig:controlroom} is a state of the art control room. The data from the sensors are elaborated by a computer and displayed to the operator on screens. This allows the computer to run algorithms on the sensor data.
 
-\begin{figure}[htbp]
+\begin{figure}
     \centering
     \begin{subfigure}{0.3\textwidth}  % <----
         \includegraphics[width=\textwidth]{images/Intro/earlysteamengine.jpg}
@@ -36,7 +36,7 @@ To visualize this evolution of maintenance approaches, let's have a look to \aut
     \end{subfigure}
     \begin{subfigure}{0.3\textwidth}  % <----
         \includegraphics[width=\textwidth]{images/Intro/modernsteamengine.jpg}
-        \caption{steam engine \cite{triple_expansion_engine}}
+        \caption{modern steam \\ engine \cite{triple_expansion_engine}}
         \label{fig:modernsteamengine}
     \end{subfigure}
     \begin{subfigure}{0.3\textwidth}  % <----
