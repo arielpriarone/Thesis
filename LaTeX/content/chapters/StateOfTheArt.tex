@@ -66,6 +66,9 @@ The concept of mobile agents used in this implementation can be resumed as anton
 
 The authors \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analysed by the system are: broken bar, bowed rotor, unbalanced rotor, stator winding defect, defective bearing.
 
+In the study \cite{calabreseRUL}, a cloud based \gls{pdm} system is proposed and tested on gear box in a bench test. This study perrorms anomaly detection, fault detection, and \gls{rul} prediction. Thw \gls{rul} predictions are made selecting a health indicator that is strongly correlated with the remaining life of the component.
+
+
 \paragraph{Thermal imaging}
 Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being non invasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify $11$~features of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, that has been enhanced to $84\%$ performing a graph cut.
 
@@ -133,9 +136,20 @@ The first two terminology are adopted also in the technical review on methods \c
 
 The three distinct concept are illustrated in \autoref{fig:pattern_types}.
 
+The task of detecting the novelty is often associated with the task of predictiong the remaining useful life (\gls{rul}), before the fault become fatal for the compoment.
+
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/StateArt/patterns.png}
     \caption{Types of patterns \cite{NoveltyTech}}
     \label{fig:pattern_types}
 \end{figure}
+
+\paragraph*{Clustering}
+The most common unsupervised task is clustering. In recent years, the volume of data collected in a typical factory has increased dramatically. Clustering is a collection of tools to extract information from huge amount of unlabeled data. 
+
+Theese algorithms can be divided in: \emph{partitioning-based} where the task is to define the boundaries between the clusters; \emph{hierarchical-based} that shows the relation between each pair of clusters depending on the medium of similarity or dissimilarity; \emph{density-based} that describes the clusters as a dense region of data points separated by low-density regions; \emph{grid-based} that apply the trasformation of the feature space into a grid before proceeeding with the clustering and \emph{model-based} that use a statistical or deep-learnign model to describe the data.
+
+Recently, the survey \cite{Abla2019survey} provides a comprehensive overview of the most common clustering algorithms used in industrial context, with reference studies. The comparision of the study is reported in \autoref{tab:clustcomparison}.
+
+{\small\input{Tables/ClusteringComparison.tex}}

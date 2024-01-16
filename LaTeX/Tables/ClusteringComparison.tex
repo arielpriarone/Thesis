@@ -1,0 +1,48 @@
+% \usepackage{color}
+% \usepackage{tabularray}
+\begin{longtblr}[
+    caption = {Clustering algorithms comparison \cite{Abla2019survey}. $n$ = number of samples, $k$ = number of clusters, $d$ = number of features.},
+    label = {tab:clustcomparison},
+  ]{
+    cell{2}{1} = {t},
+    cell{2}{2} = {t},
+    cell{3}{1} = {t},
+    cell{3}{2} = {t},
+    cell{5}{1} = {t},
+    cell{5}{2} = {t},
+    cell{6}{1} = {t},
+    cell{6}{2} = {t},
+    cell{7}{1} = {t},
+    cell{7}{2} = {t},
+    cell{8}{1} = {t},
+    cell{8}{2} = {t},
+    cell{9}{1} = {t},
+    cell{9}{2} = {t},
+    cell{10}{1} = {t},
+    cell{10}{2} = {t},
+    hline{1,23} = {-}{0.08em},
+    hline{2} = {-}{},
+  }
+  \textbf{Algorithm} & \textbf{Volume} & {\textbf{High}\\\textbf{dim.}} & {\textbf{Cluster}\\\textbf{shape}} & \textbf{Complexity} & \textbf{n. param.}\\
+  K-means & any & no & non-convex & $\mathcal{O}(nkd)$ & 1\\
+  K-modes & large & yes & non-convex & $\mathcal{O}(n)$ & 1\\
+  K-medioids & small & yes & non-convex & $\mathcal{O}(n^2dt)$ & 1\\
+  PAM & small & no & non-convex & $\mathcal{O}(k(n-k)^2)$ & 1\\
+  CLARA & large & no & non-convex & $\mathcal{O}(k(40+k)^2+$&1\\
+  &&&&$+k(n-k))$ & \\
+  Ward & any & no & non-convex & $\mathcal{O}(n)$ & 1\\
+  BIRCH & large & no & non-convex & $\mathcal{O}(n)$ & 2\\
+  CURE & large & yes & any & $\mathcal{O}(n^2\log n)$ & 2\\
+  ROCK & large & no & any & $\mathcal{O}(n^2+n^2 \log n)$ & 1\\
+  Chamelon & large & yes & any & $\mathcal{O}(n^2)$ & 3\\
+  DBSCAN & large & no & any & $\mathcal{O}(n \log n)$ & 2\\
+  OPTICS & large & no & any & $\mathcal{O}(n \log n)$ & 2\\
+  DENCLUE & large & yes & any & $\mathcal{O}(D)$ & 2\\
+  Wavecluster & large & no & any & $\mathcal{O}(n)$ & 3\\
+  STING & large & no & any & $\mathcal{O}(k)$ & 1\\
+  CLIQUE & large & yes & any & $\mathcal{O}(ck+mk)$ & 2\\
+  OPTGRID & large & yes & any & $\mathcal{O}(nd \log n)$ & 3\\
+  EM & large & yes & non-convex & $\mathcal{O}(knp)$ & 3\\
+  COBWEB & small & no & non-convex & $\mathcal{O}(n^2)$ & 1\\
+  SOM & small & yes & non-convex & $\mathcal{O}(n^2m)$ & 2\\
+  \end{longtblr}
