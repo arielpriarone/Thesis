@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import src
+np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
 src.vis.set_matplotlib_params()
 # %% generate data
-n_samples=400
+n_samples=40000
 x=np.linspace(-2,4,n_samples)
 noise=np.random.normal(0,1,n_samples)
 
@@ -56,7 +57,8 @@ Yhat = np.array([THETA[3,1]*np.sin(xi)+THETA[4,1]*np.cos(xi)**3 for xi in np.lin
 
 
 # %% plot data
-fig = plt.figure('figure1')#,figsize=[15, 15])
+fig = plt.figure()#,figsize=[15, 15])
+fig.set_size_inches(fig.get_size_inches()[0]*0.5, fig.get_size_inches()[1]*1)
 
 ax = plt.axes(projection='3d')
 print("THETA: ", THETA)
@@ -64,11 +66,44 @@ print("shape of x: ", x.shape)
 print("shape of yhat: ", yhat.shape)
 print("shape of Yhat: ", Yhat.shape)
 
-ax.scatter(x,y,y1,s=1,c='black', label='Data points')
-ax.plot(np.linspace(-2,4,1000),yhat,Yhat,c='red',label='Regression line')
+ax.scatter(x, y, y1, s=1, c='black', label='Data points')
+ax.plot(np.linspace(-2, 4, 1000), yhat, Yhat, c='red', label='Regression line')
 ax.set_xlabel("Feature 1")
 ax.set_ylabel("Feature 2")
 ax.set_zlabel("Feature 3")
+
+plt.tight_layout()
+plt.tight_layout()
+plt.tight_layout()
+fig.subplots_adjust(top=0.949,
+bottom=0.141,
+left=0.0,
+right=0.828,
+hspace=0.2,
+wspace=0.2)
+
+fig = plt.figure()#,figsize=[15, 15])
+fig.set_size_inches(fig.get_size_inches()[0]*0.5, fig.get_size_inches()[1]*1)
+
+ax = plt.axes(projection='3d')
+print("THETA: \n", THETA)
+print("shape of x: ", x.shape)
+print("shape of yhat: ", yhat.shape)
+print("shape of Yhat: ", Yhat.shape)
+
+ax.scatter(x, y, y1, s=1, c='black', label='Data points')
+ax.set_xlabel("Feature 1")
+ax.set_ylabel("Feature 2")
+ax.set_zlabel("Feature 3")
+plt.tight_layout()
+plt.tight_layout()
+plt.tight_layout()
+fig.subplots_adjust(top=0.949,
+bottom=0.141,
+left=0.0,
+right=0.828,
+hspace=0.2,
+wspace=0.2)
 
 plt.show()
 # %%
