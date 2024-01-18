@@ -8,7 +8,11 @@
     \label{fig:gauss_pdf}
 \end{figure}
 
-The \autoref{fig:gauss_pdf} illustrates a Gaussian distribution probability density function (\gls{pdf}), also known as normal distribution. The peak represents the mean $\mu$, while the spread is determined by the standard deviation $\sigma$.
+The \autoref{fig:gauss_pdf} illustrates a Gaussian distribution probability density function (\gls{pdf}), also known as normal distribution. The peak represents the mean $\mu$, while the spread is determined by the standard deviation $\sigma$. The equation of the \gls{pdf} is the following:
+
+$$
+f(x) = \frac{1}{\sigma \sqrt{2\pi} } e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}
+$$
 
 \paragraph*{}
 A Gaussian Mixture Model is a probabilistic model that assumes that the data are generated from a mixture of several Gaussian distributions. Depending on the parameters of a Gaussian distribution (mean and variance) on each axis (Features), the data generated from it in the $\gls{sym:feats}$-dimensional space will have a shape that resembles an ellipsoid with a center and an orientation.

@@ -1,2 +1,129 @@
-\chapter{Supervised Learining}
+\chapter{Machine Learining}
 \label{ch:MachineLearning}
+
+Before diving into the description of the unsupervised algorithms used for the development of this thesis work presented in \autoref{ch:Unsupervised}, this chapter aim to be an introduction of \emph{Machine Learning} (\gls{ml}) in general.
+
+An early but useful definition of Machine Learning was given by Arthur Samuel in 1959: \quoted{\emph{Machine learning is the field of study that gives computers the ability to learn without being explicitly programmed.}} A more recent definition is the following, from Tom Mitchell: \quoted{\emph{A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.}} \citepage{hands-on-geron2022}{4}
+
+So, in general, the ingredients of \gls{ml} are:
+\begin{itemize}
+    \item some data linked to some task
+    \item a task to be performed
+    \item an algorithm that learns how to perform the task on specific data
+\end{itemize}
+
+The data are usually preprocessed before giving them to the algorithm. The processed data are called \emph{features}. This is a generic term that refere to the information content of the data.
+For example, if the data are recordings of temperatures over time, the features could be the mean, the standard deviation, the minimum, and the maximum of the temperature or, in some cases if the algorithm is able to learn directly from them, the raw data themself.
+
+The tasks can be divided into main categories:
+\begin{itemize}
+    \item regression: the algorithm is trained to measure the relation between the value of output variables and corresponding values of other input variables;
+    \item classification: the algorithm is trained to assign a label to a new instance, based on the training dataset of labeled instances;
+    \item clustering: the algorithm is trained to group similar instances together into clusters.
+    \item anomaly detection: the algorithm is trained to identify instances that are different from known previous instances.
+\end{itemize}
+
+\section{Regression}
+\label{sec:Regression}
+
+
+\subsection{Least Squares}
+\label{subsec:LS}
+
+Lets consider a set of $m$ observations of a variable $y \in \mathbb{R}^{n_y}$ (output features) that depends on a variable $x \in \mathbb{R}^{n_x}$ (input features) and a set of $n_f \cdot n_y$ parameters $\theta \in \mathbb{R}^{n_f \times n_y}$.
+
+Supose to know that the output features are linked to the imput features with some functions linear in the parameters $\theta$, so that:
+\begin{multline*}
+    \begin{bmatrix}
+        y_1 & y_2 & \dots & y_{n_y} 
+    \end{bmatrix}
+    =\\
+        \begin{bmatrix}
+            f_1(x_1, \dots, x_{n_x}) & f_2(x_1, \dots, x_{n_x}) & \dots & f_{n_y}(x_1, \dots, x_{n_x}) \\
+        \end{bmatrix}
+        \cdot
+        \begin{bmatrix}
+            \theta_{1,1}  & \dots & \theta_{1,n_y} \\
+            \theta_{2,1}  & \dots & \theta_{2,n_y} \\
+            \vdots & \ddots & \vdots \\
+            \theta_{n_f,1}  & \dots & \theta_{n_f,n_y} \\
+        \end{bmatrix}
+\end{multline*}
+
+Where all the $f_i$ are any known functions, $y_i$ and $x_i$ are known data and $\theta_{i,j}$ are the parameters to be found.
+
+Considering the $m$ observations, the previous equation can be extended as:
+
+\begin{multline*}
+    \begin{bmatrix}
+        y_{1,1} & y_{1,2} & \dots & y_{1,n_y} \\
+        y_{2,1} & y_{2,2} & \dots & y_{2,n_y} \\
+        \vdots & \ddots & \vdots \\
+        y_{m,1} & y_{m,2} & \dots & y_{m,n_y} \\
+    \end{bmatrix}
+    =\\
+        \begin{bmatrix}
+            f_1(x_{1,1}, \dots, x_{1,n_x}) & \dots & f_{n_y}(x_{1,1}, \dots, x_{1,n_x}) \\
+            f_1(x_{2,1}, \dots, x_{2,n_x}) & \dots & f_{n_y}(x_{2,1}, \dots, x_{2,n_x}) \\
+            \vdots  & \ddots & \vdots \\
+            f_1(x_{m,1}, \dots, x_{m,n_x}) & \dots & f_{n_y}(x_{m,1}, \dots, x_{m,n_x}) \\
+        \end{bmatrix}
+        \cdot
+        \begin{bmatrix}
+            \theta_{1,1}  & \dots & \theta_{1,n_y} \\
+            \theta_{2,1}  & \dots & \theta_{2,n_y} \\
+            \vdots & \ddots & \vdots \\
+            \theta_{n_f,1}  & \dots & \theta_{n_f,n_y} \\
+        \end{bmatrix}
+\end{multline*}
+
+
+Rewriting the previous equation in a more compact form:
+
+\begin{equation}
+    \begin{bmatrix}
+        \vect{y}_1 \\
+        \vect{y}_2 \\
+        \vdots \\
+        \vect{y}_m \\
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+        f_1(\vect{x}_1) & f_2(\vect{x}_1) & \dots & f_{n_y}(\vect{x}_1) \\
+        f_1(\vect{x}_2) & f_2(\vect{x}_2) & \dots & f_{n_y}(\vect{x}_2) \\
+        \vdots & \ddots & \vdots \\
+        f_1(\vect{x}_m) & f_2(\vect{x}_m) & \dots & f_{n_y}(\vect{x}_m) \\
+    \end{bmatrix}
+    \cdot
+    \begin{bmatrix}
+        \theta_{1,1}  & \dots & \theta_{1,n_y} \\
+        \theta_{2,1}  & \dots & \theta_{2,n_y} \\
+        \vdots & \ddots & \vdots \\
+        \theta_{n_f,1}  & \dots & \theta_{n_f,n_y} \\
+    \end{bmatrix}
+\end{equation}
+
+That, in the most compact form, becomes:
+
+\begin{equation}
+    \vect{Y} = \vect{\Phi}(\vect{X}) \cdot \vect{\Theta}
+\end{equation}
+
+In close form, there is a solution $\vect{\Theta_{LS}}$, for estimating the parameters that minimizes the error between the estimated output $\vect{Y_{LS}} = \vect{\Phi(\vect{X})}\vect{\Theta_{LS}}$ and the real output $\vect{Y_{}}$, that is known. Lets see, in an intuitive way:
+\begin{eqnarray*}
+    \vect{Y} &=& \vect{\Phi}(\vect{X}) \cdot \vect{\Theta_{LS}} \\
+    \vect{\Phi}(\vect{X})^T\vect{Y} &=& \underbrace{\vect{\Phi}(\vect{X})^T\vect{\Phi}(\vect{X})}_{\text{square}\implies \exists \text{ inverse}}\cdot \vect{\Theta_{LS}}\\
+    (\vect{\Phi}(\vect{X})^T\vect{\Phi}(\vect{X}))^{-1}\vect{\Phi}(\vect{X})^T\vect{Y} &=& \vect{\Theta_{LS}}\\
+    \text{pinv}(\vect{\Phi}(\vect{X}))\vect{Y} &=& \vect{\Theta_{LS}}
+\end{eqnarray*}
+
+In fact, it is known that $\vect{\Theta_{LS}} = \text{pinv}(\vect{\Phi}(\vect{X}))\vect{Y}$ is the solution of the following minimization problem:
+
+\begin{equation}
+    \vect{\Theta_{LS}} = \argmin{\vect{\Theta} \in \mathbb{R}^{n_f \times n_y}}{\norm{\vect{Y}-\vect{\Phi}(\vect{X})\vect{\Theta}}_2^2}
+\end{equation}
+
+That is why this method is called \emph{Least Squares} (\gls{ls}). It' is proven that if the data $\vect{Y}$ affected my white noise, and the data $\vect{X}$ are known precisely, the solution converges to the real parameters $\vect{\Theta}_{\text{true}}$ when the number of observations $m$ goes to infinity.
+\begin{equation}
+    \lim_{m \to \infty} \vect{\Theta_{LS}} = \vect{\Theta}_{\text{true}}
+\end{equation}
