@@ -23,11 +23,11 @@ colormap = cm.get_cmap('cool')
 i=0
 for timestamp in df_features['Timestamp'].unique():
     df_features_timestamp = df_features[df_features['Timestamp'] == timestamp]
-    if i < 4:
+    if i < 2:
         color = 'blue'
-    elif i < 40:
+    elif i < 4:
         color = 'red'
-    elif i < 60:
+    elif i < 30:
          color = 'green'
     else:
         color = 'orange'  
@@ -60,6 +60,27 @@ ax2.set_xlabel('time')
 ax2.set_ylabel('voltage')
 fig.tight_layout()
 
+#Create a plot for dataframe of timeseries
+fig = plt.figure()
+ax2 = fig.add_subplot(111)
+i=0
+for timestamp in df_timeseries['Timestamp'].unique():
+    if i < 3:
+        color = 'blue'
+    elif i < 40:
+        color = 'red'
+    elif i < 60:
+         color = 'green'
+    else:
+        color = 'orange'  
+    df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
+    ax2.plot(df_timeseries_timestamp.columns[1:], np.divide(df_timeseries_timestamp.values[0, 1:]-1.235,0.24), label=timestamp, color = color)
+    i+=1
+ax2.xaxis.set_major_locator(ticker.AutoLocator())
+ax2.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+ax2.set_xlabel('time')
+ax2.set_ylabel('voltage')
+fig.tight_layout()
 
 # plot the spectrum of the timeseries
 fig, axs = plt.subplots()

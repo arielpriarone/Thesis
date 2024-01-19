@@ -10,7 +10,7 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 1           # number of snapshots to take for training
+n_train_snaps = 2           # number of snapshots to take for training
 n_features = 67             # number of features
 n_samples = 6000            # number of samples per snapshot
 
@@ -66,7 +66,7 @@ for i in range(n_train_snaps):
     end_index = data.find(end_keyword)
     floats_str = data[start_index:end_index].strip()
     current_timeserie = [(float(num)/4096)*3.3 for num in floats_str.split()] # scaling to volts
-    current_timeserie = [((float(num)/4096)*3300-1249.2058422851564)/193 for num in floats_str.split()] # scaling to g
+    #current_timeserie = [((float(num)/4096)*3300-1249.2058422851564)/193 for num in floats_str.split()] # scaling to g
 
 
     if np.size(current_features) != n_features:
