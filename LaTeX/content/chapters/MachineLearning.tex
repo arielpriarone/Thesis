@@ -1,7 +1,7 @@
 \chapter{Machine Learining}
 \label{ch:MachineLearning}
 
-Before diving into the description of the unsupervised algorithms used for the development of this thesis work presented in \autoref{ch:Unsupervised}, this chapter aim to be an introduction of \emph{Machine Learning} (\gls{ml}) in general.
+Before diving into the description of the unsupervised algorithms used for the development of this thesis work presented in \autoref{ch:Unsupervised}, this chapter aims to be an introduction of \emph{Machine Learning} (\gls{ml}) in general.
 
 An early but useful definition of Machine Learning was given by Arthur Samuel in 1959: \quoted{\emph{Machine learning is the field of study that gives computers the ability to learn without being explicitly programmed.}} A more recent definition is the following, from Tom Mitchell: \quoted{\emph{A computer program is said to learn from experience E with respect to some task T and some performance measure P, if its performance on T, as measured by P, improves with experience E.}} \citepage{hands-on-geron2022}{4}
 
@@ -12,14 +12,14 @@ So, in general, the ingredients of \gls{ml} are:
     \item an algorithm that learns how to perform the task on specific data
 \end{itemize}
 
-The data are usually preprocessed before giving them to the algorithm. The processed data are called \emph{features}. This is a generic term that refere to the information content of the data.
+The data are usually preprocessed before giving them to the algorithm. The processed data are called \emph{features}. This is a generic term that refers to the information content of the data.
 For example, if the data are recordings of temperatures over time, the features could be the mean, the standard deviation, the minimum, and the maximum of the temperature or, in some cases if the algorithm is able to learn directly from them, the raw data themself.
 
 The tasks can be divided into main categories:
 \begin{itemize}
     \item regression: the algorithm is trained to measure the relation between the value of output variables and corresponding values of other input variables;
     \item classification: the algorithm is trained to assign a label to a new instance, based on the training dataset of labeled instances;
-    \item clustering: the algorithm is trained to group similar instances together into clusters.
+    \item clustering: the algorithm is trained to group similar instances into clusters.
     \item anomaly detection: the algorithm is trained to identify instances that are different from known previous instances.
 \end{itemize}
 
@@ -32,7 +32,7 @@ The tasks can be divided into main categories:
 
 Lets consider a set of $m$ observations of a variable $y \in \mathbb{R}^{n_y}$ (output features) that depends on a variable $x \in \mathbb{R}^{n_x}$ (input features) and a set of $n_f \cdot n_y$ parameters $\theta \in \mathbb{R}^{n_f \times n_y}$.
 
-Supose to know that the output features are linked to the imput features with $n_f$ functions linear in the parameters $\theta$, so that:
+Suppose to know that the output features are linked to the input features with $n_f$ functions linear in the parameters $\theta$, so that:
 \begin{multline*}
     \begin{bmatrix}
         y_1 & y_2 & \dots & y_{n_y} 
@@ -109,7 +109,7 @@ That, in the most compact form, becomes:
     \vect{Y} = \vect{\Phi}(\vect{X}) \cdot \vect{\Theta}
 \end{equation}
 
-In close form, there is a solution $\vect{\Theta_{LS}}$, for estimating the parameters that minimizes the error between the estimated output $\vect{Y_{LS}} = \vect{\Phi(\vect{X})}\vect{\Theta_{LS}}$ and the real output $\vect{Y_{}}$, that is known. Lets see, in an intuitive way:
+In close form, there is a solution $\vect{\Theta_{LS}}$, for estimating the parameters that minimize the error between the estimated output $\vect{Y_{LS}} = \vect{\Phi(\vect{X})}\vect{\Theta_{LS}}$ and the real output $\vect{Y_{}}$, that is known. Let's see, in an intuitive way:
 \begin{eqnarray}
     \vect{Y} &=& \vect{\Phi}(\vect{X}) \cdot \vect{\Theta_{LS}} \\
     \vect{\Phi}(\vect{X})^T\vect{Y} &=& \underbrace{\vect{\Phi}(\vect{X})^T\vect{\Phi}(\vect{X})}_{\text{square}}\cdot \vect{\Theta_{LS}}\\
@@ -123,12 +123,12 @@ In fact, it is known that $\vect{\Theta_{LS}} = \text{pinv}(\vect{\Phi}(\vect{X}
     \vect{\Theta_{LS}} = \argmin{\vect{\Theta} \in \mathbb{R}^{n_f \times n_y}}{\norm{\vect{Y}-\vect{\Phi}(\vect{X})\vect{\Theta}}_2^2}
 \end{equation}
 
-That is why this method is called \emph{Least Squares} (\gls{ls}). It' is proven that if the data $\vect{Y}$ affected my white noise, and the data $\vect{X}$ are known precisely, the solution converges to the real parameters $\vect{\Theta}_{\text{true}}$ when the number of observations $m$ goes to infinity.
+That is why this method is called \emph{Least Squares} (\gls{ls}). It is proven that if the data $\vect{Y}$ affected my white noise, and the data $\vect{X}$ are known precisely, the solution converges to the real parameters $\vect{\Theta}_{\text{true}}$ when the number of observations $m$ goes to infinity.
 \begin{equation}
     \lim_{m \to \infty} \vect{\Theta_{LS}} = \vect{\Theta}_{\text{true}}
 \end{equation}
 
-Is this considered machine learning? Yes, even being this just a simple implementation of linear algebra, once programmed in a computer, it qualify as the (simplest) machine learning algorithm because fitting new data does not require any human intervention. Let's see an example. Suppose to have 400 datapoints, shown in \autoref{fig:LinearRegressiondData}, of the variable $x$, $y_1$ and $y_2$ sampled with noise, that we call Fature 1, Feature 2 and Feature 3, respectively. Suppose that it is known that the output features are linked to the input feature with a linear combination of the functions $e^x$, $x^3$, $\cos(x)$, $\sin(x)$ and $\cos^3(x)$, but the parameters $\theta$ are unknown:
+Is this considered machine learning? Yes, even being just a simple implementation of linear algebra, once programmed in a computer, it qualifies as the (simplest) machine learning algorithm because fitting new data does not require any human intervention. Let's see an example. Suppose to have 400 data points, shown in \autoref{fig:LinearRegressiondData}, of the variable $x$, $y_1$ and $y_2$ sampled with noise, that we call Fature 1, Feature 2 and Feature 3, respectively. Suppose that it is known that the output features are linked to the input feature with a linear combination of the functions $e^x$, $x^3$, $\cos(x)$, $\sin(x)$ and $\cos^3(x)$, but the parameters $\theta$ are unknown:
 
 \begin{eqnarray}
     y_1 &=& \theta_{1,1} e^x + \theta_{2,1} x^3 + \theta_{3,1} \cos(x) + \theta_{4,1} \sin(x) + \theta_{5,1} \cos^3(x) \\
@@ -139,12 +139,12 @@ Is this considered machine learning? Yes, even being this just a simple implemen
     \centering
     \begin{subfigure}{0.49\textwidth}  % <----
         \includegraphics[width=\textwidth]{images/MachineLearning/LinearRegressiondData.pdf}
-        \caption{400 datapoints}
+        \caption{400 data points}
         \label{fig:LinearRegressiondData}
     \end{subfigure}
     \begin{subfigure}{0.49\textwidth}  % <----
         \includegraphics[width=\textwidth]{images/MachineLearning/LinearRegression.pdf}
-        \caption{datapoints and the fitted curve}
+        \caption{data points and the fitted curve}
         \label{fig:LinearRegression}
     \end{subfigure}
     \caption{Least square regression example}
@@ -202,14 +202,14 @@ that is quite close to the real parameters used to generate the data:
 Using the estimated parameters, it is possible to estimate the output features for new input features, the regression line is shown in \autoref{fig:LinearRegression}.
 
 \subsubsection{Applicability}
-This is an elegant closed form solution for a regression problem, however it has some limitations:
+This is an elegant closed-form solution for a regression problem, however, it has some limitations:
 \begin{itemize}
     \item if the noise is not white, or it is present also in the input features, the solution is not guaranteed to converge to the real parameters;
-    \item if there are nonlinearity in the parameters (for example $\sin(\theta_{1,1}x)$), the solution is not applicable;
+    \item if there are nonlinearities in the parameters (for example $\sin(\theta_{1,1}x)$), the solution is not applicable;
 \end{itemize}
 
 \subsection{Gradient Descent \gls{gd}}
-To overcome these limitation, another way to estimate the parameters is to use an iterative algorithm that minimize a cost function over the parameters space. The iterations aim to update the parameters in the direction of the steepest descent of the cost function. This can be done even with nonlinearities in the data, and even if the noise is not white, but has the drawback of the risk of getting stuck in a local minimum of the cost function, starting from a random initialization.
+To overcome these limitations, another way to estimate the parameters is to use an iterative algorithm that minimizes a cost function over the parameters space. The iterations aim to update the parameters in the direction of the steepest descent of the cost function. This can be done even with nonlinearities in the data, and even if the noise is not white, but has the drawback of the risk of getting stuck in a local minimum of the cost function, starting from a random initialization.
 Another limitation is the fact that a learning rate $\eta$ has to be defined, that is a parameter that defines how much the parameters are updated at each iteration. If the learning rate is too small, the algorithm will take a lot of time to converge, if it is too large, the algorithm may overshoot the minimum and avoid convergence.
 
 In the previous closed form solution (\autoref{subsec:LS}), the hypotesis function was linear in the parameters $\vect{Y} = \vect{\Phi}(\vect{X})\cdot\vect{\Theta}$, so we can call this prediction $\vect{\hat{y}} = \vect{h}_{\vect{\Theta}}(\vect{x})$.
@@ -232,7 +232,7 @@ The gradient of the cost function, used by all gradient descent algorithms, is d
 \end{bmatrix}
 \end{equation}
 
-The algorithm than update the parameters at each iteration as:
+The algorithm then updates the parameters at each iteration as:
 \begin{equation}
     \vect{\Theta}^{(i+1)} = \vect{\Theta}^{(i)} - \eta \nabla_{\vect{\Theta}} \text{MSE}(\vect{X}, h_{\vect{\Theta}})
 \end{equation}
@@ -240,16 +240,16 @@ The algorithm than update the parameters at each iteration as:
 
 \subsection{Sthocastic Gradient Descent}
 \label{subsec:SGD}
-The \emph{Stochastic Gradient Descent} (\gls{gd}) is a variant of the \gls{gd} algorithm that compute the gradient only on one instance at each iteration, instead of on the whole dataset. This makes the algorithm much faster, but the cost function will be much more noisy, and theta will not reach a steady value, but instead will oscillate around the minimum. This has the advantage ov being more robust to local minimum entrapment, but the disadvantage of never reaching the minimum. To overcome this, the learning rate $\eta$ can be reduced at each iteration, but this will slow down the convergence.
+The \emph{Stochastic Gradient Descent} (\gls{gd}) is a variant of the \gls{gd} algorithm that computes the gradient only on one instance at each iteration, instead of on the whole dataset. This makes the algorithm much faster, but the cost function will be much more noisy, and theta will not reach a steady value but instead will oscillate around the minimum. This has the advantage of being more robust to local minimum entrapment, but the disadvantage of never reaching the minimum. To overcome this, the learning rate $\eta$ can be reduced at each iteration, but this will slow down the convergence.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/MachineLearning/GradientDescent.pdf}
-    \caption{Gradient Descen comparison}
+    \caption{Gradient Descent comparison}
     \label{fig:SGD}
 \end{figure}
 
-In the \autoref{fig:SGD} it is visualized graphically what said about Gradient Descent.
+In the \autoref{fig:SGD} it is visualized graphically what has been said about Gradient Descent.
 
 \subsection{Avoid overfitting}
 \label{subsec:overfitting}
@@ -266,13 +266,13 @@ The \gls{gd} algorithm is very powerful, but it can overfit the data. To avoid t
 \label{sec:Classification}
 Another common task in \gls{ml} is classification. In this case, the algorithm is trained to assign a label to a new instance, based on the training dataset of labeled instances. Naively, it aims to define a set of rules that divide the space of the input features in regions, each one associated with a label. The two main approaches are \emph{hard} and \emph{soft} classification. In the former, the algorithm is trained to assign a single label to each instance, while in the latter, the algorithm is trained to output a probability for each label, and the label with the highest probability is assigned to the instance.
 
-Classification is a \emph{supervised} learning task, because the training dataset is labeled. The labels can be provided by a human, or can be generated by another algorithm. Some classification algorythms are available also in the unsupervised version, where the labels are not provided, and the task is usually novelty detection.
+Classification is a \emph{supervised} learning task because the training dataset is labeled. The labels can be provided by a human or can be generated by another algorithm. Some classification algorithms are available also in the unsupervised version, where the labels are not provided, and the task is usually novelty detection.
 
 \subsection{Support Vector Machines \gls{svm}}
 \label{subsec:svm}
-Support Vector Machines are simple but powerful classification algorithms that can be used both for hard and soft classification, with medium size datasets. They are based on the idea of finding the hyperplane that best divide the space of the input features in two regions, each one associated with a label.
+Support Vector Machines are simple but powerful classification algorithms that can be used both for hard and soft classification, with medium size datasets. They are based on the idea of finding the hyperplane that best divides the space of the input features into two regions, each one associated with a label.
 
-The main drawback is that, natively, they can only be used for binary classification (two classes), but there are some extensions that allow to use them for multiclass classification. Furthermore, as will be explained in \autoref{sec:OneClassSupportVectorMachine}, they can be used also for novelty detection (one class). Another limitation is that, being a linear classifier, they can only be used for linearly separable data, but using the \emph{kernel trick}, they can be used also for nonlinearly separable data.
+The main drawback is that, natively, they can only be used for binary classification (two classes), but there are some extensions that allow to use of them for multiclass classification. Furthermore, as will be explained in \autoref{sec:OneClassSupportVectorMachine}, they can be used also for novelty detection (one class). Another limitation is that, being a linear classifier, they can only be used for linearly separable data, but using the \emph{kernel trick}, they can be used also for nonlinearly separable data.
 
 \subsubsection{Linear \gls{svm}}
 \label{subsubsec:LinearSVM}
@@ -284,4 +284,84 @@ The main drawback is that, natively, they can only be used for binary classifica
     \label{fig:LinearSVM}
 \end{figure}
 
-Looking at \autoref{fig:LinearSVM}, it is possible to visualize what the algorithm does: it finds the plane that separate a class from the other, and vice-versa for the second class. In other words, it finds the most distant parallel hyperplanes that separate the two classes. As evident from the figure, the distance between the hyperplanes (called \emph{margin}) is sensitive to the features scaling. The term \quoted{support} derive from the fact that only the instances that are on the margin, define (supports) the two planes. Those instances are called \emph{support vectors}, and in the figure are highlighted with a grey circle.
+Looking at \autoref{fig:LinearSVM}, it is possible to visualize what the algorithm does: it finds the plane that separates one class from the other, and vice-versa for the second class. In other words, it finds the most distant parallel hyperplanes that separate the two classes. As evident from the figure, the distance between the hyperplanes (called \emph{margin}) is sensitive to the features scaling. The term \quoted{support} derives from the fact that only the instances that are on the margin, define (support) the two planes. Those instances are called \emph{support vectors}, and in the figure are highlighted with a grey circle.
+
+\subsubsection{Noninear \gls{svm}}
+\label{subsubsec:NoninearSVM}
+As said before, the \gls{svm} algorithm can be used also for nonlinearly separable data, using the \emph{kernel trick}. The idea is to project the data into a higher dimensional space, where they are linearly separable, and then use the linear \gls{svm} algorithm. The projection is done using a \emph{kernel mapping}. 
+
+Let's have a look at what is the function for classifying an instance $\vect{x}^{(i)}$:
+\begin{equation}
+    t^{(i)} = \begin{cases}
+        -1 & \text{if } \vect{w}^T\vect{x}^{(i)} + b < 0 \\
+        1 & \text{if } \vect{w}^T\vect{x}^{(i)} + b \geq 0 
+    \end{cases}
+\end{equation}
+
+The model is trainded to find the parameters $\vect{w}$ and $b$ that:
+\begin{align}
+    \label{eq:LinearSVM}
+    \underset{\vect{w},b}{\text{minimize }} & \frac{1}{2}\vect{w}^T\vect{w} \\
+    \text{subject to } & t^{(i)}(\vect{w}^T\vect{x}^{(i)} + b) \geq 1 \quad \forall i = 1, \dots, m
+\end{align}
+
+Since the objective function is convex, and the inequality constraints are differentiable and convex, the solution is the same as the solution of the dual problem \citepage{hands-on-geron2022}{188}:
+\begin{align}
+    \label{eq:LinearSVMdual}
+    \underset{\vect{\alpha}}{\text{minimize }} & \frac{1}{2}\sum_{i=1}^{m}\sum_{j=1}^{m}\alpha^{(i)}\alpha^{(j)}t^{(i)}t^{(j)}\vect{x}^{(i)T}\vect{x}^{(j)} -\sum_{i=1}^{m}\alpha^{(i)}\\
+    \text{subject to } & \alpha^{(i)} \geq 0 \quad \forall i = 1, \dots, m \quad \text{and} \quad \sum_{i=1}^{m}\alpha^{(i)}t^{(i)}=0
+\end{align}
+
+\paragraph{Kernel Trick}
+Suppose wanting to use a second degree polynomial mapping, the mapping function is defined as:
+\begin{equation}
+    \phi(\vect{x}) = \phi(\begin{bmatrix}
+        x_1 \\
+        x_2 \\
+    \end{bmatrix}) = \begin{bmatrix}
+        x_1^2 \\
+        \sqrt{2}x_1x_2 \\
+        x_2^2 \\
+    \end{bmatrix}
+\end{equation}
+
+Trasforming two vectors $\vect{a}$ and $\vect{b}$ with the mapping function, to be inserted in \autoref{eq:LinearSVMdual}:
+\begin{equation}
+    \phi(\vect{a})^T\phi(\vect{b}) = \begin{bmatrix}
+        a_1^2 \\
+        \sqrt{2}a_1a_2 \\
+        a_2^2 \\
+    \end{bmatrix}^T
+    \begin{bmatrix}
+        b_1^2 \\
+        \sqrt{2}b_1b_2 \\
+        b_2^2 \\
+    \end{bmatrix} = a_1^2b_1^2 + 2a_1b_1a_2b_2 + a_2^2b_2^2 = (\vect{a}^T\vect{b})^2
+\end{equation}
+
+So, trasforming with a polynomial mapping of degree $d$, does not require to compute the mapping function, but just to compute the dot product of the two vectors and elevate it to the degree $d$, in the dual problem. There also are other kind of kernels, resumed in the following:
+\begin{align*}
+    \text{Linear: } & K(\vect{a}, \vect{b}) = \vect{a}^T\vect{b} \\
+    \text{Polynomial: } & K(\vect{a}, \vect{b}) = (\gamma\vect{a}^T\vect{b} + r)^d \\
+    \text{Gaussian RBF: } & K(\vect{a}, \vect{b}) = \exp(-\gamma\norm{\vect{a}-\vect{b}}^2) \\
+    \text{Sigmoid: } & K(\vect{a}, \vect{b}) = \tanh(\gamma\vect{a}^T\vect{b} + r)
+\end{align*}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/MachineLearning/KernelTrick.pdf}
+    \caption{Kernel Trick example \citepage{hands-on-geron2022}{180}}
+    \label{fig:KernelTrick}
+\end{figure}
+
+The \autoref{fig:KernelTrick} shows an example of \gls{svm} classification of data that are not linearly separable.
+
+This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneClassSupportVectorMachine} we will see how to use the \gls{svm} algorithm for novelty detection, as a one class classifier.
+
+
+\subsection{Decision Trees \gls{dt}}
+\label{subsec:dt}
+
+\subsection{Random Forests \gls{rf}}
+
+\autoref{subsubsec:LinearSVM}
