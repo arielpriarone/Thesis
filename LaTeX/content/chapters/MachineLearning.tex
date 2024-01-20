@@ -372,7 +372,7 @@ This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneC
 Decision Trees are very powerful classification algorithms that can also be used for regression, thinking as a feature values as classes. The classification process is based on a tree structure, where each sample start from the root node, and is filtered thru a bunch of \emph{if - then} statement until it reaches a leaf node, that output the predicited class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
 
 \paragraph*{Gini impurity}
-The classification algorithm is hence very simple, the \gls{ml} part of is the training process. Let's consider a leaf node, and imagine passing all the training samples thru the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the train dataset and will not perfom well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, it exist a metric called \emph{Gini impurity} that assume a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measure how different the classes in the node are, 0.5 being the maximum value that mean that all the classes are present in the node with equal frequency. The matematical definition is the following:
+The classification algorithm is hence very simple, the \gls{ml} part of is the training process. Let's consider a leaf node, and imagine passing all the training samples thru the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the train dataset and will not perfom well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, it exist a metric called \emph{Gini impurity} that assume a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measure how different the classes in the node are, 0.5 being the maximum value that mean that all the classes are present in the node with equal frequency. The mathematical definition is the following:
 \begin{equation}
     G_i = 1 - \sum_{k=1}^{n}p_{i,k}^2
 \end{equation}
@@ -414,7 +414,7 @@ In \autoref{fig:DecisionTreeOverfitting} it is shown an example of overfitting, 
 \end{figure}
 
 \paragraph{Regression}
-As anticipated, the \gls{dt}s can also be used for regression, in htis case, the cost function is the \gls{mse} of the predicted value in the leaf node:
+As anticipated, the \gls{dt}s can also be used for regression, in this case, the cost function is the \gls{mse} of the predicted value in the leaf node:
 \begin{equation}
     J(k, t_k) = \frac{m_{\text{left}}}{m}\text{MSE}_{\text{left}} + \frac{m_{\text{right}}}{m}\text{MSE}_{\text{right}}
 \end{equation}
