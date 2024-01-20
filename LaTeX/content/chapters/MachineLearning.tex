@@ -362,6 +362,47 @@ This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneC
 \subsection{Decision Trees \gls{dt}}
 \label{subsec:dt}
 
+\begin{figure}
+    \centering
+    \includegraphics[scale = 1]{images/MachineLearning/DT_structure.pdf}
+    \caption{Decision Tree structure}
+    \label{fig:DecisionTree}
+\end{figure}
+
+Decision Trees are very powerful classification algorithms that can also be used for regression, thinking as a feature values as classes. The classification process is based on a tree structure, where each sample start from the root node, and is filtered thru a bunch of \emph{if - then} statement until it reaches a leaf node, that output the predicited class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
+
+The classification algorithm is hence very simple, the \gls{ml} part of is the training process. Let's consider a leaf node, and imagine passing all the training samples thru the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the train dataset and will not perfom well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, it exist a metric called \emph{Gini impurity} that assume a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measure how different the classes in the node are, 0.5 being the maximum value that mean that all the classes are present in the node with equal frequency. The matematical definition is the following:
+\begin{equation}
+    G_i = 1 - \sum_{k=1}^{n}p_{i,k}^2
+\end{equation}
+where $p_{i,k}$ is the ratio of class $k$ instances among the training instances in the $i^{th}$ node.
+
+Then the training procedure tries to grow a tree defining the binary conditions that minimize the weighted average of the Gini impurity of the two child nodes, so the cost function is:
+\begin{equation}
+    J(k, t_k) = \frac{m_{\text{left}}}{m}G_{\text{left}} + \frac{m_{\text{right}}}{m}G_{\text{right}}
+\end{equation}
+where $k$ is the feature index, $t_k$ is the threshold value, $m_{\text{left}}$ and $m_{\text{right}}$ are the number of instances in the left and right child nodes, and $G_{\text{left}}$ and $G_{\text{right}}$ are the Gini impurity of the left and right child nodes.
+
+A common way for minimization of the cost function is to use the \emph{Classification and Regression Tree} (\gls{cart}) algorithm, that is a greedy algorithm that search for the optimal split at each node, but not for the global optimal tree. The algorithm complexity is $\mathcal{O}(n \times m \log_2(m))$.
+
+\subsubsection{Avoid overfitting}
+To avoid overfitting the data, the \gls{cart} algorithm implementation in \texttt{sklearn} has some hyperparameters that can be tuned:
+\begin{itemize}
+    \item \texttt{max\_depth}: the maximum depth of the tree;
+    \item \texttt{min\_samples\_split}: the minimum number of samples a node must have before it can be split;
+    \item \texttt{min\_samples\_leaf}: the minimum number of samples a leaf node must have;
+    \item \texttt{max\_leaf\_nodes}: the maximum number of leaf nodes;
+    \item \texttt{max\_features}: the maximum number of features that are evaluated for splitting at each node.
+\end{itemize}
+Increasing the \texttt{min} bound, or decreasing the \texttt{max} bound, will regularize the model, and reduce the risk of overfitting.
+In \autoref{fig:DecisionTreeOverfitting} it is shown an example of overfitting, where the left plot shows the decision boundaries of a tree with no regularization, and the right plot shows the decision boundaries of a tree with regularization.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/MachineLearning/DecisionTreeOverfitting.pdf}
+    \caption{Decision Tree overfitting example \citepage{hands-on-geron2022}{202}}
+    \label{fig:DecisionTreeOverfitting}
+\end{figure}
+
 \subsection{Random Forests \gls{rf}}
 
-\autoref{subsubsec:LinearSVM}
