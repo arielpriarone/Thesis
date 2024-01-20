@@ -371,6 +371,7 @@ This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneC
 
 Decision Trees are very powerful classification algorithms that can also be used for regression, thinking as a feature values as classes. The classification process is based on a tree structure, where each sample start from the root node, and is filtered thru a bunch of \emph{if - then} statement until it reaches a leaf node, that output the predicited class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
 
+\paragraph*{Gini impurity}
 The classification algorithm is hence very simple, the \gls{ml} part of is the training process. Let's consider a leaf node, and imagine passing all the training samples thru the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the train dataset and will not perfom well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, it exist a metric called \emph{Gini impurity} that assume a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measure how different the classes in the node are, 0.5 being the maximum value that mean that all the classes are present in the node with equal frequency. The matematical definition is the following:
 \begin{equation}
     G_i = 1 - \sum_{k=1}^{n}p_{i,k}^2
@@ -384,6 +385,14 @@ Then the training procedure tries to grow a tree defining the binary conditions 
 where $k$ is the feature index, $t_k$ is the threshold value, $m_{\text{left}}$ and $m_{\text{right}}$ are the number of instances in the left and right child nodes, and $G_{\text{left}}$ and $G_{\text{right}}$ are the Gini impurity of the left and right child nodes.
 
 A common way for minimization of the cost function is to use the \emph{Classification and Regression Tree} (\gls{cart}) algorithm, that is a greedy algorithm that search for the optimal split at each node, but not for the global optimal tree. The algorithm complexity is $\mathcal{O}(n \times m \log_2(m))$.
+
+\paragraph{Entropy}
+Another metric that can be used instead of Gini impurity inside the same cost function is the \emph{entropy} of the node, that is defined as:
+\begin{equation}
+    H_i = - \sum_{k=1}^{n}p_{i,k}\log_2(p_{i,k})
+\end{equation}
+
+This renders trees very similar to the ones obtained using Gini impurity, but the entropy is slightly slower to compute, due to the logarithm. however, it tends to produce slightly more balanced trees \cite{raschka2013decisiontrees}.
 
 \paragraph{Avoid overfitting}
 To avoid overfitting the data, the \gls{cart} algorithm implementation in \texttt{sklearn} has some hyperparameters that can be tuned:
@@ -399,8 +408,7 @@ In \autoref{fig:DecisionTreeOverfitting} it is shown an example of overfitting, 
 
 \begin{figure}
     \centering
-    \scalebox{0.7}{
-    \input{images/MachineLearning/DecisionTreeOverfitting.pgf}}
+    \includegraphics{images/MachineLearning/DecisionTreeOverfitting.pdf}
     \caption{Decision Tree overfitting example \citepage{hands-on-geron2022}{203}}
     \label{fig:DecisionTreeOverfitting}
 \end{figure}
@@ -415,4 +423,16 @@ As anticipated, the \gls{dt}s can also be used for regression, in htis case, the
 The main disadvantages of \gls{dt}s are that the classification proedure uses thresholds on the features value (cutting the hyperspace in orthogonal hyperplanes), so they are sensitive to axis orientation, and they are very sensitive to small variations in the training data. They are also very sensitive to the hyperparameters, so a small caiations in constraints leads to very different trees. The main advantages are that they are very fast to train, and the resulting model is very fast to make predictions, they are very easy to understand and visualize and they do not require any feature scaling or centering.
 
 \subsection{Random Forests \gls{rf}}
+\label{subsec:rf}
+The high sensituvity of the \gls{dt}s to small variations in the training data, can be reduced using the \emph{Random Forests} (\gls{rf}) algorithm. The idea is to train a bunch of \gls{dt}s on different random subsets of the training data, and then to average their predictions. The subsets of the training set are usually picked randomly with replacement, this technique is called \emph{bagging} (short for \emph{bootstrap aggregating}). 
 
+The benefits of using more threes on subset of the training data are shown in the \autoref{fig:RandomForest}. The left plot shows the decision boundaries of a single \gls{dt}, the center plot shows the decision boundaries of a \gls{rf} with 500 trees.
+
+\begin{figure}
+    \centering
+    \includegraphics{images/MachineLearning/RandomForest.pdf}
+    \caption{Random Forest example \citepage{hands-on-geron2022}{218}}
+    \label{fig:RandomForest}
+\end{figure}
+
+Again, this topic seems unrelated to the scope of this thesis, but in \autoref{sec:IsolationForest} we will see how to use the \gls{rf} algorithm for novelty detection, exploiting the fact that outliers are usually more isolated (require more split nodes to be rached) than the normal instances.
