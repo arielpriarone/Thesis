@@ -385,7 +385,7 @@ where $k$ is the feature index, $t_k$ is the threshold value, $m_{\text{left}}$ 
 
 A common way for minimization of the cost function is to use the \emph{Classification and Regression Tree} (\gls{cart}) algorithm, that is a greedy algorithm that search for the optimal split at each node, but not for the global optimal tree. The algorithm complexity is $\mathcal{O}(n \times m \log_2(m))$.
 
-\subsubsection{Avoid overfitting}
+\paragraph{Avoid overfitting}
 To avoid overfitting the data, the \gls{cart} algorithm implementation in \texttt{sklearn} has some hyperparameters that can be tuned:
 \begin{itemize}
     \item \texttt{max\_depth}: the maximum depth of the tree;
@@ -399,10 +399,20 @@ In \autoref{fig:DecisionTreeOverfitting} it is shown an example of overfitting, 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{images/MachineLearning/DecisionTreeOverfitting.pdf}
-    \caption{Decision Tree overfitting example \citepage{hands-on-geron2022}{202}}
+    \scalebox{0.7}{
+    \input{images/MachineLearning/DecisionTreeOverfitting.pgf}}
+    \caption{Decision Tree overfitting example \citepage{hands-on-geron2022}{203}}
     \label{fig:DecisionTreeOverfitting}
 \end{figure}
+
+\paragraph{Regression}
+As anticipated, the \gls{dt}s can also be used for regression, in htis case, the cost function is the \gls{mse} of the predicted value in the leaf node:
+\begin{equation}
+    J(k, t_k) = \frac{m_{\text{left}}}{m}\text{MSE}_{\text{left}} + \frac{m_{\text{right}}}{m}\text{MSE}_{\text{right}}
+\end{equation}
+
+\paragraph{Advantages and limitations}
+The main disadvantages of \gls{dt}s are that the classification proedure uses thresholds on the features value (cutting the hyperspace in orthogonal hyperplanes), so they are sensitive to axis orientation, and they are very sensitive to small variations in the training data. They are also very sensitive to the hyperparameters, so a small caiations in constraints leads to very different trees. The main advantages are that they are very fast to train, and the resulting model is very fast to make predictions, they are very easy to understand and visualize and they do not require any feature scaling or centering.
 
 \subsection{Random Forests \gls{rf}}
 
