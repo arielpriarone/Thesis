@@ -43,14 +43,14 @@ fig = plt.figure()
 ax2 = fig.add_subplot(111)
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 3:
+    if i < 99:
         color = 'blue'
-    elif i < 40:
+    elif i < 199:
         color = 'red'
-    elif i < 60:
+    elif i < 299:
          color = 'green'
     else:
-        color = 'orange'  
+        color = 'orange'   
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     ax2.plot(df_timeseries_timestamp.columns[1:], df_timeseries_timestamp.values[0, 1:], label=timestamp, color = color)
     i+=1
@@ -65,11 +65,11 @@ fig = plt.figure()
 ax2 = fig.add_subplot(111)
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 3:
+    if i < 99:
         color = 'blue'
-    elif i < 40:
+    elif i < 199:
         color = 'red'
-    elif i < 60:
+    elif i < 299:
          color = 'green'
     else:
         color = 'orange'  
@@ -88,14 +88,14 @@ sampling_rate = 5000 # Hz
 N=6000 # number of samples
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 20:
+    if i < 99:
         color = 'blue'
-    elif i < 40:
+    elif i < 199:
         color = 'red'
-    elif i < 60:
+    elif i < 299:
          color = 'green'
     else:
-        color = 'orange'   
+        color = 'orange'  
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     # normalize the timeseries
     fourier_timeserie = (df_timeseries_timestamp.values[0, 1:]-np.mean(df_timeseries_timestamp.values[0, 1:]))
