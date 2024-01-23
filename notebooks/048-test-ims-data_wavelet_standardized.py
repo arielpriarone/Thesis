@@ -19,6 +19,8 @@ auxpath=''                                                  # auxilliary path be
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
     auxpath='.'
+
+src.visualization.set_matplotlib_params()
     
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
@@ -27,21 +29,10 @@ tickpath    = os.path.join(auxpath + "./reports/tickz/")    #file to save the ti
 
 decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
 IMSDATA={}                                                  # empty dictionary to save data 
-n_split     = 1500                                          # number of sample to split the dataset
+n_split     = 500                                          # number of sample to split the dataset
 timestamps  = []                                            # timestamps of the samples
 W = 4.7 # inches, s/3 aspect ratio
-plt.rcParams.update({
-    'figure.figsize': (W, W/(4/3)),     # 4:3 aspect ratio
-    'font.size' : 10,                   # Set font size to 11pt
-    'axes.labelsize': 10,               # -> axis labels
-    'legend.fontsize': 10,              # -> legends
-    'font.family': 'lmodern',
-    'text.usetex': True,
-    'text.latex.preamble': (            # LaTeX preamble
-        r'\usepackage{lmodern}'
-        # ... more packages if needed
-    )
-})
+
 
 
 stdsclr=StandardScaler()

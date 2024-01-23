@@ -12,6 +12,8 @@ import importlib
 import pickle 
 import os
 from sklearn.metrics import silhouette_score, silhouette_samples
+from rich import print
+
 matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
@@ -29,6 +31,11 @@ IMSDATA={}                                             # empty dictionary to sav
 
 filehandler = open(savepath_data, 'rb') 
 IMSDATA = pickle.load(filehandler)
+filehandler.close()
+
+print(f"DATA loaded: available keys: {IMSDATA.keys()}")
+print(f"Training dataset samples: {IMSDATA['wavanaly_standardized_train'].shape}")
+print(f"Test dataset samples: {IMSDATA['wavanaly_standardized_test'].shape}")
 
 
 # %% train with different number of clusters

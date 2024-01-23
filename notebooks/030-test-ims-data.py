@@ -12,11 +12,8 @@ from IPython import get_ipython
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
-})
+src.visualization.set_matplotlib_params()
+
 # folder path
 dirPath = "./data/raw/1st_test_IMSBearing/"
 indx=0
