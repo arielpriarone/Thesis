@@ -22,19 +22,17 @@ ylabel={n° of record},
 ymin=-0.5, ymax=63.5,
 ytick style={color=black}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-040.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-044.png};
 
 \nextgroupplot[
 colorbar,
-colorbar style={ytick={-20,0,20,40,60,80,100,120},yticklabels={
+colorbar style={ytick={-60,-40,-20,0,20,40},yticklabels={
+  \(\displaystyle {\ensuremath{-}60}\),
+  \(\displaystyle {\ensuremath{-}40}\),
   \(\displaystyle {\ensuremath{-}20}\),
   \(\displaystyle {0}\),
   \(\displaystyle {20}\),
-  \(\displaystyle {40}\),
-  \(\displaystyle {60}\),
-  \(\displaystyle {80}\),
-  \(\displaystyle {100}\),
-  \(\displaystyle {120}\)
+  \(\displaystyle {40}\)
 },ylabel={Power of the features}},
 colormap={mymap}{[1pt]
  rgb(0pt)=(0.050383,0.029803,0.527975);
@@ -294,8 +292,8 @@ colormap={mymap}{[1pt]
   rgb(254pt)=(0.941896,0.96859,0.140956);
   rgb(255pt)=(0.940015,0.975158,0.131326)
 },
-point meta max=110.891348853548,
-point meta min=-4.13524204928534,
+point meta max=31.7654240726723,
+point meta min=-45.4939953551994,
 tick align=outside,
 tick pos=left,
 title={Abnormal Functioning},
@@ -315,7 +313,7 @@ ytick style={color=black},
 ytick={0,9,18,27,36,45,54,63},
 yticklabels={2092,2101,2110,2119,2128,2137,2146,2155}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-041.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-045.png};
 \end{groupplot}
 
 \end{tikzpicture}

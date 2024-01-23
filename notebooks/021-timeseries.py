@@ -27,6 +27,8 @@ ax[1].plot(snap.rawData["time"], snap.rawData["Bearing 3 x"], label = "healthy",
 ax[1].set_xlabel('time [s]')
 ax[0].set_ylabel('amplitude')
 ax[1].set_ylabel('amplitude')
+ax[0].set_title('Healthy bearing')
+ax[1].set_title('Damaged bearing')
 
 
 plt.tight_layout()
