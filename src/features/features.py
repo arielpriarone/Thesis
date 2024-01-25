@@ -14,6 +14,7 @@ import matplotlib.cm as cm
 from itertools import chain
 from matplotlib.lines import Line2D
 from typing import Dict, List, Union, Optional, Tuple
+import scipy
 
 def FFT(array, samplFreq=1, preproc=None):
     """
@@ -111,6 +112,14 @@ class FA(src.data.DB_Manager):
         if self.Config['Database']['sensors'][sensor]['features']['std']:
             self.features[sensor].update({'std':np.std(self.snap[sensor]['timeSerie'])})
             print(f"Standard deviation extracted from [purple]{sensor}[/]")
+        # if skewness Enabled
+        if self.Config['Database']['sensors'][sensor]['features']['skew']:
+            self.features[sensor].update({'skewness':scipy.stats.skew(self.snap[sensor]['timeSerie'])})
+            print(f"Skewness extracted from [purple]{sensor}[/]")
+        # if kurtosis Enabled
+        if self.Config['Database']['sensors'][sensor]['features']['kurt']:
+            self.features[sensor].update({'kurtosis':scipy.stats.kurtosis(self.snap[sensor]['timeSerie'])})
+            print(f"Kurtosis extracted from [purple]{sensor}[/]")
 
     def _extractFreqFeautures(self, sensor):
         # if Wavelet is enabled
