@@ -8,6 +8,7 @@ from rich import print
 from typing import Union, List, Dict, Any
 import pymongo
 from pymongo.collection import Collection
+from rich import print
 
 def f(x,a,b,c): #function to fit for novelty prediction
     return a*np.exp(b*x)+c
@@ -53,6 +54,7 @@ class DB_Manager:
         try:
             with open(self.configStr,'r') as f:
                 self.Config = yaml.safe_load(f)
+                print(f'Loaded config file @ {self.configStr}')
         except:
             raise Exception(f'Error reading config file @ {self.configStr}')
         self.sensors: List[str] = list(self.Config['Database']['sensors'].keys()) # list of sensors4
@@ -71,6 +73,23 @@ class DB_Manager:
     
     def __repr__(self) -> str:
         return "Loded the configuration:\n" + str(self.Config)
+    
+    @staticmethod
+    def eraseDB(configStr: str):
+        '''
+        delete the database specified in the config file
+        '''
+        try:
+            Config = DB_Manager.loadConfig(configStr)
+        except:
+            raise Exception(f'Error reading config file @ {configStr}')
+        client  = MongoClient(Config['Database']['URI'])                                    # connect to MongoBD
+        if Config['Database']['db'] in client.list_database_names():
+            client.drop_database(Config['Database']['db'])                                  # delete database
+            print(f'Deleted database \'{Config["Database"]["db"]}\' @ \'{Config["Database"]["URI"]}\'')
+        else:
+            print(f'Tried to delete database, but Database \'{Config["Database"]["db"]}\' not found @ \'{Config["Database"]["URI"]}\'')
+        client.close()
 
     @staticmethod
     def createEmptyDB(configStr: str):

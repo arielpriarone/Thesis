@@ -62,6 +62,42 @@ def IMS_converter(
         time.sleep(sleep)
     print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
 
+def _IMS_converter_withrange(
+    database    : str   = typer.Option(default='IMS',help='The name of the MongoDB database to write to'),
+    collection  : str   = typer.Option(default='RAW',help='The name of the MongoDB collection to write to'),
+    dirpath     : str   = typer.Option(default=r'C:\Users\ariel\Documents\Courses\Tesi\Code\data\raw\1st_test_IMSBearing',help='The path of the folder containing the files to read'),
+    test        : int   = typer.Option(default=1,help='The code of the IMS test (www.imscenter.net) (admitted 1,2,3)',
+                                       min=1,max=3),
+    sensor      : List[str]  = typer.Option(default=['Bearing 1 x', 'Bearing 1 y'],help='The sensor names you want to read, can be repeated! (axcepted values:\nBearing 1 x\nBearing 1 y\nBearing 2 x\nBearing 2 y\nBearing 3 x\nBearing 3 y\nBearing 4 x\nBearing 4 y\nBearing 1\n Bearing 2\nBearing 3\nBearing 4)'),
+    URI         : str   = typer.Option(default='mongodb://localhost:27017',help='The URI to connect to MongoDB'),
+    sleep       : float = typer.Option(default=None),
+    startfile   : str   = typer.Option(default=None),
+    endfile     : str   = typer.Option(default=None)
+):
+    _fileList            = sorted(os.listdir(dirpath))                                               # al things in folder
+    _fileList            = [x for x in _fileList if os.path.isfile(os.path.join(dirpath, x))]         # selsct only the files in the folders
+    _filerange           = [startfile,endfile]
+    _fileList            =   _fileList[_fileList.index(_filerange[0]):_fileList.index(_filerange[1])+1]    # dump all not needed items
+
+    _table = Table(title="\n \n Current options of the command")
+    _table.add_column('Option',style='bright_magenta')
+    _table.add_column('Value',style='bright_cyan')
+    _table.add_row('Database',database)
+    _table.add_row('Collection',collection)
+    _table.add_row('Folder path',dirpath)
+    _table.add_row('Type of test (code)',str(test))
+    _table.add_row('Sensor names',str(sensor))
+    _table.add_row('URI to connect to MongoDB',URI)
+    _table.add_row('Range of file to import',str(_filerange))
+    _console = Console()
+    _console.print(_table)  
+    for _fileName in track(_fileList,description=f'Writing files to MongoDB',):
+        path=os.path.join(dirpath, _fileName) # complete path including filename
+        src.data.IMS_to_mongo(database=database,collection=collection,filePath=path,n_of_test=test,sensors=sensor,URI=URI,printout=False)
+    if sleep is not None:
+        time.sleep(sleep)
+    print('\n Finished: '+str(len(_fileList))+' files inserted in '+str(database)+'\n')
+
 @app.command()
 def create_Empty_DB(configPath:str = typer.Option(default='../config.yaml',help='The path of the configuration file')):
     """

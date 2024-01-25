@@ -23,15 +23,15 @@ Database:           # Database configuration
       features:     # Features configuration
         wavPowers:    on                          # Wavelet powers
         mean:         on                         # Mean value
-        rms:          off                         # Root mean square
-        peak:         off                         # Peak to peak value
-        std:          off                         # Standard deviation
+        rms:          on                         # Root mean square
+        peak:         on                         # Peak to peak value
+        std:          on                         # Standard deviation
     Bearing 2 x:    # Sensor 3 name
       features:     # Features configuration
-        wavPowers:    off                         # Wavelet powers
+        wavPowers:    on                         # Wavelet powers
         mean:         on                          # Mean value
-        rms:          off                         # Root mean square
-        peak:         off                         # Peak to peak value
+        rms:          on                         # Root mean square
+        peak:         on                         # Peak to peak value
         std:          on                          # Standard deviation
 wavelet:           # Wavelet packet reasform configuration
   type:               db10                        # Type of wavelet to use
@@ -41,7 +41,7 @@ kmeans:            # kmean configuration
   max_clusters:       100                         # Max number of clusters
   max_iterations:     1000                        # Max number of iterations
   error_queue_size:   1                           # number of predictions parameters to keep in quewe for plotting/predicting
-  error_plot_size:    600                        # Size of the plotting queue
+  error_plot_size:    2000                        # Size of the plotting queue
 
 novelty:           # Novelty/fault configuration
   threshold:          0.10                        # Threshold for novelty / fault detection:
@@ -53,4 +53,4 @@ novelty:           # Novelty/fault configuration
   regressor:          exp                         # Regressor to use for prediction: exp, scipy, poly. if exp uses custom function, if scipy uses scipy.optimize.curve_fit, if poly fit polinomial of degree
 
 miscellanea:
-  logpath:            C:\Users\ariel\Documents\Courses\Tesi\Code\framework                        # Path to the logs
+  logpath:            C:\Users\ariel\Documents\Courses\Tesi\Code\framework        # Path to the logs
