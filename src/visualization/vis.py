@@ -27,6 +27,12 @@ def set_matplotlib_params():
     plt.rcParams["mathtext.fontset"] = 'cm'
     plt.rcParams["legend.fancybox"] = False
     plt.rcParams["axes.titleweight"] = 'bold'
+    plt.rcParams["date.autoformatter.year"] = "%Y"
+    plt.rcParams["date.autoformatter.month"] = "%Y-%m"
+    plt.rcParams["date.autoformatter.day"] = "%Y-%m-%d"
+    plt.rcParams["date.autoformatter.hour"] = "%Y-%m-%d %H:%M"
+    plt.rcParams["date.autoformatter.minute"] = "%Y-%m-%d %H:%M"
+    plt.rcParams["date.autoformatter.second"] = "%Y-%m-%d %H:%M:%S"
 
 
 def isNotebook() -> bool:

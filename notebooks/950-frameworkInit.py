@@ -14,7 +14,7 @@ console = Console()
 # %% script settings
 configFilePath  = r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml" # configuration file path
 rawDataDirPath  = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\raw\1st_test_IMSBearing" # folder path
-N_train         = 300 # number of training samples
+N_train         = 600 # number of training samples
 
 # %% initialise script
 Config = src.data.DB_Manager.loadConfig(configFilePath) # load configuration file
