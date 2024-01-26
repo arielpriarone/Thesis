@@ -16,7 +16,9 @@ console = Console()
 timestamps = np.array([])                                                                       # timestamps.shape = (n_samples,)
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
 train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"    # csv file with train data
+feature_scaler_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv"    # csv file with feature scaler
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
+
 max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
 
@@ -26,6 +28,11 @@ train_data = pd.read_csv(train_data_filepath, sep='\t', header=1)
 console.print(train_data.head(), style="magenta")
 timestamps = train_data.iloc[:,0].to_numpy()
 features_matrix = train_data.iloc[:,1:].to_numpy()
+try:
+    feat_weights = np.array(pd.read_csv(r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv")).flatten()
+except:
+    feat_weights = np.ones(features_matrix.shape[1])
+    console.print("Feature importance file not found, all features will be considered with equal weights.", style="magenta")
 console.print("Data loaded successfully.", style="magenta")
 console.print("Number of records: ", features_matrix.shape[0], style="magenta")
 n_features = features_matrix.shape[1] # 67 - number of features
@@ -138,6 +145,15 @@ with open(model_filepath, 'w') as f:
         if i != n_clusters-1:
             aux += ", "
     f.write("double radiuses["+str(n_clusters)+"] = {"+aux+"};\n")
+
+    # feature importance scaler
+    aux = ""
+    for i in range(n_clusters):
+        aux += str(feat_weights[i])
+        if i != n_clusters-1:
+            aux += ", "
+    f.write("double weights["+str(n_clusters)+"] = {"+aux+"};\n")
+
 console.print("Model file created successfully.", style="magenta")
 f.close()   # close file
 

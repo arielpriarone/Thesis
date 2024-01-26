@@ -61,13 +61,18 @@ RF.fit(X,kmeans.labels_)
 correct_predictions = RF.predict(X) == kmeans.labels_
 print("Accuracy:",np.sum(correct_predictions)/len(correct_predictions))
 
+# %% feature importance normalized
+feat_importance = RF.feature_importances_/np.max(RF.feature_importances_)
+
 # %% select important features
 fig, ax = plt.subplots()
-ax.bar(range(len(RF.feature_importances_)),RF.feature_importances_,color='k')
+ax.bar(np.array(range(len(feat_importance)))+1,feat_importance,color='k')
 ax.set_xlabel('feature')
 ax.set_ylabel('importance')
-ax.set_xticks(range(len(RF.feature_importances_)))
+ax.set_xticks(np.array(range(len(feat_importance)))+1)
 plt.title("Feature importance")
 
+# save the data to a file
+np.savetxt("feature_importance.csv",feat_importance,delimiter=',')
 
 plt.show()

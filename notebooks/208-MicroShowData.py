@@ -16,6 +16,17 @@ df_timeseries = pd.read_csv(r"C:\Users\ariel\Documents\Courses\Tesi\Code\timeser
 # standardise the features
 df_features.iloc[:, 1:] = (df_features.iloc[:, 1:] - df_features.iloc[:, 1:].mean()) / df_features.iloc[:, 1:].std()
 
+def setcolor(i):
+    test_intervals = [99, 199, 299]
+    if i < test_intervals[0]:
+        return 'blue'
+    elif i < test_intervals[1]:
+        return 'red'
+    elif i < test_intervals[2]:
+        return 'green'
+    else:
+        return 'orange'  
+
 # Create a plot for dataframe of features
 fig = plt.figure()
 ax1 = fig.add_subplot(111)
@@ -23,34 +34,20 @@ colormap = cm.get_cmap('cool')
 i=0
 for timestamp in df_features['Timestamp'].unique():
     df_features_timestamp = df_features[df_features['Timestamp'] == timestamp]
-    if i < 2:
-        color = 'blue'
-    elif i < 4:
-        color = 'red'
-    elif i < 30:
-         color = 'green'
-    else:
-        color = 'orange'  
+    color = setcolor(i) 
     ax1.plot(df_features_timestamp.columns[1:], df_features_timestamp.values[0, 1:], label=timestamp, color = color)
     i+=1
 ax1.set_xlabel('Timestamp')
 ax1.set_ylabel('Features')
 ax1.tick_params(labelrotation=45)
-ax1.legend()
+
 
 #Create a plot for dataframe of timeseries
 fig = plt.figure()
 ax2 = fig.add_subplot(111)
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 99:
-        color = 'blue'
-    elif i < 199:
-        color = 'red'
-    elif i < 299:
-         color = 'green'
-    else:
-        color = 'orange'   
+    color = setcolor(i)    
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     ax2.plot(df_timeseries_timestamp.columns[1:], df_timeseries_timestamp.values[0, 1:], label=timestamp, color = color)
     i+=1
@@ -65,14 +62,7 @@ fig = plt.figure()
 ax2 = fig.add_subplot(111)
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 99:
-        color = 'blue'
-    elif i < 199:
-        color = 'red'
-    elif i < 299:
-         color = 'green'
-    else:
-        color = 'orange'  
+    color = setcolor(i) 
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     ax2.plot(df_timeseries_timestamp.columns[1:], np.divide(df_timeseries_timestamp.values[0, 1:]-1.235,0.24), label=timestamp, color = color)
     i+=1
@@ -88,14 +78,7 @@ sampling_rate = 5000 # Hz
 N=6000 # number of samples
 i=0
 for timestamp in df_timeseries['Timestamp'].unique():
-    if i < 99:
-        color = 'blue'
-    elif i < 199:
-        color = 'red'
-    elif i < 299:
-         color = 'green'
-    else:
-        color = 'orange'  
+    color = setcolor(i) 
     df_timeseries_timestamp = df_timeseries[df_timeseries['Timestamp'] == timestamp]
     # normalize the timeseries
     fourier_timeserie = (df_timeseries_timestamp.values[0, 1:]-np.mean(df_timeseries_timestamp.values[0, 1:]))
