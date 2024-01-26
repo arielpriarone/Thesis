@@ -31,6 +31,7 @@ else:
     snap_file.write("Timestamp\t")
     for i in range(n_features):
         snap_file.write(f"Feature {i+1}\t")
+    snap_file.write("Novelty")
     snap_file.write("\n")
 
 for i in range(n_train_snaps):

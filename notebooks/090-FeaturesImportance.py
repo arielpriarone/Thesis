@@ -23,7 +23,7 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 src.vis.set_matplotlib_params()
 
 # script settings
-featfilepath = auxpath + "notebooks/train_data.csv"   # folder path
+featfilepath = "train_data.csv"   # folder path
 
 features = pd.read_csv(featfilepath,sep='\t')
 features = features.drop(columns=["Timestamp"]).dropna(axis=1)

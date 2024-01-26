@@ -8,6 +8,7 @@ from math import ceil, floor
 from sklearn.metrics import silhouette_score
 import datetime
 import matplotlib as mpl
+import typer
 
 # %% init
 console = Console()
@@ -33,6 +34,8 @@ try:
 except:
     feat_weights = np.ones(features_matrix.shape[1])
     console.print("Feature importance file not found, all features will be considered with equal weights.", style="magenta")
+    if not typer.confirm("do you want to proceed?", abort=True):
+        exit()
 console.print("Data loaded successfully.", style="magenta")
 console.print("Number of records: ", features_matrix.shape[0], style="magenta")
 n_features = features_matrix.shape[1] # 67 - number of features

@@ -638,7 +638,7 @@ double calcSnapDistanceError(){
 
 void std_sclr(){
 	for(int i=0; i<feat_len; i++){
-		feat_stdsd[i]=(feat_array[i]-means[i])/stds[i];
+		feat_stdsd[i]=(feat_array[i]-means[i])/stds[i];//*weights[i];
 	}
 }
 
@@ -650,7 +650,7 @@ void snapReadyHandler(){
 	}
 	else
 	{
-		snap_recorded = FALSE;						// reset the recorded flag, because the sample has been consumed
+		snap_recorded = FALSE;		// reset the recorded flag, because the sample has been consumed
 
 		/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
 		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array); // extract the features
