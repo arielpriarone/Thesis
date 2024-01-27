@@ -1,7 +1,8 @@
 # %%
 import importlib
 import time
-from bson import Timestamp # COMMENTO AGGIUNTO
+from bson import Timestamp
+import matplotlib # COMMENTO AGGIUNTO
 import matplotlib.pyplot as plt
 import numpy as np
 import sklearn
@@ -12,6 +13,8 @@ from rich import print
 from datetime import datetime
 from sklearn.preprocessing import StandardScaler
 import scipy
+import matplotlib
+matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 
 from IPython import get_ipython
@@ -25,7 +28,8 @@ sensors = ["Bearing 3 x"]
 def rms(x):
     return np.sqrt(np.mean(np.array(x)**2))
 def normalize(x):
-    return (x-np.min(x))/(np.max(x)-np.min(x))
+    std = StandardScaler()
+    return std.fit_transform(x.reshape(-1,1)).flatten()
 
 # database connection
 mongoclient, database, collection = src.data.mongoConnect("BACKUP", "RawData_1st_test_IMSBearing","mongodb://localhost:27017/")
@@ -63,22 +67,23 @@ for i, document in enumerate(documents):
         skew[sensor] = np.append(skew[sensor], scipy.stats.skew(document[sensor]))
         kurtosis[sensor] = np.append(kurtosis[sensor], scipy.stats.kurtosis(document[sensor]))
     timestamps.append(document["timestamp"])
+data = {"$\mu$": mu, "RMS": RMS, "P2P": p2p, "$\hat{\sigma}$": std, "$\hat{\gamma}$": skew, "$\hat{\kappa}$": kurtosis}
+# %% Plot
 
-# Plot
-fig, ax = plt.subplots(1,1)
-for sensor in sensors:
-    ax.plot(timestamps,normalize(mu[sensor]), label="$\mu$")
-    ax.plot(timestamps,normalize(RMS[sensor]), label="RMS")
-    ax.plot(timestamps,normalize(p2p[sensor]), label="P2P")
-    ax.plot(timestamps,normalize(std[sensor]), label="$\hat{\sigma}$")
-    ax.plot(timestamps,normalize(skew[sensor]), label="$\hat{\gamma}$")
-    ax.plot(timestamps,normalize(kurtosis[sensor]), label="$\hat{\kappa}$")
+fig, ax = plt.subplots(6,1,sharex=True)
+for i, metric in enumerate(["$\mu$", "RMS", "P2P", "$\hat{\sigma}$", "$\hat{\gamma}$", "$\hat{\kappa}$"]):
+    for sensor in sensors:
+        ax[i].plot(timestamps,normalize(data[metric][sensor]), label=sensor)
+        ax[i].set_ylabel(metric)
+        
+ax[i].set_xlabel('timestamp')
+# ax.legend()
+ax[i].tick_params(axis='x', rotation=45)
+ax[2].annotate("Novel behaviour", (datetime.fromisoformat("2003-11-22 16:06"), 1.4),(timestamps[800], 3.5), arrowprops=dict(arrowstyle="->"), fontsize=9)
 
-ax.set_xlabel('timestamp')
-ax.set_ylabel('Normalized time domain\n features')
-ax.legend()
-ax.tick_params(axis='x', rotation=45)
 
 
 plt.tight_layout()
 plt.show()
+
+# %%
