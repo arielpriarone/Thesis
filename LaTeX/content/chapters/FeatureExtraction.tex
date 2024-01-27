@@ -48,7 +48,7 @@ Let's take this as a starting point for our work. The dataset contains the vibra
     \end{table}
 
 \section{Time-domain features}
-Let's consider a timeserie $\vect{x}$ containing $n$ samples $x_1, x_2, \dots, x_n$. The goal of the feature extraction process is to extract a set of features $\vect{f} = \{f_1, f_2, \dots, f_m\}$ that can be used to describe the signal. In this section, we will describe the features that will be used in the developed framework.
+Let's consider a timeserie $\vect{x}$ containing $n$ samples $x_1, x_2, \dots, x_n$. The goal of the feature extraction process is to extract a set of features $\vect{f}_t = \{f_1, f_2, \dots, f_m\}$ that can be used to describe the signal. In this section, we will describe the features that will be used in the developed framework.
 \paragraph{Mean}
 The first feature to be considered is simply the mean of the signal. It is defined as
 \begin{equation}
@@ -71,19 +71,25 @@ The peak-to-peak value of the signal is defined as
 The standard deviation is a measure of the dispersion of the signal and is defined with respect a known distribution with knowledge of the true mean $\mu_{true}$ as
 
 \begin{equation}
-    \hat{\sigma} = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \mu_{true})^2}
+    {\sigma} = \sqrt{\frac{1}{n}\sum_{i=1}^n (x_i - \mu_{true})^2}
 \end{equation}
 
 but since in our case we don't know the true mean, we will use the sampled standard deviation, that is the best estimate, defined as
 
 \begin{equation}
-    \sigma = \sqrt{\frac{1}{n-1}\sum_{i=1}^n (x_i - \mu)^2}
+    \hat{\sigma} = \sqrt{\frac{1}{n-1}\sum_{i=1}^n (x_i - \mu)^2}
 \end{equation}
 
 \paragraph{Skewness}
 The skewness is a measure of the asymmetry of the signal and is defined as
 \begin{equation}
-    \gamma = \frac{1}{n}\sum_{i=1}^n \left(\frac{x_i - \mu}{\sigma}\right)^3
+    \gamma = \gls{sym:E}\left[ \left(\frac{x - \mu}{\sigma}\right)^3 \right]
+\end{equation}
+
+and can be estimated on sampled data as
+
+\begin{equation}
+  \hat{\gamma} = \frac{\sqrt{n(n-1)}}{n-2} \frac{\tfrac{1}{n} \sum_{i=1}^n (x_i-\overline{x})^3}{\left[\tfrac{1}{n} \sum_{i=1}^n (x_i-\overline{x})^2 \right]^{3/2}}
 \end{equation}
 
 \paragraph{Kurtosis}
@@ -97,3 +103,6 @@ and can be estimated on sampled data as
 \begin{equation}
   \hat{\kappa} = \frac{(n+1)\,n}{(n-1)\,(n-2)\,(n-3)} \; \frac{\sum_{i=1}^n (x_i - \mu)^4}{k_2^2} - 3\,\frac{(n-1)^2}{(n-2) (n-3)}
 \end{equation}
+
+\section{Frequency-domain features}
+
