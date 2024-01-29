@@ -22,7 +22,7 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
 src.vis.set_matplotlib_params()
 
-sensors = ["Bearing 3 x"]
+sensors = ["Bearing 3 x"]#["Bearing 1 x" , "Bearing 1 y", "Bearing 2 x", "Bearing 2 y", "Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
 
 # RMS
 def rms(x):
@@ -73,14 +73,13 @@ data = {"$\mu$": mu, "RMS": RMS, "P2P": p2p, "$\hat{\sigma}$": std, "$\hat{\gamm
 fig, ax = plt.subplots(6,1,sharex=True)
 for i, metric in enumerate(["$\mu$", "RMS", "P2P", "$\hat{\sigma}$", "$\hat{\gamma}$", "$\hat{\kappa}$"]):
     for sensor in sensors:
-        ax[i].plot(timestamps,normalize(data[metric][sensor]), label=sensor)
+        ax[i].plot(timestamps,normalize(data[metric][sensor]), label=sensor, color='k', linewidth=0.5)
         ax[i].set_ylabel(metric)
         
 ax[i].set_xlabel('timestamp')
-# ax.legend()
 ax[i].tick_params(axis='x', rotation=45)
-ax[2].annotate("Novel behaviour", (datetime.fromisoformat("2003-11-22 16:06"), 1.4),(timestamps[800], 3.5), arrowprops=dict(arrowstyle="->"), fontsize=9)
-
+ax[2].annotate("Novel behaviour\n2003-11-22 16:06", (datetime.fromisoformat("2003-11-22 16:06"), 1.4),(timestamps[800], 3.5), arrowprops=dict(arrowstyle="->"), fontsize=9)
+#ax[0].legend(ncol=4, bbox_to_anchor=(0.5, 1.4), loc='upper center', fontsize=8)
 
 
 plt.tight_layout()

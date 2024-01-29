@@ -37,8 +37,7 @@ def FFT(array, samplFreq=1, preproc=None):
             window = np.hamming(len(array))
             _prepArray = np.multiply(array, window)  # preprocessed array
         case 'Flip':
-            np.flip(array[0:len(array) - 1])
-            _prepArray = np.concatenate((array, np.flip(array[0:len(array) - 1])), axis=0)
+            _prepArray = np.sum(np.array([array, -np.flip(array)]), axis=0)  # preprocessed array
         case _:
             _prepArray = array
     _aux = np.fft.fft(_prepArray) / len(_prepArray)  # Normalize amplitude

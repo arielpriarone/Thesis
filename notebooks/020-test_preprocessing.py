@@ -2,6 +2,7 @@
 import importlib # COMMENTO AGGIUNTO
 import matplotlib.pyplot as plt
 import numpy as np
+from pyparsing import line
 import src
 import importlib
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
@@ -22,34 +23,36 @@ samplFreq=20000 #hz
 # %%
 # plotting
 #plt.figure(figsize=(10,6))
-fig, axes = plt.subplots(nrows=2, ncols=1,)
+fig, axes = plt.subplots(nrows=2, ncols=1)
 
 for ax in axes.flat:
     ax.set_axisbelow(True)
-    ax.grid(True,'both','both')
-    ax.set_ylabel('Magnitude')
-axes[1].set_yscale('log')
+
+axes[0].set_ylabel('Amplitude')
+axes[1].set_ylabel('Magnitude')
+#axes[1].set_yscale('log')
 axes[0].set_xlabel('Time [s]');axes[1].set_xlabel('Frequency [Hz]')
 plt.tight_layout()
 #performing fast fourier trasfotm
 # no preprocessing
 FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,preproc=None)
-axes[0].plot(snap.rawData['time'], prepSignal, alpha=0.5,label='No preprocessing')
-axes[1].scatter(freqs, FFT,s=0.5, alpha=0.2)
-# Hann window preprocessing
-FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,preproc='Hann')
-axes[0].plot(snap.rawData['time'], prepSignal, alpha=0.5,label='Hann window')
-axes[1].scatter(freqs, FFT,s=0.5, alpha=0.2)
-# Hamming window preprocessing
-FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,preproc='Hamming')
-axes[0].plot(snap.rawData['time'], prepSignal, alpha=0.5,label='Hamming window')
-axes[1].scatter(freqs, FFT,s=0.5, alpha=0.2)
+axes[0].plot(snap.rawData['time'], prepSignal, label='No preprocessing', linewidth=0.5)
+axes[1].scatter(freqs, FFT,s=0.5)
 # Flip window preprocessing
 FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,preproc='Flip')
-axes[0].plot(np.linspace(0,2*snap.rawData['time'].iloc[-1],len(prepSignal)), prepSignal, alpha=0.5,label='Flip and Reverse')
-axes[1].scatter(freqs, FFT,s=0.5, alpha=0.2)
+axes[0].plot(snap.rawData['time'], prepSignal, label='Flip and Reverse', linewidth=0.5)
+axes[1].scatter(freqs, FFT,s=0.5)
+# Hann window preprocessing
+FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,preproc='Hann')
+axes[0].plot(snap.rawData['time'], prepSignal, label='Hann window', linewidth=0.5)
+axes[1].scatter(freqs, FFT,s=0.5)
+# Hamming window preprocessing
+FFT, freqs, prepSignal = src.features.FFT(snap.rawData["Bearing 3 x"],samplFreq,preproc='Hamming')
+axes[0].plot(snap.rawData['time'], prepSignal, label='Hamming window', linewidth=0.5)
+axes[1].scatter(freqs, FFT,s=0.5)
 
-fig.legend(loc='upper center',bbox_to_anchor=(0.5,1),ncol=2)
+
+fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1), ncol=2)
 plt.subplots_adjust(top=0.9)
 plt.show()
 # %%
