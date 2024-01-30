@@ -252,14 +252,14 @@ To overcome this problem it is necessary to find a method that exploits the same
 
 At this point, let's consider a \gls{wpd} with a dept of $6$, that outputs $2^6=64$ coefficients. We are going to take the norm of each coefficient as a feature so, in the end, we will have $64$ features (from \quoted{aaaaaa} that is lead from all the approximation coefficients to \quoted{dddddd} that that is lead from all the detail coefficients instead, passing for all the combinations in between). The \gls{wpd} of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset is shown in \autoref{fig:IMS_WPD_health} as the bearing is new, and in \autoref{fig:IMS_WPD_fault} as the bearing is degraded. It is possible to see that the \gls{wpd} is able to capture the presence of the fault frequencies.
 
-\begin{figure}[hbtp]
+\begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/FeatureExtraction/IMS_WPD_health.pdf}
     \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions}
     \label{fig:IMS_WPD_health}
 \end{figure}
 
-\begin{figure}[hbtp]
+\begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/FeatureExtraction/IMS_WPD_fault.pdf}
     \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in abnormal conditions}
