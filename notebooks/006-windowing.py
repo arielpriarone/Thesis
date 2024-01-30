@@ -12,7 +12,7 @@ hamming_window = np.hamming(window_length)
 # Plot the window functions
 plt.plot(hann_window, label='Hann', linestyle='-', color='k')
 plt.plot(hamming_window, label='Hamming', linestyle='--', color='k')
-plt.xlabel(r'$n$')
+plt.xlabel(r'$i$')
 plt.ylabel('Amplitude')
 plt.xticks([0, 25, 50, 75, 100], ['1', r'$\frac{1}{4}N$', r'$\frac{1}{2}N$', r'$\frac{3}{4}N$', r'$N$'])
 plt.legend()

@@ -13,6 +13,7 @@ auxpath=''                                                  # auxilliary path be
 if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
     auxpath='.'
+src.visualization.set_matplotlib_params()                  # set nicer plot parameters
 
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
@@ -21,11 +22,6 @@ decompose   = False                                          # decompose using w
 TrainingData={}                                             # empty dictionary to save data 
 n_split     = 1500                                          # number of sample to split the dataset
 
-plt.rcParams.update({
-    "text.usetex": True,
-    "font.family": "sans-serif",
-    "font.sans-serif": "Helvetica",
-})
 
 indx=0
 fileList=[]

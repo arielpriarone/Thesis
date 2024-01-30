@@ -37,7 +37,9 @@ def FFT(array, samplFreq=1, preproc=None):
             window = np.hamming(len(array))
             _prepArray = np.multiply(array, window)  # preprocessed array
         case 'Flip':
-            _prepArray = np.sum(np.array([array, -np.flip(array)]), axis=0)  # preprocessed array
+            _prepArray = np.concatenate([array, np.flip(array)],axis=0) # preprocessed array
+            __indeces = np.arange(0, len(_prepArray), 2) # indeces of the odd numbers
+            _prepArray = _prepArray[__indeces] # drop the odd numbers
         case _:
             _prepArray = array
     _aux = np.fft.fft(_prepArray) / len(_prepArray)  # Normalize amplitude
@@ -190,7 +192,7 @@ class FA(src.data.DB_Manager):
         self.__legend_labels = copy.deepcopy(self.sensors)
         if self.MinMax is not None:
             self.__legend_lines.extend([Line2D([0], [0],marker=6, color='w',markerfacecolor=self.__colors[indx], lw=4, alpha=1) for indx, sensor in enumerate(self.sensors)]) # type: ignore
-            minmax_legend = [f"{sensor} min/max record" for sensor in self.sensors]
+            minmax_legend = [f"{sensor} min/max" for sensor in self.sensors]
             self.__legend_labels.extend(minmax_legend)
             axs.set_ylim(ymin=self.__minMax[0]*1.1, ymax=self.__minMax[1]*1.3) # type: ignore
         return axs
@@ -235,7 +237,7 @@ class FA(src.data.DB_Manager):
 
         axs.set_xticks(self.__locator_ticks,self.features_list)
         axs.tick_params(axis='x',rotation = 90)
-        axs.legend(self.__legend_lines, self.__legend_labels, loc='upper right',  ncol=len(self.sensors)*2)
+        axs.legend(self.__legend_lines, self.__legend_labels, loc='upper right',  ncol=len(self.sensors))
         axs.set_ylabel('Feature value [-]')
         axs.set_xlabel('Features [-]')
         axs.spines['left'].set_visible(True)

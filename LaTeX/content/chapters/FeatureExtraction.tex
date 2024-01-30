@@ -2,7 +2,7 @@
 \label{ch:FeatureExtraction}
 
 Before diving into the novelty detection framework itself, the features to be used need to be defined and extracted from the data. Since our goal is to detect a novel behaviour, we are interested in both \quoted{time-domain} and \quoted{frequency-domain} features. The former are used to capture the temporal evolution of the signal, while the latter are used to capture the spectral content of the signal. 
-In this chapter, we will first introduce the reference dataset that will be used to test the framework and then we will describe the features that will be used in the framework. The \gls{nd} framework will work on the complete collection of teatures $\vect{F}=\{\vect{F}_t, \vect{F}_f\}$, where $\vect{F}_t$ is the collection of time-domain features and $\vect{F}_f$ is the collection of frequency-domain features. Some of the featires will be extracted for all the signals available, while some other only on a subset of the signals, depending on the settings of the framework, as we will see in \autoref{ch:Framework}. 
+In this chapter, we will first introduce the reference dataset that will be used to test the framework and then we will describe the features that will be used in the framework. The \gls{nd} framework will work on the complete collection of teatures $\vect{F}=\{\vect{F}_t, \vect{F}_f\}$, where $\vect{F}_t$ is the collection of time-domain features and $\vect{F}_f$ is the collection of frequency-domain features. Some of the featires will be extracted for all the signals available, while some other only on a subset of the signals, depending on the settings of the framework, as it will be explained in \autoref{ch:Framework}. 
 
 
 
@@ -130,7 +130,8 @@ To visualise the evolution of the features over time, let's consider the all the
 
 To capure also the frequency behaviour of the signal, other tools are needed. In this section, we will describe the frequency-domain features  $\vect{F}_f = \{F_{m+1}, F_{m+2}, \dots, F_l\}$ that will be used in the developed framework.
 
-\subsection{Fourier transform}
+\subsection{Fourier Transform}
+\label{sec:FFT}
 
 One powerful tool to analyse the frequency content of a signal is the fourier transform or, in the case of a discrete signal, the Discrete Fourier Transform(\gls{dft}), that has a very efficient implementation in the Fast Fourier Transform (\gls{fft}) algorithm \cite{cooley1965algorithm}. This algorithm is implemented in many programming languages and libraries, including \texttt{python} and \texttt{C}. The theory behing this topic is breafly described in \autoref{app:FFT}. 
 
@@ -147,7 +148,7 @@ Consider the period of the undisturbed signal, that is the \gls{lcm} of the peri
     T = \text{LCM} \left( \frac{1}{2} \si{\s},\frac{1}{5}\si{\s},\frac{1}{7}\si{\s},\frac{1}{15}\si{\s} \right) = 1 \si{\s}
 \]
 
-So, we were looking to a signal that has a signal of one second, sampled for exactly one second. Let's see what happens if we sample the same signal for a time that is not an integer multiple of the period. In \autoref{fig:FD_known_leackage} it is shown the \gls{dft} of the same signal as before, but sampled for $t \in [0, 0.9]$. It is possible to see that the peaks are still at the frequencies of the sinusoids composing the signal, but they are not single points as it appears that also frequencies near the true frequencies are present. This phenomenon is called \emph{spectral leackage} and happens because the signal is not sampled for an integer number of periods \cite{SpectralLeakage}. 
+So, we were looking to a signal that has a period of one second, sampled for exactly one second. Let's see what happens if we sample the same signal for a time that is not an integer multiple of the period. In \autoref{fig:FD_known_leackage} it is shown the \gls{dft} of the same signal as before, but sampled for $t \in [0, 0.9]$. It is possible to see that the peaks are still at the frequencies of the sinusoids composing the signal, but they are not single points as it appears that also frequencies near the true frequencies are present. This phenomenon is called \emph{spectral leackage} and happens because the signal is not sampled for an integer number of periods \cite{SpectralLeakage}. 
 
 
 \begin{figure}
@@ -176,18 +177,29 @@ So, we were looking to a signal that has a signal of one second, sampled for exa
     \includegraphics[scale=1]{images/FeatureExtraction/windows.pdf}
     \caption{Hann and Hamming windows}
     \label{fig:windows}
-\end{figure}
+\end{figure} 
 
 
-\subsection{Preprocessing}
-Up to now, it has been shown that the \gls{dft} will translate the presence of a disturbance in the time domain into several periodic components in the frequency domain. But it has the weakness of the spectral leackage if the sampling interval is not an integer multiple of the period of the signal that is the most likely scenario in a real application. To compensate this fenomena, it is better to use a trasformation to the signal that make it artificially stant and end with the same value. This can be done with a \emph{windowing} function, or with the \quoted{flip and reverse} method \cite{Preprocessing}. 
+\subsubsection{Preprocessing}
+Up to now, it has been shown that the \gls{dft} will translate the presence of a disturbance in the time domain into several periodic components in the frequency domain. But it has the weakness of the spectral leackage if the sampling interval is not an integer multiple of the period of the signal that is the most likely scenario in a real application. To compensate this fenomena, it is better to use a trasformation to the signal that make it artificially start and end with the same value. This can be done with a \emph{windowing} function, or with the \emph{flip and reverse} method \cite{Preprocessing}. 
 
 The most common windowing funcitons are the \emph{Hann} and the \emph{Hamming} windows, defined as:
 \begin{eqnarray}
-    w_{hann}(n) = 0.5\; \left[1 - \cos \left ( \frac{2 \pi n}{N} \right) \right] \\
-    w_{hamming}(n) = \frac{25}{46}\; \left[1 - \cos \left ( \frac{2 \pi n}{N} \right) \right]
+    w_{hann}(i) = 0.5\; \left[1 - \cos \left ( \frac{2 \pi i}{n} \right) \right] \\
+    w_{hamming}(i) = \frac{25}{46}\; \left[1 - \cos \left ( \frac{2 \pi i}{n} \right) \right]
 \end{eqnarray}
-where $N$ is the total number of samples. Those funcitons are plotted in \autoref{fig:windows}. The preprocessing operation is simply to multiply the signal by the windowing function. this will make the first and last point of the signal exactly zero in the case of the Hann window, and very close to zero in the case of the Hamming window but with the advantage of having a narrower peak in the spectrum. The \quoted{flip and reverse} method is simply to subtract a flipped and reversed copy of the signal to itself, i.e. $x_{new}(n) = x(n) - x(N-n) \, \forall n \in [1,N]$. A comparison of those preprocessing techniques is shown in \autoref{fig:FD_preprocessing} and \autoref{fig:FD_preprocessing_dist}. In both figures, it is evident that the \quoted{flip and reverse} method generate a fake peak at half the sampling frequency, while the windowing funciton don't. Moreover, looking at \autoref{fig:FD_preprocessing_dist}, it is possible to see that the Hann window better suppress the spectral leackage.
+where $i$ is the considered sample as indipendent variable and $n$ is the total number of samples. Those funcitons are plotted in \autoref{fig:windows}. The preprocessing operation is simply to multiply the signal by the windowing function. this will make the first and last point of the signal exactly zero in the case of the Hann window, and very close to zero in the case of the Hamming window but with the advantage of having a narrower peak in the spectrum. 
+
+The \quoted{flip and reverse} method is simply to concatenate a flipped copy of the signal to itself and downsampling it to preserve the original length of the array, as follows \cite{Preprocessing}:
+
+\begin{equation}
+    x_{new}(i) = \begin{cases}
+        x(2i) & \text{if } i \leq \frac{n}{2} \\
+        x(2(n-i)) & \text{if } i > \frac{n}{2}
+    \end{cases} \qquad \forall i \in [1,n]
+\end{equation}
+
+A comparison of those preprocessing techniques is shown in \autoref{fig:FD_preprocessing} and \autoref{fig:FD_preprocessing_dist}. In both figures, it is evident that the \quoted{flip and reverse} method generate a fake peak at half the sampling frequency, while the windowing funciton don't. Moreover, looking at \autoref{fig:FD_preprocessing_dist}, it is possible to see that the Hann window better suppress the spectral leackage.
 In figure \autoref{fig:IMS}, it is shown the effect of different preprocessing techniques on a real world signal from the \gls{ims} dataset. The Hann window will be implicitly used in the the rest of this section.
 
 
@@ -195,22 +207,55 @@ In figure \autoref{fig:IMS}, it is shown the effect of different preprocessing t
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_Preproc_sync.pdf}
-    \caption{FFT of the signal  with a domain that is an integer multiple of the period, and a preprocessing technique applied}
+    \caption{FFT of the signal  with a domain that is an integer multiple of the period, and preprocessing techniques applied}
     \label{fig:FD_preprocessing}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_Preproc_outofsync.pdf}
-    \caption{FFT of the signal with a domain that is not an integer multiple of the period, and a preprocessing technique applied,}
+    \caption{FFT of the signal with a domain that is not an integer multiple of the period, and preprocessing techniques applied}
     \label{fig:FD_preprocessing_dist}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_PreprocIMS.pdf}
-    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions and with preprocessing techniques applied}
+    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions, with preprocessing techniques applied}
     \label{fig:IMS}
+\end{figure}
+
+
+\subsubsection{Application to the reference dataset}
+
+At this point, to see if the spectrum is representative of a fault, as it has been done for the time-domain features, we can plot all the spectrum for all the snapshots of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset, as shown in \autoref{fig:IMS_FD}. Looking at the picture, we can see that the signature frequencies of faults are present in the spectrum, and they become more and more prominent as the bearing degrades. This is a good sign justifying to use the spectrum to detect the novel behaviour.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/FeatureExtraction/FD_IMS.png}
+    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions with hann window preprocessing
+    applied}
+    \label{fig:IMS_FD}
+\end{figure}
+
+
+\subsection{Wavelet Packet Decomposition}
+\label{sec:WPD}
+
+\subsubsection{Motivation}
+
+In the previous \autoref{sec:FFT}, it as been shown that the spectrum of the signal contain useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the features extraction, and the memory usage. Considering only the \gls{fft} of all signal of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10 \text{kSamples} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
+
+To overcome this problem it is necessary to find a method that exploits the same information in the frequency domain, but using much less computational power and memory. Other tools for the frequency analysis are the Wavelet Trasform, and in particular the Wavelet Packet Decomposition (\gls{wpd}) has been used in the developed framework. The theory behind this topic is breafly described in \autoref{app:wavelet}.
+
+\subsubsection{Application to the reference dataset}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.99]{images/FeatureExtraction/WPD_IMS.pdf}
+    \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions}
+    \label{fig:IMS_WPD}
 \end{figure}
 
 \section{Conclusions}

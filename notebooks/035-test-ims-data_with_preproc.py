@@ -53,7 +53,7 @@ fig = plt.figure('figure1')#,figsize=[15, 15])
 ax = plt.axes(projection='3d')
 ax.set_xlabel('Frequency [Hz]')
 ax.set_ylabel('Snapshots')
-ax.set_zlabel('amplitude')
+ax.set_zlabel('Magnitude')
 #ax.yaxis.set_ticks(np.arange(0,6,1))
 dummy=np.round(np.linspace(0, len(fileList) - 1, 6)).astype(int).tolist()
 print(dummy)
@@ -61,5 +61,6 @@ print(dummy)
 # Create surface plot
 ax.scatter(X, Y, freqAnaly, marker='.',c=freqAnaly/np.max(freqAnaly), cmap='turbo')
 
+# plt.savefig(r"C:\Users\ariel\Documents\Courses\Tesi\Code\LaTeX\images\FeatureExtraction\FFT_IMS.jpeg", dpi=2400)
 plt.show()
 # %%
