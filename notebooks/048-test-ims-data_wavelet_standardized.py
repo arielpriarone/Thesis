@@ -103,21 +103,22 @@ ax.set_xticklabels(IMSDATA['nodes'])
 
 # %%
 # analyze just one snapshot
-aux=200 # number of the considered sample
+aux=10 # number of the considered sample
 
-fig, ax = plt.subplots(figsize=(6.4,1.5))
-ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:])
-ax.tick_params(labelbottom=False)
-ax.set_ylabel('Amplitude')
+fig, ax = plt.subplots(figsize=[2*W, W/16*9])
+ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:], color='gray')
+ax.set_xlabel('Features')
+ax.set_ylabel('Value')
+ax.tick_params(axis='x',rotation=90)
 mp2tk.save(tickpath+'WT_SingSnap_a.tex',axis_height='3cm', axis_width='0.9\linewidth')
 
-fig, ax = plt.subplots(figsize=(6.4,1.5))
+fig, ax = plt.subplots()
 ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:]/np.linalg.norm(IMSDATA['wavanaly'][aux,:]))
-ax.tick_params(labelbottom=False)
+ax.tick_params(axis='x',rotation=90)
 ax.set_ylabel('Amplitude')
 mp2tk.save(tickpath+'WT_SingSnap_b.tex',axis_height='3cm', axis_width='294.76926pt')
 
-fig, ax = plt.subplots(figsize=(6.4,1.5))
+fig, ax = plt.subplots()
 ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly_standardized'][aux,:])
 ax.set_ylabel('Amplitude')
 ax.tick_params(axis='x',rotation=90)
@@ -137,7 +138,7 @@ image1 = IMSDATA['wavanaly_standardized'][0:0+aux,:]
 image2 = IMSDATA['wavanaly_standardized'][start:start+aux,:]
 
 # Create a figure and a grid for the layout
-fig = plt.figure(figsize=(5.5, 3))
+fig = plt.figure()
 gs = fig.add_gridspec(1, 3, width_ratios=[1, 1, 0.05])  # Add an extra column for the colorbar
 
 # Create the first subplot for image1

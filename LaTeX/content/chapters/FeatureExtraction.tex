@@ -244,12 +244,30 @@ At this point, to see if the spectrum is representative of a fault, as it has be
 
 \subsubsection{Motivation}
 
-In the previous \autoref{sec:FFT}, it as been shown that the spectrum of the signal contain useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the features extraction, and the memory usage. Considering only the \gls{fft} of all signal of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10 \text{kSamples} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
+In the previous \autoref{sec:FFT}, it as been shown that the spectrum of the signal contain useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the features extraction, and the memory usage. Considering only the \gls{fft} of all signal of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10000 \text{Features} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
 
 To overcome this problem it is necessary to find a method that exploits the same information in the frequency domain, but using much less computational power and memory. Other tools for the frequency analysis are the Wavelet Trasform, and in particular the Wavelet Packet Decomposition (\gls{wpd}) has been used in the developed framework. The theory behind this topic is breafly described in \autoref{app:wavelet}.
 
 \subsubsection{Application to the reference dataset}
 
+At this point, let's consider a \gls{wpd} with a dept of $6$, that outputs $2^6=64$ coefficients. We are going to take the norm of each coefficient as a feature, so in the end we will have $64$ features (from \quoted{aaaaaa} that is lead from all the approximation coefficients to \quoted{dddddd} that that is lead from all the detail coeficients instead, passing for all the combinations in between). The \gls{wpd} of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset is shown in \autoref{fig:IMS_WPD_health} as the bearing is new, and in \autoref{fig:IMS_WPD_fault} as the bearing is degraded. It is possible to see that the \gls{wpd} is able to capture the presence of the fault frequencies.
+
+\begin{figure}[hbtp]
+    \centering
+    \includegraphics[width=\textwidth]{images/FeatureExtraction/IMS_WPD_health.pdf}
+    \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions}
+    \label{fig:IMS_WPD_health}
+\end{figure}
+
+\begin{figure}[hbtp]
+    \centering
+    \includegraphics[width=\textwidth]{images/FeatureExtraction/IMS_WPD_fault.pdf}
+    \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in abnormal conditions}
+    \label{fig:IMS_WPD_fault}
+\end{figure}
+
+At this point, it is possible to extract the features with the \gls{wpd} and plot them over time, for the whole dataset, as it has been done for the \gls{fft} in \autoref{fig:IMS_FD}. The result is shown in \autoref{fig:IMS_WPD}. The memory consumption of the data in the second figure is $64 \si{\bit} \times 64 \text{Features} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 1.1 \text{Mb}$, that means that the memory saving obtaines using \gls{wpd} instead of \gls{fft} exceeds $99\%$. 
+Despite this huge memory saving, it is possible to see that the \gls{wpd} is able to retain the information about the fault frequencies, and it is possible to see that the fault frequencies become more and more prominent as the bearing degrades over time. For this reason, the \gls{wpd} will be used in the developed framework, along with the time-domain features.
 
 \begin{figure}
     \centering
