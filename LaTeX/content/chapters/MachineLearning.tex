@@ -395,7 +395,7 @@ Another metric that can be used instead of Gini impurity inside the same cost fu
 This renders trees very similar to the ones obtained using Gini impurity, but the entropy is slightly slower to compute, due to the logarithm. however, it tends to produce slightly more balanced trees \cite{raschka2013decisiontrees}.
 
 \paragraph{Avoid overfitting}
-To avoid overfitting the data, the \gls{cart} algorithm implementation in \texttt{sklearn} has some hyperparameters that can be tuned:
+To avoid overfitting the data, the \gls{cart} algorithm implementation in \texttt{sklearn} has some \gls{glo:hyperparameter}s that can be tuned:
 \begin{itemize}
     \item \texttt{max\_depth}: the maximum depth of the tree;
     \item \texttt{min\_samples\_split}: the minimum number of samples a node must have before it can be split;
@@ -420,7 +420,7 @@ As anticipated, the \gls{dt}s can also be used for regression, in this case, the
 \end{equation}
 
 \paragraph{Advantages and limitations}
-The main disadvantages of \gls{dt}s are that the classification proedure uses thresholds on the features value (cutting the hyperspace in orthogonal hyperplanes), so they are sensitive to axis orientation, and they are very sensitive to small variations in the training data. They are also very sensitive to the hyperparameters, so a small caiations in constraints leads to very different trees. The main advantages are that they are very fast to train, and the resulting model is very fast to make predictions, they are very easy to understand and visualize and they do not require any feature scaling or centering.
+The main disadvantages of \gls{dt}s are that the classification proedure uses thresholds on the features value (cutting the hyperspace in orthogonal hyperplanes), so they are sensitive to axis orientation, and they are very sensitive to small variations in the training data. They are also very sensitive to the \gls{glo:hyperparameter}s, so a small caiations in constraints leads to very different trees. The main advantages are that they are very fast to train, and the resulting model is very fast to make predictions, they are very easy to understand and visualize and they do not require any feature scaling or centering.
 
 \subsection{Random Forests \gls{rf}}
 \label{subsec:rf}
