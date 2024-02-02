@@ -1,0 +1,42 @@
+\section{Commissioning}
+\label{sec:commissioning}
+To adapt the framework to a specific machine, the \gls{glo:commissioning} of the \gls{ml} system would have to be done in steps. Starting from the data acquisition and ending with the predictions of \gls{rul} and model updates, the steps are described in this section.
+
+\subsection{Data structure}
+\label{sec:Data_structure}
+The first phase of adaptation of the framewor to a machine is to define what data to sample and how to sample them. This includes the decision of which sensors to use, the sampling frequencies, the data acquisition system and which features are needed to be extracted from each sensor data. At this point, if more than one instance of the framework is needed, the sets of sensors and features to be used in each instance are defined. For example, in a shaft with two bearings, each with two accelerometers, the first instance of the framework would be linked to the first bearing, and would use the data from the two accelerometers to extract the features that are needed to detect the fault in the first bearing. The second instance of the framework would be linked to the second bearing, and would use the data from the other two accelerometers to extract the features that are needed to detect the fault in the second bearing. Optionally, a third instance of the framework would use the data from all four accelerometers to detect a generic fault in the shaft.
+Those decisions influence the structure of the database, which is described in \autoref{sec:Database}. 
+
+\subsection{Data acquisition}
+Once the structure of the data is defined, the first phase of the \gls{glo:commissioning} procedure is to set up the data acquisition. This has to be done when the machine is new or, at least, someone guarantees that the machine is in an healthy condition.
+
+During the previous phase, the number of instances of the framework are defined. Each instance would have it's own database. This phase is just a metter of storing the data that will be used to train the models the first time. A software agent, that we call \gls{glo:fieldagent}, is responsable for this task. 
+This phase last until the database is filled with enough data to train the models.
+
+\subsection{Training}
+The second phase of the \gls{glo:commissioning} procedure is to train the models. Once the healthy data are enough to characterize all the normal conditions of the maintaned system, all the recorded data are elaborated by another software agent that we call \gls{glo:featAg} (\gls{fa}). This agent extract all the features from the time-series and store them in a structured way.
+
+Once all the features are available in the database, another agent called \gls{glo:mla} (\gls{mla}) is responsable to train the models. All the models considered are \gls{uml} models. The models are trained on a standardized version of the feature matrix. The standardization is done \gls{wrt} the time evolution, \gls{ie} all the features used for training have a time evolution with zero mean and unit variance. This is done because most \gls{ml} algorithms are sensitive to the scale of the features.
+
+All that has been said is valid for a single instance of the framework. If more than one instance is needed, the training phase has to be done for each instance.
+
+\subsection{Evaluation}
+At this point, a model that represents the normal condition of the system is available (actually a model for each instance of the framework). The next step is to evaluate the model.
+
+In this phase, the machine continue to perform its normal operations. The \gls{glo:fieldagent} provides the sampled data, the \gls{glo:featAg} extracts the features and the \gls{glo:mla} evaluate the health of the system.
+The proposed novelty/fault metric and procedure are specific to the model used, as described in the dedicated chapter about \gls{uml} models (\autoref{sec:clust_metric} for the k-means, \autoref{dbscan_eval} for \gls{dbscan}, \autoref{sec:gauss_eval} for \gls{gmm}, \autoref{sec:svm_eval} for \gls{nu_svm}, \autoref{sec:iforest_eval} and \autoref{sec:lof_eval} for \gls{lof}). 
+
+Now the \gls{nd} is up and running. The novelty metric is used to decide if the system is healthy or not. The metric is plotted to the user to see.
+Note that in a classic \gls{ml} approach, the dataset is split into a training set and a test set. In this case the test set is the data that are sampled during the evaluation phase. It's equivalent to say that the model is trained on the past data and evaluated on the future data, or that the framework works in testing phase for an undetermined amount of time, until the user decide to update the models. This is equivalent to a test phase because if during this phase the framework outputh too many false positives, the user will decide to update the models. Otherwise, it means that the models are working properly and this phase can last indefinitely.
+
+\subsection{Model update}
+Once the metric overshoots the threshold, the \gls{mla} warns the user that the system is not healthy, and start to perform \gls{pdm} predicting the future evolution of the metric and the \gls{rul} of the system. 
+Again, this condition can last indefinitely, once new data are sampled, the \gls{mla} evaluates the health of the system and updated the predictions.
+
+It's up to the user to determine if the warning is a false positive or a real fault. In the former case, the user can decide to command the \gls{mla} to update the models. The snapshots that generated the the warning are incorporated in the training set, and the models are retrained, returning to the evaluation phase. In the latter case, the user can simply perform the repairs/maintanence needed and restore the system to a healthy condition or can use the snapshots that generated the warning to train a new model that represents the fault condition.
+
+If the user decides to train also the second model with the snapshot declared faulty, the system returns into the evaluation phase, but now the \gls{mla} outputs two metrics: one estimate the health of the system and the other how similar the behavior of the system is compared to any known fault condition.
+
+
+
+

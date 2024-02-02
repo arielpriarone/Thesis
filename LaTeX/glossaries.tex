@@ -35,6 +35,7 @@
 \newacronym{ml}{ML}{Machine Learining}  
 \newacronym{uml}{UML}{Unsupervised Machine Learining}
 \newacronym{svm}{SVM}{Support Vector Machine}
+\newacronym{nu_svm}{$\nu$-SVM}{One Class \gls{svm}}
 \newacronym{iforest}{iForest}{Isolation Forest}
 \newacronym{mlp}{MLP}{Multilayered Perceptront}
 \newacronym{dl}{DL}{\gls{glo:deep}}
@@ -58,10 +59,9 @@
 \newacronym{ls}{LS}{Least Squares}
 \newacronym{gd}{GD}{Gradient Descent}
 \newacronym{cart}{CART}{Classification and Regression Tree}
-\newacronym{mla}{MLA}{Machine Learning Agent}
-\newacronym{featAg}{FA}{Feature Agent}
-\newacronym{fieldAg}{FiA}{Field Agent}
-
+\newacronym{mla}{MLA}{\gls{glo:mla}}
+\newacronym{fa}{FA}{\gls{glo:featAg}}
+\newacronym{fieldAg}{FiA}{\gls{glo:fieldagent}}
 
 \newacronym{pc}{PC}{Personal Computer} %% miscellanea
 \newacronym{lcm}{LCM}{Least Common Multiple}
@@ -97,6 +97,7 @@
 \newacronym{sql}{SQL}{{\gls{glo:sql}}}
 \newacronym{bson}{BSON}{Binary \gls{glo:json}}
 \newacronym{cnc}{CNC}{Computer Numerical Control}
+\newacronym{ie}{i.e.}{\quoted{id est} (that is)}
 
 
 
@@ -312,4 +313,24 @@
 \newglossaryentry{glo:framework}{
     name={framework},
     description={a real or conceptual structure intended to serve as a support or guide for the building of something that expands the structure into something useful. In software development, a framework is a set of functions and classes and practices that can be used to easily solve a specific problem.}
+}
+
+\newglossaryentry{glo:fieldagent}{
+    name={Field Agent},
+    description={a software agent polls the data from the field and stores them in a database in a suitable formatted way.}
+}
+
+\newglossaryentry{glo:featAg}{
+    name={Feature Agent},
+    description={a software agent that extracts the features from the data polled by the \gls{glo:fieldagent} and stores them in a database in a suitable formatted way.}
+}
+
+\newglossaryentry{glo:mla}{
+    name={Machine Learning Agent},
+    description={software agent that trains the models, evaluate the metrics on new data, and makes predictions about the future evolution of the metrics. It also interface itself with the operator.}
+}
+
+\newglossaryentry{glo:mongodb}{
+    name={MongoDB},
+    description={a source-available, cross-platform, document-oriented database program. }
 }

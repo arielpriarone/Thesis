@@ -101,6 +101,7 @@ The first parameter is $\varepsilon$, the radius of the neighborhood. This gives
 Let's plot the silhouette score for different values of $\varepsilon$ to confirm that using $\varepsilon = 0.78$ is a good choice. In the \autoref{fig:dbscansilhouette} are shown the results that link the best $\varepsilon$ value to $3$ cluster being generated.
 
 \subsection{Evaluation of a new instance}
+\label{sec:dbscan_eval}
 Assume now that the training of the \gls{dbscan} is complete, and a new \gls{glo:snap} $\gls{sym:snap}_n$ is generated from the sensor data. How can we evaluate if the new snapshot is novel or not?
 The \gls{dbscan} algorithm is not able to predict the cluster of a new instance. However, the task of this project is novelty detection, not classification.
 To do that, as has been done for the K-means, we need to provide a metric linked to how novel a new snapshot is. 

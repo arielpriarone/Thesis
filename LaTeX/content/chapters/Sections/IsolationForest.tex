@@ -16,6 +16,7 @@ The algorithm is available in \texttt{sklearn} library, and it is very easy to u
 \end{figure}
 
 \subsection{Evaluation of a new instance}
+\label{sec:iforest_eval}
 The implementation in \texttt{sklearn} provides a function called \texttt{decision\_function}, plotted as an heatmap in \autoref{fig:IsolationForest}. the higher the value, the more likely it is to be a normal instance.
 To mantain coherence with the work done up to now, we can take the negative value of \texttt{decision\_function} as a metric to evaluate the novelty of a new instance.
 
