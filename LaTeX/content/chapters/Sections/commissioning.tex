@@ -64,7 +64,7 @@ The candidate function to fit wold then be:
     f(t) = a \cdot e^{b \cdot t}
 \end{equation}
 
-where $a$ and $b$ are the parameters to be estimated. This may work in the case depicted in \autoref{fig:exp_degradation_1}, in wich the novelty metric starts from zero and then increases exponentially. This is a problem for a general case in wich the metric can have a plateau, or start as a step that signals the early defect, and then start an exponentially decay. In our case, in \autoref{ch:Unsupervised} we defined a set of metrics to be used that are usually negative, to depict a normal behavior, and not zero. 
+where $a$ and $b$ are the parameters to be estimated. This may work in the case depicted in \autoref{fig:exp_degradation_1}, in wich the novelty metric starts from zero and then increases exponentially. This is a problem for a general case in wich the metric can have a plateau, or start as a step that signals the early defect, and then start an exponentially decay, as the example in \autoref{fig:exp_degradation_2}. In our case, in \autoref{ch:Unsupervised}, the set of defined metrics to be used are usually negative, to depict a normal behavior, and not zero. 
 
 The \autoref{eq:exp_degradation} is nice, because extracting the logarithm from both sides (and calling $y = \log(f(t))$) we obtain a linear equation that can be fitted easily with the least squares method described in \autoref{subsec:LS}, but for the reasons explained above, it's not suitable for our case. A better candidate is:
 
@@ -73,7 +73,7 @@ The \autoref{eq:exp_degradation} is nice, because extracting the logarithm from 
     f(t) = a \cdot e^{b \cdot t} + c
 \end{equation}
 
-This is a better candidate because it can depict the case in which the metric starts from a value different from zero. This is the case depicted in \autoref{fig:exp_degradation_2}. The novelty behavior starts from a value different from zero, and then increases exponentially.
+This is a better candidate because it can depict the case in which the metric starts from a value different from zero, and then increases exponentially.
 
 \subsubsection{\texttt{Scipy} fit}
 Unfortunately, \autoref{eq:exp_degradation_2} cannot be aranged in linear form, so the least squares solution has to be found with some other procedure. The \texttt{python} library \texttt{scipy.optimize} has a function called \texttt{curve\_fit} that can be used to fit a generic function to a dataset. The problem with this recursive solution is that is very sensitive to outliers and can't really estimate the parameter $c$ correctly, as is shown in \autoref{fig:exp_degradation_3}.
