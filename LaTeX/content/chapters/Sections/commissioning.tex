@@ -5,12 +5,12 @@ To adapt the framework to a specific machine, the \gls{glo:commissioning} of the
 \subsection{Data structure}
 \label{sec:Data_structure}
 The first phase of adaptation of the framewor to a machine is to define what data to sample and how to sample them. This includes the decision of which sensors to use, the sampling frequencies, the data acquisition system and which features are needed to be extracted from each sensor data. At this point, if more than one instance of the framework is needed, the sets of sensors and features to be used in each instance are defined. For example, in a shaft with two bearings, each with two accelerometers, the first instance of the framework would be linked to the first bearing, and would use the data from the two accelerometers to extract the features that are needed to detect the fault in the first bearing. The second instance of the framework would be linked to the second bearing, and would use the data from the other two accelerometers to extract the features that are needed to detect the fault in the second bearing. Optionally, a third instance of the framework would use the data from all four accelerometers to detect a generic fault in the shaft.
-Those decisions influence the structure of the database, which is described in \autoref{sec:Database}. 
+Those decisions influence the structure of the database, which will be described in \autoref{sec:Database}. 
 
 \subsection{Data acquisition}
 Once the structure of the data is defined, the first phase of the \gls{glo:commissioning} procedure is to set up the data acquisition. This has to be done when the machine is new or, at least, someone guarantees that the machine is in an healthy condition.
 
-During the previous phase, the number of instances of the framework are defined. Each instance would have it's own database. This phase is just a metter of storing the data that will be used to train the models the first time. A software agent, that we call \gls{glo:fieldagent}, is responsable for this task. 
+During the previous phase, the number of instances of the framework are defined. Each instance would have it's own database. This phase is just a metter of storing the data that will be used to train the models the first time. A software agent, that we call \gls{glo:fieldagent} (\gls{fieldAg}), is responsable for this task. 
 This phase last until the database is filled with enough data to train the models.
 
 \subsection{Training}
@@ -23,20 +23,124 @@ All that has been said is valid for a single instance of the framework. If more 
 \subsection{Evaluation}
 At this point, a model that represents the normal condition of the system is available (actually a model for each instance of the framework). The next step is to evaluate the model.
 
-In this phase, the machine continue to perform its normal operations. The \gls{glo:fieldagent} provides the sampled data, the \gls{glo:featAg} extracts the features and the \gls{glo:mla} evaluate the health of the system.
+In this phase, the machine continue to perform its normal operations. The \gls{glo:fieldagent} provides the sampled data, the \gls{glo:featAg} extracts the features and the \gls{glo:mla} evaluates the health of the system.
 The proposed novelty/fault metric and procedure are specific to the model used, as described in the dedicated chapter about \gls{uml} models (\autoref{sec:clust_metric} for the k-means, \autoref{dbscan_eval} for \gls{dbscan}, \autoref{sec:gauss_eval} for \gls{gmm}, \autoref{sec:svm_eval} for \gls{nu_svm}, \autoref{sec:iforest_eval} and \autoref{sec:lof_eval} for \gls{lof}). 
 
 Now the \gls{nd} is up and running. The novelty metric is used to decide if the system is healthy or not. The metric is plotted to the user to see.
 Note that in a classic \gls{ml} approach, the dataset is split into a training set and a test set. In this case the test set is the data that are sampled during the evaluation phase. It's equivalent to say that the model is trained on the past data and evaluated on the future data, or that the framework works in testing phase for an undetermined amount of time, until the user decide to update the models. This is equivalent to a test phase because if during this phase the framework outputh too many false positives, the user will decide to update the models. Otherwise, it means that the models are working properly and this phase can last indefinitely.
 
 \subsection{Model update}
-Once the metric overshoots the threshold, the \gls{mla} warns the user that the system is not healthy, and start to perform \gls{pdm} predicting the future evolution of the metric and the \gls{rul} of the system. 
+Once the metric overshoots the threshold, the \gls{mla} warns the user about the novelty detected, and start to perform \gls{pdm} predicting the future evolution of the metric and the \gls{rul} of the system. 
 Again, this condition can last indefinitely, once new data are sampled, the \gls{mla} evaluates the health of the system and updated the predictions.
 
-It's up to the user to determine if the warning is a false positive or a real fault. In the former case, the user can decide to command the \gls{mla} to update the models. The snapshots that generated the the warning are incorporated in the training set, and the models are retrained, returning to the evaluation phase. In the latter case, the user can simply perform the repairs/maintanence needed and restore the system to a healthy condition or can use the snapshots that generated the warning to train a new model that represents the fault condition.
+It's up to the user to determine if the warning is a false positive, a novel but healthy behaviour, or a real fault. In the firt two cases, the user can decide to command the \gls{mla} to update the models. The snapshots that generated the the warning are incorporated in the training set, and the models are retrained, returning to the evaluation phase. In the latter case, the user can simply perform the repairs/maintanence needed and restore the system to a healthy condition or can use the snapshots that generated the warning to train a new model that represents the fault condition.
 
 If the user decides to train also the second model with the snapshot declared faulty, the system returns into the evaluation phase, but now the \gls{mla} outputs two metrics: one estimate the health of the system and the other how similar the behavior of the system is compared to any known fault condition.
 
+\subsection{Predictions}
+\begin{figure}
+    \centering
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\linewidth]{images/Framework/EXP_1.pdf}
+        \caption{}
+        \label{fig:exp_degradation_1}
+    \end{subfigure}
+    \begin{subfigure}{\textwidth}
+        \includegraphics[width=\linewidth]{images/Framework/EXP_2.pdf}
+        \caption{}
+        \label{fig:exp_degradation_2}
+    \end{subfigure}
+    \caption{Novelty metric data to fit with an exponential curve.}
+    \label{fig:mainfig}
+    \label{fig:exp_degradation}
+\end{figure}
 
+The metric generate by the \gls{mla} are useful to detect novelties, with a \gls{cbm} approach. To actually perform \gls{pdm}, the \gls{mla} has also to predict the future evolution of the metric. Since, as anticipated in the introduction, this framework aim to output \emph{degradation based} predictions, a suitable fitting curve has to be used. Degradation based failures are lead by an initial defect that worsen over time. Often, the presence of an early defect further increase the worsening rate of the system. For this reason, and by observing the features evolution on publically available datasets, it seems reasonable to model the degradation with an exponential curve. This approach has been used in \cite{exp_degradation}.
 
+The candidate function to fit wold then be:
 
+\begin{equation}
+    \label{eq:exp_degradation}
+    f(t) = a \cdot e^{b \cdot t}
+\end{equation}
+
+where $a$ and $b$ are the parameters to be estimated. This may work in the case depicted in \autoref{fig:exp_degradation_1}, in wich the novelty metric starts from zero and then increases exponentially. This is a problem for a general case in wich the metric can have a plateau, or start as a step that signals the early defect, and then start an exponentially decay. In our case, in \autoref{ch:Unsupervised} we defined a set of metrics to be used that are usually negative, to depict a normal behavior, and not zero. 
+
+The \autoref{eq:exp_degradation} is nice, because extracting the logarithm from both sides (and calling $y = \log(f(t))$) we obtain a linear equation that can be fitted easily with the least squares method described in \autoref{subsec:LS}, but for the reasons explained above, it's not suitable for our case. A better candidate is:
+
+\begin{equation}
+    \label{eq:exp_degradation_2}
+    f(t) = a \cdot e^{b \cdot t} + c
+\end{equation}
+
+This is a better candidate because it can depict the case in which the metric starts from a value different from zero. This is the case depicted in \autoref{fig:exp_degradation_2}. The novelty behavior starts from a value different from zero, and then increases exponentially.
+
+\subsubsection{\texttt{Scipy} fit}
+Unfortunately, \autoref{eq:exp_degradation_2} cannot be aranged in linear form, so the least squares solution has to be found with some other procedure. The \texttt{python} library \texttt{scipy.optimize} has a function called \texttt{curve\_fit} that can be used to fit a generic function to a dataset. The problem with this recursive solution is that is very sensitive to outliers and can't really estimate the parameter $c$ correctly, as is shown in \autoref{fig:exp_degradation_3}.
+
+\subsubsection{Closed form fit with least squares}
+Fortunately, in \cite{Exp_fit}, the author profide a \emph{non recursive} solution to the problem that minimize the \gls{ls} error \gls{wrt} the parameters $a$, $b$ and $c$. The solution has been converted into the following \autoref{alg:expfit} and implemented in the framework. The fitting with this closed form solution is shown in \autoref{fig:exp_degradation_3}.
+
+\begin{algorithm}
+    \caption{Exponential regrassion of the novelty metric.}
+    \label{alg:expfit}
+    \begin{algorithmic}[1]
+      \Function{ExpRegression}{$x, y$}
+      \LineComment{$x = \{x_1, \dots, x_n\}$ is the array of x-coordinates of the data points.}
+      \LineComment{$y = \{y_1, \dots, y_n\}$ is the array of y-coordinates of the data points.}
+      \LineComment{Returns the parameters $a$, $b$ and $c$ of the exponential function $y(x) = a \cdot e^{b \cdot x} + c$ that minimize the least squares error.}
+      \State $S_1 \gets 0$
+      \State $S_k \gets S_{k-1}+\frac{1}{2}(y_k+y_{k-1})(x_k-x_{k-1}) \quad \text{for} \quad k \in [2, n]\cap \mathbb{N}$
+      \State $\begin{bmatrix}
+        A_1 \\
+        B_1        
+      \end{bmatrix} \gets \begin{bmatrix}
+        \Sigma(x_k-x_1)^2 & \Sigma(x_k-x_1)\cdot S_k \\
+        \Sigma(x_k-x_1)\cdot S_k & \Sigma S_k^2        
+      \end{bmatrix}^{-1}
+      \begin{bmatrix}
+        \Sigma(y_k-y_1)(x_k-x_1) \\
+        \Sigma(y_k-y_1)\cdot S_k  
+      \end{bmatrix}$
+      \State $a_1 \gets -\frac{A_1}{B_1}$
+        \State $c_1 \gets B_1$
+        \State $c_2 \gets c_1$
+        \State $\theta_k \gets e^{c_2\cdot x_k} \quad \forall k \in [1, n]\cap \mathbb{N}$
+        \State $\begin{bmatrix}
+            a_2 \\
+            b_2
+        \end{bmatrix} \gets 
+        \begin{bmatrix}
+            n & \Sigma \theta_k \\
+            \Sigma \theta_k & \Sigma \theta_k^2
+        \end{bmatrix}^{-1}
+        \begin{bmatrix}
+            \Sigma y_k \\
+            \Sigma y_k \cdot \theta_k
+        \end{bmatrix}$
+        \State $a \gets b_2$
+        \State $b \gets c_2$
+        \State $c \gets a_2$
+        \State \Return $a, b, c$
+      \EndFunction
+    \end{algorithmic}
+  \end{algorithm}
+  
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/Framework/EXP_3.pdf}
+    \caption{Fitted curve for \gls{rul} prediction. The scipy fit fail to estimate the parameter $c$. The closed form solution actually minimize the error.}
+    \label{fig:exp_degradation_3}
+\end{figure}
+
+\subsection{Instance structure}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=1]{images/Framework/FrameworkInstances.pdf}
+    \caption{The structure of the instances of the framework.}
+    \label{fig:instance_structure}
+\end{figure}
+
+As anticipated, in order to address different kinds of malfunciotns, the framework is thought to be instanced several times on the same system. To visualize the structure of the instances, consider the general case described in \autoref{fig:instance_structure}. Any instance can rely on data gathered from any sensors subset and can perform \gls{nd} and \gls{fd}. In the figure, the first instance reads the first three sensors and has both the \gls{nd} and \gls{fd} algorithms active (this means that a fault dataset has been gathered in the past). The second instance reads a shared sensor with the first one, plus two new sensors. The dashed line surrounding the \gls{fd} algorithm means that is not active (no fault dataset has been gathered in the past, or it has not been trained). This instance performs only \gls{nd}. The last instance is just a general prosecution of the structure, that can be scaled indefinitely.
