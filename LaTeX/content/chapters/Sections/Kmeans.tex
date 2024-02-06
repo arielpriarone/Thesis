@@ -42,7 +42,7 @@ Nowadays, the K-means algorithm is implemented in many libraries, such as \textt
     \LineComment{Every snapshot is assigned to the nearest centroid. Every centroid defines a cluster containing the assigned snapshots}
     \State $\gls{sym:cluster}_i \gets \left\{ \gls{sym:snap}_p : \norm{\gls{sym:snap}_p - \gls{sym:cent}_i}^2 \leq  \norm{\gls{sym:snap}_p - \gls{sym:cent}_j}^2  \forall j \in [1,k] \right\} \forall i \in [1,k] $
     \LineComment{The centroids are updated as the mean of their snapshots}
-    \State $\gls{sym:cent}_i \gets \frac{1}{\abs{\gls{sym:cluster}_i}}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \gls{sym:snap}_j, \forall i \in [1,k]$, \Comment{$\abs{\gls{sym:cluster}_i}$ is the cluster size}
+    \State $\gls{sym:cent}_i \gets \dfrac{1}{\abs{\gls{sym:cluster}_i}}\Sigma_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \gls{sym:snap}_j, \forall i \in [1,k]$, \Comment{$\abs{\gls{sym:cluster}_i}$ is the cluster size}
     \Until{All the centroids do not change anymore, or max iterations reached}
     \State $r_i \gets \max{\norm{\gls{sym:snap}_j-\gls{sym:cent}_i}, \, \forall \gls{sym:snap}_j \in \gls{sym:cluster}_i}, \, \forall i \in [1,k]$
     \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
@@ -88,7 +88,7 @@ For the development of the framework of this thesis, the K-means\texttt{++} algo
   \State $\gls{sym:cent}_1 \gets \text{random initialization}, \gls{sym:cent}_1 \in \gls{sym:snapset}$
   \For{$i \gets 2$ to $k$}
   \LineComment{$D(\gls{sym:snap})$ is the distance of the snapshot $\gls{sym:snap}$ from the closest centroid already chosen}
-  \State $c_i \gets \gls{sym:snap}' \in \gls{sym:snapset} \text{ with probability } \frac{D(\gls{sym:snap}')^2}{\Sigma_{\gls{sym:snap}\in\gls{sym:snapset}}D(\gls{sym:snap})^2}$
+  \State $c_i \gets \gls{sym:snap}' \in \gls{sym:snapset} \text{ with probability } \dfrac{D(\gls{sym:snap}')^2}{\Sigma_{\gls{sym:snap}\in\gls{sym:snapset}}D(\gls{sym:snap})^2}$
   \EndFor
   \State perform the Lloyd algorithm using the calculated $\gls{sym:cent}_i, \forall i \in [1,k]$ as initialization, get the model.
   \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
