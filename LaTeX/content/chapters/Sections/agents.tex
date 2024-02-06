@@ -103,7 +103,7 @@ This agent is designed to be configured as a \gls{nd} or \gls{fd} agent with jus
     
 \newpage
 \subsection{Configuration of the framework}
-All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the agents at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. An example of a valid configuration file for the \gls{ims} dataset is shown in \autoref{lst:configyaml}.
+All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the agents at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. An example of a valid configuration file for the \gls{ims} dataset is shown in below.
 \begin{minted}[
     gobble=4,
     frame=single,
@@ -114,78 +114,75 @@ All the configurations described in this chapter are stored in the \texttt{confi
     URI:                mongodb://localhost:27017   # MongoDB URI
     db:                 Shaft                       # Database name
     collection:       # Collection configuration
-      back:             BACKUP                      # Backup collection name
-      raw:              RAW                         # Raw data collection name
-      unconsumed:       UNCONSUMED                  # Unconsumed data collection name
-      healthy:          HEALTHY                     # Healthy data collection name
-      healthy_train:    HEALTHY_TRAIN               # Healthy data collection name for training (some healthy data are not used if not novelty)
-      quarantined:      QUARANTINED                 # Quarantined data collection name
-      faulty:           FAULTY                      # Faulty data collection name
-      faulty_train:     FAULTY_TRAIN                # Faulty data collection name for training (some faulty data are not used if not fault novelty)
-      models:           MODELS                      # Models collection name
+      back:             BACKUP        # Backup collection name
+      raw:              RAW           # Raw data collection name
+      unconsumed:       UNCONSUMED    # Unconsumed data collection name
+      healthy:          HEALTHY       # Healthy data collection name
+      healthy_train:    HEALTHY_TRAIN # Healthy data collection name for training (some healthy data are not used if not novelty)
+      quarantined:      QUARANTINED   # Quarantined data collection name
+      faulty:           FAULTY        # Faulty data collection name
+      faulty_train:     FAULTY_TRAIN  # Faulty data collection name for training (some faulty data are not used if not fault novelty)
+      models:           MODELS        # Models collection name
     sensors:          # Expected sensors in the database
       Bearing 1 x:    # Sensor 1 name
         features:     # Features configuration
-          wavPowers:    on                          # Wavelet powers
-          mean:         on                          # Mean value
-          rms:          on                          # Root mean square
-          peak:         on                          # Peak to peak value
-          std:          on                          # Standard deviation
-          skew:         on                          # Skewness
-          kurt:         on                          # Kurtosis
+          wavPowers:    on            # Wavelet powers
+          mean:         on            # Mean value
+          rms:          on            # Root mean square
+          peak:         on            # Peak to peak value
+          std:          on            # Standard deviation
+          skew:         on            # Skewness
+          kurt:         on            # Kurtosis
       Bearing 1 y:    # Sensor 2 name
         features:     # Features configuration
-          wavPowers:    on                          # Wavelet powers
-          mean:         on                          # Mean value
-          rms:          on                          # Root mean square
-          peak:         on                          # Peak to peak value
-          std:          on                          # Standard deviation
-          skew:         on                          # Skewness
-          kurt:         on                          # Kurtosis
+          wavPowers:    on            # Wavelet powers
+          mean:         on            # Mean value
+          rms:          on            # Root mean square
+          peak:         on            # Peak to peak value
+          std:          on            # Standard deviation
+          skew:         on            # Skewness
+          kurt:         on            # Kurtosis
       ...:
       Bearing 4 y:    # Sensor n name
         features:     # Features configuration
-          wavPowers:    on                          # Wavelet powers
-          mean:         on                          # Mean value
-          rms:          on                          # Root mean square
-          peak:         on                          # Peak to peak value
-          std:          on                          # Standard deviation
-          skew:         on                          # Skewness
-          kurt:         on                          # Kurtosis
-  wavelet:           # Wavelet packet transform configuration
-    type:               db10                        # Type of wavelet to use
-    mode:               symmetric                   # Mode of the packet transform
-    maxlevel:           6                           # Max level -> num of features = 2^level
-  kmeans:            # kmean configuration
-    max_clusters:       100                         # Max number of clusters
-    max_iterations:     1000                        # Max number of iterations
-    error_queue_size:   1                           # number of predictions parameters to keep in queue for plotting/predicting
-    error_plot_size:    2000                        # Size of the plotting queue
-  
-  novelty:           # Novelty/fault configuration
-    threshold:          0.10                        # Threshold for novelty / fault detection: relative percentage of the distance to the cluster w.r.t the max distance to the assigned cluster in the training set
-    forecast_threshold: 0.8                         # Threshold for novelty / fault prediction
-    n_fit:              250                         # Number of samples used to fit the prediction curve
-    outlier_filter:     1                           # Number of consecutive outliers to filter (1 means two outliers will be considered as novelty/fault)
-    regressor:          exp                         # Regressor to use for prediction: exp, scipy, poly. if exp uses a custom function, if scipy uses scipy.optimize.curve_fit, if poly fit polynomial of degree
-  
-  miscellanea:
-    logpath:            C:\Users\JohnSmith\Documents\framework  # Path to the logs
+          wavPowers:    on            # Wavelet powers
+          mean:         on            # Mean value
+          rms:          on            # Root mean square
+          peak:         on            # Peak to peak value
+          std:          on            # Standard deviation
+          skew:         on            # Skewness
+          kurt:         on            # Kurtosis
+    wavelet:           # Wavelet packet transform configuration
+      type:               db10          # Type of wavelet to use
+      mode:               symmetric     # Mode of the packet transform
+      maxlevel:           6             # Max level -> num of features = 2^level
+    model:             # machine learning model configuration
+      max_clusters:       100           # Max number of clusters
+      max_iterations:     1000          # Max number of iterations
+      error_queue_size:   1             # number of predictions parameters to keep in queue for plotting/predicting
+      error_plot_size:    2000          # Size of the plotting queue
+    novelty:           # Novelty/fault configuration
+      threshold:          0.10          # Threshold for novelty / fault detection: relative percentage of the distance to the cluster w.r.t the max distance to the assigned cluster in the training set
+      forecast_threshold: 0.8           # Threshold for novelty / fault prediction
+      n_fit:              250           # Number of samples used to fit the prediction curve
+      outlier_filter:     1             # Number of consecutive outliers to filter (1 means two outliers will be considered as novelty/fault)
+      regressor:          exp           # Regressor to use for prediction: exp, scipy, poly. if exp uses a custom function, if scipy uses scipy.optimize.curve_fit, if poly fit polynomial of degree
+    miscellanea:
+      logpath:            C:\Users\JohnSmith\Documents\framework  # Path to the logs
 \end{minted}
 
 \subsection{Command Line Interface (CLI)}
 \label{subsec:CLI}
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=\textwidth]{images/Framework/cli.png}
-    \caption{Command Line Interface help message}
-    \label{fig:cli}
-\end{figure}
 
 To ease the interaction with the user, a \gls{cli} has been implemented. It relies on the \texttt{click} and \texttt{typer} libraries for \texttt{python}. The \gls{cli} allows the user to instance the agents, to configure the framework, to monitor the agents and to interact with the database. All the commands are provided with a help message that can be accessed by typing \texttt{--help} after the command, as shown in \autoref{fig:cli} for the command \texttt{run-machine-learning-agent}.
 The commands implemented in the \gls{cli} are shown in \autoref{tab:CLI_commands}.
 
-
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=\textwidth]{images/Framework/cli.png}
+  \caption{Command Line Interface help message}
+  \label{fig:cli}
+\end{figure}
 
 \begin{longtable}{p{0.4\textwidth}p{0.5\textwidth}}
     \caption{\gls{cli} implemented commands\label{tab:CLI_commands}}\\ 

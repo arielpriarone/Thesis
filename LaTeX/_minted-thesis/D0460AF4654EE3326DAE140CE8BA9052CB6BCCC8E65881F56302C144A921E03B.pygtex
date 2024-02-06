@@ -1,0 +1,61 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nt}{Database}\PYG{p}{:}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Database configuration}
+\PYG{n+nt}{URI}\PYG{p}{:}\PYG{+w}{                }\PYG{l+lScalar+lScalarPlain}{mongodb://localhost:27017}\PYG{+w}{   }\PYG{c+c1}{\PYGZsh{} MongoDB URI}
+\PYG{n+nt}{db}\PYG{p}{:}\PYG{+w}{                 }\PYG{l+lScalar+lScalarPlain}{Shaft}\PYG{+w}{                       }\PYG{c+c1}{\PYGZsh{} Database name}
+\PYG{n+nt}{collection}\PYG{p}{:}\PYG{+w}{       }\PYG{c+c1}{\PYGZsh{} Collection configuration}
+\PYG{+w}{  }\PYG{n+nt}{back}\PYG{p}{:}\PYG{+w}{             }\PYG{l+lScalar+lScalarPlain}{BACKUP}\PYG{+w}{        }\PYG{c+c1}{\PYGZsh{} Backup collection name}
+\PYG{+w}{  }\PYG{n+nt}{raw}\PYG{p}{:}\PYG{+w}{              }\PYG{l+lScalar+lScalarPlain}{RAW}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Raw data collection name}
+\PYG{+w}{  }\PYG{n+nt}{unconsumed}\PYG{p}{:}\PYG{+w}{       }\PYG{l+lScalar+lScalarPlain}{UNCONSUMED}\PYG{+w}{    }\PYG{c+c1}{\PYGZsh{} Unconsumed data collection name}
+\PYG{+w}{  }\PYG{n+nt}{healthy}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{HEALTHY}\PYG{+w}{       }\PYG{c+c1}{\PYGZsh{} Healthy data collection name}
+\PYG{+w}{  }\PYG{n+nt}{healthy\PYGZus{}train}\PYG{p}{:}\PYG{+w}{    }\PYG{l+lScalar+lScalarPlain}{HEALTHY\PYGZus{}TRAIN}\PYG{+w}{ }\PYG{c+c1}{\PYGZsh{} Healthy data collection name for training (some healthy data are not used if not novelty)}
+\PYG{+w}{  }\PYG{n+nt}{quarantined}\PYG{p}{:}\PYG{+w}{      }\PYG{l+lScalar+lScalarPlain}{QUARANTINED}\PYG{+w}{   }\PYG{c+c1}{\PYGZsh{} Quarantined data collection name}
+\PYG{+w}{  }\PYG{n+nt}{faulty}\PYG{p}{:}\PYG{+w}{           }\PYG{l+lScalar+lScalarPlain}{FAULTY}\PYG{+w}{        }\PYG{c+c1}{\PYGZsh{} Faulty data collection name}
+\PYG{+w}{  }\PYG{n+nt}{faulty\PYGZus{}train}\PYG{p}{:}\PYG{+w}{     }\PYG{l+lScalar+lScalarPlain}{FAULTY\PYGZus{}TRAIN}\PYG{+w}{  }\PYG{c+c1}{\PYGZsh{} Faulty data collection name for training (some faulty data are not used if not fault novelty)}
+\PYG{+w}{  }\PYG{n+nt}{models}\PYG{p}{:}\PYG{+w}{           }\PYG{l+lScalar+lScalarPlain}{MODELS}\PYG{+w}{        }\PYG{c+c1}{\PYGZsh{} Models collection name}
+\PYG{n+nt}{sensors}\PYG{p}{:}\PYG{+w}{          }\PYG{c+c1}{\PYGZsh{} Expected sensors in the database}
+\PYG{+w}{  }\PYG{n+nt}{Bearing 1 x}\PYG{p}{:}\PYG{+w}{    }\PYG{c+c1}{\PYGZsh{} Sensor 1 name}
+\PYG{+w}{    }\PYG{n+nt}{features}\PYG{p}{:}\PYG{+w}{     }\PYG{c+c1}{\PYGZsh{} Features configuration}
+\PYG{+w}{      }\PYG{n+nt}{wavPowers}\PYG{p}{:}\PYG{+w}{    }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Wavelet powers}
+\PYG{+w}{      }\PYG{n+nt}{mean}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Mean value}
+\PYG{+w}{      }\PYG{n+nt}{rms}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Root mean square}
+\PYG{+w}{      }\PYG{n+nt}{peak}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Peak to peak value}
+\PYG{+w}{      }\PYG{n+nt}{std}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Standard deviation}
+\PYG{+w}{      }\PYG{n+nt}{skew}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Skewness}
+\PYG{+w}{      }\PYG{n+nt}{kurt}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Kurtosis}
+\PYG{+w}{  }\PYG{n+nt}{Bearing 1 y}\PYG{p}{:}\PYG{+w}{    }\PYG{c+c1}{\PYGZsh{} Sensor 2 name}
+\PYG{+w}{    }\PYG{n+nt}{features}\PYG{p}{:}\PYG{+w}{     }\PYG{c+c1}{\PYGZsh{} Features configuration}
+\PYG{+w}{      }\PYG{n+nt}{wavPowers}\PYG{p}{:}\PYG{+w}{    }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Wavelet powers}
+\PYG{+w}{      }\PYG{n+nt}{mean}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Mean value}
+\PYG{+w}{      }\PYG{n+nt}{rms}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Root mean square}
+\PYG{+w}{      }\PYG{n+nt}{peak}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Peak to peak value}
+\PYG{+w}{      }\PYG{n+nt}{std}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Standard deviation}
+\PYG{+w}{      }\PYG{n+nt}{skew}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Skewness}
+\PYG{+w}{      }\PYG{n+nt}{kurt}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Kurtosis}
+\PYG{+w}{  }\PYG{n+nt}{...}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{Bearing 4 y}\PYG{p}{:}\PYG{+w}{    }\PYG{c+c1}{\PYGZsh{} Sensor n name}
+\PYG{+w}{    }\PYG{n+nt}{features}\PYG{p}{:}\PYG{+w}{     }\PYG{c+c1}{\PYGZsh{} Features configuration}
+\PYG{+w}{      }\PYG{n+nt}{wavPowers}\PYG{p}{:}\PYG{+w}{    }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Wavelet powers}
+\PYG{+w}{      }\PYG{n+nt}{mean}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Mean value}
+\PYG{+w}{      }\PYG{n+nt}{rms}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Root mean square}
+\PYG{+w}{      }\PYG{n+nt}{peak}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Peak to peak value}
+\PYG{+w}{      }\PYG{n+nt}{std}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Standard deviation}
+\PYG{+w}{      }\PYG{n+nt}{skew}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Skewness}
+\PYG{+w}{      }\PYG{n+nt}{kurt}\PYG{p}{:}\PYG{+w}{         }\PYG{l+lScalar+lScalarPlain}{on}\PYG{+w}{            }\PYG{c+c1}{\PYGZsh{} Kurtosis}
+\PYG{n+nt}{wavelet}\PYG{p}{:}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Wavelet packet transform configuration}
+\PYG{+w}{  }\PYG{n+nt}{type}\PYG{p}{:}\PYG{+w}{               }\PYG{l+lScalar+lScalarPlain}{db10}\PYG{+w}{          }\PYG{c+c1}{\PYGZsh{} Type of wavelet to use}
+\PYG{+w}{  }\PYG{n+nt}{mode}\PYG{p}{:}\PYG{+w}{               }\PYG{l+lScalar+lScalarPlain}{symmetric}\PYG{+w}{     }\PYG{c+c1}{\PYGZsh{} Mode of the packet transform}
+\PYG{+w}{  }\PYG{n+nt}{maxlevel}\PYG{p}{:}\PYG{+w}{           }\PYG{l+lScalar+lScalarPlain}{6}\PYG{+w}{             }\PYG{c+c1}{\PYGZsh{} Max level \PYGZhy{}\PYGZgt{} num of features = 2\PYGZca{}level}
+\PYG{n+nt}{model}\PYG{p}{:}\PYG{+w}{             }\PYG{c+c1}{\PYGZsh{} machine learning model configuration}
+\PYG{+w}{  }\PYG{n+nt}{max\PYGZus{}clusters}\PYG{p}{:}\PYG{+w}{       }\PYG{l+lScalar+lScalarPlain}{100}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Max number of clusters}
+\PYG{+w}{  }\PYG{n+nt}{max\PYGZus{}iterations}\PYG{p}{:}\PYG{+w}{     }\PYG{l+lScalar+lScalarPlain}{1000}\PYG{+w}{          }\PYG{c+c1}{\PYGZsh{} Max number of iterations}
+\PYG{+w}{  }\PYG{n+nt}{error\PYGZus{}queue\PYGZus{}size}\PYG{p}{:}\PYG{+w}{   }\PYG{l+lScalar+lScalarPlain}{1}\PYG{+w}{             }\PYG{c+c1}{\PYGZsh{} number of predictions parameters to keep in queue for plotting/predicting}
+\PYG{+w}{  }\PYG{n+nt}{error\PYGZus{}plot\PYGZus{}size}\PYG{p}{:}\PYG{+w}{    }\PYG{l+lScalar+lScalarPlain}{2000}\PYG{+w}{          }\PYG{c+c1}{\PYGZsh{} Size of the plotting queue}
+\PYG{n+nt}{novelty}\PYG{p}{:}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Novelty/fault configuration}
+\PYG{+w}{  }\PYG{n+nt}{threshold}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{0.10}\PYG{+w}{          }\PYG{c+c1}{\PYGZsh{} Threshold for novelty / fault detection: relative percentage of the distance to the cluster w.r.t the max distance to the assigned cluster in the training set}
+\PYG{+w}{  }\PYG{n+nt}{forecast\PYGZus{}threshold}\PYG{p}{:}\PYG{+w}{ }\PYG{l+lScalar+lScalarPlain}{0.8}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Threshold for novelty / fault prediction}
+\PYG{+w}{  }\PYG{n+nt}{n\PYGZus{}fit}\PYG{p}{:}\PYG{+w}{              }\PYG{l+lScalar+lScalarPlain}{250}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Number of samples used to fit the prediction curve}
+\PYG{+w}{  }\PYG{n+nt}{outlier\PYGZus{}filter}\PYG{p}{:}\PYG{+w}{     }\PYG{l+lScalar+lScalarPlain}{1}\PYG{+w}{             }\PYG{c+c1}{\PYGZsh{} Number of consecutive outliers to filter (1 means two outliers will be considered as novelty/fault)}
+\PYG{+w}{  }\PYG{n+nt}{regressor}\PYG{p}{:}\PYG{+w}{          }\PYG{l+lScalar+lScalarPlain}{exp}\PYG{+w}{           }\PYG{c+c1}{\PYGZsh{} Regressor to use for prediction: exp, scipy, poly. if exp uses a custom function, if scipy uses scipy.optimize.curve\PYGZus{}fit, if poly fit polynomial of degree}
+\PYG{n+nt}{miscellanea}\PYG{p}{:}
+\PYG{+w}{  }\PYG{n+nt}{logpath}\PYG{p}{:}\PYG{+w}{            }\PYG{l+lScalar+lScalarPlain}{C:\PYGZbs{}Users\PYGZbs{}JohnSmith\PYGZbs{}Documents\PYGZbs{}framework}\PYG{+w}{  }\PYG{c+c1}{\PYGZsh{} Path to the logs}
+\end{Verbatim}
