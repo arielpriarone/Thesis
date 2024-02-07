@@ -78,3 +78,4 @@ src/data/__pycache__/__init__.cpython-39.pyc
 notebooks/06_decision_trees.ipynb
 notebooks/05_support_vector_machines.ipynb
 LaTeX/thesis.glo
+LaTeX/_minted-thesis/
