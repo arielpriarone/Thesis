@@ -1,5 +1,5 @@
 # %%
-# this don't work well because the cluster have differnt sizes
+# generate the model with noise reduciton
 from matplotlib import projections
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
@@ -25,10 +25,11 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 src.vis.set_matplotlib_params()
 
 # script settings
-featfilepath = "train_data.csv"   # folder path
+featfilepath = r"data\processed\ETEL_Test2\train_data_refined_subset.csv"   # folder path
 python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code
 features = pd.read_csv(featfilepath,sep='\t')
 features = features.drop(columns=["Timestamp"]).dropna(axis=1)
+pickleModelName = "ScaledModel_refined_subset.pickle"
 print(features.keys())
 print(features.head())
 
@@ -114,6 +115,6 @@ kmeans.radiuses = radiuses # add radiuses to the model
 kmeans.feat_importance = feat_importance # add feature importance to the model
 kmeans.means = means # add means to the model
 kmeans.stds = stds # add standard deviation to the model
-pickle.dump(kmeans, open(path.join(python_model_path,"ScaledModel.pickle"), 'wb'))
+pickle.dump(kmeans, open(path.join(python_model_path,pickleModelName), 'wb'))
 
 plt.show()

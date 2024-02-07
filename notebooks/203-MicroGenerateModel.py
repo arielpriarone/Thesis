@@ -18,9 +18,10 @@ console = Console()
 # %% global variables
 timestamps = np.array([])                                                                       # timestamps.shape = (n_samples,)
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
-train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"    # csv file with train data
+train_data_filepath = r"data\processed\ETEL_Test2\train_data.csv"    # csv file with train data
 feature_scaler_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv"    # csv file with feature scaler
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
+modelfilename = "StandardModel_notworking.pickle"                                                          # model file to be created and included in python code
 python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code
 max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
@@ -191,7 +192,7 @@ kmeans.radiuses = radiuses # add radiuses to the model
 kmeans.means = means
 kmeans.stds = stds
 kmeans.feat_weights = feat_weights
-pickle.dump(kmeans, open(path.join(python_model_path,"StandardModel.pickle"), 'wb'))
+pickle.dump(kmeans, open(path.join(python_model_path,modelfilename), 'wb'))
 
 
 plt.show()
