@@ -1,14 +1,16 @@
+from os import path
 from rich import print
 from rich.console import Console
 import pandas as pd
 import numpy as np
-from k_means_constrained import KMeansConstrained
+from sklearn.cluster import KMeans
 import matplotlib.pyplot as plt
 from math import ceil, floor
 from sklearn.metrics import silhouette_score
 import datetime
 import matplotlib as mpl
 import typer
+import pickle
 
 # %% init
 console = Console()
@@ -19,9 +21,10 @@ features_matrix = np.array([])                                                  
 train_data_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\train_data.csv"    # csv file with train data
 feature_scaler_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv"    # csv file with feature scaler
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
-
+python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code
 max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
+use_weights = False                                                                             # use feature weights
 
 # %% LOAD DATA
 console.print("Loading data...", style="magenta")
@@ -29,13 +32,15 @@ train_data = pd.read_csv(train_data_filepath, sep='\t', header=1)
 console.print(train_data.head(), style="magenta")
 timestamps = train_data.iloc[:,0].to_numpy()
 features_matrix = train_data.iloc[:,1:].to_numpy()
-try:
-    feat_weights = np.array(pd.read_csv(r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv")).flatten()
-except:
-    feat_weights = np.ones(features_matrix.shape[1])
-    console.print("Feature importance file not found, all features will be considered with equal weights.", style="magenta")
-    if not typer.confirm("do you want to proceed?", abort=True):
-        exit()
+feat_weights = np.ones(features_matrix.shape[1])
+if use_weights:
+    try:
+        feat_weights = np.array(pd.read_csv(r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv")).flatten()
+    except:
+        console.print("Feature importance file not found, all features will be considered with equal weights.", style="magenta")
+        if not typer.confirm("do you want to proceed?", abort=True):
+            exit()
+    
 console.print("Data loaded successfully.", style="magenta")
 console.print("Number of records: ", features_matrix.shape[0], style="magenta")
 n_features = features_matrix.shape[1] # 67 - number of features
@@ -63,7 +68,7 @@ sil_score=[]    # silhouette score
 inertia=[]      # inertia
 max_clusters=min(max_n_clusters,floor(features_matrix.shape[0]/min_cluster_size))   # it's not possible to have more clusters than samples/min_cluster_size
 for n_clusters in range(1,max_clusters+1):
-    kmeans=KMeansConstrained(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10, size_min=min_cluster_size, size_max=features_matrix.shape[0])
+    kmeans=KMeans(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)#, size_min=min_cluster_size, size_max=features_matrix.shape[0])
     cluster_labels=kmeans.fit_predict(standardized_features_matrix)
     if 1<n_clusters<max_clusters:
         sil_score.append(silhouette_score(standardized_features_matrix,cluster_labels))
@@ -92,7 +97,7 @@ plt.show()
 n_clusters = input("Enter desired number of clusters: ")
 n_clusters = int(n_clusters)
 
-kmeans=KMeansConstrained(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)
+kmeans=KMeans(n_clusters=n_clusters, init='k-means++', max_iter=1000, n_init=10)
 cluster_labels=kmeans.fit_predict(standardized_features_matrix) # y contains the assignments of each sample to a cluster
 
 # %% calculate radius of clusters
@@ -180,5 +185,13 @@ for i in range_feature_1:
 #            axs[i-range_feature_1[0],j-range_feature_2[0]].add_patch(plt.Circle((kmeans.cluster_centers_[cluster,i],kmeans.cluster_centers_[cluster,j]),radiuses[cluster],color=cmap(cluster),fill=False))
         axs[i-range_feature_1[0],j-range_feature_2[0]].set_aspect('equal') # set aspect ratio to 1 to preserve circle shape
 fig.tight_layout()
+
+# %% save the model to a python file
+kmeans.radiuses = radiuses # add radiuses to the model
+kmeans.means = means
+kmeans.stds = stds
+kmeans.feat_weights = feat_weights
+pickle.dump(kmeans, open(path.join(python_model_path,"StandardModel.pickle"), 'wb'))
+
 
 plt.show()
