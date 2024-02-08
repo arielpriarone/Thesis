@@ -48,11 +48,13 @@ for filepath in [featfilepath,faultfilepath]:
         print("Metric column dropped")
     except:
         print("Metric column not found")
+    features_7 = features.drop(columns=features.keys()[7:]) # take only the first 7 features
     print(features.keys())
     print(features.head())
 
     # %% load the data
     X = features.to_numpy() # data to fit in the model
+    X_7 = features_7.to_numpy() # data to fit in the model with only first 7 features
     print(np.shape(X))
 
     # load the models
@@ -61,6 +63,7 @@ for filepath in [featfilepath,faultfilepath]:
     scaledModel_subset = pickle.load(open(path.join(python_model_path,"ScaledModel_refined_subset.pickle"), 'rb'))
     standardModel_refined = pickle.load(open(path.join(python_model_path,"StandardModel_refined.pickle"), 'rb'))
     standardModel_notworking = pickle.load(open(path.join(python_model_path,"StandardModel_notworking.pickle"), 'rb'))
+    standardModel_7features = pickle.load(open(path.join(python_model_path,"Standard_7features.pickle"), 'rb'))
 
     # print the models
     print(f"modelradiuses = {standardModel.radiuses}")
@@ -73,12 +76,13 @@ for filepath in [featfilepath,faultfilepath]:
     standardized_features_matrix_notworking = np.array([(x-standardModel_notworking.means)/standardModel_notworking.stds for x in X])
     scaled_features_matrix = np.array([(x-scaledModel.means)/scaledModel.stds*scaledModel.feat_importance for x in X])
     scaled_features_matrix_subset = np.array([(x-scaledModel_subset.means)/scaledModel_subset.stds*scaledModel_subset.feat_importance for x in X])
-
+    standardized_features_matrix_7 = np.array([(x-standardModel_7features.means)/standardModel_7features.stds for x in X_7])
     metric = {"standard": [], 
               "scaled": [], 
               "standard refined": [], 
               "scaled subset": [], 
-              "standard notworking": []}
+              "standard notworking": [],
+              "7 features": []}
     # evaluate the models on the training data collected the second day
     for i in range(standardized_features_matrix.shape[0]): # standard model
         y = standardModel.predict(standardized_features_matrix[i,:].reshape(1,-1))    
@@ -110,7 +114,12 @@ for filepath in [featfilepath,faultfilepath]:
         print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-standardModel_notworking.radiuses[int(y)])/standardModel_notworking.radiuses[int(y)]) # calculate the error
         metric['standard notworking'].append(current_error)
-
+    for i in range(standardized_features_matrix_7.shape[0]): # standard model
+        y = standardModel_7features.predict(standardized_features_matrix_7[i,:].reshape(1,-1))    
+        distance_to_assigned_center = standardModel_7features.transform(standardized_features_matrix_7[i].reshape(1,-1))[0,y]
+        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        current_error=float((distance_to_assigned_center-standardModel_7features.radiuses[int(y)])/standardModel_7features.radiuses[int(y)]) # calculate the error
+        metric['7 features'].append(current_error)
 
     fig, ax = plt.subplots(2,1,sharex=True)
     fig.set_linewidth(0.5)
@@ -119,6 +128,7 @@ for filepath in [featfilepath,faultfilepath]:
     ax[0].plot(metric['standard refined'], label='Standard refined novelty metric')
     ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
     ax[0].plot(metric['scaled subset'], label='Scaled subset novelty metric')
+    ax[0].plot(metric['7 features'], label='7 features novelty metric')
     ax[0].set_ylabel('Novelty metric')
     ax[0].legend()
     ax[0].set_title('Novelty metric comparison')
@@ -127,6 +137,7 @@ for filepath in [featfilepath,faultfilepath]:
     ax[1].plot(mobileAverage(metric['standard refined']), label='Standard refined novelty metric')
     ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
     ax[1].plot(mobileAverage(metric['scaled subset']), label='Scaled subset novelty metric')
+    ax[1].plot(mobileAverage(metric['7 features']), label='7 features novelty metric')
     ax[1].set_xlabel('Sample')
     ax[1].set_ylabel('Novelty metric')
     ax[1].set_title('Novelty metric comparison Moving Average')

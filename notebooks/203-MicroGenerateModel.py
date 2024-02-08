@@ -18,10 +18,10 @@ console = Console()
 # %% global variables
 timestamps = np.array([])                                                                       # timestamps.shape = (n_samples,)
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
-train_data_filepath = r"data\processed\ETEL_Test2\train_data.csv"    # csv file with train data
+train_data_filepath = r"data\processed\ETEL_Test2\train_data_refined_subset7features.csv"    # csv file with train data
 feature_scaler_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv"    # csv file with feature scaler
 model_filepath = r"C:\Users\ariel\Desktop\model.h"                                              # model file to be created and included in C.
-modelfilename = "StandardModel_notworking.pickle"                                                          # model file to be created and included in python code
+modelfilename = "Standard_7features.pickle"                                                          # model file to be created and included in python code
 python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code
 max_n_clusters = 25                                                                             # maximum number of clusters to try
 min_cluster_size = 2                                                                            # minimum number of samples in a cluster
@@ -167,25 +167,28 @@ console.print("Model file created successfully.", style="magenta")
 f.close()   # close file
 
 # %% plot resulting clusters
-range_feature_1=range(30, 33) # select features to plot vs next ones
-range_feature_2=range(50, 53) # select features to plot vs previous ones
+try:
+    range_feature_1=range(30, 33) # select features to plot vs next ones
+    range_feature_2=range(50, 53) # select features to plot vs previous ones
 
-fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
-fig.tight_layout()
-cmap = mpl.colormaps['Set1']
-for i in range_feature_1: 
-    for j in range_feature_2:
-        if i!=j:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(standardized_features_matrix[:,i],standardized_features_matrix[:,j],s=1,marker='*',c=cluster_labels+1,cmap='Set1')
-            axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c=range(1,n_clusters+1),cmap='Set1')
-        if i==range_feature_1[-1]:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
-        if j==range_feature_2[0]:
-            axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
-#        for cluster in range(0,n_clusters):
-#            axs[i-range_feature_1[0],j-range_feature_2[0]].add_patch(plt.Circle((kmeans.cluster_centers_[cluster,i],kmeans.cluster_centers_[cluster,j]),radiuses[cluster],color=cmap(cluster),fill=False))
-        axs[i-range_feature_1[0],j-range_feature_2[0]].set_aspect('equal') # set aspect ratio to 1 to preserve circle shape
-fig.tight_layout()
+    fig, axs=plt.subplots(len(range_feature_1),len(range_feature_2),sharex=True,sharey=True)
+    fig.tight_layout()
+    cmap = mpl.colormaps['Set1']
+    for i in range_feature_1: 
+        for j in range_feature_2:
+            if i!=j:
+                axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(standardized_features_matrix[:,i],standardized_features_matrix[:,j],s=1,marker='*',c=cluster_labels+1,cmap='Set1')
+                axs[i-range_feature_1[0],j-range_feature_2[0]].scatter(kmeans.cluster_centers_[:,i],kmeans.cluster_centers_[:,j],marker='x',c=range(1,n_clusters+1),cmap='Set1')
+            if i==range_feature_1[-1]:
+                axs[i-range_feature_1[0],j-range_feature_2[0]].set_xlabel('feature '+str(j))
+            if j==range_feature_2[0]:
+                axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
+    #        for cluster in range(0,n_clusters):
+    #            axs[i-range_feature_1[0],j-range_feature_2[0]].add_patch(plt.Circle((kmeans.cluster_centers_[cluster,i],kmeans.cluster_centers_[cluster,j]),radiuses[cluster],color=cmap(cluster),fill=False))
+            axs[i-range_feature_1[0],j-range_feature_2[0]].set_aspect('equal') # set aspect ratio to 1 to preserve circle shape
+    fig.tight_layout()
+except:
+    console.print("Error plotting clusters.", style="magenta")
 
 # %% save the model to a python file
 kmeans.radiuses = radiuses # add radiuses to the model
