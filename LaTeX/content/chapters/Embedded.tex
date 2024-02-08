@@ -40,10 +40,43 @@ Similarly to what have been done for the \texttt{python} implementation, the par
 \section{Software}
 The code consists on a main loop, that is continuously running. It is responsable for executing the state machine behaviour, that manages the different phase of operation. The phases of operation are the same described for the \texttt{python} implementation, except for the training phase, in wich the microcontroller performs the sensor polling, the feature extraction and then send the data to the \gls{pc} using a serial communication. The \gls{pc} is responsable for the training phase. This part is developed again in \texttt{python}, but the final model is then formatted as a \texttt{model.h} file that can be directly included in the embedded code. The model is then stored in the flash memory of the microcontroller, together with the rest of the program.
 
+The hardware configuration has been done using the \gls{ide} ({STM32cubeIDE} tool), that is a graphical interface that allows to configure the microcontroller and generate the initialization code. 
+
 \subsection{Sensor polling}
-\writehereaboutinterrupts
+The microcontroller comes with an Hardware Abstraction Layer (\gls{hal}) which acts as a intermediary layer between the hardware and software. It simplifies interaction with the microcontroller's peripherals, such as GPIO, UART, and timers, by providing standardized functions and APIs. The \gls{hal} library enhance code reusability across different STM32 microcontroller families, streamlining the development process and enhancing scalability of embedded systems projects.
+
+To sample tha data at a precise samplinf frequency, two options are available:
+\begin{itemize}
+    \item Use the Direct Memory Acces (\gls{dma}) capability of the microcontroller. This approach allow to sample the GPIO, and store the result in the mamory accessible by the CPU, whithout using cpu time. The \gls{dma} is then configured to trigger an interrupt at the end of the transfer, and the interrupt is used to signal the end of the sampling and to start the feature extraction. It is suitable for high sampling frequencies and in fact, even downscaling the clock frequency linked to the \gls{dma} there is a lower bound of obtainable sampling frequenies.
+    \item Use the Timer peripheral of the microcontroller. The timer is configured to trigger an interrupt at a precise frequency, and the interrupt cause the CPU to poll the sensor data. This approach is suitable for sampling frequencies that are not too high, and it is the one used in this work (for frequency in the order of \SI{ }{\kilo\hertz}).
+    If too many interrupts are generated, the CPU may not be able to execute them instantly, so the actual sampling may shift from the desired frequency, however, in this implementation the only interrupt used is the one for the sampling, so the CPU is not overloaded and the sampling frequency is precise.
+\end{itemize}
+
 
 \subsection{Feature extraction}
 The features available to be extra are the same as the ones described in \autoref{ch:FeatureExtraction}. The time-domain features are coded directly in a function that is responsible for extracting them. The frequency-domain features are computed by another function that relies on the \texttt{C} library \texttt{wavelib} for the wavelet transform \cite{wavelib}. The power of the wavelet coefficients are then computed and appended to the feature vector. The feature vector is then stored in the RAM, and it is used for the novelty detection.
-The features are then standardized using the same mean and standard deviation used for the training phase. The standardization is performed in the same way as in the \texttt{python} implementation.
+The features are then standardized using the same mean and standard deviation used for the training phase. 
 
+\subsection{Evaluation}
+When the microcontroller is in the evaluation phase, the feature vector is processed to compute the novelty metric. The model cluster centroids and radiuses were saved in the code in the training phase, so now it is possible to run the \autoref{alg:eval_new_snapshot}. 
+
+\subsection{Custom \texttt{C} functions}
+The \texttt{C} main loop, which executes all the behaviours that in the \texttt{python} implementation were executed by tthe various agents, relies on the library functions as well as on the custom functions resumed in \autoref{tab:custom_functions}.
+
+\begin{longtable}{p{0.4\textwidth}p{0.5\textwidth}}
+    \caption{Custom function implemented in \texttt{C}\label{tab:custom_functions}}\\ 
+    \toprule
+    \textbf{Method} & \textbf{Description} \endfirsthead 
+    \hline
+    setRTCclock & Set the clock of the microcontroller to the current time \\
+    get\_time & Get the current time from the RTC clock \\
+    acquireSnapshot & Acquire a snapshot from the sensor \\
+    calcSnapDistanceError & Calculate the novelty metric based on the model centroids, radiuses and the current features vector \\
+    std\_sclr & Standardize the features vector \\
+    snapReadyHandler & Handle the snapshot ready event (the interrupt of the Timer) \\
+    norm2 & Compute the norm of a vector \\
+    packetCoeff & Perform the Wavelet packed decomposition and compute the norm of the coufficients, it relies on \cite{wavelib} \\
+    featureExtractor & Extract the features from the snapshot (both time domain and frequency domain) \\
+    eucDist & Compute the euclidean distance between two vectors \\
+    \bottomrule
+    \end{longtable}
