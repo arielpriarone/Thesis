@@ -59,11 +59,19 @@ for filepath in [featfilepath,faultfilepath]:
 
     # load the models
     standardModel = pickle.load(open(path.join(python_model_path,"StandardModel.pickle"), 'rb'))
+    print("standardModel = ");print(standardModel)
     scaledModel = pickle.load(open(path.join(python_model_path,"ScaledModel.pickle"), 'rb'))
+    print("scaledModel = ");print(scaledModel)
     scaledModel_subset = pickle.load(open(path.join(python_model_path,"ScaledModel_refined_subset.pickle"), 'rb'))
+    print("scaledModel_subset = ");print(scaledModel_subset)
     standardModel_refined = pickle.load(open(path.join(python_model_path,"StandardModel_refined.pickle"), 'rb'))
+    print("standardModel_refined = ");print(standardModel_refined)
     standardModel_notworking = pickle.load(open(path.join(python_model_path,"StandardModel_notworking.pickle"), 'rb'))
+    print("standardModel_notworking = ");print(standardModel_notworking)
     standardModel_7features = pickle.load(open(path.join(python_model_path,"Standard_7features.pickle"), 'rb'))
+    print("standardModel_7features = ");print(standardModel_7features)
+    ScaledModel_7mask = pickle.load(open(path.join(python_model_path,"ScaledModel_7mask.pickle"), 'rb'))
+    print("ScaledModel_7mask = ");print(ScaledModel_7mask)
 
     # print the models
     print(f"modelradiuses = {standardModel.radiuses}")
@@ -77,49 +85,58 @@ for filepath in [featfilepath,faultfilepath]:
     scaled_features_matrix = np.array([(x-scaledModel.means)/scaledModel.stds*scaledModel.feat_importance for x in X])
     scaled_features_matrix_subset = np.array([(x-scaledModel_subset.means)/scaledModel_subset.stds*scaledModel_subset.feat_importance for x in X])
     standardized_features_matrix_7 = np.array([(x-standardModel_7features.means)/standardModel_7features.stds for x in X_7])
+    standardized_features_matrix_7mask = np.array([(x-ScaledModel_7mask.means)/ScaledModel_7mask.stds for x in X])
+    
     metric = {"standard": [], 
               "scaled": [], 
               "standard refined": [], 
               "scaled subset": [], 
               "standard notworking": [],
-              "7 features": []}
+              "7 features": [],
+              "7 mask": []}
     # evaluate the models on the training data collected the second day
     for i in range(standardized_features_matrix.shape[0]): # standard model
         y = standardModel.predict(standardized_features_matrix[i,:].reshape(1,-1))    
         distance_to_assigned_center = standardModel.transform(standardized_features_matrix[i].reshape(1,-1))[0,y]
-        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        #print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-standardModel.radiuses[int(y)])/standardModel.radiuses[int(y)]) # calculate the error
         metric['standard'].append(current_error)
     for i in range(scaled_features_matrix.shape[0]): # scaled model
         y = scaledModel.predict(scaled_features_matrix[i,:].reshape(1,-1))    
         distance_to_assigned_center = scaledModel.transform(scaled_features_matrix[i].reshape(1,-1))[0,y]
-        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        #print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-scaledModel.radiuses[int(y)])/scaledModel.radiuses[int(y)]) # calculate the error
         metric['scaled'].append(current_error)
     for i in range(scaled_features_matrix_subset.shape[0]): # scaled model
         y = scaledModel_subset.predict(scaled_features_matrix_subset[i,:].reshape(1,-1))    
         distance_to_assigned_center = scaledModel_subset.transform(scaled_features_matrix_subset[i].reshape(1,-1))[0,y]
-        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        #print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-scaledModel_subset.radiuses[int(y)])/scaledModel_subset.radiuses[int(y)]) # calculate the error
         metric['scaled subset'].append(current_error)
     for i in range(standardized_features_matrix_refined.shape[0]): # standard model
         y = standardModel_refined.predict(standardized_features_matrix_refined[i,:].reshape(1,-1))    
         distance_to_assigned_center = standardModel_refined.transform(standardized_features_matrix_refined[i].reshape(1,-1))[0,y]
-        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        # print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-standardModel_refined.radiuses[int(y)])/standardModel_refined.radiuses[int(y)]) # calculate the error
         metric['standard refined'].append(current_error)
     for i in range(standardized_features_matrix_notworking.shape[0]): # standard model
         y = standardModel_notworking.predict(standardized_features_matrix_notworking[i,:].reshape(1,-1))    
         distance_to_assigned_center = standardModel_notworking.transform(standardized_features_matrix_notworking[i].reshape(1,-1))[0,y]
-        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        # print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-standardModel_notworking.radiuses[int(y)])/standardModel_notworking.radiuses[int(y)]) # calculate the error
         metric['standard notworking'].append(current_error)
     for i in range(standardized_features_matrix_7.shape[0]): # standard model
         y = standardModel_7features.predict(standardized_features_matrix_7[i,:].reshape(1,-1))    
         distance_to_assigned_center = standardModel_7features.transform(standardized_features_matrix_7[i].reshape(1,-1))[0,y]
-        print(f"y = {y}, distance = {distance_to_assigned_center}")
+        #print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-standardModel_7features.radiuses[int(y)])/standardModel_7features.radiuses[int(y)]) # calculate the error
         metric['7 features'].append(current_error)
+    for i in range(standardized_features_matrix_7mask.shape[0]): # standard model
+        y = ScaledModel_7mask.predict(standardized_features_matrix_7mask[i,:].reshape(1,-1))    
+        distance_to_assigned_center = ScaledModel_7mask.transform(standardized_features_matrix_7mask[i].reshape(1,-1))[0,y]
+        #print(f"y = {y}, distance = {distance_to_assigned_center}")
+        current_error=float((distance_to_assigned_center-ScaledModel_7mask.radiuses[int(y)])/ScaledModel_7mask.radiuses[int(y)]) # calculate the error
+        metric['7 mask'].append(current_error)
 
     fig, ax = plt.subplots(2,1,sharex=True)
     fig.set_linewidth(0.5)
@@ -129,6 +146,7 @@ for filepath in [featfilepath,faultfilepath]:
     ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
     ax[0].plot(metric['scaled subset'], label='Scaled subset novelty metric')
     ax[0].plot(metric['7 features'], label='7 features novelty metric')
+    ax[0].plot(metric['7 mask'], label='7 mask novelty metric')
     ax[0].set_ylabel('Novelty metric')
     ax[0].legend()
     ax[0].set_title('Novelty metric comparison')
@@ -138,6 +156,7 @@ for filepath in [featfilepath,faultfilepath]:
     ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
     ax[1].plot(mobileAverage(metric['scaled subset']), label='Scaled subset novelty metric')
     ax[1].plot(mobileAverage(metric['7 features']), label='7 features novelty metric')
+    ax[1].plot(mobileAverage(metric['7 mask']), label='7 mask novelty metric')
     ax[1].set_xlabel('Sample')
     ax[1].set_ylabel('Novelty metric')
     ax[1].set_title('Novelty metric comparison Moving Average')

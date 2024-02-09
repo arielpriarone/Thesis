@@ -8,3 +8,4 @@
 #define LED_GRE GPIO_PIN_0 	// RED LED ADDRESS AT GPIO B
 #define VERBOSE FALSE		// SET THE VERBOSITY MODE
 #define OPMODE TRAIN		// SET THE OPERATION MODE: TRAIN or EVALUATE
+#define Use7Features TRUE	// use only first 7 features for evaluation

@@ -29,11 +29,13 @@ featfilepath = r"data\processed\ETEL_Test2\train_data_refined_subset.csv"   # fo
 python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code
 features = pd.read_csv(featfilepath,sep='\t')
 features = features.drop(columns=["Timestamp"]).dropna(axis=1)
-pickleModelName = "ScaledModel_refined_subset.pickle"
-print(features.keys())
-print(features.head())
+pickleModelName = "ScaledModel_7mask.pickle"
 
+define_importance_manually = True
 
+# define importance manually
+if define_importance_manually:
+    feat_importance = np.concatenate((np.ones(7),np.zeros(60)))
 
 # %% load the data
 X = features.to_numpy() # data to fit in the model

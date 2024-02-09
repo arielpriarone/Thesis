@@ -129,6 +129,9 @@ int main(void)
 		feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																		time-domain		...		freq-domain		*/
 		feat_stdsd = (double *)malloc(sizeof(double) * feat_len); // standardised features
+		if(Use7Features){
+			feat_len=7; // to reduce the features span to look for
+		}
 	  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
