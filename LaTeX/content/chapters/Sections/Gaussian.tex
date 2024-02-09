@@ -21,7 +21,7 @@ A Gaussian Mixture Model is a probabilistic model that assumes that the data are
 \subsection{Training}
 \label{sec:gauss_train}
 As anticipated, the assumption is that every cluster has a normal \gls{pdf} on each axis. So, for each feature, the total \gls{pdf} is a superposition of $k$ normal \gls{pdf}. 
-The algorithm used to train the model is the expectation maximization \gls{em} algorithm. This is a generalization of the k-means algorithm that allows to find the centroids (means), the covariance matrices of the clusters, and their weights. Unlike the k-means, the \gls{em} is a soft clustering algorithm, meaning that each point is assigned to each cluster with a probability, instead of being assigned to a single cluster.
+The algorithm used to train the model is the Expectation Maximization (\gls{em}) algorithm. This is a generalization of the k-means algorithm that allows to find the centroids (means), the covariance matrices of the clusters, and their weights. Unlike the k-means, the \gls{em} is a soft clustering algorithm, meaning that each point is assigned to each cluster with a probability, instead of being assigned to a single cluster.
 The \gls{em} algorithm is an iterative algorithm that aims to find the parameters that maximize the \gls{glo:likelihood}.
 
 \subsection{Selecting the number of clusters}
