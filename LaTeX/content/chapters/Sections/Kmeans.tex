@@ -1,7 +1,7 @@
 \section{K-means}
 \label{sec:kmeans}
 
-This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each cluster with it's mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a phisical point of view, is the center of mass of the cluster itself as if it is composed my unitary point masses located at the datapoints positions. The mean is not necessarily a point belonging to the cluster.
+This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each cluster with its mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a physical point of view, is the center of mass of the cluster itself as if it is composed by unitary point masses located at the datapoints' positions. The mean is not necessarily a point belonging to the cluster.
 
 Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
@@ -13,11 +13,11 @@ Let's assume to have extrapolated $F$ features from each of our signals, to prod
 Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
 
 Anyway, {\gls{glo:heuristic}} clustering algorithms were already developed in the 1950s. 
-The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version  published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
+The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version, published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
 
-Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used inscientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cithe this algorithm as first in the group of four most polular algorithms.
+Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used in scientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cited this algorithm as first in the group of four most popular algorithms.
 
-Nowadays, the K-means algorithm is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result, so the problem of getting a sub-optimal resulti is not a common issue in practice.
+Nowadays, the K-means algorithm is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result, so the problem of getting a sub-optimal result is not a common issue in practice.
 
 \subsection{Training}
 
@@ -57,24 +57,24 @@ The decision boundaries are a Voronoi tessellation of the space, and they are de
 \label{sec:kmeans_improvements}
 \paragraph*{Kmeans}
 Finding the optimal solution of the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
-To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that the most algorithms do not scale well as the number $n$ of {\gls{glo:snap}} increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
+To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that most algorithms do not scale well as the number $n$ of {\gls{glo:snap}} increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
 
 It is worth noticing that an exact solution of the problem has been published \cite{Kmeans_vornoi_japan} with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of clusters and the number of features $F$.
 
 \paragraph*{Lloyd's algorithm}
 The classic Lloyd algorithm \cite{Lloyd1982} has a complexity $\mathcal{O}(n\cdot k\cdot F )$.
 
-\paragraph*{Various improvements to the Lloyd's algorithm} Keeping the same basic idea, various modifications of the Lloyd algorithm have been proposed to improve the performances. For example, Kanugo \cite{kanungo2004local} proposed a local search algorithm that has a complexity $\mathcal{O}(n^3)$. Another result by Malay \cite{Kmeans_linear} has a linear complexity $\mathcal{O}(n)$. 
+\paragraph*{Various improvements to Lloyd's algorithm} Keeping the same basic idea, various modifications of the Lloyd algorithm have been proposed to improve the performances. For example, Kanugo \cite{kanungo2004local} proposed a local search algorithm that has a complexity $\mathcal{O}(n^3)$. Another result by Malay \cite{Kmeans_linear} has a linear complexity $\mathcal{O}(n)$. 
 
-Another inprovement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances ({\gls{glo:snap}}s) and the {\gls{glo:cent}}s. This algorithm become convenient when number $k$ of clusters is large ($\geq 20$), and up to a dimensionality of $F=1000$ features.
+Another improvement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances ({\gls{glo:snap}}s) and the {\gls{glo:cent}}s. This algorithm becomes convenient when the number $k$ of clusters is large ($\geq 20$), and up to a dimensionality of $F=1000$ features.
 
-A variant of the Lloyd algorithm regarding both the speed of execution and the memory consumption has been proposed by Sculley \cite{Sculley2010}. This solution achieve a reduction of the execution time by orders of magnitude, and enables to perform the classification even for datasets that dont't fit in the memory of the machine. This is achieved by using a \emph{mini-batch} approach, where the {\gls{glo:cent}}s are updated after each batch of {\gls{glo:snap}}s.
+A variant of the Lloyd algorithm regarding both the speed of execution and the memory consumption has been proposed by Sculley \cite{Sculley2010}. This solution achieves a reduction of the execution time by orders of magnitude and enables performing the classification even for datasets that don't fit in the memory of the machine. This is achieved by using a \emph{mini-batch} approach, where the {\gls{glo:cent}}s are updated after each batch of {\gls{glo:snap}}s.
 
-With regard to the problem of converging to a local minimum, the most common approach is to run the algorithm multiple times with different initializations and then select the best result, this is avoided by Reddy \cite{Vornoi_Kmeans}, by using the vornoi tassellation of the hyperspace using the datapoints to generate the initialization for the {\gls{glo:cent}} positions, this algorithm perform better in the sense that is less likely to get trapped in a local minima.
+Concerning the problem of converging to a local minimum, the most common approach is to run the algorithm multiple times with different initializations and then select the best result, this is avoided by Reddy \cite{Vornoi_Kmeans}, by using the Voronoi tessellation of the hyperspace using the datapoints to generate the initialization for the {\gls{glo:cent}} positions, this algorithm perform better in the sense that is less likely to get trapped in a local minimum.
 
 
 \paragraph{K-means\texttt{++}} 
-The last improved algorithm reported in this section has it's own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the {\gls{glo:cent}}s $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the {\gls{glo:cent}}s, the first {\gls{glo:cent}} $\gls{sym:cent}_1$ is chosen randomly from the {\gls{glo:snap}}s, and then the other {\gls{glo:cent}}s are chosen from the remaining {\gls{glo:snap}}s with a probability that depends from the distance of the candidate {\gls{glo:snap}} to the closest already chosen {\gls{glo:cent}}. This approach is summarized in the \autoref{alg:kmeanspp}.
+The last improved algorithm reported in this section has its own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the {\gls{glo:cent}}s $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the {\gls{glo:cent}}s, the first {\gls{glo:cent}} $\gls{sym:cent}_1$ is chosen randomly from the {\gls{glo:snap}}s, and then the other {\gls{glo:cent}}s are chosen from the remaining {\gls{glo:snap}}s with a probability that depends from the distance of the candidate {\gls{glo:snap}} to the closest already chosen {\gls{glo:cent}}. This approach is summarized in the \autoref{alg:kmeanspp}.
 
 For the development of the framework of this thesis, the K-means\texttt{++} algorithm has been implemented in \texttt{Python}, using the \texttt{scikit-learn} library. The library function has been modified, adding a method that returns the radii of the clusters, this information is crucial for our scope, as it will be needed for evaluating if a new {\gls{glo:snap}} is a novelty, normal or fault, as it will be explained in the \autoref{sec:clust_metric} and \autoref{sec:clust_threshold}.
 
@@ -97,7 +97,7 @@ For the development of the framework of this thesis, the K-means\texttt{++} algo
 \end{algorithm}
 
 \subsection{Selecting the number of clusters}
-It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of clusters $k$ in advance. There are some methods to decide what is the best number of clusters, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is hardly automatable so, during the training phase, the user has to decide the number of clusters to be used.
+It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of clusters $k$ in advance. There are some methods to decide what is the best number of clusters, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is automatable so, during the training phase, the user can decide the number of clusters to be used, or leave the selection to the algorithm itself.
 
 To compare the results of the different iterations, it is possible to use some metrics on the data and the {\gls{glo:cent}}s. The most common metrics are the \emph{inertia} and the \emph{silhouette score}, described in the following paragraphs.
 
@@ -223,28 +223,28 @@ This value can be evaluated in real-time and plotted in a graph so that the user
   e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
 \end{equation}
 
-Afetr applying this scaling, the metric now follow this rule of thumb:
+After applying this scaling, the metric now follows this rule of thumb:
 \begin{itemize}
-  \item $e_n \ in [-1,0] \implies \gls{sym:snap}_n$ is a normal {\gls{glo:snap}};
+  \item $e_n \in [-1,0] \implies \gls{sym:snap}_n$ is a normal {\gls{glo:snap}};
   \item $e_n \in (0,+\infty) \implies \gls{sym:snap}_n$ is a novelty;
 \end{itemize}
 
 \subsection{Trasformation of the metric for the fault detection}
 \label{sec:clust_fault}
-In the previous \autoref{sec:clust_threshold} it has been proposed a metric to detect how novel a {\gls{glo:snap}} is.
+In the previous \autoref{sec:clust_threshold} a metric has been proposed to detect how novel a {\gls{glo:snap}} is.
 
-Let's assume now to have trained the model on a dataset of {\gls{glo:snap}}s collected in a period in wich the system was having a known malfunction. In this case, the metric applied to any future {\gls{glo:snap}} will carry the information of \quoted{how faulty} the system is, or better \quoted{how similarly the system is behaving \gls{wrt} a known malfunction}.
+Let's assume now to have trained the model on a dataset of {\gls{glo:snap}}s collected in a period in which the system was having a known malfunction. In this case, the metric applied to any future {\gls{glo:snap}} will carry the information of \quoted{how faulty} the system is, or better \quoted{how similarly the system is behaving \gls{wrt} a known malfunction}.
 
-Since the metric already defined is the normalized distance of the current \gls{glo:snap} from the {\gls{glo:cent}} of the cluster, if the clustered data are indicative of a malfunction, the metric $e_n$ will be in the range $[-1,0]$ when the system have a known malfunction present in the training data and $e_n$ will be in the range $(0,+\infty)$ when the system is not behaving as a knon malfunction.
+Since the metric already defined is the normalized distance of the current \gls{glo:snap} from the {\gls{glo:cent}} of the cluster, if the clustered data are indicative of a malfunction, the metric $e_n$ will be in the range $[-1,0]$ when the system has a known malfunction present in the training data and $e_n$ will be in the range $(0,+\infty)$ when the system is not behaving as a known malfunction.
 
-To maintain the same behavior of the metric as in \autoref{sec:clust_threshold}, a trasformation that maps the range $[-1,0]$ into $(0,+\infty)$, and the range $(0,+\infty)$ into $[-1,0]$ is needed. This can be done by applying a logarithmic trasformation to the metric, as shown in the \autoref{eq:clust_eval_log}. This trasformation is applied only if the model is working in fault detection mode, otherwise the metric has to remain the same as in \autoref{eq:clust_eval_norm}.
+To maintain the same behavior of the metric as in \autoref{sec:clust_threshold}, a trasformation that maps the range $[-1,0]$ into $(0,+\infty)$, and the range $(0,+\infty)$ into $[-1,0]$ is needed. This can be done by applying a logarithmic transformation to the metric, as shown in the \autoref{eq:clust_eval_log}. This transformation is applied only if the model is working in fault detection mode, otherwise, the metric has to remain the same as in \autoref{eq:clust_eval_norm}.
 
 \begin{equation}
   \label{eq:clust_eval_log}
   e'_{n} = -\ln(e_n+1) = -\ln{\left(\frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}}\right)}, \text{ where $i$ is the the assigned cluster}
 \end{equation}
 
-In practice, to avoid numerical representation problems, it is need to avoid mapping $-1$ (when the new snapshot happpen to be perfectly in the center of a cluster) into $+\infty$. To do that, a constant slightly smaller than $1$ is multiplied to the metric before applying the logarithmic trasformation, so that the funciton will have the vertical asymptote slightly before $-1$, and all the inputs $\in [-1,0]$ will be mapped into real values. The plot of the settled function is shown in the \autoref{fig:kmeans_fault}.
+In practice, to avoid numerical representation problems, it is mandatory to avoid mapping $-1$ (when the new snapshot happpens to be perfectly in the center of a cluster) into $+\infty$. To do that, a constant slightly smaller than $1$ is multiplied to the metric before applying the logarithmic transformation, so that the function will have the vertical asymptote slightly before $-1$, and all the inputs $\in [-1,0]$ will be mapped into real values. The plot of the settled function is shown in the \autoref{fig:kmeans_fault}.
 
 \begin{figure}[htbp]
   \centering
@@ -290,15 +290,15 @@ The evaluation procedure developed to address the novelty/fault detection scope 
 \end{algorithm}
 
 
-\subsection{Comment about selecting wrong value of $k$}
+\subsection{Comment about selecting the wrong value of $k$}
 \label{sec:wrong_k}
 A brief comment about what has been done in the experimental phase, in the cases where the number of clusters $k$ was difficult to define based on the silhouette plots. This happened when the maximum value of $k$ was shared between more than one value of $k$ (multiple peaks with similar values or a flat shape of the peak).
 
 In this case, the best choice is to select the maximum value of $k$ that is still compliant with the silhouette criterion. This is because the in scope of this thesis the final goal is to detect novelty. 
 
-For display purposes, let's consider an example in the plane ($F$ = 2), with a dataset that clearly have three distinct clusters. Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and the a new {\gls{glo:snap}} that happens to be in the middle of the two clusters will not be detected as novelty. 
+For display purposes, let's consider an example in the plane ($F$ = 2), with a dataset that clearly has three distinct clusters. Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and a new {\gls{glo:snap}} that happens to be in the middle of the two clusters will not be detected as novelty. 
 
-In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters were $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new {\gls{glo:snap}} would not have been detected as novelty. On the other hand, selecting $k=4$, the algorithm would have correctly detected the novelty, even if onne cluster has been split in two.
+In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters were $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new {\gls{glo:snap}} would not have been detected as novelty. On the other hand, by selecting $k=4$, the algorithm would have correctly detected the novelty, even if one cluster had been split in two.
 
 \begin{figure}
   \centering
@@ -309,9 +309,9 @@ In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of cluste
 
 
 \subsection{Limits of the k-means algorithm}
-This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and it is well scalable. But it has also some limits, the most important are \citepage{hands-on-geron2022}{273}:
+This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and is well scalable. But it has also some limits, the most important are \citepage{hands-on-geron2022}{273}:
 \begin{itemize}
-  \item it perform poorely if the clusters are not spherical;
+  \item it performs poorly if the clusters are not spherical;
   \item it performs poorly if the clusters have very different sizes;
   \item it performs poorly if the clusters have different densities.
 \end{itemize}

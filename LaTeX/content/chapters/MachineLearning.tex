@@ -240,7 +240,7 @@ The algorithm then updates the parameters at each iteration as:
 
 \subsection{Sthocastic Gradient Descent}
 \label{subsec:SGD}
-The \emph{Stochastic Gradient Descent} (\gls{gd}) is a variant of the \gls{gd} algorithm that computes the gradient only on one instance at each iteration, instead of on the whole dataset. This makes the algorithm much faster, but the cost function will be much more noisy, and theta will not reach a steady value but instead will oscillate around the minimum. This has the advantage of being more robust to local minimum entrapment, but the disadvantage of never reaching the minimum. To overcome this, the learning rate $\eta$ can be reduced at each iteration, but this will slow down the convergence.
+The \emph{Stochastic Gradient Descent} (\gls{sgd}) is a variant of the \gls{gd} algorithm that computes the gradient only on one instance at each iteration, instead of on the whole dataset. This makes the algorithm much faster, but the cost function will be much more noisy, and theta will not reach a steady value but instead will oscillate around the minimum. This has the advantage of being more robust to local minimum entrapment, but the disadvantage of never reaching the minimum. To overcome this, the learning rate $\eta$ can be reduced at each iteration, but this will slow down the convergence.
 
 \begin{figure}
     \centering
@@ -369,7 +369,7 @@ This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneC
     \label{fig:DecisionTree}
 \end{figure}
 
-Decision Trees are very powerful classification algorithms that can also be used for regression, thinking as a feature values as classes. The classification process is based on a tree structure, where each sample start from the root node, and is filtered thru a bunch of \emph{if - then} statement until it reaches a leaf node, that output the predicited class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
+Decision Trees are very powerful classification algorithms that can also be used for regression, thinking of feature values as classes. The classification process is based on a tree structure, where each sample start from the root node, and is filtered thru a bunch of \emph{if - then} statement until it reaches a leaf node, that output the predicited class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
 
 \paragraph*{Gini impurity}
 The classification algorithm is hence very simple, the \gls{ml} part of is the training process. Let's consider a leaf node, and imagine passing all the training samples thru the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the train dataset and will not perfom well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, it exist a metric called \emph{Gini impurity} that assume a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measure how different the classes in the node are, 0.5 being the maximum value that mean that all the classes are present in the node with equal frequency. The mathematical definition is the following:
