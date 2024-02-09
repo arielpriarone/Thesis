@@ -91,7 +91,7 @@ bool transmit_flag 	= FALSE;					// transmit snap features request flag
 uint16_t adc_buf[ADC_BUF_LEN]; 					// reserve a buffer for the analogue readings
 uint16_t timer_index = 0;						// index for the timer interrupt analog conversion
 
-int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
+int feat_len = 7;//TD_FEAT + pow(2,TREE_DEPTH); 	// features array length
 double *feat_array = NULL;						/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																time-domain		...		freq-domain		*/
 double *feat_stdsd = NULL;
@@ -126,12 +126,13 @@ int main(void)
 {
 	  /* USER CODE BEGIN 1 */
 		int feat_len = TD_FEAT + pow(2,TREE_DEPTH); 			// features array length
+		if(Use7Features){
+			feat_len = 7; // to reduce the features span to look for
+			printf("feat_len = %d", feat_len);
+		}
 		feat_array = (double *)malloc(sizeof(double) * feat_len);	/* features array {0, ... ,TD_FEAT-1, TDFEAT, feat_len-1}
 																		time-domain		...		freq-domain		*/
 		feat_stdsd = (double *)malloc(sizeof(double) * feat_len); // standardised features
-		if(Use7Features){
-			feat_len=7; // to reduce the features span to look for
-		}
 	  /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -656,7 +657,10 @@ void snapReadyHandler(){
 		snap_recorded = FALSE;		// reset the recorded flag, because the sample has been consumed
 
 		/* ACTIONS TO PERFORM WHEN A NEW TIME-DOMAIN SNAP IS READY */
-		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_array); // extract the features
+		if(1){
+			printf("About to extract features with feat_len = %d", feat_len);
+		}
+		feat_array = featureExtractor(adc_buf, ADC_BUF_LEN, TREE_DEPTH, feat_len, feat_array); // extract the features
 		if (transmit_flag){
 			myprintf("the time-domain sampled signal is: \r\n\n");
 			if(VERBOSE){printUint16_tArray(adc_buf, ADC_BUF_LEN);}

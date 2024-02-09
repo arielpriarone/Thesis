@@ -100,6 +100,7 @@ double *packetCoeff(double *inp, int length, int tree_depth, double *coefs) { //
 double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 							int len_time_array,				// length of time-domain snapshot
 							int tree_depth,					// depth of the wavelet decomposition tree
+							int feat_len, 					// total features array length, if it is less than max, high coeficients truncated
 							double *out_features_array)		// output array of features
 {
 	// cast the input array to double
@@ -139,8 +140,8 @@ double *featureExtractor(	uint16_t *time_array,			// time-domain snapshot
 	coefs = packetCoeff(time_array_double, len_time_array, tree_depth, coefs);
 
 	// assign the features to the output array
-	for (int i = 0; i < len; ++i) {
-		out_features_array[i+3] = coefs[i];
+	for (int i = 3; i < feat_len; ++i) {
+		out_features_array[i] = coefs[i-3];
 	}
 
 	// free the memory
