@@ -157,11 +157,11 @@ with open(model_filepath, 'w') as f:
 
     # feature importance scaler
     aux = ""
-    for i in range(n_clusters):
+    for i in range(n_features):
         aux += str(feat_weights[i])
-        if i != n_clusters-1:
+        if i != n_features-1:
             aux += ", "
-    f.write("double weights["+str(n_clusters)+"] = {"+aux+"};\n")
+    f.write("double weights["+str(n_features)+"] = {"+aux+"};\n")
 
 console.print("Model file created successfully.", style="magenta")
 f.close()   # close file
