@@ -47,21 +47,21 @@ The microcontroller comes with an Hardware Abstraction Layer (\gls{hal}) which a
 
 To sample tha data at a precise samplinf frequency, two options are available:
 \begin{itemize}
-    \item Use the Direct Memory Acces (\gls{dma}) capability of the microcontroller. This approach allow to sample the GPIO, and store the result in the mamory accessible by the CPU, whithout using cpu time. The \gls{dma} is then configured to trigger an interrupt at the end of the transfer, and the interrupt is used to signal the end of the sampling and to start the feature extraction. It is suitable for high sampling frequencies and in fact, even downscaling the clock frequency linked to the \gls{dma} there is a lower bound of obtainable sampling frequenies.
+    \item Use the Direct Memory Acces (\gls{dma}) capability of the microcontroller. This approach allow to sample the GPIO, and store the result in the memory accessible by the CPU, whithout using cpu time. The \gls{dma} is then configured to trigger an interrupt at the end of the transfer, and the interrupt is used to signal the end of the sampling and to start the feature extraction. It is suitable for high sampling frequencies and in fact, even downscaling the clock frequency linked to the \gls{dma} there is a lower bound of obtainable sampling frequenies.
     \item Use the Timer peripheral of the microcontroller. The timer is configured to trigger an interrupt at a precise frequency, and the interrupt cause the CPU to poll the sensor data. This approach is suitable for sampling frequencies that are not too high, and it is the one used in this work (for frequency in the order of \SI{ }{\kilo\hertz}).
     If too many interrupts are generated, the CPU may not be able to execute them instantly, so the actual sampling may shift from the desired frequency, however, in this implementation the only interrupt used is the one for the sampling, so the CPU is not overloaded and the sampling frequency is precise.
 \end{itemize}
 
 
 \subsection{Feature extraction}
-The features available to be extra are the same as the ones described in \autoref{ch:FeatureExtraction}. The time-domain features are coded directly in a function that is responsible for extracting them. The frequency-domain features are computed by another function that relies on the \texttt{C} library \texttt{wavelib} for the wavelet transform \cite{wavelib}. The power of the wavelet coefficients are then computed and appended to the feature vector. The feature vector is then stored in the RAM, and it is used for the novelty detection.
+The features available to be extracted are the same as the ones described in \autoref{ch:FeatureExtraction}. The time-domain features are coded directly in a function that is responsible for extracting them. The frequency-domain features are computed by another function that relies on the \texttt{C} library \texttt{wavelib} for the wavelet transform \cite{wavelib}. The power of the wavelet coefficients are then computed and appended to the feature vector. The feature vector is then stored in the RAM, and it is used for the novelty detection.
 The features are then standardized using the same mean and standard deviation used for the training phase. 
 
 \subsection{Evaluation}
 When the microcontroller is in the evaluation phase, the feature vector is processed to compute the novelty metric. The model cluster centroids and radiuses were saved in the code in the training phase, so now it is possible to run the \autoref{alg:eval_new_snapshot}. 
 
 \subsection{Custom \texttt{C} functions}
-The \texttt{C} main loop, which executes all the behaviours that in the \texttt{python} implementation were executed by tthe various agents, relies on the library functions as well as on the custom functions resumed in \autoref{tab:custom_functions}.
+The \texttt{C} main loop, which executes all the behaviours that in the \texttt{python} implementation were executed by the various agents, relies on the library functions as well as on the custom functions resumed in \autoref{tab:custom_functions}.
 
 \begin{longtable}{p{0.4\textwidth}p{0.5\textwidth}}
     \caption{Custom function implemented in \texttt{C}\label{tab:custom_functions}}\\ 
