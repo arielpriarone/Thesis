@@ -16,20 +16,20 @@ Using this approach, this algorithm is able to identify outliers in a dataset wi
     \caption{Local Outlier Factor decision function.}
     \label{fig:LocalOutlierFactor}
 \end{figure}
-This algorithm is implemented in \texttt{sklearn} library, and requires the number $MinPts$ of k-nearest neighbors to be specified. According to the authors, the value of \gls{lof} of a particular snapshot is neither increasing nor decreasing with the value of $MinPts$. They also suggest an \gls{glo:heuristic} to select the value of $MinPts$ that is hardly automatable. 
+This algorithm is implemented in \texttt{sklearn} library and requires the number $MinPts$ of k-nearest neighbors to be specified. According to the authors, the value of \gls{lof} of a particular snapshot is neither increasing nor decreasing with the value of $MinPts$. They also suggest an \gls{glo:heuristic} to select the value of $MinPts$ that is hardly automatable. 
 For this reason, it's difficult to use this algorithm in a real-time scenario in an unsupervised way.
 
 Anyway, as an example, using the same dataset used in \autoref{fig:dbscandata}, and running the \gls{lof} algorithm with the default value of $MinPts=20$, we obtain the results shown in \autoref{fig:LocalOutlierFactor}.
 
 \subsection{Evaluation of a new instance}
 \label{sec:lof_eval}
-The \texttt{sklearn} implementation of the \gls{lof} algorithm has a method that returns the \gls{lof} of a new instance. Since the bigger is the value, the more likely it is that the new snapshot is an outlier, we can take directly this value as a metric to evaluate the novelty of a new instance.
+The \texttt{sklearn} implementation of the \gls{lof} algorithm has a method that returns the \gls{lof} of a new instance. Since the bigger the value is, the more likely it is that the new snapshot is an outlier, we can take directly this value as a metric to evaluate the novelty of a new instance.
 
-To select a threshold value, it holds what has being said in \autoref{sec:iforest_threshold} about iForest.
+To select a threshold value, it holds what has been said in \autoref{sec:iforest_threshold} about iForest.
 
 
 \subsection{Limitations of Local Outlier Factor}
 \label{sec:lof_limitations}
-The main limitations are the difficulty to define a threshold value to declare some instances as outliers, and the difficulty to use it a completely unsupervised way.
+The main limitations are the difficulty of defining a threshold value to declare some instances as outliers and the difficulty of using it in a completely unsupervised way.
 
 

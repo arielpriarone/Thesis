@@ -1,7 +1,7 @@
 \section{K-means}
 \label{sec:kmeans}
 
-This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each cluster with its mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a physical point of view, is the center of mass of the cluster itself as if it is composed by unitary point masses located at the datapoints' positions. The mean is not necessarily a point belonging to the cluster.
+This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each cluster with its mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a physical point of view, is the center of mass of the cluster itself as if it is composed of unitary point masses located at the positions of the datapoints. The mean is not necessarily a point belonging to the cluster.
 
 Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
@@ -15,7 +15,7 @@ Unfortunately, this problem is NP-hard, even for as little as $F=2$ features con
 Anyway, {\gls{glo:heuristic}} clustering algorithms were already developed in the 1950s. 
 The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version, published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
 
-Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used in scientiﬁc and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cited this algorithm as first in the group of four most popular algorithms.
+Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used in scientific and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cited this algorithm as first in the group of four most popular algorithms.
 
 Nowadays, the K-means algorithm is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result, so the problem of getting a sub-optimal result is not a common issue in practice.
 
@@ -211,7 +211,7 @@ Using this metric it is possible to define as \emph{novelty} all the {\gls{glo:s
 In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\gls{sym:cluster}_i$ and use it to detect if a {\gls{glo:snap}} is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > {t}_i$.
 
 \paragraph*{}
-At this point, the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones. Moreover, most of the times, the clusters shape and sized will not have a phisical meaning, and the act of manually define a threshold for each cluster would be against our goal of designing a fully unsupervised framework.
+At this point, the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones. Moreover, most of the times, the clusters' shape and size will not have a physical meaning, and the act of manually defining a threshold for each cluster would go against our goal of designing a fully unsupervised framework.
 
 \paragraph*{}
 To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\gls{sym:radius}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version.
@@ -244,7 +244,7 @@ To maintain the same behavior of the metric as in \autoref{sec:clust_threshold},
   e'_{n} = -\ln(e_n+1) = -\ln{\left(\frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}}\right)}, \text{ where $i$ is the the assigned cluster}
 \end{equation}
 
-In practice, to avoid numerical representation problems, it is mandatory to avoid mapping $-1$ (when the new snapshot happpens to be perfectly in the center of a cluster) into $+\infty$. To do that, a constant slightly smaller than $1$ is multiplied to the metric before applying the logarithmic transformation, so that the function will have the vertical asymptote slightly before $-1$, and all the inputs $\in [-1,0]$ will be mapped into real values. The plot of the settled function is shown in the \autoref{fig:kmeans_fault}.
+In practice, to avoid numerical representation problems, it is mandatory to avoid mapping $-1$ (when the new snapshot happens to be perfectly in the center of a cluster) into $+\infty$. To do that, a constant slightly smaller than $1$ is multiplied to the metric before applying the logarithmic transformation, so that the function will have the vertical asymptote slightly before $-1$, and all the inputs $\in [-1,0]$ will be mapped into real values. The plot of the settled function is shown in the \autoref{fig:kmeans_fault}.
 
 \begin{figure}[htbp]
   \centering
@@ -298,7 +298,7 @@ In this case, the best choice is to select the maximum value of $k$ that is stil
 
 For display purposes, let's consider an example in the plane ($F$ = 2), with a dataset that clearly has three distinct clusters. Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and a new {\gls{glo:snap}} that happens to be in the middle of the two clusters will not be detected as novelty. 
 
-In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters were $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new {\gls{glo:snap}} would not have been detected as novelty. On the other hand, by selecting $k=4$, the algorithm would have correctly detected the novelty, even if one cluster had been split in two.
+In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters was $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new {\gls{glo:snap}} would not have been detected as novelty. On the other hand, by selecting $k=4$, the algorithm would have correctly detected the novelty, even if one cluster had been split in two.
 
 \begin{figure}
   \centering
