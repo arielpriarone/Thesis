@@ -27,7 +27,7 @@ The \gls{json} format is also human-readable, which makes it easy to understand 
 \end{longtblr}
 
 MongoDB structure is based on collections, that are groups of (\gls{json}) documents. A document is a set of key-value pairs that can be nested in several layers. Documents have a dynamic schema, which means that documents in the same collection do not need to have the same set of fields or structure, and common fields in a collection's documents may hold different types of data. To store the data needed by the framework the collections reported in \autoref{tab:MongoDB_collections} are used.
-In the following paragraph, the structure and purposes of each collection are described.
+In the following paragraphs, the structure and purposes of each collection are described.
 
 \paragraph{Raw}
 Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain feature extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the following \gls{json} structure:

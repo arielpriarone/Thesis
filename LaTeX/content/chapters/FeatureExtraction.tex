@@ -50,8 +50,8 @@ To visualize what happens to the vibration signal as the bearing degrades over t
     \textbf{Recording Duration} & 22/10/2003 - 25/11/2003 & 12/02/2004 - 19/02/2004 & 04/03/2004 - 04/04/2004\\
     \textbf{No. of Files} & 2156 & 984 & 4448\\
     \textbf{No. of Channels} & 8 & 4 & 4\\
-    \textbf{Channel Arrangement} & {Bearing 1 ch 1  2\\Bearing 2 ch 3  4
-    \\Bearing 3 ch 5  6
+    \textbf{Channel Arrangement} & {Bearing 1 ch 1 \& 2\\Bearing 2 ch 3 \& 4
+    \\Bearing 3 ch 5 \& 6
     \\Bearing 4 ch 7 \& 8~ ~~} & {Bearing 1 ch 1\\Bearing 2 ch 2\\Bearing 3 ch 3\\Bearing 4 ch 4 ~} & {Bearing 1 ch 1\\Bearing 2 ch 2\\Bearing 3 ch 3\\Bearing 4 ch 4~ ~~}\\
     \textbf{File Recording Interval} & 5 or 10 min & 10 min & 10 min\\
     \textbf{Fault type } & {Bearing 3: inner race defect\\Bearing 4: roller element defect} & Bearing 1: outer race failure & Bearing 3: outer race failure
@@ -60,7 +60,7 @@ To visualize what happens to the vibration signal as the bearing degrades over t
     \end{table}
 
 \section{Time-domain features}
-Let's consider a timeserie $\vect{x}$ containing $n$ samples $x_1, x_2, \dots, x_n$. The goal of the feature extraction process is to extract a set of features $\vect{F}_t = \{F_1, F_2, \dots, F_m\}$ that can be used to describe the signal. In this section, we will describe the features that will be used in the developed framework.
+Let's consider a timeserie $\vect{x}$ containing $n$ samples $x_1, x_2, \dots, x_n$. The goal of the feature extraction process is to extract a set of features $\vect{F}_t = \{F_1, F_2, \dots, F_m\}\in \mathbb{R}^F$ that can be used to describe the signal. In this section, we will describe the features that will be used in the developed framework.
 \paragraph{Mean}
 The first feature to be considered is simply the mean of the signal. It is defined as
 \begin{equation}
