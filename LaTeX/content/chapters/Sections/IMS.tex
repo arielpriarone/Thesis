@@ -3,22 +3,49 @@
 
 In \autoref{ch:FeatureExtraction}, the reference dataset \cite{lee2007bearingdataset} has been introduced. At this point the \gls{pc} implementation of the framework, described in \autoref{ch:Framework}, can be validated on this dataset. 
 
+In this section the framework is tested with different configurations on data from different test of the \gls{ims} dataset. The aim is to find the best configuration for the framework and to evaluate the performance of the algorithm. This is described first with the K-means algorithm, and then compared with the others algorithms discussed in \autoref{ch:Unsupervised}.
+
 \subsection{Training}
 
-As first training data, the first 500 samples of the test $\text{n}^\circ$1 dataset has been used (\autoref{tab:IMS_test_parameters}).
+\begin{figure}
+    \centering
+    \includegraphics{images/IMS/Heatmap.pdf}
+    \caption{Heatmap of the standardized features value for the test $\text{n}^\circ$1 of \gls{ims} dataset}
+    \label{fig:Heatmap}
+\end{figure}
 
+As first training data, the first 500 samples of the test $\text{n}^\circ$1 dataset has been used (\autoref{tab:IMS_test_parameters}). From now, if not specified differently, the training dataset is this first 500 samples. The configuration file has been set to use the data from the \quoted{bearing 3x} sensor. The \autoref{fig:Heatmap} gives a detailed view  of the standardized features values at the beginning and at the end of the dataset.
+
+The abstract version of the \gls{fieldAg} has been used to extract the features from the dataset, creating all the snapshots $\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. Theese snapshots are stored in the \emph{unconsumed} collection of the database.
+
+Using the commands of the CLI, the training procedure has been launched:
+\begin{minted}[linenos,breaklines]{bash}
+    C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-feature-agent
+    C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-machine-learning-agent novelty train
+\end{minted}
+
+where the first command runs the \gls{fieldAg} and the second one runs an \quoted{healthy} instance of the \gls{mla} in training mode.
+At this point, the \gls{mla} ask the user to move the snapshots from the \emph{unconsumed} to the \emph{healthy} colection, since the \emph{healthy} collection is empty. After the confirmation, the \gls{mla} starts the training with different number of clusters, and output the scoring in the form of silhouette and inertia scores. The results are shown in \autoref{fig:SilScore_01} and \autoref{fig:InertiaScore_01}. The user can confirm that the best number of clusters is 2, as the silhouette score is the highest and the inertia score is at the \gls{pof} point, or insert another number of clusters, rememebering that it is best to overestimate the number of clusters to increase the system sensitivity, as discussed in \autoref{sec:wrong_k}. 
+
+In this case the number of cluster has been set to 2, so that the \gls{mla} saves the model trained with $n=2$ into the database. Even if the feature space has high dimensionality, the agent plot to the user also a scatter plot of a subset of features of the training dataset, to have a visual feedback of the clustering, as shown in \autoref{fig:Clusters}, where the points are the snapshots, the crosses are the centroids and the colors represent the assigned cluster. We can observe that the projections of the clusters shapes on some planes are not perfectly spherical but, at least, they are not too elongated. This is a good sign for the K-means algorithm, as discussed in \autoref{sec:kmeans_limits}.
 
 \begin{figure}
     \centering
     \includegraphics{images/IMS/SilScore_01.pdf}
+    \caption{Silhouette score for clustering the test $\text{n}^\circ$1 of \gls{ims} dataset}
+    \label{fig:SilScore_01}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics{images/IMS/InertiaScore_01.pdf}
+    \caption{Inertia score for clustering the test $\text{n}^\circ$1 of \gls{ims} dataset}
+    \label{fig:InertiaScore_01}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Clusters.pdf}
+    \caption{Scatterplot of training $\gls{glo:snap}$ for the test $\text{n}^\circ$1 of \gls{ims} dataset}
+    \label{fig:Clusters}
 \end{figure}

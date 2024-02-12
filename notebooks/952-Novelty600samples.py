@@ -49,4 +49,5 @@ ax.hlines(threshold, timestamps[0], timestamps[-1], colors='r', linestyles='dash
 ax.set_xlabel("Sample")
 ax.set_ylabel("Novelty metric [%]")
 ax.legend()
+
 plt.show()

@@ -99,8 +99,7 @@ for i in range_feature_1:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
 
 
-plt.show()
-exit()
+
 # %%
 # with only train dataset - to check htat it's working ok
 y_pred_train=kmeans.predict(IMSDATA['wavanaly_standardized_train'])

@@ -105,7 +105,7 @@ ax.set_xticklabels(IMSDATA['nodes'])
 # analyze just one snapshot
 aux=10 # number of the considered sample
 
-fig, ax = plt.subplots(figsize=[2*W, W/16*9])
+fig, ax = plt.subplots()
 ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:], color='gray')
 ax.set_xlabel('Features')
 ax.set_ylabel('Value')
@@ -172,7 +172,7 @@ ax2.set_title('Abnormal Functioning')
 # Add a colorbar on the right that has the same height as the two plots
 cax = fig.add_subplot(gs[0, 2])
 cbar = plt.colorbar(im2, cax=cax)
-cbar.set_label('Power of the features')
+cbar.set_label('Features value')
 
 # Adjust the layout to prevent overlapping of labels
 plt.tight_layout()
