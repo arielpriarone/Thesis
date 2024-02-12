@@ -41,7 +41,7 @@ print(f"Test dataset samples: {IMSDATA['wavanaly_standardized_test'].shape}")
 # %% train with different number of clusters
 sil_score=[]
 inertia=[]
-max_clusters=100
+max_clusters=40
 for n_blobs in range(1,max_clusters+1):
     kmeans=KMeans(n_blobs,n_init='auto',max_iter=1000)
     y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
@@ -52,24 +52,33 @@ for n_blobs in range(1,max_clusters+1):
 
 # %%
 fig, axs=plt.subplots()
-fig.tight_layout()
-axs.plot(range(2,max_clusters+1),sil_score)
-axs.set_ylabel('Silhouette')
-axs.set_xlabel('Num. of clusters')
+fig_height = fig.get_figheight()
+fig.set_figheight(fig_height*0.6)
 
+axs.plot(range(2,max_clusters+1),sil_score,'k')
+
+axs.set_ylabel('Silhouette score')
+axs.set_xlabel('$n$ of clusters')
+axs.annotate('Max for $n=2$', xy=(2, 0.6), xytext=(10, 0.4),
+             arrowprops=dict(facecolor='black', shrink=0.05, width=0.01, headwidth=5, headlength=5))
+fig.tight_layout()
 # %%
 fig, axs=plt.subplots()
-fig.tight_layout()
-axs.plot(range(1,max_clusters+1),inertia)
-axs.set_ylabel('Inertia')
-axs.set_xlabel('Num. of clusters')
+fig_height = fig.get_figheight()
+fig.set_figheight(fig_height*0.6)
 
+axs.plot(range(1,max_clusters+1),inertia,'k')
+axs.annotate('POF for $n=2$', xy=(2, 10000), xytext=(20, 30000),
+             arrowprops=dict(facecolor='black', shrink=0.05, width=0.01, headwidth=5, headlength=5))
+axs.set_ylabel('Inertia')
+axs.set_xlabel('$n$ of clusters')
+fig.tight_layout()
 
 # %%
 
 # select 2 clusters because of silhouette analisys - train dataset
 n_blobs=2
-kmeans=KMeans(n_blobs)
+kmeans=KMeans(n_blobs,n_init=10)
 y_pred_train=kmeans.fit_predict(IMSDATA['wavanaly_standardized_train'])
 
 range_feature_1=range(30, 33)
@@ -90,6 +99,8 @@ for i in range_feature_1:
             axs[i-range_feature_1[0],j-range_feature_2[0]].set_ylabel('feature '+str(i))
 
 
+plt.show()
+exit()
 # %%
 # with only train dataset - to check htat it's working ok
 y_pred_train=kmeans.predict(IMSDATA['wavanaly_standardized_train'])
