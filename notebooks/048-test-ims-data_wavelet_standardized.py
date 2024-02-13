@@ -152,7 +152,7 @@ locator=src.vis.custom_tick_locator(8,np.arange(0,0+aux))
 ax1.yaxis.set_major_locator(ticker.FixedLocator(locator))
 ax1.set_yticklabels(locator)
 ax1.set_xlabel('Features')
-ax1.set_ylabel('n° of record')
+ax1.set_ylabel('n$^\circ$ of record')
 ax1.set_title('Normal Functioning')
 
 # Create the second subplot for image2
@@ -166,7 +166,7 @@ locator=src.vis.custom_tick_locator(8,np.arange(start,start+aux))
 ax2.yaxis.set_major_locator(ticker.FixedLocator(locator))
 ax2.set_yticklabels(np.arange(start,start+aux)[i] for i in locator)
 ax2.set_xlabel('Features')
-ax2.set_ylabel('n° of record')
+ax2.set_ylabel('n$^\circ$ of record')
 ax2.set_title('Abnormal Functioning')
 
 # Add a colorbar on the right that has the same height as the two plots

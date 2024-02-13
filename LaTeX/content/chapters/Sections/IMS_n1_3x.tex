@@ -1,12 +1,5 @@
-\section{Validation on \gls{ims} dataset}
+\section{\gls{ims} dataset No.1 - Bearing 3x sensor}
 \label{sec:ValidationOnRealWorldData}
-
-In \autoref{ch:FeatureExtraction}, the reference dataset \cite{lee2007bearingdataset} has been introduced. At this point the \gls{pc} implementation of the framework, described in \autoref{ch:Framework}, can be validated on this dataset. 
-
-In this section the framework is tested with different configurations on data from different test of the \gls{ims} dataset. The aim is to find the best configuration for the framework and to evaluate the performance of the algorithm. This is described first with the K-means algorithm, and then compared with the others algorithms discussed in \autoref{ch:Unsupervised}.
-
-\subsection{Training}
-
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Heatmap.pdf}
@@ -14,11 +7,16 @@ In this section the framework is tested with different configurations on data fr
     \label{fig:Heatmap}
 \end{figure}
 
-As first training data, the first 500 samples of the test $\text{n}^\circ$1 dataset has been used (\autoref{tab:IMS_test_parameters}). From now, if not specified differently, the training dataset is this first 500 samples. The configuration file has been set to use the data from the \quoted{bearing 3x} sensor. The \autoref{fig:Heatmap} gives a detailed view  of the standardized features values at the beginning and at the end of the dataset.
 
-The abstract version of the \gls{fieldAg} has been used to extract the features from the dataset, creating all the snapshots $\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. Theese snapshots are stored in the \emph{unconsumed} collection of the database.
+To start the validation, let's subdivide the test No.1 of the \gls{ims} dataset into training and testing datasets. The first 500 samples are used for training, and the remaining samples are used for testing. The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain features described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behavior of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of the test No.1 of the \gls{ims} dataset. For display purposes, the features are standardized, and the heatmap of the standardized features is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
 
-Using the commands of the CLI, the training procedure has been launched:
+The abstract version of the \gls{fieldAg} has been used to extract the features from the dataset, creating all the snapshots in the set $\gls{sym:snapset}=\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. Theese snapshots are stored in the \emph{unconsumed} collection of the database.
+
+\subsection{Training}
+
+
+
+Using the commands of the \gls{cli}, the training procedure has been launched:
 \begin{minted}[linenos,breaklines]{bash}
     C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-feature-agent
     C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-machine-learning-agent novelty train
@@ -49,3 +47,5 @@ In this case the number of cluster has been set to 2, so that the \gls{mla} save
     \caption{Scatterplot of training $\gls{glo:snap}$ for the test $\text{n}^\circ$1 of \gls{ims} dataset}
     \label{fig:Clusters}
 \end{figure}
+
+\subsection{Testing}
