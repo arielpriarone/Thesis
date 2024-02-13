@@ -123,6 +123,7 @@ class MLA(src.data.DB_Manager):
                     if not printed:
                         print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
                         printed=True
+            self.append_evaluated_snap() # append the snap to the evaluated collection (to preserve the data, before scaling)
             self.scale_features()
             if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
                 if self.type == 'novelty':
@@ -131,7 +132,6 @@ class MLA(src.data.DB_Manager):
                 self.predict() # predict the fault
             self._mark_snap_evaluated() # mark the snap as evaluated
             if self.type == 'novelty':
-                self.append_evaluated_snap() # append the snap to the evaluated collection
                 self._delete_evaluated_snap() # delete the snap from the unconsumed collection
             print(f"Distance Novelty: {self.err_dict['values'][-1]}")
     
