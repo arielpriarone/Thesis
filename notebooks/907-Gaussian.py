@@ -41,8 +41,8 @@ for n_blobs in range(1,max_clusters+1):
     AIC.append(GM.aic(X))
 # plot BIC and AIC
 fig, ax = plt.subplots()
-ax.plot(range(1,max_clusters+1),BIC,label='BIC')
-ax.plot(range(1,max_clusters+1),AIC,label='AIC')
+ax.plot(range(1,max_clusters+1),BIC,label='BIC', color='k', linestyle='--')
+ax.plot(range(1,max_clusters+1),AIC,label='AIC', color='k', linestyle='dashdot')
 ax.set_xlabel('Number of clusters')
 ax.set_ylabel('Information Criterion')
 ax.legend()
