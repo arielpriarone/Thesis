@@ -11,6 +11,8 @@ frequencies =   [30,   70,  100, 300,   800]  # Base frequency of the waveform
 amplitudes =    [2.0,  3.0,  2.0,  2.0,  1.0]  # Amplitudes of the harmonics
 frequencies =   [80,   120]  # Base frequency of the waveform
 amplitudes =    [1.0,  3.0]  # Amplitudes of the harmonics
+frequencies =   [30,   70,  100]  # Base frequency of the waveform
+amplitudes =    [0.1,  1.0,  1.0]  # Amplitudes of the harmonics
 # frequencies =   [30,   70,  100,   800,   1400]  # Base frequency of the waveform
 # amplitudes =    [0.1,  1.0,  1.0,    1.0,    1.0]  # Amplitudes of the harmonics
 # frequencies =   [30,   70,  100,   800,   1400]  # Base frequency of the waveform
@@ -28,6 +30,6 @@ for amplitude, frequency in zip(amplitudes, frequencies):
 waveform /= np.max(np.abs(waveform))
 
 # Save the waveform as a .wav file
-wav.write('data/output_4.wav', sampling_rate, waveform)
+wav.write('data/output_5.wav', sampling_rate, waveform)
 
 
