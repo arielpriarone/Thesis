@@ -26,9 +26,9 @@ novelty_metric = np.multiply(document["values"],100)
 
 
 fig, ax = plt.subplots()
-ax.plot(timestamps,novelty_metric,'k', label="Novelty metric")
-ax.hlines(threshold, timestamps[0], timestamps[-1], colors='r', linestyles='dashed', label="Threshold")
-ax.annotate("Novel behaviour\n2003-11-16 07:46", (dt.datetime.fromisoformat("2003-11-16T07:46"), threshold), textcoords="offset points", xytext=(-100,100), ha='center', fontsize=10, color='k', arrowprops=dict(facecolor='black', arrowstyle='->'))
+ax.scatter(timestamps,novelty_metric,c='k',marker='.', s=2, label='Novelty metric')
+ax.hlines(threshold, timestamps[0], timestamps[-1], colors='k', linestyles='dashed', label="threshold")
+ax.annotate("Novel behaviour\n2003-11-16 07:46", (dt.datetime.fromisoformat("2003-11-16T07:46"), threshold), textcoords="offset points", xytext=(-100,50), ha='center', fontsize=10, color='k', arrowprops=dict(facecolor='black', arrowstyle='->'))
 ax.set_xlabel("Sample")
 ax.set_ylabel("Novelty metric [%]")
 ax.legend()

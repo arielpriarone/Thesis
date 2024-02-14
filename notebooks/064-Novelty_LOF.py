@@ -1,4 +1,5 @@
 # %%
+from cgi import test
 from math import inf
 from matplotlib import projections
 from sklearn.cluster import KMeans
@@ -13,8 +14,9 @@ import matplotlib
 from matplotlib import cm
 import src
 import importlib
-import pickle 
-import os
+from pymongo import MongoClient
+from sklearn.preprocessing import StandardScaler
+import datetime as dt
 from sklearn.metrics import silhouette_score, silhouette_samples
 from rich import print
 from sklearn.mixture import BayesianGaussianMixture
@@ -28,35 +30,56 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 src.vis.set_matplotlib_params()
 
 # script settings
-modelpath     = auxpath + "./models/kmeans_model.pickle"   # folder path
-savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys
-decompose   = False                                         # decompose using wavelet packet / reload previous decomposition
-IMSDATA={}                                             # empty dictionary to save data 
+# Connect to the MongoDB database
+client = MongoClient()
 
-filehandler = open(savepath, 'rb') 
-IMSDATA = pickle.load(filehandler)
-print(IMSDATA.keys())
+# Access the "BACKUP" database
+database = client["BACKUP"]
 
+# Access the "500_samples_OnlyBearing3x_allfeatures" collection
+collection = database["500_samples_OnlyBearing3x_allfeatures"]
+
+# Find the document with id "evaluated dataset"
+test_dataset = collection.find_one({"_id": "evaluated dataset"})
+train_dataset = collection.find_one({"_id": "training set"})
+print(f"test dataset keys:\n {test_dataset.keys()}")
+print(f"train dataset keys:\n {train_dataset.keys()}")
+print(f"there are {len(train_dataset['Bearing 3 x'].keys())} features in the test dataset")
+
+timestamps_train = list(train_dataset['timestamp'])
+timestamps_test = list(test_dataset['timestamp'])
+test_matrix = np.array(list(test_dataset['Bearing 3 x'].values())).transpose()
+train_matrix = np.array(list(train_dataset['Bearing 3 x'].values())).transpose()
+
+print(f"test matrix shape: {test_matrix.shape}")
+print(f"train matrix shape: {train_matrix.shape}")
+
+std_scaler = StandardScaler()
+train_matrix = std_scaler.fit_transform(train_matrix)
+test_matrix = std_scaler.transform(test_matrix)
 
 # %% load the data
-X = IMSDATA['wavanaly_standardized_train'] # data to fit in the model
+X = train_matrix # data to fit in the model
 print(np.shape(X))
-X_full = IMSDATA['wavanaly_standardized'] # data to fit in the model
-print(np.shape(X_full))
 
 # %% fit model 
 lof = LocalOutlierFactor(n_neighbors=20, novelty=True, contamination=0.005)
 lof.fit(X)
 
 # %% predict with all dataset
-threshold = 0.005
-scores = lof.decision_function(IMSDATA['wavanaly_standardized'])
+threshold = 0.5
+scores = lof.decision_function(test_matrix)
 metric = - scores
 
 fig, ax = plt.subplots()
-ax.scatter(range(len(metric)),metric,c='k',marker='.')
-ax.set_xlabel('snapshot')
+ax.scatter(timestamps_test,metric,c='k',marker='.', s=2, label='Novelty metric')
+ax.set_xlabel('timestamp')
 ax.set_ylabel('LOF')
-ax.axhline(y=threshold, color='r', linestyle='-.')
+ax.axhline(y=threshold, color='k', linestyle='-.', label='threshold')
+ax.annotate('Novel behaviour\n2003-11-16 07:49', xy = (dt.datetime.fromisoformat('2003-11-16T07.49'), threshold), 
+             fontsize = 12, xytext = (dt.datetime.fromisoformat('2003-11-06T15.06'), 36), 
+             arrowprops = dict(facecolor = 'k', arrowstyle = '->'),
+             color = 'k')
+plt.legend()
 
 plt.show()
