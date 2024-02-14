@@ -13,10 +13,11 @@ console = Console()
 
 # configurations
 n_train_snaps = 10          # number of snapshots to take for training
-n_features = 67             # number of features
+n_features = 7             # number of features
 
 # Open the serial port
 ser = serial.Serial('COM5', 115200)
+test_filepath = "test_data_shaker.csv"
 
 # variables to store the data
 timestamps = []
@@ -24,10 +25,10 @@ features = []
 novelties = []
 
 # Open the csv file to save the snapshots
-if os.path.exists("test_data.csv"):
-    snap_file = open("test_data.csv", "a")
+if os.path.exists(test_filepath):
+    snap_file = open(test_filepath, "a")
 else:
-    snap_file = open("test_data.csv", "w")
+    snap_file = open(test_filepath, "w")
     snap_file.write("Timestamp\t")
     for i in range(n_features):
         snap_file.write(f"Feature {i+1}\t")
@@ -65,7 +66,7 @@ for i in range(n_train_snaps):
     current_novelty = float(data[start_index:end_index].strip())
 
     # Check if the number of features is correct
-    if np.size(current_features) != 67:
+    if np.size(current_features) != n_features:
         raise ValueError(f"The number of features received ({np.size(current_features)}) is not 67.")   
     
     # Use the current time as the timestamp because the micro reset every time it is powered on

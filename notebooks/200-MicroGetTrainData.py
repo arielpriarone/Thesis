@@ -10,17 +10,17 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 3          # number of snapshots to take for training
-n_features = 67             # number of features
-
+n_train_snaps = 100          # number of snapshots to take for training
+n_features = 7             # number of features
+filename = "train_data_shaker.csv"
 # Open the serial port
 ser = serial.Serial('COM5', 115200)
 
 # Open the csv file to save the snapshots
-if os.path.exists("train_data.csv"):
-    snap_file = open("train_data.csv", "a")
+if os.path.exists(filename):
+    snap_file = open(filename, "a")
 else:
-    snap_file = open("train_data.csv", "w")
+    snap_file = open(filename, "w")
     snap_file.write("Timestamp\t")
     for i in range(n_features):
         snap_file.write(f"Feature {i+1}\t")

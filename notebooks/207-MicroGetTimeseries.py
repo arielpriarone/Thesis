@@ -10,8 +10,8 @@ import datetime
 console = Console()
 
 # configurations
-n_train_snaps = 2           # number of snapshots to take for training
-n_features = 67             # number of features
+n_train_snaps = 20           # number of snapshots to take for training
+n_features = 7             # number of features
 n_samples = 6000            # number of samples per snapshot
 
 # Open the serial port
