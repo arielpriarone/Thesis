@@ -21,7 +21,7 @@ Software \gls{glo:agent}s are autonomous programs that perform a specific task i
     \label{fig:Field_Agent_flowchart}
 \end{figure}
 
-The \gls{glo:fieldagent} is the interface between the hardware and the software. It is responsible for the acquisition of the data from the sensors and the communication with the database. Since some features are related to the spectrum of the data, a precise and fixed sampling frequency is needed. Hence, the \gls{fieldAg} must incorporate a synchronization with the \gls{adc}. It stores data in the \emph{raw} collection and the \emph{backup} collection. In \autoref{fig:Field_Agent_flowchart}, the flow of operations are shown as a flowchart, emphasizing the importance of the synchronization with the \gls{adc}. This software agent has not been implemented in \texttt{python}, because the experimental validation of this work, as it will be described in \autoref{sec:Validation}, has been performed directly on the \gls{glo:edge} platform. During the tests on the publicly available datasets, an abstract version of the \gls{fieldAg} has been used, that reads the data from the \gls{csv} files.
+The \gls{glo:fieldagent} is the interface between the hardware and the software. It is responsible for the acquisition of the data from the sensors and the communication with the database. Since some features are related to the spectrum of the data, a precise and fixed sampling frequency is needed. Hence, the \gls{fieldAg} must incorporate a synchronization with the \gls{adc}. It stores data in the \emph{raw} collection and the \emph{backup} collection. In \autoref{fig:Field_Agent_flowchart}, the flow of operations is shown as a flowchart, emphasizing the importance of the synchronization with the \gls{adc}. This software agent has not been implemented in \texttt{python}, because the experimental validation of this work, as it will be described in \autoref{sec:Validation}, has been performed directly on the \gls{glo:edge} platform. During the tests on the publicly available datasets, an abstract version of the \gls{fieldAg} has been used, that reads the data from the \gls{csv} files.
 
 
 \subsection{Feature Agent (FA)}
@@ -49,7 +49,7 @@ The \gls{fa} is responsible for the feature extraction from the raw data. It rea
     writeToUnconsumed & write the extracted features to the \emph{unconsumed} collection \\
     initialize\_barPlotFeatures & initializes the bar plot of the features that is shown to the user \\
     barPlotFeatures & updates the bar plot with new features \\
-    run & perform the agent operations in loop. idle until new data are available in \emph{raw} collection \\
+    run & perform the agent operations in a loop. idle until new data are available in \emph{raw} collection \\
     \bottomrule
 \end{longtable}
     
@@ -75,7 +75,7 @@ This agent is designed to be configured as a \gls{nd} or \gls{fd} agent with jus
     \hline
     run & run the \gls{mla} according to its current state \\
     evaluate & evaluate the current snapshot based on the novelty or the fault metric, according to the type of instance \\
-    predict & fit the novelty metric with a degradation curve to predict the future evolution~ \\
+    predict & fits the novelty metric with a degradation curve to predict the future evolution~ \\
     mark\_snap\_evaluated & set the evaluated flag to true for the current snapshot \\
     delete\_evaluated\_snap & remove the evaluated snapshots from the \emph{unconsumed} collection \\
     scale\_features & scales the features of the current snapshot according to the standard scaler used during the training procedure \\

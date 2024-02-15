@@ -30,7 +30,7 @@ The data to be monitored varies \gls{wrt} the field of application. The most com
     \label{fig:standard_terminology}
 \end{figure}
 
-A standard terminology used for industrial maintenance is provided by the European committee for standardization with the standard \texttt{EN13306:2018} \cite{EN13306:2018}. The terminology is summarized in \autoref{fig:standard_terminology}. The most advanced maintenance technique family is \textbf{\gls{glo:conditionbasedmaintenance}}. This category includes the most modern \textbf{\gls{glo:predictivemaintenance}}. Note that the definition does not imply that the \quoted{monitoring} of the system must be continuous, it may also be scheduled or not even scheduled, and performed both manually of by a program.
+A standard terminology used for industrial maintenance is provided by the European committee for standardization with the standard \texttt{EN13306:2018} \cite{EN13306:2018}. The terminology is summarized in \autoref{fig:standard_terminology}. The most advanced maintenance technique family is \textbf{\gls{glo:conditionbasedmaintenance}}. This category includes the most modern \textbf{\gls{glo:predictivemaintenance}}. Note that the definition does not imply that the \quoted{monitoring} of the system must be continuous, it may also be scheduled or not even scheduled, and performed both manually or by a program.
 
 The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{\gls{glo:onistemaintenance}}. All these definitions are reported in the {glossary}
 
@@ -160,7 +160,14 @@ This framework has been successfully tested on:
     \item a laboratory test on spring probes
 \end{itemize}
 
-In the first two cases, the framework was able to detect the novelty and predict the \gls{rul}, in the laboratory test, it was able to recognise the new data as \emph{healthy} because the probes were not yet damaged.
+In the first two cases, the framework was able to detect the novelty and predict the \gls{rul}, in the laboratory test, it was able to recognise the new data as \emph{healthy} because the probes were not yet damaged. The graphical results of one test on real-world data is shown in \autoref{fig:umbertoresult}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.6\textwidth]{images/IMS/UmbertoResults.png}
+    \caption{Results provided by \cite{Umberto} for the test $\text{n}^\circ$1 of \gls{ims} dataset.}
+    \label{fig:umbertoresult}
+\end{figure}
 
 
 \paragraph*{Clustering}

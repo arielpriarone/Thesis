@@ -8,7 +8,11 @@
 \end{figure}
 
 
-To start the validation, let's subdivide the test No.1 of the \gls{ims} dataset into training and testing datasets. The first 500 samples are used for training, and the remaining samples are used for testing. The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain features described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behavior of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of the test No.1 of the \gls{ims} dataset. For display purposes, the features are standardized, and the heatmap of the standardized features is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
+To start the validation, let's subdivide the test No.1 of the \gls{ims} dataset into training and testing datasets. The first 500 samples are used for training, and the remaining samples are used for testing. 
+
+For all the algorithms, the assumption about the system is that, even if the degradation is continuous, the system is surely healthy untill 2003-11-07. The threshold for performing the \gls{nd} is set conformingly to this assumption, for every model considered. Otherwise, the performance of any model could be artificially made as good as desidered, by simply setting the threshold to a lower value.
+
+The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain features described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behavior of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of the test No.1 of the \gls{ims} dataset. For display purposes, the features are standardized, and the heatmap of the standardized features is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
 
 The abstract version of the \gls{fieldAg} has been used to extract the features from the dataset, creating all the snapshots in the set $\gls{sym:snapset}=\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. Theese snapshots are stored in the \emph{unconsumed} collection of the database.
 
@@ -49,11 +53,20 @@ In this case the number of cluster has been set to 2, so that the \gls{mla} save
 \subsection{\gls{nd} Validation - K-means}
 Using the validation partition of the dataset, it is possible to set the \gls{mla} in \emph{evaluate} mode. The \gls{fieldAg} uses the validation partition and fill the \emph{raw} collection with the timeseries. The {\gls{fa}} extract the features and continuously fill the \emph{unconsumed} collection with the snapshots. The \gls{mla} evaluates the snapshots according to \autoref{alg:eval_new_snapshot}  and plots the result, as well as generating a warning if the novelty metric is greater than a certain threshold. The results are shown in \autoref{fig:NoveltyScore_01}, where we can see that the framwork detects the novelty quite early, at 2003-11-16 07:46, while the dataset authors, declared the test finished because of bering defects (not catastrofic failures) at 2003-11-25 23:40. The comparision of the margin of early detection for different algorithms will be resumed later.
 
+In \autoref{fig:NoveltyScore_01_detail}, a detailed view of the \gls{nd} metric becoming consistently greater than the threshold is shown.
+
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Novelty_01_500samples_bearing3x.pdf}
     \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (K-means)}
     \label{fig:NoveltyScore_01} 
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_detail.pdf}
+    \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (K-means) - detailed view}
+    \label{fig:NoveltyScore_01_detail} 
 \end{figure}
 
 \subsection{Training - \gls{dbscan}}
@@ -76,8 +89,8 @@ As it has been done for the K-means, the validation partition of the dataset is 
     \label{fig:NoveltyScore_01_dbscan}
 \end{figure}
 
-\subsection{Training -\gls{gmm}}
-Let's now try with the \gls{gmm} model. The metric for selecting the number of cluster are now the \gls{bic} and the \gls{aic}, as shown in \autoref{fig:bic_aic_gmm} and \autoref{fig:aic_gmm}. The  two metrics diverges but, as discussed in \autoref{sec:gauss_train}, the \gls{aic} tends to perform better. In this case, minimizing the \gls{aic} leads to select 25 as the number of clusters, that is much more than what selected with the K-means, but still a reasonable choice, also considering that the \gls{gmm} is a soft clustering algorithm and that we are using the density as a metric to perform \gls{nd}.
+\subsection{Training - \gls{gmm}}
+Let's now try with the \gls{gmm} model. The metric for selecting the number of cluster are now the \gls{bic} and the \gls{aic}, as shown in \autoref{fig:bic_aic_gmm}. The  two metrics diverges but, as discussed in \autoref{sec:gauss_train}, the \gls{aic} tends to perform better. In this case, minimizing the \gls{aic} leads to select 25 as the number of clusters, that is much more than what selected with the K-means, but still a reasonable choice, also considering that the \gls{gmm} is a soft clustering algorithm and that we are using the density as a metric to perform \gls{nd}.
 
 \begin{figure}
     \centering
@@ -87,10 +100,87 @@ Let's now try with the \gls{gmm} model. The metric for selecting the number of c
 \end{figure}
 
 \subsection{\gls{nd} Validation - \gls{gmm}}
-The validation partition of the dataset is now used for performing \gls{nd} with the \gls{gmm} model. The result is shown in \autoref{fig:NoveltyScore_01_gmm}, where we can see that the \gls{gmm} model detects the novelty at 2003-11-22 03:47. The consideration about this result are the same as for the \gls{dbscan} model. In \autoref{fig:NoveltyScore_01_gmm}, the metric (density value) appears in colored dots, as each color represent the cluster to which the snapshot has been assigned.
+The validation partition of the dataset is now used for performing \gls{nd} with the \gls{gmm} model. The result is shown in \autoref{fig:NoveltyScore_01_gmm}, where we can see that the \gls{gmm} model detects the novelty at 2003-11-22 03:47. The consideration about this result are the same as for the \gls{dbscan} model, and in fact, the timestamp of the detection event is really close to te one obtained with \gls{dbscan}. In \autoref{fig:NoveltyScore_01_gmm}, the metric (density value) appears in colored dots, as each color represent the cluster to which the snapshot has been assigned.
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_gmm.pdf}
     \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (\gls{gmm})}
     \label{fig:NoveltyScore_01_gmm}
 \end{figure}
+
+\subsection{\gls{nd} Validation - Bayesan \gls{gmm}}
+The other Gaussian model is the \gls{bgmm}, since this approach is totally unsupervised, only the validation data are reported here. The result is shown in \autoref{fig:NoveltyScore_01_bgmm}, where we can see that the \gls{bgmm} model detects the novelty around the same time as the \gls{gmm} model, at 2003-11-22 03:45.
+
+In both \gls{gmm} and \gls{bgmm} the metric (density value) spans a lot of decades, so the plots are done in logarithmic scale.
+
+\begin{figure}
+    \centering
+    \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_GMM_bayesan.pdf}
+    \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (\gls{bgmm})}
+    \label{fig:NoveltyScore_01_bgmm}
+\end{figure}
+
+\subsection{\gls{nd} Validation - \gls{nu_svm}}
+The next algorithm to test is the \gls{nu_svm}. Again, this is totally unsupervised, so only the validation data are reported here. The result is shown in \autoref{fig:NoveltyScore_01_nusvm}, where we can see that the \gls{nu_svm} model detects the novelty at 2003-11-22 14:56, that is comparable with the \gls{dbscan} and \gls{gmm} models.
+
+\begin{figure}
+    \centering
+    \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_nusvm.pdf}
+    \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (\gls{nu_svm})}
+    \label{fig:NoveltyScore_01_nusvm}
+\end{figure}
+
+\subsection{\gls{nd} Validation - \gls{iforest}}
+Let's now test the \gls{iforest} model. The result is shown in \autoref{fig:NoveltyScore_01_iforest}, where we can see that the \gls{iforest} model detects the novelty at 2003-11-16 10:08:46, that is a good result comparable with the K-means model. The problem with the metric of the \gls{iforest} is that it increases a lot the variance around the \gls{nd} event, but the mean does not increase consistently, so a lot of snapshots are discarded as outliers, before the \gls{nd} event. 
+\begin{figure}
+    \centering
+    \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_iforest.pdf}
+    \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (\gls{iforest})}
+    \label{fig:NoveltyScore_01_iforest}
+\end{figure}
+
+\subsection{\gls{nd} Validation - \gls{lof}}
+The last algorithm to test is the \gls{lof}. The result is shown in \autoref{fig:NoveltyScore_01_lof}, where we can see that the \gls{lof} model detects the novelty at 2003-11-16 07:49, that is a good result comparable with the K-means model. It doesn't have the same problem of the \gls{iforest}, as there aren't as many discarded snapshots before the \gls{nd} event.
+
+\begin{figure}
+    \centering
+    \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_lof.pdf}
+    \caption{Results of \gls{nd} for the test $\text{n}^\circ$1 of \gls{ims} dataset (\gls{lof})}
+    \label{fig:NoveltyScore_01_lof}
+\end{figure}
+
+\subsection{Comparison of the results}
+
+\subsubsection{Comparison between the models}
+
+\begin{table}
+    \centering
+    \caption{Comparision of the results for the test $\text{n}^\circ$1 of \gls{ims} dataset.}
+    \label{tab:ims01_comparision}
+    \begin{tabular}{lrr} 
+    \toprule
+    \textbf{Algorithm} & \textbf{\gls{nd} event} & \textbf{\gls{glo:leadtime} }{[}min] \\ 
+    \hline
+    K-means & 2003-11-16 07:46 & \textbf{13913} \\
+    \gls{dbscan} & 2003-11-22 15:06 & 4833 \\
+    \gls{gmm} & 2003-11-22 03:47 & 5513 \\
+    \gls{bgmm} & 2003-11-22 03:45 & 5514 \\
+    \gls{nu_svm} & 2003-11-22 14:56 & 4844 \\
+    \gls{iforest} & 2003-11-16 10:08 & 13771 \\
+    \gls{lof} & 2003-11-16 07:48 & 13912 \\
+    Just P2P & 2003-11-22 16:06 & 4774 \\
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+In \autoref{tab:ims01_comparision}, the results of all the previous tests are resumed, togheter with the result of performing \gls{nd} without any machine learning algorithm, but just setting a threshold on the P2P value of the timeseries.
+
+This last basic approach detects the novelty around the afternoon of 2003-11-22. The \gls{nu_svm} and the \gls{dbscan} models are not performing much better than not even using machine learning (at least on this dataset signal). The \gls{gmm} and \gls{bgmm} models are performing slightly better, but the margin is so low that the result may be biased by the threshold setting. The \gls{iforest}, \gls{lof} and K-means models are performing better, they are all very close in detecting the novelty, around 14000 min = 9.7 days before the end of the test. The K-means model is the one performing the best, but just slightly better than the \gls{iforest} and \gls{lof} models so, again, this small difference may not be significant. However, as discussed in the previous chapters, the K-means model will be used in the rest of the work, as it is also the most simple and interpretable model.
+
+
+\subsubsection{Comparison with another approach}
+As anticipated in the \autoref{ch:state_of_the_art}, about the State of the Art, the signal of the same bearing (Bearing 3x) of this same test has been used in \cite{Umberto}. In their research, the authors used a different approach, based on regression, and obtained the result reported here in \autoref{fig:umbertoresult}
+
+
+\subsubsection{Comment about the comparison}
+Every system that output a warning based on a trigger on a threshold is highly sensitive to the value of the threshold itself. This means that the comparison of the results is not straightforward, and quite opinable, because selecting low trheshold will make almost every system to trigger earlier. The measure to take into consideration, in my opinion, is how much false positive are generated if the threshold is lowered, and how small the variance of the metric is. An high variance, on this dataset, means that the system is very sensitive while evaluating quite similar signals.

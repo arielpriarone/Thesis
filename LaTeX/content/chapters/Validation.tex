@@ -1,16 +1,17 @@
 \chapter{Validation}
 \label{sec:Validation}
 
-This chapter is dedicated to the validation of the framework on real-world data. In \autoref{ch:FeatureExtraction}, the reference dataset \cite{lee2007bearingdataset} has been introduced. Firstly, the \texttt{python} implementation of the framework is validated on the \gls{ims} dataset several times with different configuration to show the flexibility of the framework, and try to find the best configuration for the dataset. 
+This chapter is dedicated to the validation of the framework on real-world data. In \autoref{ch:FeatureExtraction}, the reference dataset \cite{lee2007bearingdataset} has been introduced. Firstly, the \texttt{python} implementation of the framework is validated on the \gls{ims} dataset several times with different configurations to show the flexibility of the framework, and try to find the best configuration for the dataset. 
 
-The first test in the \gls{ims} dataset is carried out with all the machine learning models developed, then only the K-mean model is used in the folllowing tests. In all tests an outlier filter has been implemented, so that the \gls{mla} will warn about the novelty behavior only if two consecutive snapshots are labeled as outliers. 
+The first test in the \gls{ims} dataset is carried out with all the machine learning models developed, then only the K-mean model is used in the following tests. In all tests an outlier filter has been implemented, so that the \gls{mla} will warn about the novelty behavior only if two consecutive snapshots are labeled as outliers. 
 
 Then, the \gls{glo:edge} implementation of the framework is validated experimentally on a machine and with a laboratory shaker.
 
 
 
-
+\maskongoig{
 \input{content/chapters/Sections/IMS_n1_3x.tex}
 \input{content/chapters/Sections/Shaker_test01.tex}
 \input{content/chapters/Sections/Shaker_test02.tex}
 \input{content/chapters/Sections/ExperimentalValidation.tex}
+}

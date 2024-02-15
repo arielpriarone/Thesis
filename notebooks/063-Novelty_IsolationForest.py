@@ -67,7 +67,7 @@ clf = IsolationForest(random_state=0,verbose=True,max_samples=np.shape(X)[0])
 clf.fit(X)
 
 # %% predict with all dataset
-threshold = 0.07
+threshold = 0.045
 scores = clf.decision_function(test_matrix)
 metric = - scores
 
@@ -76,12 +76,29 @@ ax.scatter(timestamps_test,metric,c='k',marker='.', s=2, label='Novelty metric')
 ax.set_xlabel('timestamp')
 ax.set_ylabel('metric')
 ax.axhline(y=threshold, color='k', linestyle='-.', label='threshold')
-ax.annotate('Novel behaviour\n2003-11-22 10:16', xy = (dt.datetime.fromisoformat('2003-11-22T10.16'), threshold), 
-             fontsize = 12, xytext = (dt.datetime.fromisoformat('2003-11-13T15.06'), 0.15), 
+ax.annotate('Novel behaviour\n2003-11-16 10:08:46', xy = (dt.datetime.fromisoformat('2003-11-16T10.08'), threshold), 
+             fontsize = 12, xytext = (dt.datetime.fromisoformat('2003-11-10T15.06'), 0.15), 
              arrowprops = dict(facecolor = 'k', arrowstyle = '->'),
              color = 'k')
 ax.legend()
 
+
+# Find the indices of the values that are greater than the threshold
+indices = np.where(metric > threshold)[0]
+
+# Find the second of two consecutive values that are greater than the threshold
+second_consecutive_index = None
+for i in range(len(indices) - 1):
+    if indices[i+1] - indices[i] == 1:
+        second_consecutive_index = indices[i+1]
+        break
+
+# Check if a second consecutive index was found
+if second_consecutive_index is not None:
+    second_consecutive_timestamp = timestamps_test[second_consecutive_index]
+    print(f"Timestamp of second consecutive value: {second_consecutive_timestamp}")
+else:
+    print("No second consecutive value greater than threshold found")
 
 
 plt.show()

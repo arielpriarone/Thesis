@@ -10,7 +10,7 @@ Let's assume to have extrapolated $F$ features from each of our signals, to prod
   \label{eq:kmeans_problem}
 \end{equation}
 
-Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
+Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee finding the global optimum in a reasonable time.
 
 Anyway, {\gls{glo:heuristic}} clustering algorithms were already developed in the 1950s. 
 The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version, published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
@@ -249,7 +249,7 @@ In practice, to avoid numerical representation problems, it is mandatory to avoi
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{images/kmeans/metric_trasform.pdf}
-  \caption{Logarithmic Trasformation applied to the metric in case the model is working in fault detection mode}
+  \caption{Logarithmic Transformation applied to the metric in case the model is working in fault detection mode}
   \label{fig:kmeans_fault}
 \end{figure}
 
