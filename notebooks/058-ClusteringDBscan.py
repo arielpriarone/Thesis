@@ -135,7 +135,7 @@ threshold = 0.6
 cmap = cm.get_cmap("Set1")
 #ax.scatter(range(len(predictions_dist)),predictions_dist,c=[cmap(x) for x in predictions_lab],marker='.',s=.5)
 ax.scatter(timestamps_test,predictions_dist,c='k',marker='.',s=1, label= 'Novelty metric value')
-ax.axhline(y=db.eps*(1+threshold), color='r', linestyle='-.', label=f'novelty threshold = $\epsilon$*(1+{threshold})')
+ax.axhline(y=db.eps*(1+threshold), color='k', linestyle='-.', label=f'novelty threshold = $\epsilon$*(1+{threshold})')
 ax.legend()
 ax.annotate('Novel behaviour\n2003-11-22 15:06', xy = (dt.datetime.fromisoformat('2003-11-22T15.06'), 24), 
              fontsize = 12, xytext = (dt.datetime.fromisoformat('2003-11-13T15.06'), 200), 
