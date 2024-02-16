@@ -185,4 +185,9 @@ As anticipated in the \autoref{ch:state_of_the_art}, about the State of the Art,
 \subsubsection{Comment about the comparison}
 Every system that output a warning based on a trigger on a threshold is highly sensitive to the value of the threshold itself. This means that the comparison of the results is not straightforward, and quite opinable, because selecting low trheshold will make almost every system to trigger earlier. The measure to take into consideration, in my opinion, is how much false positive are generated if the threshold is lowered, and how small the variance of the metric is. An high variance, on this dataset, means that the system is very sensitive while evaluating quite similar signals.
 
-\subsection{\gls{rul} Validation - \gls{lof}}
+\subsection{\gls{rul} Predictions validation - K-means}
+
+\begin{figure}
+    \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_predictions.pdf}
+    \caption{\gls{rul} prediction at different instants after the \gls{nd} event. The dashed lines are the instants of the predictions correspondinding to the same color solid line prediction.}
+\end{figure}
