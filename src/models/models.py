@@ -123,7 +123,6 @@ class MLA(src.data.DB_Manager):
                     if not printed:
                         print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
                         printed=True
-            self.append_evaluated_snap() # append the snap to the evaluated collection (to preserve the data, before scaling)
             self.scale_features()
             if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
                 if self.type == 'novelty':
@@ -135,21 +134,6 @@ class MLA(src.data.DB_Manager):
                 self._delete_evaluated_snap() # delete the snap from the unconsumed collection
             print(f"Distance Novelty: {self.err_dict['values'][-1]}")
     
-    def append_evaluated_snap(self):
-        # if the document does not exists, create it
-        if self.col_back.count_documents({'_id': 'evaluated dataset'}) == 0:
-            dummy_dict = {'_id': 'evaluated dataset', 'timestamp': []}
-            for sensor in self.sensors:
-                dummy_dict[sensor] = {}
-                for feature in self.snap[sensor].keys():
-                    dummy_dict[sensor][feature] = []
-            self.col_back.insert_one(dummy_dict)
-        else: # append the snap to the evaluated collection
-            self.col_back.update_one({'_id': 'evaluated dataset'}, {'$push': {'timestamp': self.snap['timestamp']}})
-            for sensor in self.sensors:
-                for feature in self.snap[sensor].keys():
-                    self.col_back.update_one({'_id': 'evaluated dataset'}, {'$push': {sensor + '.' + feature: self.snap[sensor][feature]}})
-
     def predict(self):
         print("Predicting the fault...")
         ''' This method predicts the fault '''
