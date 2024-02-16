@@ -168,7 +168,7 @@ The last algorithm to test is the \gls{lof}. The result is shown in \autoref{fig
     \gls{nu_svm} & 2003-11-22 14:56 & 4844 \\
     \gls{iforest} & 2003-11-16 10:08 & 13771 \\
     \gls{lof} & 2003-11-16 07:48 & 13912 \\
-    Just P2P & 2003-11-22 16:06 & 4774 \\
+    {P2P} without any \gls{ml} & 2003-11-22 16:06 & 4774 \\
     \bottomrule
     \end{tabular}
 \end{table}
@@ -179,8 +179,10 @@ This last basic approach detects the novelty around the afternoon of 2003-11-22.
 
 
 \subsubsection{Comparison with another approach}
-As anticipated in the \autoref{ch:state_of_the_art}, about the State of the Art, the signal of the same bearing (Bearing 3x) of this same test has been used in \cite{Umberto}. In their research, the authors used a different approach, based on regression, and obtained the result reported here in \autoref{fig:umbertoresult}
+As anticipated in the \autoref{ch:state_of_the_art}, about the State of the Art, the signal of the same bearing (Bearing 3x) of this same test has been used in \cite{Umberto}. In their research, the authors used a different approach, based on regression, and obtained the result reported in \autoref{fig:umbertoresult}
 
 
 \subsubsection{Comment about the comparison}
 Every system that output a warning based on a trigger on a threshold is highly sensitive to the value of the threshold itself. This means that the comparison of the results is not straightforward, and quite opinable, because selecting low trheshold will make almost every system to trigger earlier. The measure to take into consideration, in my opinion, is how much false positive are generated if the threshold is lowered, and how small the variance of the metric is. An high variance, on this dataset, means that the system is very sensitive while evaluating quite similar signals.
+
+\subsection{\gls{rul} Validation - \gls{lof}}
