@@ -49,15 +49,19 @@ In this case, an accelerometer, whose key specifications are shown in \autoref{t
     \end{table}
 
 \subsection{Training and evaluating}
-The framework was firstly set to gather the data, extract the features according to the configuration, and send the data to the \gls{pc} for training. The training signals are two waves with different harmonic content and the test signal is very similar to one used for training, except for the presence of an additional harmonic with small amplitude. The train and test signals harmonic content is reported in \autoref{tab:shaker_param_01}. The amplitude of the vibration has been tuned at each test to ensure that the microcontroller was reading a signal of 1V$_{pp}$. The amplitude of the signals has been kept constant to test the capability of the framework to detect the frequency content of the signal in the feature extraction phase. The waveform of the signals is shown in \autoref{fig:shaker}, to show the similarity of the two signals. 
+The framework was firstly set to gather the data, extract the features according to the configuration, and send the data to the \gls{pc} for training. The training signals are two waves with different harmonic content and the test signal is very similar to one used for training, except for the presence of an additional harmonic with small amplitude. The train and test signals harmonic content is reported in \autoref{tab:shaker_param_01}. The amplitude of the vibration has been tuned at each test to ensure that the microcontroller was reading a signal of 1V$_{pp}$. The amplitude of the signals has been kept constant to test the capability of the framework to detect the frequency content of the signal in the feature extraction phase. The waveform of the test signals is shown with the one of one training signal in \autoref{fig:shaker}, to show the similarity of the two signals. 
 
 The setting of the framework can be resumed as follows:
 \begin{itemize}
     \item 67 features extracted from the signal ($2^6=64$ features from the wavelet decomposition, mean, P2P, and RMS);
     \item 110 samples for training for each signal.
+    \item sampling frequency of 5kHz, for 1s of acquisition.
 \end{itemize}
 
-After the data gathering was completed, the training was done on the \gls{pc}, as usual. The silhouette score correctly suggested 2 as the best number of clusters to be used. The PC part of the framework outputs the \texttt{model.h} file directly in the embedded project folder, so just a new upload of the firmware was needed to test the detection. The microcontroller was then set in \emph{evaluation} mode and both the two training signals and the test signal were fed to the shaker. The result of the novelty detection is shown in \autoref{fig:shaker_results}. The result is consistent with the expected outcome, as the training signals produced a negative novelty metric, while the test signal produced a positive (and quite high) novelty metric. The spectrum of the signals used is shown graphically in \autoref{fig:shaker_spectrum}.
+After the data gathering was completed, the training was done on the \gls{pc}, as usual. The silhouette score correctly suggested 2 as the best number of clusters to be used. The PC part of the framework outputs the \texttt{model.h} file directly in the embedded project folder, so just a new upload of the firmware was needed to test the detection. The microcontroller was then set in \emph{evaluation} mode and both the two training signals and the test signal were fed to the shaker. 
+
+\subsection{Results}
+The result of the novelty detection is shown in \autoref{fig:shaker_results}. The result is consistent with the expected outcome, as the training signals produced a negative novelty metric, while the test signal produced a positive (and quite high) novelty metric. The spectrum of the signals used is shown graphically in \autoref{fig:shaker_spectrum}.
 
 \begin{figure}
     \centering

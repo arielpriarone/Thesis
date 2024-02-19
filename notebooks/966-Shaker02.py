@@ -123,6 +123,34 @@ for i, feature1 in enumerate(features):
 fig.tight_layout()
 plt.subplots_adjust(wspace=0, hspace=0)
             
+# try with lof
+from sklearn.neighbors import LocalOutlierFactor
+lof = LocalOutlierFactor(n_neighbors=20, novelty=True)
+lof.fit(features_matrix)
+NoveltyMetric = -lof.decision_function(features_matrix_test)
 
+# %% Split the data
+tests = []
+timestamps = []
+start = 0
+for i, samples in enumerate(tests_separators):
+    end = start + samples
+    print(f"slicing from {start} to {end}")
+    tests.append(NoveltyMetric[start:end])
+    timestamps.append((Timestamp_all[start:end]))
+    start = end
+
+fig, ax = plt.subplots()
+
+for i, test in enumerate(tests):
+    xlabels = [dt.datetime.fromisoformat(ts) for ts in timestamps[i]]
+    ax.plot(timestamps[i],test*100, label=tests_names[i])
+    print(f"Test {i} - {tests_names[i]}")
+    print(f"Novelty: {(test)}")
+ax.axhline(y=0, color='k', linestyle='-.', label='threshold')
+ax.set_xticklabels([])
+ax.set_xlabel("snapshots")
+ax.set_ylabel("Novelty Metric [-]")
+fig.legend(ncol=3, loc='outside upper right')
 
 plt.show()

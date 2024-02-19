@@ -74,6 +74,7 @@ ax.set_xlabel('Frequency (Hz)')
 ax.set_ylabel('Amplitude')
 ax.set_xscale('log')
 ax.legend()
+ax.annotate('Harmonic to be\ndetected', xy=(300, 80), xytext=(130, 200), arrowprops=dict(facecolor='black', arrowstyle='->'))
 fig.tight_layout()
 
 plt.show()
