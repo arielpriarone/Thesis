@@ -58,19 +58,19 @@ for filepath in [featfilepath,faultfilepath]:
     print(np.shape(X))
 
     # load the models
-    standardModel = pickle.load(open(path.join(python_model_path,"StandardModel.pickle"), 'rb'))
+    standardModel = pickle.load(open(path.join(python_model_path,"StandardModel.pickle"), 'rb')) # this is the model trained with 1 day of data up to sample 399
     print("standardModel = ");print(standardModel)
-    scaledModel = pickle.load(open(path.join(python_model_path,"ScaledModel.pickle"), 'rb'))
+    scaledModel = pickle.load(open(path.join(python_model_path,"ScaledModel.pickle"), 'rb')) # this is the model trained with 1 day of data up to sample 399
     print("scaledModel = ");print(scaledModel)
-    scaledModel_subset = pickle.load(open(path.join(python_model_path,"ScaledModel_refined_subset.pickle"), 'rb'))
+    scaledModel_subset = pickle.load(open(path.join(python_model_path,"ScaledModel_refined_subset.pickle"), 'rb'))  # this is the model trained with 1 day of data and partially the second day up to sample 499
     print("scaledModel_subset = ");print(scaledModel_subset)
-    standardModel_refined = pickle.load(open(path.join(python_model_path,"StandardModel_refined.pickle"), 'rb'))
+    standardModel_refined = pickle.load(open(path.join(python_model_path,"StandardModel_refined.pickle"), 'rb')) #this is the standard model with all the second day of data in training dataset, except the noise
     print("standardModel_refined = ");print(standardModel_refined)
-    standardModel_notworking = pickle.load(open(path.join(python_model_path,"StandardModel_notworking.pickle"), 'rb'))
+    standardModel_notworking = pickle.load(open(path.join(python_model_path,"StandardModel_notworking.pickle"), 'rb')) #this is the standard model with the noise in the dataset - not working properly
     print("standardModel_notworking = ");print(standardModel_notworking)
     standardModel_7features = pickle.load(open(path.join(python_model_path,"Standard_7features.pickle"), 'rb'))
     print("standardModel_7features = ");print(standardModel_7features)
-    ScaledModel_7mask = pickle.load(open(path.join(python_model_path,"ScaledModel_7mask.pickle"), 'rb'))
+    ScaledModel_7mask = pickle.load(open(path.join(python_model_path,"ScaledModel_7mask.pickle"), 'rb')) # this is the model with the mask to reduce the number of features - not working properly
     print("ScaledModel_7mask = ");print(ScaledModel_7mask)
 
     # print the models
@@ -138,25 +138,35 @@ for filepath in [featfilepath,faultfilepath]:
         current_error=float((distance_to_assigned_center-ScaledModel_7mask.radiuses[int(y)])/ScaledModel_7mask.radiuses[int(y)]) # calculate the error
         metric['7 mask'].append(current_error)
 
+    # exclude the 500 - 800 index range that are noise
+    exclude = [i for i in range(500,800)]
+    metric['standard'] = [x for i,x in enumerate(metric['standard']) if not i in exclude]
+    metric['scaled'] = [x for i,x in enumerate(metric['scaled']) if not i in exclude]
+    metric['standard refined'] = [x for i,x in enumerate(metric['standard refined']) if not i in exclude]
+    metric['scaled subset'] = [x for i,x in enumerate(metric['scaled subset']) if not i in exclude]
+    metric['standard notworking'] = [x for i,x in enumerate(metric['standard notworking']) if not i in exclude]
+    metric['7 features'] = [x for i,x in enumerate(metric['7 features']) if not i in exclude]
+    metric['7 mask'] = [x for i,x in enumerate(metric['7 mask']) if not i in exclude]
+
     fig, ax = plt.subplots(2,1,sharex=True)
     fig.set_linewidth(0.5)
-    ax[0].plot(metric['standard'], label='Standard novelty metric')
-    ax[0].plot(metric['scaled'], label='Scaled novelty metric')
-    ax[0].plot(metric['standard refined'], label='Standard refined novelty metric')
-    ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
-    ax[0].plot(metric['scaled subset'], label='Scaled subset novelty metric')
+    ax[0].plot(metric['standard'], label='Standard - train day 1')
+    ax[0].plot(metric['scaled'], label='Scaled - train day 1')
+    ax[0].plot(metric['standard refined'], label='Standard all train novelty metric - train day 1 and 2')
+    # ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
+    ax[0].plot(metric['scaled subset'], label='Scaled subset - train day 1 and partially 2')
     ax[0].plot(metric['7 features'], label='7 features novelty metric')
-    ax[0].plot(metric['7 mask'], label='7 mask novelty metric')
+    #ax[0].plot(metric['7 mask'], label='7 mask novelty metric')
     ax[0].set_ylabel('Novelty metric')
     ax[0].legend()
     ax[0].set_title('Novelty metric comparison')
     ax[1].plot(mobileAverage(metric['standard']), label='Standard novelty metric')
     ax[1].plot(mobileAverage(metric['scaled']), label='Scaled novelty metric')
     ax[1].plot(mobileAverage(metric['standard refined']), label='Standard refined novelty metric')
-    ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
+    # ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
     ax[1].plot(mobileAverage(metric['scaled subset']), label='Scaled subset novelty metric')
     ax[1].plot(mobileAverage(metric['7 features']), label='7 features novelty metric')
-    ax[1].plot(mobileAverage(metric['7 mask']), label='7 mask novelty metric')
+    #ax[1].plot(mobileAverage(metric['7 mask']), label='7 mask novelty metric')
     ax[1].set_xlabel('Sample')
     ax[1].set_ylabel('Novelty metric')
     ax[1].set_title('Novelty metric comparison Moving Average')
