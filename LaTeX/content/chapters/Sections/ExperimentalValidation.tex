@@ -1,2 +1,30 @@
-\section{Experimentas on a linear axis platform}
+\clearpage
+\section{Experimental validation on a linear axis}
 \label{sec:ExperimentalValidation}
+
+The experimental validation reported in the previous \autoref{sec:shaker_test01} and \autoref{sec:shaker_test02} was carried out in a well-controlled envinronment with a shaker that was able to generate vibration according to specific references. To further test the framework, a real-word application is considered in this section. The setup consists of a machine equipped with a linear axis, that is used to move a platform. On the emoving platform the same accelerometer described in \autoref{tab:adxl335_specifications} has been atached using a custom 3D-printed fixture.
+
+The test consists of defining a set of movements to be actuated by the platform, the accelerometer is used to capture the characteristics of each movement. As it has done previously, some movement profiles are used for training and some other for testing. The position reference is shown in \autoref{fig:etel_profile}, and the parameters of the profiles are resumed in \autoref{tab:etel_profiles}.
+
+\begin{figure}
+    \centering
+    \todo%\includegraphics{Images/etel/etel_profile.pdf}
+    \caption{Position reference for the linear axis test.}
+    \label{fig:etel_profile}
+\end{figure}
+
+\begin{table}
+    \centering
+    \caption{Harmonic coefficients for the shaker test.}
+    \label{tab:etel_profiles}
+    \begin{tabular}{cccc} 
+    \toprule
+    \textbf{Profile N.} & \textbf{Speed} {[}$\text{m}\text{s}^{-1}$] & \textbf{Acceleration} {[}$\text{m}\text{s}^{-2}$] & \textbf{Jerk} {[}$\text{s}$] \\ 
+    \hline
+    1 & 0.8 & 6 & 0.02 \\
+    2 & 0.4 & 3 & 0.02 \\
+    3 & 0.4 & 6 & 0.02 \\
+    4 & 0.6 & 8 & 0.02 \\
+    \bottomrule
+\end{tabular}
+\end{table}
