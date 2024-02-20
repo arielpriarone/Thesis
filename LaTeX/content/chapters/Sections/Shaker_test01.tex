@@ -1,7 +1,7 @@
 \section{Experiments on a laboratory shaker - Test 1}
 \label{sec:shaker_test01}
 
-After the \gls{pc} implementation of the framework has been tested widely on the \gls{ims} dataset, the \gls{glo:edge} implementation had to be validated experimentally. The first test that was done is with a laboratory shaker, which is basically a powerfull active speaker with a really wide band that can be atached with a bolt to a structure, to vibrate it.
+After the \gls{pc} implementation of the framework has been tested widely on the \gls{ims} dataset, the \gls{glo:edge} implementation had to be validated experimentally. The first test was done with a laboratory shaker, which is basically a powerful active speaker with a really wide band that can be attached with a bolt to a structure, to vibrate it.
 
 In this case, an accelerometer, whose key specifications are shown in \autoref{tab:adxl335_specifications}, was used to capture the vibration signal. The accelerometer was attached to the shaker, with a custom 3D-printed fixture. This first test has the scope of checking the capability of the \gls{glo:edge} implementation to detect a new low amplitude harmonic in the signal. The signal is generated as a \texttt{.wav} file and fed to the shaker by a player. Both the input of the shaker and the output of the accelerometer were monitored with a digital oscilloscope. The setup is shown in \autoref{fig:shaker_setup}.
 
@@ -50,7 +50,7 @@ In this case, an accelerometer, whose key specifications are shown in \autoref{t
     \end{table}
 
 \subsection{Training and evaluating}
-The framework was firstly set to gather the data, extract the features according to the configuration, and send the data to the \gls{pc} for training. The training signals are two waves with different harmonic content and the test signal is very similar to one used for training, except for the presence of an additional harmonic with small amplitude. The train and test signals harmonic content is reported in \autoref{tab:shaker_param_01}. The amplitude of the vibration has been tuned at each test to ensure that the microcontroller was reading a signal of 1V$_{pp}$. The amplitude of the signals has been kept constant to test the capability of the framework to detect the frequency content of the signal in the feature extraction phase. The waveform of the test signals is shown with the one of one training signal in \autoref{fig:shaker}, to show the similarity of the two signals. 
+The framework was firstly set to gather the data, extract the features according to the configuration, and send the data to the \gls{pc} for training. The training signals are two waves with different harmonic content and the test signal is very similar to one used for training, except for the presence of an additional harmonic with a small amplitude. The train and test signals harmonic content is reported in \autoref{tab:shaker_param_01}. The amplitude of the vibration has been tuned at each test to ensure that the microcontroller was reading a signal of 1V$_{pp}$. The amplitude of the signals has been kept constant to test the capability of the framework to detect the frequency content of the signal in the feature extraction phase. The waveform of the test signals is shown with the one of one training signal in \autoref{fig:shaker}, to show the similarity of the two signals. 
 
 The setting of the framework can be resumed as follows:
 \begin{itemize}
