@@ -17,6 +17,7 @@ import pandas as pd
 import pickle
 from os import path
 import matplotlib as mpl
+import matplotlib.ticker as ticker
 matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
@@ -72,6 +73,8 @@ for filepath in [featfilepath,faultfilepath]:
     print("standardModel_7features = ");print(standardModel_7features)
     ScaledModel_7mask = pickle.load(open(path.join(python_model_path,"ScaledModel_7mask.pickle"), 'rb')) # this is the model with the mask to reduce the number of features - not working properly
     print("ScaledModel_7mask = ");print(ScaledModel_7mask)
+    ScaledModel_Select = pickle.load(open(path.join(python_model_path,"ScaledModel_select.pickle"), 'rb')) # this is the model with the mask to reduce the number of features - not working properly
+    print("ScaledModel_Select = ");print(ScaledModel_Select) # done with feature selectror
 
     # print the models
     print(f"modelradiuses = {standardModel.radiuses}")
@@ -86,6 +89,7 @@ for filepath in [featfilepath,faultfilepath]:
     scaled_features_matrix_subset = np.array([(x-scaledModel_subset.means)/scaledModel_subset.stds*scaledModel_subset.feat_importance for x in X])
     standardized_features_matrix_7 = np.array([(x-standardModel_7features.means)/standardModel_7features.stds for x in X_7])
     standardized_features_matrix_7mask = np.array([(x-ScaledModel_7mask.means)/ScaledModel_7mask.stds for x in X])
+    standardized_features_matrix_select = np.array([(x-ScaledModel_Select.means)/ScaledModel_Select.stds*ScaledModel_Select.feat_importance for x in X])
     
     metric = {"standard": [], 
               "scaled": [], 
@@ -93,7 +97,9 @@ for filepath in [featfilepath,faultfilepath]:
               "scaled subset": [], 
               "standard notworking": [],
               "7 features": [],
-              "7 mask": []}
+              "7 mask": [],
+              "select": []}
+    
     # evaluate the models on the training data collected the second day
     for i in range(standardized_features_matrix.shape[0]): # standard model
         y = standardModel.predict(standardized_features_matrix[i,:].reshape(1,-1))    
@@ -137,9 +143,18 @@ for filepath in [featfilepath,faultfilepath]:
         #print(f"y = {y}, distance = {distance_to_assigned_center}")
         current_error=float((distance_to_assigned_center-ScaledModel_7mask.radiuses[int(y)])/ScaledModel_7mask.radiuses[int(y)]) # calculate the error
         metric['7 mask'].append(current_error)
+    for i in range(standardized_features_matrix_select.shape[0]): # standard model
+        y = ScaledModel_Select.predict(standardized_features_matrix_select[i,:].reshape(1,-1))    
+        distance_to_assigned_center = ScaledModel_Select.transform(standardized_features_matrix_select[i].reshape(1,-1))[0,y]
+        #print(f"y = {y}, distance = {distance_to_assigned_center}")
+        current_error=float((distance_to_assigned_center-ScaledModel_Select.radiuses[int(y)])/ScaledModel_Select.radiuses[int(y)]) # calculate the error
+        metric['select'].append(current_error)
 
     # exclude the 500 - 800 index range that are noise
-    exclude = [i for i in range(500,800)]
+    exclude = []
+    if filepath == featfilepath:
+        exclude = [i for i in range(500,800)] + [i for i in range(1,400)]  # noise set + first 400 samples
+        
     metric['standard'] = [x for i,x in enumerate(metric['standard']) if not i in exclude]
     metric['scaled'] = [x for i,x in enumerate(metric['scaled']) if not i in exclude]
     metric['standard refined'] = [x for i,x in enumerate(metric['standard refined']) if not i in exclude]
@@ -147,29 +162,40 @@ for filepath in [featfilepath,faultfilepath]:
     metric['standard notworking'] = [x for i,x in enumerate(metric['standard notworking']) if not i in exclude]
     metric['7 features'] = [x for i,x in enumerate(metric['7 features']) if not i in exclude]
     metric['7 mask'] = [x for i,x in enumerate(metric['7 mask']) if not i in exclude]
+    metric['select'] = [x for i,x in enumerate(metric['select']) if not i in exclude]
 
-    fig, ax = plt.subplots(2,1,sharex=True)
+    fig, ax = plt.subplots(2,1,sharex=True, figsize=(7.18,5.78))
     fig.set_linewidth(0.5)
     ax[0].plot(metric['standard'], label='Standard - train day 1')
     ax[0].plot(metric['scaled'], label='Scaled - train day 1')
+    ax[0].plot(metric['select'], label='Select novelty metric')
     ax[0].plot(metric['standard refined'], label='Standard all train novelty metric - train day 1 and 2')
     # ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
     ax[0].plot(metric['scaled subset'], label='Scaled subset - train day 1 and partially 2')
     ax[0].plot(metric['7 features'], label='7 features novelty metric')
     #ax[0].plot(metric['7 mask'], label='7 mask novelty metric')
+
     ax[0].set_ylabel('Novelty metric')
-    ax[0].legend()
+
     ax[0].set_title('Novelty metric comparison')
-    ax[1].plot(mobileAverage(metric['standard']), label='Standard novelty metric')
-    ax[1].plot(mobileAverage(metric['scaled']), label='Scaled novelty metric')
-    ax[1].plot(mobileAverage(metric['standard refined']), label='Standard refined novelty metric')
+    ax[1].plot(mobileAverage(metric['standard']))
+    ax[1].plot(mobileAverage(metric['scaled']))
+    ax[1].plot(mobileAverage(metric['select']))
+    ax[1].plot(mobileAverage(metric['standard refined']))
     # ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
-    ax[1].plot(mobileAverage(metric['scaled subset']), label='Scaled subset novelty metric')
-    ax[1].plot(mobileAverage(metric['7 features']), label='7 features novelty metric')
+    ax[1].plot(mobileAverage(metric['scaled subset']))
+    ax[1].plot(mobileAverage(metric['7 features']))
     #ax[1].plot(mobileAverage(metric['7 mask']), label='7 mask novelty metric')
+   
     ax[1].set_xlabel('Sample')
     ax[1].set_ylabel('Novelty metric')
-    ax[1].set_title('Novelty metric comparison Moving Average')
-    ax[1].legend()
+    ax[1].set_title('Novelty metric comparison Moving Average (last 5 samples)')
+
+    ax[0].xaxis.set_major_locator(ticker.AutoLocator())
+    ax[0].xaxis.set_minor_locator(ticker.AutoMinorLocator())
+    ax[1].xaxis.set_major_locator(ticker.AutoLocator())
+    ax[1].xaxis.set_minor_locator(ticker.AutoMinorLocator())
+ 
+    fig.legend(loc='upper center')
 
 plt.show()

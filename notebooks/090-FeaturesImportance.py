@@ -1,6 +1,6 @@
 # %%
 # generate the model with noise reduciton
-from matplotlib import projections
+from matplotlib import projections, use
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
 from sklearn.ensemble import IsolationForest, RandomForestClassifier
@@ -25,13 +25,14 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
 src.vis.set_matplotlib_params()
 
 # script settings
-featfilepath = r"data\processed\ETEL_Test2\train_data_refined_subset.csv"   # folder path
+featfilepath = r"data\processed\ETEL_Test1\train_data.csv"   # folder path
 python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code
 features = pd.read_csv(featfilepath,sep='\t')
 features = features.drop(columns=["Timestamp"]).dropna(axis=1)
-pickleModelName = "ScaledModel_7mask.pickle"
+pickleModelName = "ScaledModel_select.pickle"
 
-define_importance_manually = True
+define_importance_manually = False # if True, the importance of the features is defined manually
+use_selectKbest = True # if True, the importance of the features is defined by SelectKBest, otherwise by Random Forest
 
 # define importance manually
 if define_importance_manually:
@@ -85,13 +86,27 @@ print("Accuracy:",np.sum(correct_predictions)/len(correct_predictions))
 # %% feature importance normalized
 feat_importance = RF.feature_importances_/np.max(RF.feature_importances_)
 
+# try with selectkbest
+from sklearn.feature_selection import SelectKBest
+from sklearn.feature_selection import mutual_info_classif
+selector = SelectKBest(k=10)
+selector.fit(standardized_features_matrix, kmeans.labels_)
+feat_importance_Kbest = selector.scores_/np.max(selector.scores_)
+
 # %% select important features
 fig, ax = plt.subplots()
-ax.bar(np.array(range(len(feat_importance)))+1,feat_importance,color='k')
+x = np.array(range(len(feat_importance)))+1
+ax.bar(x,feat_importance,color='k', width=0.4, label='Random Forest')
+ax.bar(x+0.4,feat_importance_Kbest,color='gray', width=0.4, label='SelectKBest')
 ax.set_xlabel('feature')
-ax.set_ylabel('importance')
-ax.set_xticks(np.array(range(len(feat_importance)))+1)
-plt.title("Feature importance")
+ax.set_ylabel('weight')
+ax.set_xticks(x+0.2)
+ax.set_xticklabels(x,rotation=90)
+ax.legend()
+
+
+if use_selectKbest:
+    feat_importance = feat_importance_Kbest
 
 # retrain the model with the scaled features
 # scale the features by importance
