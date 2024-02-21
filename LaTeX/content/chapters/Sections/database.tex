@@ -30,72 +30,65 @@ MongoDB structure is based on collections, that are groups of (\gls{json}) docum
 In the following paragraphs, the structure and purposes of each collection are described.
 
 \paragraph{Raw}
-Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain feature extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the following \gls{json} structure:
-\begin{lstlisting}[language=json,firstnumber=1]
-    {
-        "_id": {
-          "$oid": "xx...xxx"
-        },
-        "timestamp": {
-          "$date": "YYYY-MM-DDThh:mm:ss.SSSZ"
-        },
-        "Sensor 1": {
-          "sampFreq": 123456,
-          "timeSerie": [
-            123.456,
-            . . . ,
-            123.456
-          ]
-        },
-        ...
-        "Sensor n": {
-          "sampFreq": 123456,
-          "timeSerie": [
-            -123.456,
-            . . . ,
-            123.456
-          ]
-        }
-      }
-\end{lstlisting}
-where \texttt{\_id} is the unique identifier of the document, \texttt{timestamp} is the time at which the data was acquired, in \gls{iso} format, and \texttt{Sensor 1} to \texttt{Sensor n} are the names of the sensors. Each sensor has a \texttt{sampFreq} field that contains the sampling frequency of that particular sensor, and a \texttt{timeSerie} field that contains the data acquired by the sensor, as a list. The \texttt{timeSerie} field is a list of floating point numbers, that can be of any length. Note that the sampling frequencies of different sensors can be different, for example, if a timestamp contains $1\si{\s}$ period of data, a vibration sensor would be linked to an array with several thousands of samples, while a temperature sensor would be linked to only one sample.
+Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain feature extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the \gls{json} structure summarized in \autoref{tab:raw_json}.
+\begin{longtable}{lll}
+  \caption{Structure of the \quoted{raw} collection \gls{json} configuration file.}\\ 
+  \toprule
+  \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
+  \hline
+  \texttt{\textunderscore}id &  & string \\
+  timestamp &  & ISO date \\*
+  \multirow{2}{*}{sensor 1} & sampling frequency & float \\*
+   & time-serie & list[float] \\*
+  \multirow{2}{*}{sensor 2} & sampling frequency & float \\*
+   & time-serie & list[float] \\
+  $\dots$ & $\dots$ & $\dots$ \\*
+  \multirow{2}{*}{sensor~$n$} & sampling fequency & float \\*
+   & time-serie & list[float] \\
+  \bottomrule
+  \end{longtable}
+where \texttt{\textunderscore id} is the unique identifier of the document, \texttt{timestamp} is the time at which the data was acquired, in \gls{iso} format, and \texttt{Sensor 1} to \texttt{Sensor n} are the names of the sensors. Each sensor has a \texttt{sampFreq} field that contains the sampling frequency of that particular sensor, and a \texttt{timeSerie} field that contains the data acquired by the sensor, as a list. The \texttt{timeSerie} field is a list of floating point numbers, that can be of any length. Note that the sampling frequencies of different sensors can be different, for example, if a timestamp contains $1\si{\s}$ period of data, a vibration sensor would be linked to an array with several thousands of samples, while a temperature sensor would be linked to only one sample.
 
 \paragraph{Unconsumed}
-Once defined the structure that the time-series will have in the database, let's define the structure of the snapshots. The features extracted from the time-series are stored in the {unconsumed} collection, with the following \gls{json} structure:
+Once defined the structure that the time-series will have in the database, let's define the structure of the snapshots. The features extracted from the time-series are stored in the {unconsumed} collection, with the \gls{json} structure described in \autoref{tab:unconsumed_json}.
 
-\begin{lstlisting}[language=json,firstnumber=1]
-    {
-        "_id": {
-          "$oid": "xxx....xxx"
-        },
-        "timestamp": {
-          "$date": "YYY-MM-DDThh:mm:ss.SSSZ"
-        },
-        "Sensor 1": {
-          "mean": 123.456,
-          "rms": 123.456,
-          "peak2peak": 123.456,
-          "std": 123.456,
-          "skewness": 123.456,
-          "kurtosis": 123.456,
-          "wavelet coef aaaaaa": 123.456,
-          "wavelet coef aaaaad": 123.456,
-          ...,
-          "wavelet coef dddddd": 123.456
-        },
-        "Sensor 2": {
-          "mean": 123.456,
-          "kurtosis": 1.099722740047154
-        },
-        ...,
-        "Sensor n": {
-          "mean": 123.456,
-          ...
-        }
-        "novelty evaluated": true/false
-      }
-\end{lstlisting}
-
+\begin{longtable}{lll}
+  \caption{Structure of the \quoted{unconsumed} collection \gls{json} configuration file.}\\ 
+  \toprule
+  \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
+  \hline
+  \texttt{\textunderscore}id & - & string \\
+  timestamp & - & ISO date \\
+  \vcell{sensor 1} & \vcell{mean} & \vcell{float} \\*[-\rowheight]
+  \printcelltop & \printcellmiddle & \printcellmiddle \\
+   & root mean square & float \\
+   & peak to peak & float \\
+   & standard deviation & float \\
+   & skewness & float \\
+   & kurtosis & float \\
+   & wavelet coefficient~$1$ & float \\
+   & wavelet coefficient~$2$ ~ & float \\
+   & $\vdots$ & $\vdots$ \\
+   & wavelet coefficient~$2^{\text{three dept}}$ & float \\
+  sensor 2 & mean & float \\
+   & root mean square & float \\
+   & peak to peak & float \\
+   & standard deviation & float \\
+   & skewness & float \\
+   & kurtosis & float \\
+   & wavelet coefficient~$1$ & float \\
+   & wavelet coefficient~$2$ & float \\
+   & $\vdots$ & $\vdots$ \\
+   & wavelet coefficient~ $2^{\text{three dept}}$~~ & float \\
+  $\vdots$ & $\vdots$ & $\vdots$ \\
+  sensor~$n$ & mean & float \\
+   & root mean square & float \\
+   & $\vdots$ & $\vdots$ \\
+   & wavelet coefficient~ ~~$2^{\text{three dept}}$ & float \\
+  novelty evaluated flag & - & boolean \\
+  \bottomrule
+  \end{longtable}
+  
 Notice that different sensors can have different features. The \quoted{novelty evaluated} field is a boolean that is set to \texttt{false} when the snapshot is created, and is set to \texttt{true} when the \gls{nd} algorithm evaluates the snapshot. This field is used to avoid evaluating the same snapshot multiple times while leaving it in the collection until also the \gls{fd} algorithm is performed. At this point, the snapshot will be moved either to the backup collection, discarded or to the quarantine collection if either the \gls{nd} or the \gls{fd} flag it.
 
 \paragraph{Quarantined}
@@ -107,53 +100,39 @@ The idea behind the \quoted{healthy} collection is to store the snapshots that a
 \paragraph{Healthy train}
 In this collection the healthy snapshots are packed together in different documents, each of them useful in a different phase of the training process.
 
-  {The first document hase the \texttt{id} \texttt{training\_set}, that contains all the \texttt{N} training snapshots, each of them with \texttt{n} sensors signals, characterized by \texttt{F} features. For ease of accessibility, every bottom-nested field is a list of \texttt{N} elements. The structure is the following:}
+{The first document hase the \texttt{id} \texttt{training\textunderscore set}, that contains all the \texttt{N} training snapshots, each of them with \texttt{n} sensors signals, characterized by \texttt{F} features. For ease of accessibility, every bottom-nested field is a list of \texttt{N} elements. The structure is resumed in \autoref{tab:train_json}.}
 
-\begin{lstlisting}[language=json,firstnumber=1]
-{
-  "_id": "training set",
-  "timestamp": [
-    {
-      "$date": "YYYY-MM-DDThh:mm:ss.SSSZ" 	# timestamp 1
-    },  
-	...,
-    {   
-      "$date": "YYYY-MM-DDThh:mm:ss.SSSZ" 	# timestamp N
-    }
-  ],
-  "Sensor 1": {
-    "Feature 1": [
-      123.456,								# value 1
-      ...,
-      123.456								# value N
-    ],
-	...,
-	"Feature F": [
-      123.456,								# value 1
-      ...,
-      123.456								# value N
-    ]},
-	...
-  "Sensor n": {
-    "Feature 1": [
-      123.456,								# value 1
-      ...,
-      123.456								# value N
-    ],
-	...,
-	"Feature F": [
-      123.456,								# value 1
-      ...,
-      123.456								# value N
-    ]}
-}
-\end{lstlisting}
+
+\begin{longtable}{lll}
+\caption{Structure of the \quoted{healthy train} collection \gls{json} configuration file.}\\ 
+\toprule
+\textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
+\hline
+\texttt{\textunderscore}id & - & string \\
+timestamp & - & list[ISO date] \\
+\vcell{sensor 1} & \vcell{feature 1} & \vcell{list[float]} \\*[-\rowheight]
+\printcelltop & \printcellmiddle & \printcellmiddle \\
+ & feature 2 & list[float] \\
+ & $\vdots$ & $\vdots$ \\
+ & feature F & list[float] \\
+sensor 2 & feature 1 & list[float] \\
+ & feature 2 & list[float] \\
+ & $\vdots$ & $\vdots$ \\
+ & feature F & llist[loat] \\
+$\vdots$ & $\vdots$ & $\vdots$ \\
+sensor~$n$ & feature 1 & list[float] \\
+ & feature 2 & llist[loat] \\
+ & $\vdots$ & $\vdots$ \\
+ & \begin{tabular}[c]{@{}l@{}}feature F\\\end{tabular} & list[float] \\
+\bottomrule
+\end{longtable}
+
 
 This collection contains other three documents:
 \begin{itemize}
   \item \texttt{training set scaled}, that contains the scaled training set, having the same structure as the \texttt{training set} document;
   \item \texttt{training set MIN MAX}, that contains the minimum and maximum values of the features of the training set, useful to plot the features with a reference of the bounds of the training set. It has the same structure of the \texttt{training set} document, but the bottom-nested fields are lists of two elements (the minimum and the maximum value);
-  \item \texttt{StandardScaler\_pickled}. It contains the \texttt{StandardScaler} object that was used to scale the training set. This object is encoded in \gls{glo:pickle}, and it is used during the evaluation phase to scale the snapshots before evaluating them.
+  \item \texttt{StandardScaler\textunderscore pickled}. It contains the \texttt{StandardScaler} object that was used to scale the training set. This object is encoded in \gls{glo:pickle}, and it is used during the evaluation phase to scale the snapshots before evaluating them.
 \end{itemize}
 
 \paragraph{Faulty}
@@ -165,45 +144,21 @@ This collection serves the same exact purpose as the \quoted{healthy train} coll
 \paragraph{Models}
 This collection contains the models trained on the healthy and faulty data and a buffer of the predictions and metrics to be displayed to the user.
 
-The structure of the models documents is just an identifier and the \texttt{python} object of the model, encoded in \gls{glo:pickle}. The structure of the predictions and metrics documents is the following:
+The structure of the models documents is just an identifier and the \texttt{python} object of the model, encoded in \gls{glo:pickle}. The structure of the predictions and metrics documents is the \autoref{tab:model_json}:
 
-\begin{lstlisting}[language=json,firstnumber=1]
-{
-  "_id": "Kmeans cluster novelty indicator",
-  "values": [										# novelty metric
-    123.456,										# first buffer value
-    ...,
-    123.456									        # last buffer value
-  ],
-  "timestamp": [
-    {
-      "$date": "YYYY-MM-DDThh:mm:ss.SSSZ"			# first buffer date
-    },
-  ...,
-    {
-      "$date": "YYYY-MM-DDThh:mm:ss.SSSZ"			# last buffer date
-    }
-  ],
-  "assigned_cluster": [								# predicted cluster
-    1,												# first predicted cluster
-    ...,
-    4												# last predicted cluster
-  ],
-  "anomaly": [										# anomaly flag
-    false,											# first flag
-    ...,
-    true											# last flag
-  ],
-  "pred_parameters": [								# last prediction curve 
-    {
-      "$binary": {
-        "base64": "....",
-        "subType": "00"
-      }
-    }
-  ]
-}
-\end{lstlisting}
+\begin{longtable}{lll}
+  \caption{Structure of the \quoted{models} collection \gls{json} configuration file.}\\ 
+  \toprule
+  \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
+  \hline
+  \texttt{\textunderscore}id & - & string \\
+  timestamp & - & list[ISO date] \\
+  values & - & list[float] \\
+  assigned cluster & - & list[int] \\
+  anomaly flag & - & list[bool] \\
+  prediction curve parameters & - & pickle format \\
+  \bottomrule
+  \end{longtable}
 
 \paragraph{Backup}
 The backup collection is a general-purpose container for any document that needs to be stored for backup purposes. It can contain time-series, features, models, etc. The structure of the documents in this collection is the same as the structure of the documents in the other collections.
