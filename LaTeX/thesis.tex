@@ -66,15 +66,13 @@
 % 2) or
 \paginavuota % to manually create a blank page
 
-\sommario
-\input{content/summary}
-
-\phantom{0}
-\cleardoublepage
-\thispagestyle{empty}
-
 \ringraziamenti % acknowledgements
 \input{content/acknowledgements}
+
+\customClearDoublePage % to have a blank page and start on a fresh right page
+
+\sommario
+\input{content/summary}
 
 \paginavuota
 \tableofcontents
