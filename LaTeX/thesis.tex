@@ -64,7 +64,6 @@
 %\cleardoublepage
 %\thispagestyle{empty} % to have empty page, without numbers
 % 2) or
-\paginavuota % to manually create a blank page
 
 \ringraziamenti % acknowledgements
 \input{content/acknowledgements}
@@ -74,7 +73,7 @@
 \sommario
 \input{content/summary}
 
-\paginavuota
+
 \tableofcontents
 
 \listoftables % ToC for tables
@@ -87,7 +86,7 @@
 % style overrides the global style
 % here we are printing only abbreviations
 % printunsrtglossary if using record, otherwise printglossary is ok
-\paginavuota
+
 %\printunsrtglossary[style=altlist,title=Acronyms,type=\glsxtrabbrvtype] % A.P. rimosso perchè toptesi fa schifo
 \maskglossaries{\printglossaries}
 
@@ -111,8 +110,7 @@
 
 % endnotes here if needed
 
-\phantom{0}
-\cleardoublepage
+\customClearDoublePage
 \printbibliography[heading=bibintoc] % heading required to show it in ToC
 
 \end{document}
