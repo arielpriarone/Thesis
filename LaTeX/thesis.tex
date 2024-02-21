@@ -65,6 +65,7 @@
 %\thispagestyle{empty} % to have empty page, without numbers
 % 2) or
 
+\customClearDoublePage % to have a blank page and start on a fresh right page
 \ringraziamenti % acknowledgements
 \input{content/acknowledgements}
 
@@ -73,8 +74,10 @@
 \sommario
 \input{content/summary}
 
-
-\tableofcontents
+{
+\customClearDoublePage
+\pdfbookmark[0]{\contentsname}{toc}%
+\tableofcontents}
 
 \listoftables % ToC for tables
 
