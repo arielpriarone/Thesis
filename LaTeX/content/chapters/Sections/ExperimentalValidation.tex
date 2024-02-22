@@ -34,7 +34,7 @@ To perform the training, a loop has been implemented on the \gls{pc} that manage
 
 Although not useful for the training, the microcontroller has been set not only to transmit the features to the \gls{pc} but also the time-series, for visualization purposes. The time-series of the training set are shown in \autoref{fig:axis_timeseries}, and the features are shown in \autoref{fig:axis_features}.
 
-In the time-series set it is possible to see some outliers, for example, there is a record in which profile 1 started being actuated by the axis with a delay \gls{wrt} the others. Profile 4, instead, has some outliers due to the axis sometimes overshooting the reference position.
+In the time-series set it is possible to see some outliers, for example, there is a record in which profile 1 started being actuated by the axis with a delay \gls{wrt} the others. Profile 4, instead, has some outliers due to the axis sometimes overshooting the reference position. These outlier are caused by the axis control, and the investigation about why does it happen is out of the scope of this work. 
 
 The training set contains 100 snapshots for each profile, for a total of 400 snapshots. The K-means model is then trained for $n=5$ clusters, according to the silhouette criterion.
 
@@ -51,6 +51,13 @@ The training set contains 100 snapshots for each profile, for a total of 400 sna
     \includegraphics[width=\textwidth]{images/LinearMotor/Features.pdf}
     \caption{features of the training set}
     \label{fig:axis_features}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \includegraphics{images/LinearMotor/Scatter.pdf}
+    \caption{Visualization of the separation between profiles in the feature space}
+    \label{fig:axis_training}
 \end{figure}
 
 As done previously, the training is performed with the user confirming the correct number of clusters. And updating the model into the microcontroller.

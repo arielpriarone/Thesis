@@ -103,73 +103,60 @@ This agent is designed to be configured as a \gls{nd} or \gls{fd} agent with jus
     
 \newpage
 \subsection{Configuration of the framework}
-All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the agents at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. An example of a valid configuration file for the \gls{ims} dataset is shown in below.
-\begin{minted}[
-    gobble=4,
-    frame=single,
-    linenos,
-    breaklines
-  ]{yaml}
-    Database:           # Database configuration
-    URI:                mongodb://localhost:27017   # MongoDB URI
-    db:                 Shaft                       # Database name
-    collection:       # Collection configuration
-      back:             BACKUP        # Backup collection name
-      raw:              RAW           # Raw data collection name
-      unconsumed:       UNCONSUMED    # Unconsumed data collection name
-      healthy:          HEALTHY       # Healthy data collection name
-      healthy_train:    HEALTHY_TRAIN # Healthy data collection name for training (some healthy data are not used if not novelty)
-      quarantined:      QUARANTINED   # Quarantined data collection name
-      faulty:           FAULTY        # Faulty data collection name
-      faulty_train:     FAULTY_TRAIN  # Faulty data collection name for training (some faulty data are not used if not fault novelty)
-      models:           MODELS        # Models collection name
-    sensors:          # Expected sensors in the database
-      Bearing 1 x:    # Sensor 1 name
-        features:     # Features configuration
-          wavPowers:    on            # Wavelet powers
-          mean:         on            # Mean value
-          rms:          on            # Root mean square
-          peak:         on            # Peak to peak value
-          std:          on            # Standard deviation
-          skew:         on            # Skewness
-          kurt:         on            # Kurtosis
-      Bearing 1 y:    # Sensor 2 name
-        features:     # Features configuration
-          wavPowers:    on            # Wavelet powers
-          mean:         on            # Mean value
-          rms:          on            # Root mean square
-          peak:         on            # Peak to peak value
-          std:          on            # Standard deviation
-          skew:         on            # Skewness
-          kurt:         on            # Kurtosis
-      ...:
-      Bearing 4 y:    # Sensor n name
-        features:     # Features configuration
-          wavPowers:    on            # Wavelet powers
-          mean:         on            # Mean value
-          rms:          on            # Root mean square
-          peak:         on            # Peak to peak value
-          std:          on            # Standard deviation
-          skew:         on            # Skewness
-          kurt:         on            # Kurtosis
-    wavelet:           # Wavelet packet transform configuration
-      type:               db10          # Type of wavelet to use
-      mode:               symmetric     # Mode of the packet transform
-      maxlevel:           6             # Max level -> num of features = 2^level
-    model:             # machine learning model configuration
-      max_clusters:       100           # Max number of clusters
-      max_iterations:     1000          # Max number of iterations
-      error_queue_size:   1             # number of predictions parameters to keep in queue for plotting/predicting
-      error_plot_size:    2000          # Size of the plotting queue
-    novelty:           # Novelty/fault configuration
-      threshold:          0.10          # Threshold for novelty / fault detection: relative percentage of the distance to the cluster w.r.t the max distance to the assigned cluster in the training set
-      forecast_threshold: 0.8           # Threshold for novelty / fault prediction
-      n_fit:              250           # Number of samples used to fit the prediction curve
-      outlier_filter:     1             # Number of consecutive outliers to filter (1 means two outliers will be considered as novelty/fault)
-      regressor:          exp           # Regressor to use for prediction: exp, scipy, poly. if exp uses a custom function, if scipy uses scipy.optimize.curve_fit, if poly fit polynomial of degree
-    miscellanea:
-      logpath:            C:\Users\JohnSmith\Documents\framework  # Path to the logs
-\end{minted}
+All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the agents at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. The \autoref{tab:yaml} shows the structure of the configuration file.
+
+
+\begin{longtable}{>{\hspace{0pt}}m{0.26\linewidth}>{\hspace{0pt}}m{0.113\linewidth}>{\hspace{0pt}}m{0.569\linewidth}}
+  \caption{Structure of the framework configuration file.\label{tab:yaml}}\\ 
+  \toprule
+  \rowcolor[rgb]{0.929,0.929,0.923}\textbf{Field} & \textbf{Type} & \textbf{Description} \endfirsthead 
+  \hline
+  Database & structure & Database configuration \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/URI & string & MongoDB URI \\
+  $\dots$/DB & string & Database name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Collection & structure & Collections configuration \\
+  $\dots$/$\dots$/Backup & string & Backup collection name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/Raw & string & Raw data collection name \\
+  $\dots$/$\dots$/Unconsumed & string & Unconsumed data collection name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/Healthy & string & Healthy data collection name \\
+  $\dots$/$\dots$/Healthy\_train & string & Healthy data collection packed for training (some healthy data are not used if not novelty) \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/Quarantined & string & Quarantined data collection name \\
+  $\dots$/$\dots$/Faulty & string & Faulty data collection name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/Faulty\_train & string & Faulty data collection packed for~training (some faulty data are not used if not novelty) \\
+  $\dots$/$\dots$/Models & string & Models collection name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}Sensors & structure & Sensors configuration \\
+  $\dots$/Sensor 1/Name & string & Sensor 1 name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/Features & structure & Features configuration of this sensor \\
+  $\dots$/$\dots$/$\dots$/Wavelet & bool & Enable or disable wavelet decomposition for the considered sensor \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/$\dots$/Mean & bool & Enable or disable mean feature for the considered sensor \\
+  $\dots$/$\dots$/$\dots$/RMS & bool & Enable or disable RMS feature for the considered sensor \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/$\dots$/P2P & bool & Enable or disable P2P feature for the considered sensor \\
+  $\dots$/$\dots$/$\dots$/Std & bool & Enable or disable Standard deviation feature for the considered sensor \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$/$\dots$/Skew & bool & Enable or disable skewness feature for the considered sensor \\
+  $\dots$/$\dots$/$\dots$/Kurt & bool & Enable or disable kurtosis feature for the considered sensor \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/$\dots$ & $\dots$ & $\dots$ \\
+  $\dots$/Sensor n/Name & string & Sensor $n$ name \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Sensor\_n/Features & structure & Features configuration of this sensor \\
+  $\dots$/Sensor n/$\dots$ & $\dots$ & $\dots$ \\
+  \rowcolor[rgb]{0.929,0.929,0.923}Wavelet & structure & Wavelet Packet Decomposition configuration \\
+  $\dots$/Type & string & Type of wavelet to be used (ex. db10, Moore, etc.) \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Mode & string & Mode of decomposition (ex. Symmetric) \\
+  $\dots$/Level & int & Depth of the decomposition tree (No. of features~$=2^\text{Level}$ \\
+  \rowcolor[rgb]{0.929,0.929,0.923}Model & structure & Models configuration \\
+  $\dots$/Max clusters & int & Maximum number of clusters to attempt during clustering \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Max iterations & int & Maximum iterations of the UML algorythm \\
+  $\dots$/queue & int & Number of RUL predictions to keep in memory \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Plot size & int & Number of Novelty Metric values to be kept in memory for plotting \\
+  Novelty-Fault & structure & Configuration of the novelty or fault detection \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Threshold & float & Novelty - Fault detection threshold \\
+  $\dots$/RUL Threshold & float & Novelty - Fault threshold for RUL predictions \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Fit points & int & Number of samples used for fitting the prediction curve \\
+  $\dots$/Outlier filter & int & Number of consecutive outliers to filter \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Regressor & string & Type of curve to fit (exp or scipy to select the closed form solution or the iterative solution) \\
+  Log & string & Path where to store the logs of the framework \\
+  \bottomrule
+  \end{longtable}
+  
 
 \subsection{Command Line Interface (CLI)}
 \label{subsec:CLI}

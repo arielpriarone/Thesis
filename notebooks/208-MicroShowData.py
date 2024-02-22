@@ -67,6 +67,34 @@ ax1.set_xlim(0, 66)
 ax1.tick_params(labelrotation=90)
 ax1.legend()
 
+# plot a scatter plot of the features
+src.visualization.set_matplotlib_params()
+fig, ax = plt.subplots(2,3)
+features_plot_set = [5,6,25,26]
+
+ax_row = 0
+ax_col = 0
+for j in features_plot_set:
+    for k in features_plot_set[features_plot_set.index(j) +1:]:
+        i=0
+        for timestamp in df_features['Timestamp'].unique():
+            df_features_timestamp = df_features[df_features['Timestamp'] == timestamp]
+            color = setcolor(i) 
+            ax[ax_row, ax_col].scatter(df_features_timestamp.values[0, j], df_features_timestamp.values[0, k], marker='.' ,color=color)
+            ax[ax_row, ax_col].set_xlabel(df_features.columns[j])
+            ax[ax_row, ax_col].set_ylabel(df_features.columns[k])
+            ax[ax_row, ax_col].set_xticks([])
+            ax[ax_row, ax_col].set_yticks([])
+            i+=1
+        ax_col+=1
+        print(ax_col)
+        if ax_col == 3:
+            ax_col = 0
+            ax_row += 1
+    
+plt.tight_layout()
+plt.show()
+exit()
 
 #Create a plot for dataframe of timeseries
 fig = plt.figure()
