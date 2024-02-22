@@ -10,6 +10,7 @@ from scipy.fft import rfft, rfftfreq
 import matplotlib.ticker as ticker
 import src
 import matplotlib as mpl
+from rich import print
 
 src.visualization.set_matplotlib_params()
 mpl.rcParams['lines.linewidth'] = 0.5
@@ -67,6 +68,63 @@ ax1.set_xlim(0, 66)
 ax1.tick_params(labelrotation=90)
 ax1.legend()
 
+# the same thing but with shaded area
+fig = plt.figure()
+ax1 = fig.add_subplot(111)
+plt.subplots_adjust(top=0.954,
+bottom=0.278,
+left=0.057,
+right=0.995,
+hspace=0.2,
+wspace=0.2)
+colormap = cm.get_cmap('cool')
+
+min_1 = np.inf*np.ones(df_features.shape[1]-1)
+max_1 = -np.inf*np.ones(df_features.shape[1]-1)
+min_2 = np.inf*np.ones(df_features.shape[1]-1)
+max_2 = -np.inf*np.ones(df_features.shape[1]-1)
+min_3 = np.inf*np.ones(df_features.shape[1]-1)
+max_3 = -np.inf*np.ones(df_features.shape[1]-1)
+min_4 = np.inf*np.ones(df_features.shape[1]-1)
+max_4 = -np.inf*np.ones(df_features.shape[1]-1)
+
+for i, timestamp in enumerate(df_features['Timestamp'].unique()):
+    match setcolor(i):
+        case 'blue':
+            min_1 = np.minimum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], min_1)
+            max_1 = np.maximum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], max_1)
+        case 'red':
+            min_2 = np.minimum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], min_2)
+            max_2 = np.maximum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], max_2)
+        case 'green':
+            min_3 = np.minimum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], min_3)
+            max_3 = np.maximum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], max_3)
+        case 'orange':
+            min_4 = np.minimum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], min_4)
+            max_4 = np.maximum(df_features[df_features['Timestamp'] == timestamp].to_numpy().ravel()[1:], max_4)
+
+min_1 = np.array(min_1, dtype=float)
+max_1 = np.array(max_1, dtype=float)
+min_2 = np.array(min_2, dtype=float)
+max_2 = np.array(max_2, dtype=float)
+min_3 = np.array(min_3, dtype=float)
+max_3 = np.array(max_3, dtype=float)
+min_4 = np.array(min_4, dtype=float)
+max_4 = np.array(max_4, dtype=float)
+
+ax1.fill_between(range(0,67), min_1, max_2, color='blue',   alpha=0.3, label='profile 1')
+ax1.fill_between(range(0,67), min_2, max_2, color='red',    alpha=0.3, label='profile 2')
+ax1.fill_between(range(0,67), min_3, max_3, color='green',  alpha=0.3, label='profile 3')
+ax1.fill_between(range(0,67), min_4, max_4, color='orange', alpha=0.3, label='profile 4')
+ax1.set_ylabel('Value')
+ax1.set_xlim(0, 66)
+ax1.tick_params(labelrotation=90)
+ax1.legend()
+
+
+
+
+
 # plot a scatter plot of the features
 src.visualization.set_matplotlib_params()
 fig, ax = plt.subplots(2,3)
@@ -93,8 +151,6 @@ for j in features_plot_set:
             ax_row += 1
     
 plt.tight_layout()
-plt.show()
-exit()
 
 #Create a plot for dataframe of timeseries
 fig = plt.figure()
