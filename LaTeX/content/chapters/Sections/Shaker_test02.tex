@@ -54,6 +54,7 @@ For completness, in \autoref{fig:shaker_conf_matrix}, also the true positive res
     \caption{False Negative and True Positive results. On the diagonal, there is a histogram of the feature values. The off-diagonal plots are the scatter plots of the features. The shades are the projection of the clusters on the considered plane. (Red: False Negative, Magenta: True Positive, Black: training data)}
     \label{fig:shaker_conf_matrix}
 \end{figure}
+\clearpage
 
 \subsection{Possible improvements}
 The environment of this test is very challenging for the k-means algorithm. As discussed in \autoref{ch:Unsupervised}, there are algorithms that are not affected by the clusters' shapes. The candidate algorithms that may perform better in this situation are the \gls{lof}, the \gls{iforest} and \gls{dbscan}. A future work could be to implement these algorithms in the \gls{glo:edge} framework, despite being more demanding in computational power and memory, and test them in this environment.

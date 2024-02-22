@@ -164,15 +164,15 @@ for filepath in [featfilepath,faultfilepath]:
     metric['7 mask'] = [x for i,x in enumerate(metric['7 mask']) if not i in exclude]
     metric['select'] = [x for i,x in enumerate(metric['select']) if not i in exclude]
 
-    fig, ax = plt.subplots(2,1,sharex=True, figsize=(7.18,5.78))
+    fig, ax = plt.subplots(2,1,sharex=True, figsize=(7.68,5.78))
     fig.set_linewidth(0.5)
-    ax[0].plot(metric['standard'], label='Standard - train day 1')
-    ax[0].plot(metric['scaled'], label='Scaled - train day 1')
-    ax[0].plot(metric['select'], label='Select novelty metric')
-    ax[0].plot(metric['standard refined'], label='Standard all train novelty metric - train day 1 and 2')
+    ax[0].plot(metric['standard'], label='Model 1')              # label='Standard - train day 1')
+    ax[0].plot(metric['scaled'], label='Model 2')    # label='Scaled Random Forest - train day 1')
+    ax[0].plot(metric['select'], label='Model 3')            # label='Scaled scipy - train day 1')
+    # ax[0].plot(metric['standard refined'], label='Standard all train novelty metric - train day 1 and 2')
     # ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
-    ax[0].plot(metric['scaled subset'], label='Scaled subset - train day 1 and partially 2')
-    ax[0].plot(metric['7 features'], label='7 features novelty metric')
+    ax[0].plot(metric['scaled subset'], label='Model 4')    # label='Scaled subset - train day 1 and partially 2')
+    ax[0].plot(metric['7 features'], label='Model 5')                         # label='7 features novelty metric')
     #ax[0].plot(metric['7 mask'], label='7 mask novelty metric')
 
     ax[0].set_ylabel('Novelty metric')
@@ -181,7 +181,7 @@ for filepath in [featfilepath,faultfilepath]:
     ax[1].plot(mobileAverage(metric['standard']))
     ax[1].plot(mobileAverage(metric['scaled']))
     ax[1].plot(mobileAverage(metric['select']))
-    ax[1].plot(mobileAverage(metric['standard refined']))
+    # ax[1].plot(mobileAverage(metric['standard refined']))
     # ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
     ax[1].plot(mobileAverage(metric['scaled subset']))
     ax[1].plot(mobileAverage(metric['7 features']))
@@ -195,7 +195,11 @@ for filepath in [featfilepath,faultfilepath]:
     ax[0].xaxis.set_minor_locator(ticker.AutoMinorLocator())
     ax[1].xaxis.set_major_locator(ticker.AutoLocator())
     ax[1].xaxis.set_minor_locator(ticker.AutoMinorLocator())
+    ax[0].set_xlim(0, len(metric['standard']))
+    ax[1].set_xlim(0, len(metric['standard']))
+    ax[0].hlines(0, 0, len(metric['standard']), color='grey', linestyle='-', label='__nolegend__')
+    ax[1].hlines(0, 0, len(metric['standard']), color='grey', linestyle='-', label='__nolegend__')
  
-    fig.legend(loc='upper center')
+    fig.legend(loc='upper center', ncol = 5)
 
 plt.show()

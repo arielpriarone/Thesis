@@ -38,6 +38,8 @@ In the time-series set it is possible to see some outliers, for example, there i
 
 The training set contains 100 snapshots for each profile, for a total of 400 snapshots. The K-means model is then trained for $n=5$ clusters, according to the silhouette criterion.
 
+As done previously, the training is performed with the user confirming the correct number of clusters. And updating the model into the microcontroller.
+
 \begin{figure}
     \centering
     \includegraphics{images/LinearMotor/Timeseries.pdf}
@@ -57,27 +59,73 @@ The training set contains 100 snapshots for each profile, for a total of 400 sna
     \centering
     \includegraphics{images/LinearMotor/Scatter.pdf}
     \caption{Visualization of the separation between profiles in the feature space}
-    \label{fig:axis_training}
+    \label{fig:axis_scatter}
 \end{figure}
 
-As done previously, the training is performed with the user confirming the correct number of clusters. And updating the model into the microcontroller.
 
 \subsection{Testing}
 The microcontroller is then set in \emph{evaluate} mode and the \gls{nd} is performed on a loop that repeats the movement of profile 2. The result of this first model (Model 1) is shown in \autoref{fig:axis_testing}. We can see that the model immediately falsely detects a novelty, despite profile 2 being part of the training set. The figure also shows a clearer view of the evolution of the novelty score, obtained by applying a moving average filter on the last 5 values of the novelty metric.
 
 Let's investigate why this model gives almost all false positive results. Analyzing the features of the training set (\autoref{fig:axis_features}), we can see that the first features, up to $\approx 12$, are grouped by profile, but most of the remaining features are not, this arises the suspect that these features may not be significative of the movement, but maybe just representing noise. This is likely also because the necessary standardization procedure ensures that each feature will have unitary standard deviation, regardless of the magnitude of the feature itself \gls{wrt} the others. This may cause \quoted{noise} features to be amplified in the model. Moreover, it's clear that, being most of the features not significant, the model is not able to distinguish between the profiles.
 
-\subsection{Feature scaling}
-To address the problem of the non-significative features, a feature scaling method is proposed. The idea is to scale the features in such a way that the most significant features will have a higher weight in the model. To do that, a naive approach could be to visually select the important features (by eye it's evident that are the first few) and apply a small scaling factor to the others. 
+In \autoref{fig:axis_scatter}, a better visualization of the problem is presented. Features 5 and 6 are significative of the specific movement as we can see in the scatter plot, because the data points are grouped by profile. The features 25 and 26, instead, are not significative, as the data points are not grouped by profile.
 
-This approach goes against the principle of the framework being fully automatic to train. To address this problem, an unsupervised and automatic method is proposed. The idea is to scale the features in such a way that the most significant features will have a higher weight in the model. To do that, it's possible to exploit the fact that, at this point, the K-means model is already trained and this step provided labels for the training dataset. It's now possible to apply a \emph{supervised} \gls{ml} algorithm in a way that is transparent to the user, so the whole procedure remains \emph{unsupervised}.
-
-Luckily, the \gls{glo:sklearn} library provides a method \todo
 
 
 \begin{figure}
     \centering
-    %\includegraphics{images/LinearMotor/Testing.pdf}
+    \includegraphics[angle=-90,origin=c]{images/LinearMotor/Testing.pdf}
     \caption{Novelty detection on profile 2.}
     \label{fig:axis_testing}
 \end{figure}
+\clearpage
+
+
+\subsection{Feature scaling}
+To address the problem of the non-significative features, a feature scaling method is proposed. The idea is to scale the features in such a way that the most significant features will have a higher weight in the model. To do that, a naive approach could be to visually select the important features (by eye it's evident that are the first few) and apply a small scaling factor to the others. 
+
+This approach goes against the principle of the framework being fully automatic to train. To address this problem, an unsupervised and automatic method is proposed. The idea is to scale the features in such a way that the most significant features will have a higher weight in the model. To do that, it's possible to exploit the fact that, at this point, the K-means model is already trained and the training procedure provided labels for the dataset. It's now possible to apply a \emph{supervised} \gls{ml} algorithm in a way that is transparent to the user, so the whole procedure remains \emph{unsupervised}.
+
+The framework is then extended to include the possibility to apply feature scaling. The two possibilities are to use the Random Forest classifier or the SelectKBest algorithm to provide the weights. Since this scaling will affect also the future snapshots, a new train of the \gls{mla} is necessary. The new model is then trained with the same training set, but with the scaled features. This approach is illustrated in \autoref{fig:scalingprocedure}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics{images/LinearMotor/Feat_scaling.pdf}
+    \caption{Feature scaling procedure.}
+    \label{fig:scalingprocedure}
+\end{figure}
+
+This scaling technique is used with several configuration for both scaling the feature, and reducing the number of features, discarding the unnecessary ones. The settings of each tuned model are resumed in \autoref{tab:axis_models}. These models are describe later in this section.
+
+\begin{table}
+    \centering
+    \caption{Tuned embedded models parameters}
+    \label{tab:axis_models}
+    \resizebox{\linewidth}{!}{%
+    \begin{tabular}{ccccccccc} 
+    \toprule
+    \multirow{2}{*}{\textbf{Model}} & \multicolumn{2}{c}{\textbf{Feature Scaling}} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{Feature}\\\textbf{Subset}\end{tabular}} & \multicolumn{4}{c}{\begin{tabular}[c]{@{}c@{}}\textbf{Training Snapshots}\\(per each profile)\\\end{tabular}} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{N of}\\\textbf{clusters}\end{tabular}} \\
+     & SelectKBest & Random Forest &  & 1 & 2 & 3 & 4 &  \\ 
+    \hline
+    Model 1 &  &  &  & 100 & 100 & 100 & 100 & 5 \\
+    Model 2 &  & \checkmark &  & 100 & 100 & 100 & 100 & 3 \\
+    Model 3 & \checkmark &  &  & 100 & 100 & 100 & 100 & 3 \\
+    Model 4 &  & \checkmark &  & 100 & 200 & 100 & 100 & 5 \\
+    Model 5 &  & \checkmark & \checkmark & 100 & 200 & 100 & 100 & 6 \\
+    \bottomrule
+    \end{tabular}
+    }
+    \end{table}
+
+\subsubsection{Random Forest}
+The Random Forest classification algorithm gives a measure of the importance of each feature, and this measure can be used to scale the features. The \gls{rf} algorithm is trained on the training set, with the labels provided by the K-means model. 
+
+The feature importance is based on the idea that that the Gini impurity is reduced at a split in each decision tree of the forest. The more the impurity is reduced, the more important the feature used for that split is \cite{RF_featimportance}. This concept, averaged over all splits of all the trees, gives a measure of the importance of each feature.
+
+For our purpose, the inportance is then normalized to have a maximum value of~1, so the most important feature will remain unscaled.
+
+\subsubsection{SelectKBest}
+Another tool for analyzing the importance of features is the SelectKBest algorithm. It is available in the \texttt{scikit-learn} library and is used to select the $k$ most important features or alternatively, to output a score for each feature, based on \gls{anova} statistics.
+
+\subsubsection{Results}
+scrivere qui i barplot dei pesi \todo
