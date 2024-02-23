@@ -94,7 +94,7 @@ fig, axes = plt.subplots(nrows=2, ncols=1,)
 
 axes[1].set_yscale('log')
 axes[0].set_xlabel('Time [s]');axes[1].set_xlabel('Frequency [Hz]')
-axes[0].set_ylabel('amplitude');axes[1].set_ylabel('Magnitude')
+axes[0].set_ylabel('Amplitude');axes[1].set_ylabel('Magnitude')
 plt.tight_layout()
 
 #performing fast fourier trasfotm

@@ -114,12 +114,12 @@ for eps in eps_range:
 src.vis.set_matplotlib_params() # reset the values
 fig, ax = plt.subplots(2,1,sharex=True)
 ax[0].plot(eps_range,n_labels)
-ax[0].set_ylabel('$n$ of sclusters')
+ax[0].set_ylabel('$n$ of clusters')
 ax[1].plot(eps_range,sil_score)
 ax[1].set_ylabel('silhouette score')
 ax[1].set_xlabel(r'$\varepsilon$')
 
-ax[0].annotate(r'coresponding to $3$ clusters', xy=(0.78, 3), xytext=(0.6, 1),
+ax[0].annotate(r'corresponding to $3$ clusters', xy=(0.78, 3), xytext=(0.6, 1),
             arrowprops=dict(arrowstyle="->", connectionstyle="arc3"),
             )
 ax[1].annotate(r'max for $\varepsilon \approx 0.78$', xy=(0.78, 0.55), xytext=(0.6, 0.3),

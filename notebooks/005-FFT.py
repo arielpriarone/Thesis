@@ -61,7 +61,7 @@ print(f"periods: {periods}")
 
 # plotting the signal and the spectrum
 fig, ax = plotSpectrum(signal, samplFreq)
-ax[1].annotate('known armonics', xy=(30,0.5), xytext=(70, 1), xycoords='data',arrowprops=dict(arrowstyle='->', color='k'))
+ax[1].annotate('known harmonics', xy=(30,0.5), xytext=(70, 1), xycoords='data',arrowprops=dict(arrowstyle='->', color='k'))
 
 # injecting disturbance
 for t in time:
