@@ -164,7 +164,7 @@ for filepath in [featfilepath,faultfilepath]:
     metric['7 mask'] = [x for i,x in enumerate(metric['7 mask']) if not i in exclude]
     metric['select'] = [x for i,x in enumerate(metric['select']) if not i in exclude]
 
-    fig, ax = plt.subplots(2,1,sharex=True, figsize=(7.68,5.78))
+    fig, ax = plt.subplots(2,1,sharex=True)#, figsize=(7.68,5.78))
     fig.set_linewidth(0.5)
     ax[0].plot(metric['standard'], label='Model 1')              # label='Standard - train day 1')
     ax[0].plot(metric['scaled'], label='Model 2')    # label='Scaled Random Forest - train day 1')
@@ -178,13 +178,13 @@ for filepath in [featfilepath,faultfilepath]:
     ax[0].set_ylabel('Novelty metric')
 
     ax[0].set_title('Novelty metric comparison')
-    ax[1].plot(mobileAverage(metric['standard']))
-    ax[1].plot(mobileAverage(metric['scaled']))
-    ax[1].plot(mobileAverage(metric['select']))
+    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['standard']))
+    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['scaled']))
+    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['select']))
     # ax[1].plot(mobileAverage(metric['standard refined']))
     # ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
-    ax[1].plot(mobileAverage(metric['scaled subset']))
-    ax[1].plot(mobileAverage(metric['7 features']))
+    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['scaled subset']))
+    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['7 features']))
     #ax[1].plot(mobileAverage(metric['7 mask']), label='7 mask novelty metric')
    
     ax[1].set_xlabel('Sample')
