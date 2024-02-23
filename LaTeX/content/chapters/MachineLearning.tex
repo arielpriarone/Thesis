@@ -1,4 +1,4 @@
-\chapter{Machine Learining}
+\chapter{Machine Learning}
 \label{ch:MachineLearning}
 
 Before diving into the description of the unsupervised algorithms used for the development of this thesis work presented in \autoref{ch:Unsupervised}, this chapter aims to be an introduction of \emph{Machine Learning} (\gls{ml}) in general.
@@ -238,7 +238,7 @@ The algorithm then updates the parameters at each iteration as:
 \end{equation}
 
 
-\subsection{Sthocastic Gradient Descent}
+\subsection{Stochastic Gradient Descent}
 \label{subsec:SGD}
 The \emph{Stochastic Gradient Descent} (\gls{sgd}) is a variant of the \gls{gd} algorithm that computes the gradient only on one instance at each iteration, instead of on the whole dataset. This makes the algorithm much faster, but the cost function will be much more noisy, and theta will not reach a steady value but instead will oscillate around the minimum. This has the advantage of being more robust to local minimum entrapment, but the disadvantage of never reaching the minimum. To overcome this, the learning rate $\eta$ can be reduced at each iteration, but this will slow down the convergence.
 

@@ -53,7 +53,7 @@ Nowadays, the K-means algorithm is implemented in many libraries, such as \textt
 As an example, we can consider $F=2$ features, and generate some test points shaped like three separated clusters. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iterations of the algorithm, and the final result. The K-means algorithm had $n=200$ {\gls{glo:snap}}s, and $k=3$ clusters as input. The colors of the dots and the shaded areas represent the clusters and the decision boundaries. The {\gls{glo:cent}}s are represented as black crosses.
 The decision boundaries are a Voronoi tessellation of the space, and they are defined as the set of points that are equidistant from the {\gls{glo:cent}}s of two different clusters. The algorithm itself does not compute the boundaries, but it is useful to plot them for visualization purposes.
 
-\subsection{Variatons of the K-means algorithm}
+\subsection{Variations of the K-means algorithm}
 \label{sec:kmeans_improvements}
 \paragraph*{Kmeans}
 Finding the optimal solution of the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
@@ -229,7 +229,7 @@ After applying this scaling, the metric now follows this rule of thumb:
   \item $e_n \in (0,+\infty) \implies \gls{sym:snap}_n$ is a novelty;
 \end{itemize}
 
-\subsection{Trasformation of the metric for the fault detection}
+\subsection{Transformation of the metric for the fault detection}
 \label{sec:clust_fault}
 In the previous \autoref{sec:clust_threshold} a metric has been proposed to detect how novel a {\gls{glo:snap}} is.
 
