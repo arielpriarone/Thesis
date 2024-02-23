@@ -30,11 +30,11 @@ The test consists of defining a set of movements to be actuated by the platform,
 \end{table}
 
 \subsection{Training}
-To perform the training, a loop has been implemented on the \gls{pc} that manages the axis movements. The script cyclically actuates the axis to follow the reference profile and asks the microcontroller to start the acquisition of the accelerometer data at the beginning of movement. The received features are then stored in a file, and the process is repeated for each profile. The sampling frequency of the microcontroller is 5kHz, for a total of 6000 samples per profile. 
+To perform the training, a loop has been implemented on the \gls{pc} that manages the axis movements. The script cyclically actuates the axis to follow the reference profile and asks the microcontroller to start the acquisition of the accelerometer data at the beginning of the movement. The received features are then stored in a file, and the process is repeated for each profile. The sampling frequency of the microcontroller is 5kHz, for a total of 6000 samples per profile. 
 
 Although not useful for the training, the microcontroller has been set not only to transmit the features to the \gls{pc} but also the time-series, for visualization purposes. The time-series of the training set are shown in \autoref{fig:axis_timeseries}, and the features are shown in \autoref{fig:axis_features}.
 
-In the time-series set it is possible to see some outliers, for example, there is a record in which profile 1 started being actuated by the axis with a delay \gls{wrt} the others. Profile 4, instead, has some outliers due to the axis sometimes overshooting the reference position. These outlier are caused by the axis control, and the investigation about why does it happen is out of the scope of this work. 
+In the time-series set it is possible to see some outliers, for example, there is a record in which profile 1 started being actuated by the axis with a delay \gls{wrt} the others. Profile 4, instead, has some outliers due to the axis sometimes overshooting the reference position. These outliers are caused by the axis control, and the investigation about why it happens is out of the scope of this work. 
 
 The training set contains 100 snapshots for each profile, for a total of 400 snapshots. The K-means model is then trained for $n=5$ clusters, according to the silhouette criterion.
 
@@ -68,7 +68,7 @@ The microcontroller is then set in \emph{evaluate} mode and the \gls{nd} is perf
 
 Let's investigate why this model gives almost all false positive results. Analyzing the features of the training set (\autoref{fig:axis_features}), we can see that the first features, up to $\approx 12$, are grouped by profile, but most of the remaining features are not, this arises the suspect that these features may not be significative of the movement, but maybe just representing noise. This is likely also because the necessary standardization procedure ensures that each feature will have unitary standard deviation, regardless of the magnitude of the feature itself \gls{wrt} the others. This may cause \quoted{noise} features to be amplified in the model. Moreover, it's clear that, being most of the features not significant, the model is not able to distinguish between the profiles.
 
-In \autoref{fig:axis_scatter}, a better visualization of the problem is presented. Features 5 and 6 are significative of the specific movement as we can see in the scatter plot, because the data points are grouped by profile. The features 25 and 26, instead, are not significative, as the data points are not grouped by profile.
+In \autoref{fig:axis_scatter}, a better visualization of the problem is presented. Features 5 and 6 are significative of the specific movement as we can see in the scatter plot, because the data points are grouped by profile. Features 25 and 26, instead, are not significative, as the data points are not grouped by profile.
 
 
 
@@ -86,7 +86,7 @@ To address the problem of the non-significative features, a feature scaling meth
 
 This approach goes against the principle of the framework being fully automatic to train. To address this problem, an unsupervised and automatic method is proposed. The idea is to scale the features in such a way that the most significant features will have a higher weight in the model. To do that, it's possible to exploit the fact that, at this point, the K-means model is already trained and the training procedure provided labels for the dataset. It's now possible to apply a \emph{supervised} \gls{ml} algorithm in a way that is transparent to the user, so the whole procedure remains \emph{unsupervised}.
 
-The framework is then extended to include the possibility to apply feature scaling. The two possibilities are to use the Random Forest classifier or the SelectKBest algorithm to provide the weights. Since this scaling will affect also the future snapshots, a new train of the \gls{mla} is necessary. The new model is then trained with the same training set, but with the scaled features. This approach is illustrated in \autoref{fig:scalingprocedure}.
+The framework is then extended to include the possibility of applying feature scaling. The two possibilities are to use the Random Forest classifier or the SelectKBest algorithm to provide the weights. Since this scaling will affect also future snapshots, a new train of the \gls{mla} is necessary. The new model is then trained with the same training set but with the scaled features. This approach is illustrated in \autoref{fig:scalingprocedure}.
 
 \begin{figure}[h!]
     \centering
@@ -95,7 +95,7 @@ The framework is then extended to include the possibility to apply feature scali
     \label{fig:scalingprocedure}
 \end{figure}
 
-This scaling technique is used with several configuration for both scaling the feature, and reducing the number of features, by discarding the unnecessary ones. The settings of each tuned model are resumed in \autoref{tab:axis_models}. These models are describe later in this section.
+This scaling technique is used with several configurations for both scaling the feature and reducing the number of features, by discarding the unnecessary ones. The settings of each tuned model are resumed in \autoref{tab:axis_models}. These models are described later in this section.
 
 \begin{table}
     \centering
@@ -125,10 +125,10 @@ The feature importance is based on the idea that the Gini impurity is reduced at
 For our purpose, the importance is then normalized to have a maximum value of~1, so the most important feature will remain unscaled.
 
 \subsubsection{SelectKBest}
-Another tool for analyzing the importance of features is the SelectKBest algorithm. It is available in the \texttt{scikit-learn} library and is used to select the $k$ most important features or alternatively, to output a score for each feature, based on \gls{anova} statistics.
+Another tool for analyzing the importance of features is the SelectKBest algorithm. It is available in the \texttt{scikit-learn} library and is used to select the $k$ most important features or, alternatively, to output a score for each feature, based on \gls{anova} statistics.
 
 \subsubsection{Results}
-At this point, both the training of the \gls{rf} and SelectKBest is performed. The weigths obtained with both methods are shown in \autoref{fig:axis_weights}. The two metods gave very similar results. Now it is possible to train the \gls{mla} with the scaled features, Model 2 and Model 3 are trained with the \gls{rf} and SelectKBest weigths, respectively. Both models performs better than the original model, because they give a smaller novelty score for the testing set. However, the problem of eliminating the false positive results is not yet solved, because the novelty score is still grater than zero.
+At this point, both the training of the \gls{rf} and SelectKBest is performed. The weights obtained with both methods are shown in \autoref{fig:axis_weights}. The two methods gave very similar results. Now it is possible to train the \gls{mla} with the scaled features, Model 2 and Model 3 are trained with the \gls{rf} and SelectKBest weights, respectively. Both models perform better than the original model because they give a smaller novelty score for the testing set. However, the problem of eliminating the false positive results is not yet solved, because the novelty score is still greater than zero.
 
 \begin{figure}
     \centering
@@ -137,10 +137,12 @@ At this point, both the training of the \gls{rf} and SelectKBest is performed. T
     \label{fig:axis_weights}
 \end{figure}
 
-To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 snapshots for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. The novelty score becomes then positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the dataset without any false positive result, even without the attivation of the outlier filter.
+To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 snapshots for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. Then, the novelty score becomes positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the dataset without any false positive result, even without the activation of the outlier filter.
 
 \subsection{Testing the \gls{nd}}
-The previous experiment was done to test the capability of the framework to identify a known profile. Now the framework is tested to identify a profile that is not part of the training set, so it should trigger a \gls{nd} event. The test consist of actuating the axis alternating between unknown profiles and known profiles. For reference, also Model 1, Model 2, and Model 3 are used, even if they was discarded in the previous section. The results are shown in \autoref{fig:axis_testing2}.
+The previous experiment was done to test the capability of the framework to identify a known profile. Now the framework is tested to identify a profile that is not part of the training set, so it should trigger a \gls{nd} event. The test consists of actuating the axis alternating between unknown profiles and known profiles (10 snapshots each repetition). For reference, also Model 1, Model 2, and Model 3 are used, even if they were discarded in the previous section. 
+
+The results are shown in \autoref{fig:axis_testing2}. Model 4 performs poorly because, even if it avoids completely giving false positive results, it gives a lot of false negative results. Unknown profiles are not detected as novelties, or they are detected only in isolated cases, with a very low novelty score that is not enough to trigger the \gls{nd} event, considering the threshold discussed in the previous section.
 
 \begin{figure}
     \centering

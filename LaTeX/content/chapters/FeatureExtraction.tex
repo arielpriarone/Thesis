@@ -1,7 +1,7 @@
 \chapter{Feature Extraction}
 \label{ch:FeatureExtraction}
 
-Before diving into the novelty detection framework itself, the features to be used need to be defined and extracted from the data. Since our goal is to detect a novel behavior, we are interested in both \quoted{time-domain} and \quoted{frequency-domain} features. The former are used to capture the temporal evolution of the signal, while the latter are used to capture the spectral content of the signal. 
+Before diving into the novelty detection framework itself, the features to be used need to be defined and extracted from the data. Since our goal is to detect a novel behaviour, we are interested in both \quoted{time-domain} and \quoted{frequency-domain} features. The former are used to capture the temporal evolution of the signal, while the latter are used to capture the spectral content of the signal. 
 In this chapter, we will first introduce the reference dataset that will be used to test the framework and then we will describe the features that will be used in the framework. The \gls{nd} framework will work on the complete collection of features $\vect{F}=\{\vect{F}_t, \vect{F}_f\}$, where $\vect{F}_t$ is the collection of time-domain features and $\vect{F}_f$ is the collection of frequency-domain features. Some of the features will be extracted for all the signals available, while some others only on a subset of the signals, depending on the settings of the framework, as it will be explained in \autoref{ch:Framework}. 
 
 
@@ -128,7 +128,7 @@ To visualize the evolution of the features over time, let's consider all the sna
 
 \section{Frequency-domain features}
 
-To capture also the frequency behavior of the signal, other tools are needed. In this section, we will describe the frequency-domain features  $\vect{F}_f = \{F_{m+1}, F_{m+2}, \dots, F_l\}$ that will be used in the developed framework.
+To capture also the frequency behaviour of the signal, other tools are needed. In this section, we will describe the frequency-domain features  $\vect{F}_f = \{F_{m+1}, F_{m+2}, \dots, F_l\}$ that will be used in the developed framework.
 
 \subsection{Fourier Transform}
 \label{sec:FFT}
@@ -183,7 +183,7 @@ So, we were processing a signal that has a period of one second, sampled for exa
 \subsubsection{Preprocessing}
 Up to now, it has been shown that the \gls{dft} will translate the presence of a disturbance in the time domain into several periodic components in the frequency domain. However, it has the spectral leakage weakness if the sampling interval is not an integer multiple of the period of the signal which is the most likely scenario in a real application. To compensate for this phenomenon, it is better to use a transformation to the signal that makes it artificially start and end with the same value. This can be done with a \emph{windowing} function, or with the \emph{flip and reverse} method \cite{Preprocessing}. 
 
-The most common windowing funcitons are the \emph{Hann} and the \emph{Hamming} windows, defined as:
+The most common windowing functions are the \emph{Hann} and the \emph{Hamming} windows, defined as:
 \begin{eqnarray}
     w_{hann}(i) = 0.5\; \left[1 - \cos \left ( \frac{2 \pi i}{n} \right) \right] \\
     w_{hamming}(i) = \frac{25}{46}\; \left[1 - \cos \left ( \frac{2 \pi i}{n} \right) \right]
@@ -200,7 +200,7 @@ The \quoted{flip and reverse} method is simply to concatenate a flipped copy of 
 \end{equation}
 
 A comparison of those preprocessing techniques is shown in \autoref{fig:FD_preprocessing} and \autoref{fig:FD_preprocessing_dist}. In both figures, it is evident that the \quoted{flip and reverse} method generates a fake peak at half the sampling frequency, while the windowing function doesn't. Moreover, looking at \autoref{fig:FD_preprocessing_dist}, it is possible to see that the Hann window better suppresses the spectral leakage.
-In figure \autoref{fig:IMS}, it is shown the effect of different preprocessing techniques on a real-world signal from the \gls{ims} dataset. The Hann window will be implicitly used in the rest of this section.
+In figure \autoref{fig:IMS} it is shown the effect of different preprocessing techniques on a real-world signal from the \gls{ims} dataset. The Hann window will be implicitly used in the rest of this section.
 
 
 
@@ -233,7 +233,7 @@ At this point, to see if the spectrum is representative of a fault, as it has be
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/FeatureExtraction/FD_IMS.png}
-    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions with hann window preprocessing
+    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions with Hann window preprocessing
     applied}
     \label{fig:IMS_FD}
 \end{figure}
@@ -277,5 +277,5 @@ Despite this huge memory saving, it is possible to see that the \gls{wpd} is abl
 \end{figure}
 
 \section{Conclusions}
-Even just considering very simple time-domain features, we can already detect the degradation of the bearing by comparing these feature values to a threshold. On the other hand, also the frequency-domain features could be just compared with a threshold to detect novel behaviors. But, as we will see in \autoref{ch:Framework}, a general purpose framework based upon a more sophisticated approach based on the clustering of the data, it will be possible to condense all the features from all the signals into a single metric that will be used to detect the novel behavior. This will have several advantages. Some of them are being able to detect a novel behavior even if it is not possible to define a threshold for each feature, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the framework will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain features, but only by the frequency-domain features.
+Even just considering very simple time-domain features, we can already detect the degradation of the bearing by comparing these feature values to a threshold. On the other hand, also the frequency-domain features could be just compared with a threshold to detect novel behaviours. But, as we will see in \autoref{ch:Framework}, a general purpose framework based upon a more sophisticated approach based on the clustering of the data, it will be possible to condense all the features from all the signals into a single metric that will be used to detect the novel behaviour. This will have several advantages. Some of them are being able to detect a novel behaviour even if it is not possible to define a threshold for each feature, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the framework will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain features, but only by the frequency-domain features.
 

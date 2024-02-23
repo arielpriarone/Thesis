@@ -15,7 +15,7 @@ f(x) = \frac{1}{\sigma \sqrt{2\pi} } e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\r
 $$
 
 \paragraph*{}
-A Gaussian Mixture Model is a probabilistic model that assumes that the data are generated from a mixture of several Gaussian distributions. Depending on the parameters of a Gaussian distribution (mean and variance) on each axis (Features), the data generated from it in the $\gls{sym:feats}$-dimensional space will have a shape that resembles an ellipsoid with a center and an orientation.
+A Gaussian Mixture Model is a probabilistic model that assumes that the data are generated from a mixture of several Gaussian distributions. Depending on the parameters of a Gaussian distribution (mean and variance) on each axis (Features), the data generated from it in the $\gls{sym:feats}$-dimensional space will have a shape that resembles an ellipsoid with a centre and an orientation.
 
 
 \subsection{Training}
@@ -53,14 +53,14 @@ Considering, as an example, the same dataset used in \autoref{fig:dbscandata}, a
     \caption{Trained Gaussian Mixture Model}
     \label{fig:gauss_example}
 \end{figure}
-Once the model is well trained, we can use it to evaluate a new instance. The \autoref{fig:gauss_example} shows the result of the training of the \gls{gmm} on the example dataset. The ellipsoids represent the clusters, the size of the ellipsoids is proportional to the weight of the cluster, while the orientation and the size of the ellipsoids are determined by the covariance matrix of the cluster. 
+Once the model is well-trained, we can use it to evaluate a new instance. The \autoref{fig:gauss_example} shows the result of the training of the \gls{gmm} on the example dataset. The ellipsoids represent the clusters, the size of the ellipsoids is proportional to the weight of the cluster, while the orientation and the size of the ellipsoids are determined by the covariance matrix of the cluster. 
 
 The \texttt{pyhton} implementation of the \gls{gmm} used in this project is the one provided by the \texttt{sklearn} library. It has an attribute called \texttt{score\_samples} that returns the log value of the \gls{pdf} of the samples.
 The bigger the value, the more likely it is to be inside a cluster. 
 To maintain the same philosophy of the other algorithms, we can take the negative value of \texttt{score\_samples} as a metric to evaluate the novelty of a new instance. 
 
 \subsection{Selecting the threshold}
-As said for K-means, and \gls{dbscan}, a threshold will be needed to decide if the new instance is novel or not. If, as supposed for now, the scenario is that the training dataset is composed only of normal instances, then the threshold can be selected by looking at the distribution of the novelty metric on the training dataset, and selecting a value slightly higher than the maximum value for the training dataset.
+As said for K-means, and \gls{dbscan}, a threshold will be needed to decide if the new instance is novel or not. If, as supposed for now, the scenario is that the training dataset is composed only of normal instances, then the threshold can be selected by looking at the distribution of the novelty metric on the training dataset and selecting a value slightly higher than the maximum value for the training dataset.
 
 If the scenario is that the training dataset is composed of both normal and anomalous instances sampled at constant intervals, and the ratio between normal and anomalous instances is Known, then \gls{gmm} enables us to select the threshold in a more sophisticated way.
 
@@ -68,7 +68,7 @@ Suppose for example that $1\%$ of the training dataset is anomalous, since the m
 
 \subsection{Totally unsupervised approach}
 \label{sec:gauss_unsupervised}
-Another advantage of the \gls{gmm} is that it can be used in a totally unsupervised way. This can be done using the variation called Bayesian Gaussian Mixture Model \gls{bgmm}. This variation is able to assign $0$ as 
+Another advantage of the \gls{gmm} is that it can be used in a totally automated way. This can be done using the variation called Bayesian Gaussian Mixture Model \gls{bgmm}. This variation is able to assign $0$ as 
 weight to some clusters, meaning that those clusters are not used to generate the \gls{pdf} of the samples. In this case, we can set the number of clusters as high as the size of the training dataset, and the \gls{bgmm} will select the best number of clusters to use to generate the \gls{pdf} of the samples. 
 
 \subsection{Limitations of \gls{gmm}}

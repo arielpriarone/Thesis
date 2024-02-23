@@ -1,7 +1,7 @@
 
 \section{Database}
 \label{sec:Database}
-In the previous \autoref{sec:commissioning}, the setup behavior phases of the framework have been described, referring to a generic \quoted{database}, without specifying the structure of the database. Let's now address the problem of storing the data efficiently and effectively. Instead of relying on \texttt{python} data structures, it is better to use a dedicated database manager.
+In the previous \autoref{sec:commissioning}, the setup behaviour phases of the framework have been described, referring to a generic \quoted{database}, without specifying the structure of the database. Let's now address the problem of storing the data efficiently and effectively. Instead of relying on \texttt{python} data structures, it is better to use a dedicated database manager.
 
 The proposed framework uses \gls{glo:mongodb} for the following reasons. It is a widely-used, open-source \gls{glo:nosql} database that is designed to handle unstructured or semi-structured data. It utilizes a document-oriented data model, storing data in flexible, \gls{json}-like \gls{bson} format. MongoDB is suitable for implementation in a \gls{nd} framework due to its scalability, flexibility, and real-time data processing capabilities. In novelty detection, the system often deals with diverse and dynamic data sources, making MongoDB's \quoted{unstructureness} advantageous for handling varying data formats and evolving data requirements. It has the ability to handle large volumes of data and support scaling allowing for efficient storage and retrieval of information in real-time, crucial for real-time applications. Moreover, MongoDB has a rich query language and secondary indexes that allow for fast and efficient querying of data and a library for \texttt{python} that makes it easy to use.
 The \gls{json} format is also human-readable, which makes it easy to understand the data stored in the database, and \quoted{mongoDB Compass} is a graphical user interface that allows one to easily explore the database.
@@ -43,7 +43,7 @@ Thinking about the data flow, the first interface between the hardware and the s
   \multirow{2}{*}{sensor 2} & sampling frequency & float \\*
    & time-serie & list[float] \\
   $\dots$ & $\dots$ & $\dots$ \\*
-  \multirow{2}{*}{sensor~$n$} & sampling fequency & float \\*
+  \multirow{2}{*}{sensor~$n$} & sampling frequency & float \\*
    & time-serie & list[float] \\
   \bottomrule
   \end{longtable}

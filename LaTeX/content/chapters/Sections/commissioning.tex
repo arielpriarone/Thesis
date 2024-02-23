@@ -33,9 +33,9 @@ Note that in a classic \gls{ml} approach, the dataset is split into a training s
 Once the metric overshoots the threshold, the \gls{mla} warns the user about the novelty detected, and starts to perform \gls{pdm} predicting the future evolution of the metric and the \gls{rul} of the system. 
 Again, this condition can last indefinitely, once new data are sampled, the \gls{mla} evaluates the health of the system and updates the predictions.
 
-It's up to the user to determine if the warning is a false positive, a novel but healthy behavior, or a real fault. In the first two cases, the user can decide to command the \gls{mla} to update the models. The snapshots that generated the warning are incorporated into the training set, and the models are retrained, returning to the evaluation phase. In the latter case, the user can simply perform the repairs/maintenance needed and restore the system to a healthy condition or can use the snapshots that generated the warning to train a new model that represents the fault condition.
+It's up to the user to determine if the warning is a false positive, a novel but healthy behaviour, or a real fault. In the first two cases, the user can decide to command the \gls{mla} to update the models. The snapshots that generated the warning are incorporated into the training set, and the models are retrained, returning to the evaluation phase. In the latter case, the user can simply perform the repairs/maintenance needed and restore the system to a healthy condition or can use the snapshots that generated the warning to train a new model that represents the fault condition.
 
-If the user decides to train also the second model with the snapshot declared faulty, the system returns into the evaluation phase, but now the \gls{mla} outputs two metrics: one estimates the health of the system and the other how similar the behavior of the system is compared to any known fault condition.
+If the user decides to train also the second model with the snapshot declared faulty, the system returns into the evaluation phase, but now the \gls{mla} outputs two metrics: one estimates the health of the system and the other how similar the behaviour of the system is compared to any known fault condition.
 
 \subsection{Predictions}
 \label{sec:predictions}
@@ -65,7 +65,7 @@ The candidate function to fit would then be:
     f(t) = a \cdot e^{b \cdot t}
 \end{equation}
 
-where $a$ and $b$ are the parameters to be estimated. This may work in the case depicted in \autoref{fig:exp_degradation_1}, in which the novelty metric starts from zero and then increases exponentially. This is a problem for a general case in which the metric can have a plateau, or start as a step that signals the early defect, and then start an exponentially decay, as the example in \autoref{fig:exp_degradation_2}. In our case, in \autoref{ch:Unsupervised}, the set of defined metrics to be used are usually negative, to depict a normal behavior, and not zero. 
+where $a$ and $b$ are the parameters to be estimated. This may work in the case depicted in \autoref{fig:exp_degradation_1}, in which the novelty metric starts from zero and then increases exponentially. This is a problem for a general case in which the metric can have a plateau, or start as a step that signals the early defect, and then start an exponentially decay, as the example in \autoref{fig:exp_degradation_2}. In our case, it \autoref{ch:Unsupervised}, the set of defined metrics to be used are usually negative, to depict a normal behaviour, and not zero. 
 
 The \autoref{eq:exp_degradation} is nice, because by extracting the logarithm from both sides (and calling $y = \log(f(t))$) we obtain a linear equation that can be fitted easily with the least squares method described in \autoref{subsec:LS}, but for the reasons explained above, it's not suitable for our case. A better candidate is:
 
@@ -77,7 +77,7 @@ The \autoref{eq:exp_degradation} is nice, because by extracting the logarithm fr
 This is a better candidate because it can depict the case in which the metric starts from a value different from zero, and then increases exponentially.
 
 \subsubsection{\texttt{Scipy} fit}
-Unfortunately, \autoref{eq:exp_degradation_2} cannot be aranged in linear form, so the least squares solution has to be found with some other procedure. The \texttt{python} library \texttt{scipy.optimize} has a function called \texttt{curve\_fit} that can be used to fit a generic function to a dataset. The problem with this recursive solution is that is very sensitive to outliers and can't really estimate the parameter $c$ correctly, as is shown in \autoref{fig:exp_degradation_3}.
+Unfortunately, \autoref{eq:exp_degradation_2} cannot be arranged in linear form, so the least squares solution has to be found with some other procedure. The \texttt{python} library \texttt{scipy.optimize} has a function called \texttt{curve\_fit} that can be used to fit a generic function to a dataset. The problem with this recursive solution is that is very sensitive to outliers and can't really estimate the parameter $c$ correctly, as is shown in \autoref{fig:exp_degradation_3}.
 
 \subsubsection{Closed form fit with least squares}
 Fortunately, in \cite{Exp_fit}, the author provides a \emph{nonrecursive} solution to the problem that minimizes the \gls{ls} error \gls{wrt} the parameters $a$, $b$ and $c$. The solution has been converted into the following \autoref{alg:expfit} and implemented in the framework. The fitting with this closed-form solution is shown in \autoref{fig:exp_degradation_3}. This optimal solution is used as default in the framework to predict the future evolution of the metric, the \texttt{scipy} implementation can still be used by changing a parameter in the configuration file because it has the advantage of fitting any function, so it may be useful in particular cases.

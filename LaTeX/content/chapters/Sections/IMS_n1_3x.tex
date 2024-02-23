@@ -12,7 +12,7 @@ To start the validation, let's subdivide the test No.1 of the \gls{ims} dataset 
 
 For all the algorithms, the assumption about the system is that, even if the degradation is continuous, the system is surely healthy until 2003-11-07. The threshold for performing the \gls{nd} is set conformingly to this assumption, for every model considered. Otherwise, the performance of any model could be artificially made as good as desired, by simply setting the threshold to a lower value.
 
-The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain features described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behavior of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of test No.1 of the \gls{ims} dataset. For display purposes, the features are standardized, and the heatmap of the standardized features is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
+The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain features described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behaviour of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of test No.1 of the \gls{ims} dataset. For display purposes, the features are standardized, and the heatmap of the standardized features is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
 
 The abstract version of the \gls{fieldAg} has been used to extract the features from the dataset, creating all the snapshots in the set $\gls{sym:snapset}=\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. These snapshots are stored in the \emph{unconsumed} collection of the database.
 
@@ -25,9 +25,9 @@ Using the commands of the \gls{cli}, the training procedure has been launched:
 \end{minted}
 
 where the first command runs the \gls{fieldAg} and the second one runs an \quoted{healthy} instance of the \gls{mla} in training mode.
-At this point, the \gls{mla} asks the user to move the snapshots from the \emph{unconsumed} to the \emph{healthy} collection, since the \emph{healthy} collection is empty. After the confirmation, the \gls{mla} starts the training with a different number of clusters, and outputs the scoring in the form of silhouette and inertia scores. The results are shown in \autoref{fig:SilScore_01} and \autoref{fig:InertiaScore_01}. The user can confirm that the best number of clusters is 2, as the silhouette score is the highest and the inertia score is at the \gls{pof} point, or insert another number of clusters, remembering that it is best to overestimate the number of clusters to increase the system sensitivity, as discussed in \autoref{sec:wrong_k}. 
+At this point, the \gls{mla} asks the user to move the snapshots from the \emph{unconsumed} to the \emph{healthy} collection, since the \emph{healthy} collection is empty. After the confirmation, the \gls{mla} starts the training with a different number of clusters and outputs the scoring in the form of silhouette and inertia scores. The results are shown in \autoref{fig:SilScore_01} and \autoref{fig:InertiaScore_01}. The user can confirm that the best number of clusters is 2, as the silhouette score is the highest and the inertia score is at the \gls{pof} point, or insert another number of clusters, remembering that it is best to overestimate the number of clusters to increase the system sensitivity, as discussed in \autoref{sec:wrong_k}. 
 
-In this case, the number of clusters has been set to 2, so that the \gls{mla} saves the model trained with $n=2$ into the database. Even if the feature space has high dimensionality, the agent plot to the user also a scatter plot of a subset of features of the training dataset, to have a visual feedback of the clustering, as shown in \autoref{fig:Clusters}, where the points are the snapshots, the crosses are the centroids and the colors represent the assigned cluster. We can observe that selecting 2 as the number of clusters is adequate and that the projections of the clusters' shapes on some planes are not perfectly spherical but, at least, they are not too elongated. This is a good sign for the K-means algorithm, as discussed in \autoref{sec:kmeans_limits}.
+In this case, the number of clusters has been set to 2, so that the \gls{mla} saves the model trained with $n=2$ into the database. Even if the feature space has high dimensionality, the agent plot to the user also a scatter plot of a subset of features of the training dataset, to have a visual feedback of the clustering, as shown in \autoref{fig:Clusters}, where the points are the snapshots, the crosses are the centroids and the colours represent the assigned cluster. We can observe that selecting 2 as the number of clusters is adequate and that the projections of the clusters' shapes on some planes are not perfectly spherical but, at least, they are not too elongated. This is a good sign for the K-means algorithm, as discussed in \autoref{sec:kmeans_limits}.
 
 \begin{figure}
     \centering
@@ -100,7 +100,7 @@ Let's now try with the \gls{gmm} model. The metric for selecting the number of c
 \end{figure}
 
 \subsection{\gls{nd} Validation - \gls{gmm}}
-The validation partition of the dataset is now used for performing \gls{nd} with the \gls{gmm} model. The result is shown in \autoref{fig:NoveltyScore_01_gmm}, where we can see that the \gls{gmm} model detects the novelty at 2003-11-22 03:47. The considerations about this result are the same as for the \gls{dbscan} model, and in fact, the timestamp of the detection event is really close to the one obtained with \gls{dbscan}. In \autoref{fig:NoveltyScore_01_gmm}, the metric (density value) appears in colored dots, as each color represents the cluster to which the snapshot has been assigned.
+The validation partition of the dataset is now used for performing \gls{nd} with the \gls{gmm} model. The result is shown in \autoref{fig:NoveltyScore_01_gmm}, where we can see that the \gls{gmm} model detects the novelty at 2003-11-22 03:47. The considerations about this result are the same as for the \gls{dbscan} model, and in fact, the timestamp of the detection event is really close to the one obtained with \gls{dbscan}. In \autoref{fig:NoveltyScore_01_gmm}, the metric (density value) appears in coloured dots, as each colour represents the cluster to which the snapshot has been assigned.
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_gmm.pdf}
@@ -131,7 +131,7 @@ The next algorithm to test is the \gls{nu_svm}. Again, this is totally unsupervi
 \end{figure}
 
 \subsection{\gls{nd} Validation - \gls{iforest}}
-The second last technique to test is the one based on the \gls{iforest} model. The result is shown in \autoref{fig:NoveltyScore_01_iforest}, where we can see that the \gls{iforest} model detects the novelty at 2003-11-16 10:08:46, that is a good result comparable with the K-means model. The problem with the metric of the \gls{iforest} is that it increases a lot the variance around the \gls{nd} event, but the mean does not increase consistently, so a lot of snapshots are discarded as outliers, before the \gls{nd} event. 
+The second last technique to test is the one based on the \gls{iforest} model. The result is shown in \autoref{fig:NoveltyScore_01_iforest}, where we can see that the \gls{iforest} model detects the novelty at 2003-11-16 10:08:46, which is a good result comparable with the K-means model. The problem with the metric of the \gls{iforest} is that it increases a lot the variance around the \gls{nd} event, but the mean does not increase consistently, so a lot of snapshots are discarded as outliers, before the \gls{nd} event. 
 
 This is, in my opinion, a promising approach. With these settings a lot of snapshots are discarded as outliers, but with a different outlier filter, based on the percentage of novelty samples in a window, the \gls{iforest} model could perform even better.
 \begin{figure}
@@ -157,7 +157,7 @@ The last algorithm to test is the \gls{lof}. The result is shown in \autoref{fig
 
 \begin{table}
     \centering
-    \caption{Comparision of the results for the test $\text{n}^\circ$1 of \gls{ims} dataset.}
+    \caption{Comparison of the results for the test $\text{n}^\circ$1 of \gls{ims} dataset.}
     \label{tab:ims01_comparision}
     \begin{tabular}{lrr} 
     \toprule
@@ -185,20 +185,20 @@ As anticipated in the \autoref{ch:state_of_the_art}, about the State of the Art,
 
 
 \subsubsection{Comment about the comparison}
-Every system that outputs a warning based on a trigger on a threshold is highly sensitive to the value of the threshold itself. This means that the comparison of the results is not straightforward, and quite opinable, because selecting a low threshold will make almost every system trigger earlier. The measure to take into consideration, in my opinion, is how many false positives are generated if the threshold is lowered, and how small the variance of the metric is. An high variance, on this dataset, means that the system is very sensitive while evaluating quite similar signals.
+Every system that outputs a warning based on a trigger on a threshold is highly sensitive to the value of the threshold itself. This means that the comparison of the results is not straightforward, and quite opinable, because selecting a low threshold will make almost every system trigger earlier. The measure to take into consideration, in my opinion, is how many false positives are generated if the threshold is lowered, and how small the variance of the metric is. A high variance, on this dataset, means that the system is very sensitive while evaluating quite similar signals.
 
 \subsection{\gls{rul} Predictions validation - K-means}
-After the \gls{nd} event, the \gls{mla} start predicting the future evolution of the novelty metric, and it superimpose the prediction curve to the same plot displayed to the user. The fitting procedure is the closed form solution of the \gls{ls} problem applied to an exponential curve of \autoref{eq:exp_degradation_2}, as described in \autoref{sec:predictions}. The samples used for the regression of the curve are the last 230 before the current one. This parameter of the framework is configurable in the \texttt{.yaml} file. 
+After the \gls{nd} event, the \gls{mla} starts predicting the future evolution of the novelty metric, and it superimposes the prediction curve to the same plot displayed to the user. The fitting procedure is the closed form solution of the \gls{ls} problem applied to an exponential curve of \autoref{eq:exp_degradation_2}, as described in \autoref{sec:predictions}. The samples used for the regression of the curve are the last 230 before the current one. This parameter of the framework is configurable in the \texttt{.yaml} file. 
 
 Some good predictions are shown in \autoref{fig:RULPredictions01}. The \gls{rul} is the difference between the intercept of the prediction curve and another threshold, higher than the one used for \gls{nd}, and the current time. In the figure, the blue line is a prediction made just a few hours after the \gls{nd} event (the vertical dashed line marks the time of the prediction). The same concept applies to the other predictions performed in later times.
 
 In some circumstances, the novelty metric starts decreasing slightly, on average, as can be seen around 2003-11-21. In this case, if the novelty metric has this behavior for several snapshots ($\approx 230$), the fitted curve will be a decreasing exponential, as shown in \autoref{fig:RULPredictions01_fail}. 
 
-If this situation occurs, the intercept with the threshold does not exist, and the \gls{rul} prediction fails, so the interpretation of the \gls{rul} is left to the user. In some cases, the defect in a system can \quoted{self-heal} (for example a crack in a bearing can be polished with the use \cite{IMSpaper}). If this behavior is possible for the system, this situation can be interpreted as a sign that the system is going to return to normality. Otherwise, the user can retain the previous \gls{rul} prediction as the \gls{rul} of the system.
+If this situation occurs, the intercept with the threshold does not exist, and the \gls{rul} prediction fails, so the interpretation of the \gls{rul} is left to the user. In some cases, the defect in a system can \quoted{self-heal} (for example a crack in a bearing can be polished with the use \cite{IMSpaper}). If this behaviour is possible for the system, this situation can be interpreted as a sign that the system is going to return to normality. Otherwise, the user can retain the previous \gls{rul} prediction as the \gls{rul} of the system.
 
 \begin{figure}
     \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_predictions.pdf}
-    \caption{\gls{rul} prediction at different instants after the \gls{nd} event. The dashed lines are the instants of the predictions corresponding to the same color solid line prediction.}
+    \caption{\gls{rul} prediction at different instants after the \gls{nd} event. The dashed lines are the instants of the predictions corresponding to the same colour solid line prediction.}
     \label{fig:RULPredictions01}
 \end{figure}
 
@@ -230,7 +230,7 @@ An intuition about why the sensitivity of the system is reduced after the retrai
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Novelty_01_500samples_bearing3x_predictions_retrained.pdf}
-    \caption{\gls{rul} prediction at different instants after the \gls{nd} event. The dashed lines are the instants of the predictions corresponding to the same color solid line prediction.}
+    \caption{\gls{rul} prediction at different instants after the \gls{nd} event. The dashed lines are the instants of the predictions corresponding to the same colour solid line prediction.}
     \label{fig:RULPredictions01_retrained}
 \end{figure}
 
