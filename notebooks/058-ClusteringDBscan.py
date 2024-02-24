@@ -100,7 +100,7 @@ for eps in eps_range:
 
 fig, ax = plt.subplots(2,1,sharex=True)
 ax[0].plot(eps_range,n_labels, 'k')
-ax[0].set_ylabel('$n$ of sclusters')
+ax[0].set_ylabel('$n$ of clusters')
 ax[1].plot(eps_range,sil_score, 'k')
 ax[1].set_ylabel('silhouette score')
 ax[1].set_xlabel('$\epsilon$')

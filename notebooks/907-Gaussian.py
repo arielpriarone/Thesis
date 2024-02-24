@@ -46,7 +46,7 @@ ax.plot(range(1,max_clusters+1),AIC,label='AIC', color='k', linestyle='dashdot')
 ax.set_xlabel('Number of clusters')
 ax.set_ylabel('Information Criterion')
 ax.legend()
-ax.annotate(r'Both criterion minimized for $k=3$ clusters', xy=(3, 900), xytext=(3,1200),
+ax.annotate(r'Both criteria minimized for $k=3$ clusters', xy=(3, 900), xytext=(3,1200),
             arrowprops=dict(arrowstyle="->", connectionstyle="arc3"),
             )
 fig.set_size_inches(np.multiply(fig.get_size_inches(),[1,0.7]))
