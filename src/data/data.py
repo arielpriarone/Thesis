@@ -204,7 +204,7 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: int,sens
         raise Exception("'filePath', 'URI', 'database', 'collection', must all be a string")
     if n_of_test not in [1,2,3]:
         raise Exception("'n_of_test' must be 1,2 or 3")
-    if not all(x in ["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y","Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"] for x in sensors):
+    if not all(x in ["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y","Bearing 1", "Bearing 2", "Bearing 3", "Bearing 4"] for x in sensors):
         raise Exception("'sensors' must be a list subset of: \n 'Bearing 1 x'\n 'Bearing 1 y'\n 'Bearing 2 x'\n 'Bearing 2 y'\n'Bearing 3 x'\n 'Bearing 3 y'\n 'Bearing 4 x'\n 'Bearing 4 y'\n'Bearing 1' \n 'Bearing 2'\n 'Bearing 3'\n 'Bearing 4' ")
     
     match n_of_test:  # names formatting for IMS files
