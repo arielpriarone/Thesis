@@ -1,12 +1,14 @@
 % !TEX encoding = UTF-8 Unicode
 % !TEX TS-program = pdflatex
-
+\newif\ifprint % to compile the print version or the digital one
+\printtrue     % to compile the print version
+\printfalse    % to compile the digital version  (default) - comment this line to compile the print version
 % toptesti document class
 \documentclass[%
     a4paper, % not needed, by default it is a4paper, or also b5paper can be used
     corpo=12pt, % dimension of basic font
     % oneside is generally the way to go
-    twoside, % two side optimizes for two-face printing, having chapters open on the right (aka odd numbers), if you don't want blank pages put oneside here
+    oneside, % two side optimizes for two-face printing, having chapters open on the right (aka odd numbers), if you don't want blank pages put oneside here
     stile=standard,
     %evenboxes, % not needed, to put supervisors and candidate at the same level
     tipotesi=magistrale,
@@ -65,17 +67,17 @@
 %\thispagestyle{empty} % to have empty page, without numbers
 % 2) or
 
-\customClearDoublePage % to have a blank page and start on a fresh right page
+\ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
 \ringraziamenti % acknowledgements
 \input{content/acknowledgements}
 
-\customClearDoublePage % to have a blank page and start on a fresh right page
+\ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
 
-\sommario
-\input{content/summary}
+\maskongoig{\sommario
+\input{content/summary}}
 
 {
-\customClearDoublePage
+\ifprint \customClearDoublePage \fi
 \pdfbookmark[0]{\contentsname}{toc}%
 \tableofcontents}
 
