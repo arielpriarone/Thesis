@@ -211,9 +211,9 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: int,sens
         case 1:
             __names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
         case 2:
-            __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+            __names=["Bearing 1", "Bearing 2", "Bearing 3", "Bearing 4"]
         case 3:
-            __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+            __names=["Bearing 1", "Bearing 2", "Bearing 3", "Bearing 4"]
         case _:
             raise Exception("n_of_test must be 1, 2 or 3")
             
