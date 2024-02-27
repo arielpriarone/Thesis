@@ -12,7 +12,7 @@ Database:           # Database configuration
     faulty_train:     FAULTY_TRAIN                # Faulty data collection name for training (some faulty data are not used if not fault novelty)
     models:           MODELS                      # Models collection name
   sensors:          # Expected sensors in the database
-    Bearing 1 x:    # Sensor 1 name
+    Bearing 1:    # Sensor 1 name
       features:     # Features configuration
         wavPowers:    on                          # Wavelet powers
         mean:         on                          # Mean value
@@ -21,15 +21,15 @@ Database:           # Database configuration
         std:          on                          # Standard deviation
         skew:         on                          # Skewness
         kurt:         on                          # Kurtosis
-    Bearing 1 y:    # Sensor 2 name
-      features:     # Features configuration
-        wavPowers:    on                          # Wavelet powers
-        mean:         on                          # Mean value
-        rms:          on                          # Root mean square
-        peak:         on                          # Peak to peak value
-        std:          on                          # Standard deviation
-        skew:         on                          # Skewness
-        kurt:         on                          # Kurtosis
+    # Bearing 1 y:    # Sensor 2 name
+    #   features:     # Features configuration
+    #     wavPowers:    on                          # Wavelet powers
+    #     mean:         on                          # Mean value
+    #     rms:          on                          # Root mean square
+    #     peak:         on                          # Peak to peak value
+    #     std:          on                          # Standard deviation
+    #     skew:         on                          # Skewness
+    #     kurt:         on                          # Kurtosis
     # Bearing 2 x:    # Sensor 3 name
     #   features:     # Features configuration
     #     wavPowers:    on                          # Wavelet powers

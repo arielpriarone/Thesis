@@ -195,6 +195,7 @@ class MLA(src.data.DB_Manager):
         if self.type == 'fault':
             try:
                 current_error = float(-np.log(current_error+0.999)) # if the type is fault, the error is negative
+                print("Error transformed with log function")
             except ZeroDivisionError:
                 float('inf')
 
