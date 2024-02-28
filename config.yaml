@@ -92,7 +92,7 @@ kmeans:            # kmean configuration
   max_clusters:       100                         # Max number of clusters
   max_iterations:     1000                        # Max number of iterations
   error_queue_size:   1                           # number of predictions parameters to keep in quewe for plotting/predicting
-  error_plot_size:    2000                        # Size of the plotting queue
+  error_plot_size:    4500                        # Size of the plotting queue
 
 novelty:           # Novelty/fault configuration
   threshold:          0.10                        # Threshold for novelty / fault detection:

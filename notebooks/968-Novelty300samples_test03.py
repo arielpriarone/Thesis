@@ -18,15 +18,14 @@ src.visualization.set_matplotlib_params() # set matplotlib parameters to generat
 # script settings
 URI = "mongodb://localhost:27017/"
 db = "BACKUP"   
-collection = "Train_300samples_test2"
+collection = "Train_300samples_test3"
 threshold = 10 # threshold for novelty detection [%]
 
 data = MongoClient(URI)[db][collection]
 document = data.find_one({"_id": "Kmeans cluster novelty indicator"})
 timestamps = document["timestamp"]
-if not all(timestamps[i] < timestamps[i+1] for i in range(len(timestamps)-1)): raise ValueError("Timestamps are not in order")
+if not all(timestamps[i] <= timestamps[i+1] for i in range(len(timestamps)-1)): raise ValueError("Timestamps are not in order")
 novelty_metric = np.multiply(document["values"],100)
-
 
 # fig 1 - novelty detection
 from bisect import bisect_right
@@ -54,21 +53,21 @@ ax.set_ylim(-300,7500)
 ax.set_xlabel("Timestamp")
 ax.set_ylabel("Novelty metric [%]")
 ax.set_yscale('symlog')
-ax.annotate('Novel behaviour\n2004-02-16 03:32', xy=(dt.datetime(2004,2,16,3,32),10), xytext=(dt.datetime(2004,2,16,12,0),-10), arrowprops=dict(facecolor='black', arrowstyle='->'))
+ax.annotate('Novel behaviour\n2004-04-12 19:21', xy=(dt.datetime(2004,4,12,19,21),10), xytext=(dt.datetime(2004,4,4,12,0),200), arrowprops=dict(facecolor='black', arrowstyle='->'))
 ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
 ax.legend()
 
 
 # figure 2 - RUL prediction
 
-PRED_INSTANTS = ["2004-02-16 03:32","2004-02-17 03:32","2004-02-18 03:32","2004-02-19 03:32"]
+PRED_INSTANTS = ["2004-04-12 19:21", "2004-04-17 00:13"]
 colormap = [mpl.colors.to_hex(plt.cm.tab10(i)) for i in range(len(PRED_INSTANTS))]
 fig, ax = plt.subplots()
 ax.scatter(timestamps,novelty_metric,c='k',marker='.', s=2, label='Novelty metric')
 for ind, instant in enumerate([dt.datetime.fromisoformat(aux).timestamp()-offset for aux in PRED_INSTANTS]):
     #time_of_prediction = dt.datetime.fromisoformat("2003-11-21T00:00").timestamp() - offset  # time of prediction "2003-11-16T07:46"
     time_of_prediction = instant
-    windowing = 230 # windowing for the prediction
+    windowing = 150 # windowing for the prediction
 
     print(f"type(time_of_prediction): {type(time_of_prediction)}")
     print(f"time_of_prediction: {time_of_prediction}")
@@ -98,7 +97,7 @@ ax.legend()
 threshold = -25 # threshold for fault detection [%]
 document = data.find_one({"_id": "Kmeans cluster fault indicator"})
 timestamps = document["timestamp"]
-if not all(timestamps[i] < timestamps[i+1] for i in range(len(timestamps)-1)): raise ValueError("Timestamps are not in order")
+if not all(timestamps[i] <= timestamps[i+1] for i in range(len(timestamps)-1)): raise ValueError("Timestamps are not in order")
 fault_metric = np.multiply(document["values"],100)
 timestamps_float = [ts.timestamp() for ts in timestamps]
 offset = timestamps_float[0]  # offset to set the first timestamp to 0
@@ -123,7 +122,7 @@ ax.axhline(threshold, color='k', linestyle='dotted',label= 'Threshold',linewidth
 #ax.set_xlabel("Timestamp")
 #ax.set_ylabel("Fault metric [%]")
 # ax.set_yscale('symlog')
-ax.annotate('Faulty behaviour\n2004-02-17 07:44', xy=(dt.datetime(2004,2,17,7,44),threshold), xytext=(dt.datetime(2004,2,15,12,0),25), arrowprops=dict(facecolor='black', arrowstyle='->'))
+ax.annotate('Faulty behaviour\n2004-04-17 17:33', xy=(dt.datetime(2004,4,17,17,33),threshold), xytext=(dt.datetime(2004,4,5,12,0),25), arrowprops=dict(facecolor='black', arrowstyle='->'))
 #ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
 #ax.legend()
 
@@ -136,7 +135,7 @@ offset = timestamps_float[0]  # offset to set the first timestamp to 0
 timestamps_float = [ts - offset for ts in timestamps_float]  # set the first timestamp to 0
 print(f"type(timestamps_float): {type(timestamps_float)}")
 print(f"type(timestamps_float[0]): {type(timestamps_float[0])}")
-PRED_INSTANTS = ["2004-02-17 07:44","2004-02-18 10:30"]#, "2004-02-18 18:13"]
+PRED_INSTANTS = ["2004-04-17 17:33"]#, "2004-02-18 18:13
 #fig, ax = plt.subplots()
 #ax.scatter(timestamps,fault_metric,c='k',marker='.', s=2, label='Fault metric')
 colormap = [mpl.colors.to_hex(plt.cm.tab10(i)) for i in range(len(PRED_INSTANTS))]
@@ -144,7 +143,7 @@ timestamp_plot = [timestamp_float for timestamp_float in np.linspace(timestamps_
 for ind, instant in enumerate([dt.datetime.fromisoformat(aux).timestamp()-offset for aux in PRED_INSTANTS]):
     #time_of_prediction = dt.datetime.fromisoformat("2003-11-21T00:00").timestamp() - offset  # time of prediction "2003-11-16T07:46"
     time_of_prediction = instant
-    windowing = 100 # windowing for the prediction
+    windowing = 250 # windowing for the prediction
 
     print(f"type(time_of_prediction): {type(time_of_prediction)}")
     print(f"time_of_prediction: {time_of_prediction}")

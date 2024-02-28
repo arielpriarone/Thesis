@@ -22,21 +22,14 @@ class snapshot: #this should contain all the useful information about a snapshot
         __imsTimeInterval=1 # 1[s] intervals records
         # read a ims formatted file data - ref: The  data  was  generated  by  the  NSF  I/UCR  Center  for  Intelligent  Maintenance  Systems  
         # (IMS  – www.imscenter.net) with support from Rexnord Corp. in Milwaukee, WI. 
-        match n_of_test:
-            case 1:
-                __names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
-            case 2:
-                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
-            case 3:
-                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
         __names = []
         match n_of_test:
             case 1:
                 __names=["Bearing 1 x", "Bearing 1 y", "Bearing 2 x", "Bearing 2 y","Bearing 3 x", "Bearing 3 y", "Bearing 4 x", "Bearing 4 y"]
             case 2:
-                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+                __names=["Bearing 1", "Bearing 2", "Bearing 3", "Bearing 4"]
             case 3:
-                __names=["Bearing 1 ", "Bearing 2", "Bearing 3", "Bearing 4"]
+                __names=["Bearing 1", "Bearing 2", "Bearing 3", "Bearing 4"]
         self.rawData=pd.read_csv(path,delimiter='\t',names=__names)
         for i in self.rawData.columns.values.tolist():
             if i in variables:
@@ -219,7 +212,7 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: int,sens
             
     __data=pd.read_csv(filePath,delimiter='\t',names=__names)
     for __i in __data.columns.values.tolist():
-        if __i in sensors:
+        if __i in sensors: # todo: revert this line
             pass
         else: # remove the unwanted culumns
             __data.drop(labels=__i,axis=1, inplace=True) # axis 1  are columns
