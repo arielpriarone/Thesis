@@ -22,15 +22,7 @@ df_novelty = np.reshape(pd.read_csv(r"data\processed\ETEL_Test3\test_data_202402
 print(df_novelty)
 
 # Plot the novelty
-labels = ["acc: 6, spd: 0.4",
-          "acc: 6, spd: 0.6",
-          "acc: 6, spd: 0.8",
-          "acc: 3, spd: 0.8",
-          "acc: 4, spd: 0.8",
-          "acc: 5, spd: 0.8",
-          "acc: 4, spd: 0.6",
-          "acc: 3, spd: 0.4",
-          "acc: 6, spd: 0.2"]
+labels = ["Profile 1", "Profile 2", "Profile 3", "Profile 4", "Profile 5", "Profile 6", "Profile 7", "Profile 8", "Profile 9"]
 fig, ax = plt.subplots()
 for i in range(df_novelty.shape[0]):
     ax.plot(range(i*10+1,i*10+11),df_novelty[i],label = labels[i])

@@ -9,13 +9,13 @@ The test consists of defining a set of movements to be actuated by the platform,
 \begin{figure}
     \centering
     \todo%\includegraphics{Images/etel/etel_profile.pdf}
-    \caption{Position reference for the linear axis test.}
+    \caption{Position reference for the linear axis test}
     \label{fig:etel_profile}
 \end{figure}
 
 \begin{table}
     \centering
-    \caption{Harmonic coefficients for the shaker test.}
+    \caption{Movement profiles of the linear axis}
     \label{tab:etel_profiles}
     \begin{tabular}{cccc} 
     \toprule
@@ -30,7 +30,7 @@ The test consists of defining a set of movements to be actuated by the platform,
 \end{table}
 
 \subsection{Training}
-To perform the training, a loop has been implemented on the \gls{pc} that manages the axis movements. The script cyclically actuates the axis to follow the reference profile and asks the microcontroller to start the acquisition of the accelerometer data at the beginning of the movement. The received features are then stored in a file, and the process is repeated for each profile. The sampling frequency of the microcontroller is 5kHz, for a total of 6000 samples per profile. 
+To perform the training, a loop has been implemented on the \gls{pc} that manages the axis movements. The script cyclically actuates the axis to follow the reference profile and asks the microcontroller to start the acquisition of the accelerometer data at the beginning of the movement. The received features are then stored in a file, and the process is repeated for each profile. The sampling frequency of the microcontroller is 5kHz, for a total of 6000 samples each timeserie. 
 
 Although not useful for the training, the microcontroller has been set not only to transmit the features to the \gls{pc} but also the time-series, for visualization purposes. The time-series of the training set are shown in \autoref{fig:axis_timeseries}, and the features are shown in \autoref{fig:axis_features}.
 
@@ -140,13 +140,54 @@ At this point, both the training of the \gls{rf} and SelectKBest is performed. T
 To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 snapshots for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. Then, the novelty score becomes positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the dataset without any false positive result, even without the activation of the outlier filter.
 
 \subsection{Testing the \gls{nd}}
+\subsubsection{Test 1}
 The previous experiment was done to test the capability of the framework to identify a known profile. Now the framework is tested to identify a profile that is not part of the training set, so it should trigger a \gls{nd} event. The test consists of actuating the axis alternating between unknown profiles and known profiles (10 snapshots each repetition). For reference, also Model 1, Model 2, and Model 3 are used, even if they were discarded in the previous section. 
 
 The results are shown in \autoref{fig:axis_testing2}. Model 4 performs poorly because, even if it avoids completely giving false positive results, it gives a lot of false negative results. Unknown profiles are not detected as novelties, or they are detected only in isolated cases, with a very low novelty score that is not enough to trigger the \gls{nd} event, considering the threshold discussed in the previous section.
+
+Model 5 is a further refinement: instead of using the features importance metric for scaling them, it is used to select a subset of features to be used. In this case $F=7$ features are selected, and the model is trained with the standardized features. The training set consists of the original 400 snapshots, as the first three models. In \autoref{fig:axis_testing2} it's evident that this is the best model that clearly distinguish between known and unknown profiles, without giving any false positive or false negative results.
+
+The better performance of Model 5 is due both the fact that the most important features are used, and the fact that the number of features is reduced. The latter phenomenon is known as \emph{curse of dimensionality}, and it's a common problem in \gls{ml} that arises when the number of increases. In general, regressors and classifiers have an optimal number of features, and the performance decreases if the number of features is too high \cite{curse_dim}. 
 
 \begin{figure}
     \centering
     \includegraphics{images/LinearMotor/Testing2.pdf}
     \caption{Novelty detection on known and unknown profiles}
     \label{fig:axis_testing2}
+\end{figure}
+
+\subsubsection{Test 2}
+At this point, Model 5 seems promising. The Previous test gave just a qualitative result, so a further test is performed to quantify the performance of the model. The test consists of actuating the axis with several known and unknown profiles, and find the limit of the capability of the model. The profiles used for training and testing are resumed in \autoref{tab:etel_profiles_2}. The results are shown in \autoref{fig:axis_testing3}. The novelty score is always negative for the known profiles, and always positive (and very large) for the profiles 4, 5, 7 and 8. 
+
+Profiles 6 has a small variation in acceleration $\approx 17\%$, and this cause the novelty to be tetected only in some instances, with a low score. This can be considered the sensitivity limit in this specific case. On the other hand, a variation in acceleration of $\approx 33\%$ is enough to trigger the \gls{nd} event for all the snapshots of profile 5. 
+
+Profile 9 shows a variation in speed of $\approx 50\%$, and this is enough to trigger the \gls{nd} event for most snapshots, but not all. This performance is considered acceptable, because the speed reference is quite rarerly actuated during the execution of the movement. Moreover, the sensor measure acceleration, not speed. So the expectation to detect a chenge in speed rely on the assumption that the change in speed will cause a change in the acceleration evolution.
+
+\begin{table}
+    \centering
+    \caption{Movement profiles of the linear axis for Model 5 validation}
+    \label{tab:etel_profiles_2}
+    \begin{tabular}{cccccc} 
+    \toprule
+    \multirow{2}{*}{\textbf{Profile N.}} & \multirow{2}{*}{\textbf{Speed}{[}$\text{m}\text{s}^{-1}$]} & \multirow{2}{*}{\textbf{ Acc.}{[}$\text{m}\text{s}^{-2}$]} & \multirow{2}{*}{\textbf{Jerk}{[}$\text{s}$]} & \multicolumn{2}{c}{\textbf{N. of snapshots}} \\
+     &  &  &  & \textbf{Train} & \textbf{Test} \\ 
+    \hline
+    1 & 0.4 & 6 & 0.02 & 100 & 10 \\
+    2 & 0.6 & 6 & 0.02 & 100 & 10 \\
+    3 & 0.8 & 6 & 0.02 & 100 & 10 \\
+    4 & 0.8 & 3 & 0.02 & - & 10 \\
+    5 & 0.8 & 4 & 0.02 & - & 10 \\
+    6 & 0.8 & 5 & 0.02 & - & 10 \\
+    7 & 0.6 & 4 & 0.02 & - & 10 \\
+    8 & 0.4 & 3 & 0.02 & - & 10 \\
+    9 & 0.2 & 6 & 0.02 & - & 10 \\
+    \bottomrule
+    \end{tabular}
+    \end{table}
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{images/LinearMotor/Testing3.pdf}
+    \caption{Novelty detection on known and unknown profiles}
+    \label{fig:axis_testing3}
 \end{figure}
