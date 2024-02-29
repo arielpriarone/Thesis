@@ -212,11 +212,12 @@ def IMS_to_mongo(database: str,collection: str,filePath: str,n_of_test: int,sens
             
     __data=pd.read_csv(filePath,delimiter='\t',names=__names)
     for __i in __data.columns.values.tolist():
-        if __i in sensors: # todo: revert this line
+        if __i in ["Bearing 2"]: # todo: revert this line
             pass
         else: # remove the unwanted culumns
             __data.drop(labels=__i,axis=1, inplace=True) # axis 1  are columns
-    
+    # rename column Bearing 3 to Bearing 1
+    __data.rename(columns={'Bearing 2':'Bearing 1'},inplace=True) # todo: revert this line
     # connect to MongoDb
     __client = MongoClient(URI)
     __db = __client[database]
