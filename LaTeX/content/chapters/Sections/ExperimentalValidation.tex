@@ -137,7 +137,7 @@ At this point, both the training of the \gls{rf} and SelectKBest is performed. T
     \label{fig:axis_weights}
 \end{figure}
 
-To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 snapshots for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. Then, the novelty score becomes positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the dataset without any false positive result, even without the activation of the outlier filter.
+To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 snapshots for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. Then, the novelty score becomes positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the datasets without any false positive result, even without the activation of the outlier filter.
 
 \subsection{Testing the \gls{nd}}
 \subsubsection{Test 1}
@@ -145,9 +145,9 @@ The previous experiment was done to test the capability of the framework to iden
 
 The results are shown in \autoref{fig:axis_testing2}. Model 4 performs poorly because, even if it avoids completely giving false positive results, it gives a lot of false negative results. Unknown profiles are not detected as novelties, or they are detected only in isolated cases, with a very low novelty score that is not enough to trigger the \gls{nd} event, considering the threshold discussed in the previous section.
 
-Model 5 is a further refinement: instead of using the features importance metric for scaling them, it is used to select a subset of features to be used. In this case $F=7$ features are selected, and the model is trained with the standardized features. The training set consists of the original 400 snapshots, as the first three models. In \autoref{fig:axis_testing2} it's evident that this is the best model that clearly distinguish between known and unknown profiles, without giving any false positive or false negative results.
+Model 5 is a further refinement: instead of using the features importance metric for scaling them, it is used to select a subset of features to be used. In this case $F=7$ features are selected, and the model is trained with the standardized features. The training set consists of the original 400 snapshots, as the first three models. In \autoref{fig:axis_testing2} it's evident that this is the best model that clearly distinguishes between known and unknown profiles, without giving any false positive or false negative results.
 
-The better performance of Model 5 is due both the fact that the most important features are used, and the fact that the number of features is reduced. The latter phenomenon is known as \emph{curse of dimensionality}, and it's a common problem in \gls{ml} that arises when the number of increases. In general, regressors and classifiers have an optimal number of features, and the performance decreases if the number of features is too high \cite{curse_dim}. 
+The better performance of Model 5 is due to both the fact that the most important features are used, and the fact that the number of features is reduced. The latter phenomenon is known as \emph{curse of dimensionality}, and it's a common problem in \gls{ml} that arises when the number of dimensions of the feature space increases. In general, regressors and classifiers have an optimal number of features, and the performance decreases if the number of features is too high \cite{curse_dim}. 
 
 \begin{figure}
     \centering
@@ -157,11 +157,11 @@ The better performance of Model 5 is due both the fact that the most important f
 \end{figure}
 
 \subsubsection{Test 2}
-At this point, Model 5 seems promising. The Previous test gave just a qualitative result, so a further test is performed to quantify the performance of the model. The test consists of actuating the axis with several known and unknown profiles, and find the limit of the capability of the model. The profiles used for training and testing are resumed in \autoref{tab:etel_profiles_2}. The results are shown in \autoref{fig:axis_testing3}. The novelty score is always negative for the known profiles, and always positive (and very large) for the profiles 4, 5, 7 and 8. 
+At this point, Model 5 seems promising. The Previous test gave just a qualitative result, so a further test is performed to quantify the performance of the model. The test consists of actuating the axis with several known and unknown profiles and finding the limit of the capability of the model. The profiles used for training and testing are resumed in \autoref{tab:etel_profiles_2}. The results are shown in \autoref{fig:axis_testing3}. The novelty score is always negative for the known profiles, and always positive (and very large) for the profiles 4, 5, 7 and 8. 
 
-Profiles 6 has a small variation in acceleration $\approx 17\%$, and this cause the novelty to be tetected only in some instances, with a low score. This can be considered the sensitivity limit in this specific case. On the other hand, a variation in acceleration of $\approx 33\%$ is enough to trigger the \gls{nd} event for all the snapshots of profile 5. 
+Profile 6 has a small variation in acceleration $\approx 17\%$, and this causes the novelty to be detected only in some instances, with a low score. This can be considered the sensitivity limit in this specific case. On the other hand, a variation in acceleration of $\approx 33\%$ is enough to trigger the \gls{nd} event for all the snapshots of profile 5. 
 
-Profile 9 shows a variation in speed of $\approx 50\%$, and this is enough to trigger the \gls{nd} event for most snapshots, but not all. This performance is considered acceptable, because the speed reference is quite rarerly actuated during the execution of the movement. Moreover, the sensor measure acceleration, not speed. So the expectation to detect a chenge in speed rely on the assumption that the change in speed will cause a change in the acceleration evolution.
+Profile 9 shows a variation in speed of $\approx 50\%$, and this is enough to trigger the \gls{nd} event for most snapshots, but not all. This performance is considered acceptable because the speed reference is quite rarely actuated during the execution of the movement. Moreover, the sensor measures acceleration, not speed. So the expectation to detect a change in speed relies on the assumption that the change in speed will cause a change in the acceleration evolution.
 
 \begin{table}
     \centering
