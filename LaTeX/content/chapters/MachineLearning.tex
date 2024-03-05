@@ -30,7 +30,7 @@ The tasks can be divided into main categories:
 \subsection{Least Squares}
 \label{subsec:LS}
 
-Lets consider a set of $m$ observations of a variable $y \in \mathbb{R}^{n_y}$ (output features) that depends on a variable $x \in \mathbb{R}^{n_x}$ (input features) and a set of $n_f \cdot n_y$ parameters $\theta \in \mathbb{R}^{n_f \times n_y}$.
+Let's consider a set of $m$ observations of a variable $y \in \mathbb{R}^{n_y}$ (output features) that depends on a variable $x \in \mathbb{R}^{n_x}$ (input features) and a set of $n_f \cdot n_y$ parameters $\theta \in \mathbb{R}^{n_f \times n_y}$.
 
 Suppose to know that the output features are linked to the input features with $n_f$ functions linear in the parameters $\theta$, so that:
 \begin{multline*}
@@ -212,7 +212,7 @@ This is an elegant closed-form solution for a regression problem, however, it ha
 To overcome these limitations, another way to estimate the parameters is to use an iterative algorithm that minimizes a cost function over the parameters space. The iterations aim to update the parameters in the direction of the steepest descent of the cost function. This can be done even with nonlinearities in the data, and even if the noise is not white, but has the drawback of the risk of getting stuck in a local minimum of the cost function, starting from a random initialization.
 Another limitation is the fact that a learning rate $\eta$ has to be defined, that is a parameter that defines how much the parameters are updated at each iteration. If the learning rate is too small, the algorithm will take a lot of time to converge, if it is too large, the algorithm may overshoot the minimum and avoid convergence.
 
-In the previous closed form solution (\autoref{subsec:LS}), the hypotesis function was linear in the parameters $\vect{Y} = \vect{\Phi}(\vect{X})\cdot\vect{\Theta}$, so we can call this prediction $\vect{\hat{y}} = \vect{h}_{\vect{\Theta}}(\vect{x})$.
+In the previous closed form solution (\autoref{subsec:LS}), the hypothesis function was linear in the parameters $\vect{Y} = \vect{\Phi}(\vect{X})\cdot\vect{\Theta}$, so we can call this prediction $\vect{\hat{y}} = \vect{h}_{\vect{\Theta}}(\vect{x})$.
 
 The cost function to be minimized is usually defined as the mean squared error between the prediction and the real data:
 \begin{equation}
@@ -298,7 +298,7 @@ Let's have a look at what is the function for classifying an instance $\vect{x}^
     \end{cases}
 \end{equation}
 
-The model is trainded to find the parameters $\vect{w}$ and $b$ that:
+The model is trained to find the parameters $\vect{w}$ and $b$ that:
 \begin{align}
     \label{eq:LinearSVM}
     \underset{\vect{w},b}{\text{minimize }} & \frac{1}{2}\vect{w}^T\vect{w} \\
@@ -325,7 +325,7 @@ Suppose needing to use a second-degree polynomial mapping, the mapping function 
     \end{bmatrix}
 \end{equation}
 
-Trasforming two vectors $\vect{a}$ and $\vect{b}$ with the mapping function, to be inserted in \autoref{eq:LinearSVMdual}:
+Transforming two vectors $\vect{a}$ and $\vect{b}$ with the mapping function, to be inserted in \autoref{eq:LinearSVMdual}:
 \begin{equation}
     \phi(\vect{a})^T\phi(\vect{b}) = \begin{bmatrix}
         a_1^2 \\
@@ -372,13 +372,13 @@ This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneC
 Decision Trees are very powerful classification algorithms that can also be used for regression, thinking of feature values as classes. The classification process is based on a tree structure, where each sample starts from the root node, and is filtered through a bunch of \emph{if - then} statements until it reaches a leaf node, that outputs the predicted class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
 
 \paragraph*{Gini impurity}
-The classification algorithm is hence very simple, the \gls{ml} part of is the training process. Let's consider a leaf node, and imagine passing all the training samples through the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the training dataset and will not perform well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, there exists a metric called \emph{Gini impurity} that assumes a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measure how different the classes in the node are, 0.5 being the maximum value that means that all the classes are present in the node with equal frequency. The mathematical definition is the following:
+The classification algorithm is hence very simple, the \gls{ml} part is the training process. Let's consider a leaf node, and imagine processing all the training samples through the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the training dataset and will not perform well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, there exists a metric called \emph{Gini impurity} that assumes a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measures how different the classes in the node are, 0.5 being the maximum value that means that all the classes are present in the node with equal frequency. The mathematical definition is the following:
 \begin{equation}
     G_i = 1 - \sum_{k=1}^{n}p_{i,k}^2
 \end{equation}
 where $p_{i,k}$ is the ratio of class $k$ instances among the training instances in the $i^{th}$ node.
 
-Then the training procedure tries to grow a tree defining the binary conditions that minimize the weighted average of the Gini impurity of the two child nodes, so the cost function is:
+Then the training procedure tries to grow a tree defining the binary conditions that minimizes the weighted average of the Gini impurity of the two child nodes, so the cost function is:
 \begin{equation}
     J(k, t_k) = \frac{m_{\text{left}}}{m}G_{\text{left}} + \frac{m_{\text{right}}}{m}G_{\text{right}}
 \end{equation}

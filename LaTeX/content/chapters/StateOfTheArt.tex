@@ -4,11 +4,11 @@
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{images/StateArt/Industry40.pdf}
-    \caption{Indusstrial revolutions}
+    \caption{Industrial revolutions}
     \label{fig:ind40}    
 \end{figure}
 
-The invention of the modern steam engine in the $18^{th}$ century, marked the beginning of the first industrial revolution. The second industrial revolution, in the $19^{th}$ century, was characterized by the introduction of mass production and the assembly line. The introduction of computers and automation in factories, in the $20^{th}$ century, enabled the third industrial revolution. Nowadays, we are currently living in the $4^{th}$ industrial revolution, that embraces the industry $4.0$ vision. State-of-the-art industries have small decentralized smart networks that make decisions autonomously. This is possible thanks to the \emph{Internet of Things} (\gls{iot}), smart sensors and actuators, and \emph{Big Data} analysis (\autoref{fig:ind40}). 
+The invention of the modern steam engine in the $18^{th}$ century marked the beginning of the first industrial revolution. The second industrial revolution, in the $19^{th}$ century, was characterized by the introduction of mass production and the assembly line. The introduction of computers and automation in factories, in the $20^{th}$ century, enabled the third industrial revolution. Nowadays, we are currently living in the $4^{th}$ industrial revolution, that embraces the industry $4.0$ vision. State-of-the-art industries have small decentralized smart networks that make decisions autonomously. This is possible thanks to the \emph{Internet of Things} (\gls{iot}), smart sensors and actuators, and \emph{Big Data} analysis (\autoref{fig:ind40}). 
 The data to be monitored varies \gls{wrt} the field of application. The most common are \cite{State_Art_Coanda_2020}:
 \begin{itemize}
     \item Vibration Analysis - Efficient method for detecting issues in rotating equipment.
@@ -32,7 +32,7 @@ The data to be monitored varies \gls{wrt} the field of application. The most com
 
 A standard terminology used for industrial maintenance is provided by the European committee for standardization with the standard \texttt{EN13306:2018} \cite{EN13306:2018}. The terminology is summarized in \autoref{fig:standard_terminology}. The most advanced maintenance technique family is \textbf{\gls{glo:conditionbasedmaintenance}}. This category includes the most modern \textbf{\gls{glo:predictivemaintenance}}. Note that the definition does not imply that the \quoted{monitoring} of the system must be continuous, it may also be scheduled or not even scheduled and performed both manually or by a program.
 
-The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{\gls{glo:onistemaintenance}}. All these definitions are reported in the {glossary}
+The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{\gls{glo:onistemaintenance}}. All these definitions are reported in the {glossary}.
 
 
 \paragraph{\gls{rm} vs \gls{pm}}
@@ -43,13 +43,13 @@ The standard also defines what \textbf{\gls{glo:onlinemaintenance}} and \textbf{
     \label{fig:lost_opportunities}
 \end{figure}
 
-As anticipated in the introduction, the two main approaches are \textbf{reactive maintenance} (\gls{aka} \gls{glo:correctivemaintenance}), which restores system functionality, and \textbf{proactive maintenance} (\gls{aka} \gls{glo:preventivemaintenance}), which preserves system functionality \cite{Rely_maint_book}.
+As anticipated in the introduction, the two main approaches are \textbf{Reactive Maintenance} (\gls{aka} \gls{glo:correctivemaintenance}), which restores system functionality, and \textbf{Proactive Maintenance} (\gls{aka} \gls{glo:preventivemaintenance}), which preserves system functionality \cite{Rely_maint_book}.
 
 The former approach leads to very high downtime \gls{wrt} the latter \cite{NIST}. For all the time a system is down, the company forfeits the opportunity to make a profit. This is called \emph{lost opportunity cost}. In reality, the total costs of downtime are even higher, because there are other costs associated with labor overhead and materials \cite{Lost_Opport_Cost}. The second approach optimizes both the pre-repair and post-repair logistics and, acting before the failure, can reduce also the total downtime. A qualitative diagram of these benefits is shown in \autoref{fig:lost_opportunities}. Other than the downtime, a more complete comparison between the advantages and disadvantages of the two approaches is shown in \autoref{tab:PM_vs_RM}.
 
 \input{Tables/ProactiveVsReactive.tex}
 
-\paragraph{Passive vs active maintenance}
+\paragraph{Passive vs Active maintenance}
 \gls{pdm} techniques can be divided also into \emph{passive} and \emph{active}. The former uses existing sensors or adds new sensors to the system and these data are just analyzed. The latter, instead, uses actuators to perturb the system and then analyzes the response. The former is more common because it is less expensive and less invasive. The latter, instead, is more accurate but its application is limited to special applications. The most common field of application of active \gls{pdm} is electrical systems, where the perturbation can be applied by injecting a current or a voltage \cite{State_Art_Hasemian_2011}.
 
 In \cite{State_Art_Hasemian_2011}, the author proposes also, as an example of active \gls{pdm}, the use of the Loop Current Step Response (\gls{lcsr}) technique. In this test, an electrical signal in the form of a step change is sent to the sensor using a Wheatstone bridge, causing heating in the \gls{rtd} sensing element. The resulting exponential transient at the bridge output is analyzed to determine the \gls{rtd}'s response time. Beyond measuring response time, the \gls{lcsr} test can serve other purposes, such as detecting water levels in a pipe and ensuring the proper installation of temperature sensors in thermowells. Moreover, it aids in verifying timely responses to temperature changes and identifying potential degradation due to ageing.
@@ -64,22 +64,22 @@ A relatively new structure for \gls{pdm} is proposed in \cite{CloudBased_Wang}. 
 
 The concept of mobile agents used in this implementation can be resumed as autonomous software entities that can migrate from one host to another, carrying their data and state \cite{CUCURULL2009712}.
 
-The authors of \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exhibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analyzed by the system are: broken bar, bowed rotor, unbalanced rotor, stator winding defect, and defective bearing.
+The authors of \cite{CloudBased_Wang} tested the mobile agent implementation with induction motors that exhibited different failure modes. For example, a motor with a broken rotor bar defect is analyzed, collecting raw current measurements, envelope analysis, and spectrum analysis. Spectrum analysis poses challenges in distinguishing healthy and faulty motor signals. However, a comparison of current envelopes reveals marked differences in energy concentration associated with broken rotor bar-related frequencies. The defects analyzed by the system are broken bar, bowed rotor, unbalanced rotor, stator winding defect, and defective bearing.
 
-In the study \cite{calabreseRUL}, a cloud-based \gls{pdm} system is proposed and tested on a gearbox in a bench test. This study performs anomaly detection, fault detection, and \gls{rul} prediction. Thw \gls{rul} predictions are made by selecting a health indicator that is strongly correlated with the remaining life of the component.
+In the study \cite{calabreseRUL}, a cloud-based \gls{pdm} system is proposed and tested on a gearbox in a bench test. This study performs anomaly detection, fault detection, and \gls{rul} prediction. The \gls{rul} predictions are made by selecting a health indicator that is strongly correlated with the remaining life of the component.
 
 
 \paragraph{Thermal imaging}
 Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being noninvasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify $11$~features of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, which has been enhanced to $84\%$ performing a graph cut.
 
 \paragraph{Algorithms for \gls{pdm}}
-To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two main categories of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}. \gls{ann}, \gls{dt}, \gls{svm}, \gls{knn}, \gls{pf}, \gls{art} and \gls{som} are \gls{ml} algorithms, whlile \gls{ae}, \gls{cnn}, \gls{rnn}, \gls{dbn}, \gls{gan}, \gls{tl} and \gls{dlr} are deep learnign algorithms. The most common field of application of each algorithm is also reported in the table.
+To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two main categories of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}. \gls{ann}, \gls{dt}, \gls{svm}, \gls{knn}, \gls{pf}, \gls{art} and \gls{som} are \gls{ml} algorithms, while \gls{ae}, \gls{cnn}, \gls{rnn}, \gls{dbn}, \gls{gan}, \gls{tl} and \gls{dlr} are deep learning algorithms. The most common field of application of each algorithm is also reported in the table.
 
 \input{Tables/ML_algorithms.tex}
 
 \paragraph*{Fault / Novelty detection}
 
-As anticipated in the \autoref{sec:preface}, another distinction in the \gls{pdm} techniques arises from the data available to build a model and/or to train it.
+As anticipated in \autoref{sec:preface}, another distinction in the \gls{pdm} techniques arise from the data available to build a model and/or to train it.
 
 \subparagraph*{Fault detection}
 If there is a knowledge of the peculiar features of most faults, the algorithms can be trained to detect them. As anticipated, this is called \emph{fault detection} (\gls{fd}). For example, if the monitored system is a ball bearing, it is well known in the literature that there are four distinct fault modes, each of which has a specific frequency signature illustrated in \autoref{fig:bearing_faults} \cite{RollingSignature}:
@@ -96,7 +96,7 @@ Where $f_r$ is the shaft speed, $n$ is the number of rolling elements, and $\phi
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/StateArt/bearing.jpg}
-    \caption{Typycal bearing fault signals \cite{RollingSignature}}
+    \caption{Typical bearing fault signals \cite{RollingSignature}}
     \label{fig:bearing_faults}
 \end{figure}
 
@@ -116,9 +116,9 @@ As anticipated, most of the time there is almost no precise knowledge about the 
 
 Once the novelty detection algorithm is trained, it can be used to give an estimate of \quoted{how novel} the current behaviour of the system is. One of the major issues with \gls{nd} is to set the threshold value to decide if the observation is novel or not \cite{NoveltyReview}. This is because the value of the metric is hardly linkable to a physical property, and the span of the metric is not known a priori.
 
-In the \autoref{tab:novelTechniques}, the novelty detection techniques described in the comprehensive review \cite{NoveltyReview} are summarized. The review makes clear that in the field of \gls{nd}, both supervised and unsupervised techniques are used. It divides  the categories on the theory behind:
+In \autoref{tab:novelTechniques}, the novelty detection techniques described in the comprehensive review \cite{NoveltyReview} are summarized. The review makes clear that in the field of \gls{nd}, both supervised and unsupervised techniques are used. It categorize the techniques into:
 \begin{itemize}
-    \item \textbf{Probabilistic} - involve a density estimation of the data;
+    \item \textbf{Probabilistic} - involves a density estimation of the data;
     \item \textbf{Distance-based} - are the class of clustering techniques used traditionally for classification;
     \item \textbf{Reconstruction-based} - use a regression model to reconstruct the data, then the error is used to detect the novelty;
     \item \textbf{Domain-based} - try to define a boundary that contains all the normal data;
@@ -127,7 +127,7 @@ In the \autoref{tab:novelTechniques}, the novelty detection techniques described
 
 {\input{Tables/NoveltyTechniques.tex}}
 
-The first two terminologies are adopted also in the technical review on methods \cite{NoveltyTech}. This study also categorizes the pattern to be identified in the following classes:
+The first two terminologies are adopted also in the technical review of \gls{nd} methods \cite{NoveltyTech}. This study also categorizes the pattern to be identified in the following classes:
 \begin{itemize}
     \item \textbf{Point pattern} - are single instances that are anomalous \gls{wrt} the rest of the data;
     \item \textbf{Contextual patter} - are anomalous \gls{wrt} a specific context;
@@ -136,7 +136,7 @@ The first two terminologies are adopted also in the technical review on methods 
 
 The three distinct concepts are illustrated in \autoref{fig:pattern_types}.
 
-The task of detecting the novelty is often associated with the task of predicting the \gls{glo:rul} (\gls{rul}), before the fault becomes fatal for the component.
+The task of detecting the novelty is often associated with the task of predicting the \gls{glo:rul} (\gls{rul}) before the fault becomes fatal for the component.
 
 \begin{figure}
     \centering
@@ -145,9 +145,9 @@ The task of detecting the novelty is often associated with the task of predictin
     \label{fig:pattern_types}
 \end{figure}
 
-A novel framework for performing \gls{nd}, \gls{fd} and \gls{rul} predictions has been proposed by researchers at PIC4SeR\footnote{\url{https://pic4ser.polito.it/}} in \cite{Umberto}. It is based on several autonomous agents working together on a database.  The authors aimed to perform \gls{pdm} in a scenario in which there is no physical knowledge and no prior data collections about the maintained system. The framework is meant to be set in a \emph{training phase} on a new machine, to collect the \emph{normal} data and train the \gls{ml} model. After that, it will continuously work in \emph{testing mode}: the framework will compute a prediction error on the current data that is used as a novelty metric.
+A novel framework for performing \gls{nd}, \gls{fd} and \gls{rul} predictions has been proposed by researchers at PIC4SeR\footnote{\url{https://pic4ser.polito.it/}} \cite{Umberto}. It is based on several autonomous agents working together on a database.  The authors aimed to perform \gls{pdm} in a scenario in which there is no physical knowledge and no prior data collections about the maintained system. The framework is meant to be set in a \emph{training phase} on a new machine, to collect the \emph{normal} data and train the \gls{ml} model. After that, it will continuously work in \emph{testing mode}: the framework will compute a prediction error on the current data that is used as a novelty metric.
 
-The features are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Rree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the framework can decide which regressor to use in each specific case. 
+The features are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Tree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the framework can decide which regressor to use in each specific case. 
 
 The model can be retrained after a novelty has been detected, to update the model with the new data. Even if the framework is meant to be trained on a new machine, it can be used also on a machine that has been in service for years: the faults already present will be part of the training database, but the predictions will still be useful because of the tendency of the faults to worsen over time.
 
@@ -175,6 +175,6 @@ The most common unsupervised task is clustering. In recent years, the volume of 
 
 These algorithms can be divided into: \emph{partitioning-based} where the task is to define the boundaries between the clusters; \emph{hierarchical-based} that shows the relation between each pair of clusters depending on the medium of similarity or dissimilarity; \emph{density-based} that describes the clusters as a dense region of data points separated by low-density regions; \emph{grid-based} that apply the transformation of the feature space into a grid before proceeding with the clustering and \emph{model-based} that use a statistical or deep-learning model to describe the data.
 
-Recently, the survey \cite{Abla2019survey} provides a comprehensive overview of the most common clustering algorithms used in an industrial context, with reference studies. The comparison of the study is reported in \autoref{tab:clustcomparison}.
+Recently, the survey \cite{Abla2019survey} provided a comprehensive overview of the most common clustering algorithms used in an industrial context, with reference studies. The comparison of the study is reported in \autoref{tab:clustcomparison}.
 
 {\small\input{Tables/ClusteringComparison.tex}}
