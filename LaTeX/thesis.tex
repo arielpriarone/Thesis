@@ -75,11 +75,13 @@
 
 
 \maskabstract{
-\fontsize{11}{13.6}\selectfont{\sommario\input{content/chapters/Sections/Abstract.tex}}}
+%\fontsize{11}{13.6}\selectfont{
+\sommario\input{
+    content/Abstract.tex
+%    }
+    }} % abstract
 
-
-{
-\ifprint \customClearDoublePage \fi
+{\ifprint \customClearDoublePage \fi
 \pdfbookmark[0]{\contentsname}{toc}%
 \tableofcontents}
 
