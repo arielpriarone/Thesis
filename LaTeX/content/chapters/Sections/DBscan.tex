@@ -59,7 +59,7 @@ In the paper \cite{dbscan} the authors propose a detailed pseudocode of the algo
   \begin{algorithmic}[1]
     \Procedure{DBSCAN}{$D, \varepsilon, MinPts$}
     \For {$p \in D$}
-        \If {$abs{N_\varepsilon(p)} \ge MinPts$}
+        \If {$\abs{N_\varepsilon(p)} \ge MinPts$}
             \State mark $p$ as a core point
         \EndIf
     \EndFor
@@ -81,12 +81,11 @@ In the paper \cite{dbscan} the authors propose a detailed pseudocode of the algo
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Example of \gls{dbscan} clustering}
+\subsection{Choosing the parameters}
 Running the algorithm implemented in the \texttt{sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.78$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ clusters, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
 
 Note that the \gls{dbscan} is able to identify clusters with arbitrary shapes, even if they are not convex and are not \gls{glo:lin-sep}. This is a big advantage over the K-means, which is not able to identify clusters with arbitrary shapes.
 
-\subsection{Choosing the parameters}
 
 \begin{figure}
     \centering
@@ -104,7 +103,7 @@ Let's plot the silhouette score for different values of $\varepsilon$ to confirm
 \label{sec:dbscan_eval}
 Assume now that the training of the \gls{dbscan} is complete, and a new \gls{glo:snap} $\gls{sym:snap}_n$ is generated from the sensor data. How can we evaluate if the new snapshot is novel or not?
 The \gls{dbscan} algorithm is not able to predict the cluster of a new instance. However, the task of this project is novelty detection, not classification.
-To do that, as has been done for the K-means, we need to provide a metric linked to how novel a new snapshot is. 
+To do that, as has been done for the K-means, a metric linked to how novel a new snapshot is developed. 
 
 The idea used previously to compute the distance to a centroid and normalizing it by the radius of the cluster is not applicable here, because the \gls{dbscan} do not use centroids to define clusters. A naive idea for our purpose is to compute the distance of the new snapshot from the closest snapshot in the training dataset.
 If the distance is greater than a threshold, then the new snapshot is considered novel.
@@ -115,7 +114,7 @@ And now the question: if we use the distance of a new $\gls{sym:snap}_n$ from th
     \item during the training phase, the \gls{dbscan} has discarded the noise points. This improves the quality of the metric because the distance from a noise point is not meaningful.
 \end{itemize}
 
-\subsection{Limitations of \gls{dbscan}}
+\subsection{Limitations of the algorithm}
 The first limitation of \gls{dbscan} is about cluster density: since $\varepsilon$ is fixed, the algorithm is not able to identify clusters with different densities. In this case, it will split low-density clusters into multiple clusters. For our purpose, this is not a problem, because we are interested in novelty detection, so even if a cluster is misidentified as multiple clusters, the new snapshot will be considered novel. To increase the sensitivity of the novelty detection $\varepsilon$ can be decreased, but this will increase the number of noise points.
 
 The other main limitation of \gls{dbscan} is that it has a complexity of roughly $\mathcal{O}(m^2)$, where $m$ is the number of points in the dataset. This means that the algorithm is not scalable to large datasets \citepage{hands-on-geron2022}{281}. There exist improvements to the algorithm that reduce the complexity to $\mathcal{O}(m\log m)$, like the FDBSCAN developed by Bing Liu \cite{dbscanlogm}. The complexity remains linear \gls{wrt} the number of features.

@@ -57,9 +57,9 @@ The decision boundaries are a Voronoi tessellation of the space, and they are de
 \label{sec:kmeans_improvements}
 \paragraph*{Kmeans}
 Finding the optimal solution to the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
-To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that most algorithms do not scale well as the number $n$ of {\gls{glo:snap}} increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
+To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that most algorithms do not scale well as the number $n$ of {\gls{glo:snap}}s increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
 
-It is worth noticing that an exact solution to the problem has been published \cite{Kmeans_vornoi_japan} with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of clusters and the number of features $F$.
+It is worth noticing that an exact solution to the problem has been published \cite{Kmeans_vornoi_japan}, with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of clusters and the number of features $F$.
 
 \paragraph*{Lloyd's algorithm}
 The classic Lloyd algorithm \cite{Lloyd1982} has a complexity $\mathcal{O}(n\cdot k\cdot F )$.
@@ -70,11 +70,11 @@ Another improvement has been developed by Elkan \cite{kmeans-accelerated}, by ke
 
 A variant of the Lloyd algorithm regarding both the speed of execution and the memory consumption has been proposed by Sculley \cite{Sculley2010}. This solution achieves a reduction of the execution time by orders of magnitude and enables performing the classification even for datasets that don't fit in the memory of the machine. This is achieved by using a \emph{mini-batch} approach, where the {\gls{glo:cent}}s are updated after each batch of {\gls{glo:snap}}s.
 
-Concerning the problem of converging to a local minimum, the most common approach is to run the algorithm multiple times with different initializations and then select the best result, this is avoided by Reddy \cite{Vornoi_Kmeans}, by using the Voronoi tessellation of the hyperspace using the data points to generate the initialization for the {\gls{glo:cent}} positions, this algorithm perform better in the sense that is less likely to get trapped in a local minimum.
+Concerning the problem of converging to a local minimum, the most common approach is to run the algorithm multiple times with different initializations and then select the best result, this is avoided by Reddy \cite{Vornoi_Kmeans}, by using the Voronoi tessellation of the hyperspace using the data points to generate the initialization for the {\gls{glo:cent}} positions, this algorithm performs better in the sense that is less likely to get trapped in a local minimum.
 
 
 \paragraph{K-means\texttt{++}} 
-The last improved algorithm reported in this section has its own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the {\gls{glo:cent}}s $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the {\gls{glo:cent}}s, the first {\gls{glo:cent}} $\gls{sym:cent}_1$ is chosen randomly from the {\gls{glo:snap}}s, and then the other {\gls{glo:cent}}s are chosen from the remaining {\gls{glo:snap}}s with a probability that depends from the distance of the candidate {\gls{glo:snap}} to the closest already chosen {\gls{glo:cent}}. This approach is summarized in the \autoref{alg:kmeanspp}.
+The last improved algorithm reported in this section has its own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the {\gls{glo:cent}}s $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the {\gls{glo:cent}}s, the first {\gls{glo:cent}} $\gls{sym:cent}_1$ is chosen randomly from the {\gls{glo:snap}}s, and then the other {\gls{glo:cent}}s are chosen from the remaining {\gls{glo:snap}}s with a probability that depends on the distance of the candidate {\gls{glo:snap}} to the closest already chosen {\gls{glo:cent}}. This approach is summarized in the \autoref{alg:kmeanspp}.
 
 For the development of the framework of this thesis, the K-means\texttt{++} algorithm has been implemented in \texttt{Python}, using the \texttt{scikit-learn} library. The library function has been modified, adding a method that returns the radii of the clusters, this information is crucial for our scope, as it will be needed for evaluating if a new {\gls{glo:snap}} is a novelty, normal or fault, as it will be explained in the \autoref{sec:clust_metric} and \autoref{sec:clust_threshold}.
 
@@ -189,7 +189,7 @@ The entities shown in the \autoref{fig:clust_spheres} are:
 
 \subsection{Metric for the new instance evaluation}
 \label{sec:clust_metric}
-Once the new {\gls{glo:snap}} $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (\gls{aka} metric) linked to how novel this {\gls{glo:snap}} is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. One simple approach could be to compute the difference between the distance of $\gls{sym:snap}_n$ from the {\gls{glo:cent}} $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current {\gls{glo:snap}}, so it is possible to use that as a novelty measure.
+Once the new {\gls{glo:snap}} $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (\gls{aka} metric) linked to how novel this {\gls{glo:snap}} is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. The first simple approach used in this project is computing the difference between the distance of $\gls{sym:snap}_n$ from the {\gls{glo:cent}} $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current {\gls{glo:snap}}, so it is possible to use that as a novelty measure.
 
 \begin{equation}
   \label{eq:clust_eval}
@@ -198,7 +198,7 @@ Once the new {\gls{glo:snap}} $\gls{sym:snap}_n$ has been assigned to the right 
 
 Few consideration about the result of the \autoref{eq:clust_eval}:
 \begin{itemize}
-  \item if $e_{n} > 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centered in $\gls{sym:cent}_i$, so it is probably a novel {\gls{glo:snap}};
+  \item if $e_{n} > 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centred in $\gls{sym:cent}_i$, so it is probably a novel {\gls{glo:snap}};
   \item if $e_{n} < 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal {\gls{glo:snap}}. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \textbf{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
 \end{itemize}
 
@@ -277,7 +277,7 @@ The evaluation procedure developed to address the novelty/fault detection scope 
     \EndFor
     \State$e \gets \dfrac{\norm{\gls{sym:dist}_{i_{\text{min}}}}}{\norm{\gls{sym:radius}_{i_{\text{min}}}}} - 1$ \Comment {compute the novelty metric}
     \If {fault detection mode}
-    \State $e \gets -\ln(e\cdot(1-10^-6)+1)$ \Comment {apply the logarithmic trasformation}
+    \State $e \gets -\ln(e+1-10^{-6})$ \Comment {apply the logarithmic trasformation}
     \EndIf
     \If {$e > t$}
     \State \Return novelty flag, $e$  \Comment {the snapshot is novelty}
@@ -308,7 +308,7 @@ In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of cluste
 \end{figure}
 
 
-\subsection{Limits of the k-means algorithm}
+\subsection{Limitations of the algorithm}
 \label{sec:kmeans_limits}
 This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and is well scalable. But it has also some limits, the most important are \citepage{hands-on-geron2022}{273}:
 \begin{itemize}
