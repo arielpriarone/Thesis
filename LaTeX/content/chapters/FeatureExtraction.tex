@@ -73,7 +73,7 @@ The Root mean square of the signal \gls{rms} is related to the power and is defi
     \text{RMS} = \sqrt{\frac{1}{n}\sum_{i=1}^n x_i^2}
 \end{equation}
 
-\paragraph{Peack-to-peak}
+\paragraph{Peak-to-peak}
 The peak-to-peak value of the signal is defined as
 \begin{equation}
     \text{P2P} = \max(\vect{x}) - \min(\vect{x})
@@ -110,7 +110,7 @@ The kurtosis is a measure of the \quoted{peakedness} of the signal and is define
     \kappa = \frac{1}{n}\sum_{i=1}^n \left(\frac{x_i - \mu_{true}}{\sigma}\right)^4
 \end{equation}
 
-and can be estimated on sampled data as
+It can be estimated on sampled data as
 
 \begin{equation}
   \hat{\kappa} = \frac{(n+1)\,n}{(n-1)\,(n-2)\,(n-3)} \; \frac{\sum_{i=1}^n (x_i - \mu)^4}{k_2^2} - 3\,\frac{(n-1)^2}{(n-2) (n-3)}
@@ -123,7 +123,7 @@ and can be estimated on sampled data as
     \label{fig:IMS_TD_features}
 \end{figure}
 
-To visualize the evolution of the features over time, let's consider all the snapshots of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset and plot all the time-domain features described above. The result is shown in \autoref{fig:IMS_TD_features}. Having seen also \autoref{fig:IMS_bearing}, it's not surprising that the P2P and the kurtosis are the time domain features that capture the degradation of the bearing the earliest. 
+To visualize the evolution of the features over time, consider all the snapshots of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset and plot all the time-domain features described above. The result is shown in \autoref{fig:IMS_TD_features}. Having seen also \autoref{fig:IMS_bearing}, it's not surprising that the P2P and the kurtosis are the time domain features that capture the degradation of the bearing the earliest. 
 
 
 \section{Frequency-domain features}
@@ -135,25 +135,25 @@ To capture also the frequency behaviour of the signal, other tools are needed. I
 
 One powerful tool to analyze the frequency content of a signal is the Fourier transform or, in the case of a discrete signal, the Discrete Fourier Transform(\gls{dft}), which has a very efficient implementation in the Fast Fourier Transform (\gls{fft}) algorithm \cite{cooley1965algorithm}. This algorithm is implemented in many programming languages and libraries, including \texttt{python} and \texttt{C}. The theory behind this topic is briefly described in \autoref{app:FFT}. 
 
-To have a better understanding of the capability of the \gls{fft} to capture the frequency content of a signal (and the presence of a disturbance in a portion of the signal), let's consider the following signal, composed by the sum of four sinusoids with different frequencies that is plotted with its \gls{dft} in \autoref{fig:FD_known}:
+To have a better understanding of the capability of the \gls{fft} to capture the frequency content of a signal (and the presence of a disturbance in a portion of the signal), consider the following signal, composed by the sum of four sinusoids with different frequencies that are plotted with its \gls{dft} in \autoref{fig:FD_known}:
 \begin{multline}
     x(t) = \sin(2\pi f_1 t) + \sin(2\pi f_2 t) + \sin(2\pi f_3 t) + \sin(2\pi f_4 t), \\
     t \in [0, 1], \quad \{f_1, f_2, f_3, f_4\} = \{2, 5, 7, 15\} \si{\Hz}
 \end{multline}
 
-In the \autoref{fig:FD_known} it is possible to see the four peaks in the frequency domain, corresponding to the four frequencies of the sinusoids. Now, let's consider the same signal, but with an additive disturbance in a small portion of the signal, as shown in \autoref{fig:FD_known_dist}. The disturbance is a period of the signal $x(t) = \sin(2\pi f_5 t)$, with $f_5=50\si{\Hz}$, that is added to the signal in the interval $t \in [0.4, 0.6]$. The \gls{dft} of this signal is shown in \autoref{fig:FD_known_dist}. It is possible to see that the disturbance is captured by the spectrum as a broad frequency additional components, instead of a peak at $f_5=50\si{\Hz}$. This is because the disturbance is not acting on the whole signal. For our purpose, this is still good because we can detect the variation of all the frequencies involved.
+In the \autoref{fig:FD_known} it is possible to see the four peaks in the frequency domain, corresponding to the four frequencies of the sinusoids. Now, consider the same signal, but with an additive disturbance in a small portion of the signal, as shown in \autoref{fig:FD_known_dist}. The disturbance is a period of the signal $x(t) = \sin(2\pi f_5 t)$, with $f_5=50\si{\Hz}$, that is added to the signal in the interval $t \in [0.4, 0.6]$. The \gls{dft} of this signal is shown in \autoref{fig:FD_known_dist}. It is possible to see that the disturbance is captured by the spectrum as a broad frequency additional components, instead of a peak at $f_5=50\si{\Hz}$. This is because the disturbance is not acting on the whole signal. For our purpose, this is still good because we can detect the variation of all the frequencies involved.
 
 Consider the period of the undisturbed signal, that is the \gls{lcm} of the periods of the four sinusoids composing the signal.
 \[ 
-    T = \text{LCM} \left( \frac{1}{2} \si{\s},\frac{1}{5}\si{\s},\frac{1}{7}\si{\s},\frac{1}{15}\si{\s} \right) = 1 \si{\s}
+    T = \text{\gls{lcm}} \left( \frac{1}{2} \si{\s},\frac{1}{5}\si{\s},\frac{1}{7}\si{\s},\frac{1}{15}\si{\s} \right) = 1 \si{\s}
 \]
 
-So, we were processing a signal that has a period of one second, sampled for exactly one second. Let's see what happens if we sample the same signal for a time that is not an integer multiple of the period. In \autoref{fig:FD_known_leackage} it is shown the \gls{dft} of the same signal as before, but sampled for $t \in [0, 0.9]$. It is possible to see that the peaks are still at the frequencies of the sinusoids composing the signal, but they are not single points as it appears that also frequencies near the true frequencies are present. This phenomenon is called \emph{spectral leackage} and happens because the signal is not sampled for an integer number of periods \cite{SpectralLeakage}. 
+So, we were processing a signal that has a period of one second, sampled for exactly one second. Let's see what happens if we sample the same signal for a time that is not an integer multiple of the period. In \autoref{fig:FD_known_leackage} it is shown the \gls{dft} of the same signal as before, but sampled for $t \in [0, 0.9]$. It is possible to see that the peaks are still at the frequencies of the sinusoids composing the signal, but they are not single points as it appears that also frequencies near the true frequencies are present. This phenomenon is called \emph{spectral leakage} and happens because the signal is not sampled for an integer number of periods \cite{SpectralLeakage}. 
 
 
 \begin{figure}
     \centering
-    \includegraphics[scale=1]{images/FeatureExtraction/FD_known.pdf}
+    \includegraphics[width=\textwidth]{images/FeatureExtraction/FD_known.pdf}
     \caption{FFT of the signal with known frequency components}
     \label{fig:FD_known}
 \end{figure}
@@ -188,7 +188,7 @@ The most common windowing functions are the \emph{Hann} and the \emph{Hamming} w
     w_{hann}(i) = 0.5\; \left[1 - \cos \left ( \frac{2 \pi i}{n} \right) \right] \\
     w_{hamming}(i) = \frac{25}{46}\; \left[1 - \cos \left ( \frac{2 \pi i}{n} \right) \right]
 \end{eqnarray}
-where $i$ is the considered sample as independent variable and $n$ is the total number of samples. Those functions are plotted in \autoref{fig:windows}. The preprocessing operation is simply to multiply the signal by the windowing function. this will make the first and last point of the signal exactly zero in the case of the Hann window, and very close to zero in the case of the Hamming window but with the advantage of having a narrower peak in the spectrum. 
+where $i$ is the considered sample as the independent variable and $n$ is the total number of samples. Those functions are plotted in \autoref{fig:windows}. The preprocessing operation is simply to multiply the signal by the windowing function. this will make the first and last point of the signal exactly zero in the case of the Hann window, and very close to zero in the case of the Hamming window but with the advantage of having a narrower peak in the spectrum. 
 
 The \quoted{flip and reverse} method is simply to concatenate a flipped copy of the signal to itself and downsampling it to preserve the original length of the array, as follows \cite{Preprocessing}:
 
@@ -244,13 +244,15 @@ At this point, to see if the spectrum is representative of a fault, as it has be
 
 \subsubsection{Motivation}
 
-In the previous \autoref{sec:FFT}, it has been shown that the spectrum of the signal contains useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the features extraction, and the memory usage. Considering only the \gls{fft} of all signal of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10 \text{kFeatures} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
+In the previous \autoref{sec:FFT}, it has been shown that the spectrum of the signal contains useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the features extraction, and the memory usage. Considering only the \gls{fft} of all signals of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10 \text{kFeatures} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
 
-To overcome this problem it is necessary to find a method that exploits the same information in the frequency domain, but using much less computational power and memory. Other tools for the frequency analysis are the Wavelet Transform, and in particular the Wavelet Packet Decomposition (\gls{wpd}) has been used in the developed framework. The theory behind this topic is briefly described in \autoref{app:wavelet}.
+To overcome this problem it is necessary to find a method that exploits the same information in the frequency domain, but using much less computational power and memory. Other tools for the frequency analysis are the Wavelet Transform and, in particular, the Wavelet Packet Decomposition (\gls{wpd}) has been used in the developed framework. The theory behind this topic is briefly described in \autoref{app:wavelet}.
+
+Furthermore, most \gls{ml} algorithms perform better with a lower number of features, and the \gls{wpd} is able to extract a lower number of features. For example, for a signal like the ones in the \gls{ims} dataset $\vect{x} \in \mathbb{R}^{2000}$, the \gls{wpd} with a depth of $6$ will output $2^6=64$ coefficients, which are transformed into features. On the other hand, the \gls{fft} will output $2000$ coefficients, which can already be considered an high dimensionality space.
 
 \subsubsection{Application to the reference dataset}
 
-At this point, let's consider a \gls{wpd} with a dept of $6$, that outputs $2^6=64$ coefficients. We are going to take the norm of each coefficient as a feature so, in the end, we will have $64$ features (from \quoted{aaaaaa} that is lead from all the approximation coefficients to \quoted{dddddd} that that is lead from all the detail coefficients instead, passing for all the combinations in between). The \gls{wpd} of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset is shown in \autoref{fig:IMS_WPD_health} as the bearing is new, and in \autoref{fig:IMS_WPD_fault} as the bearing is degraded. It is possible to see that the \gls{wpd} is able to capture the presence of the fault frequencies.
+At this point, let's consider a \gls{wpd} with a depth of $6$, that outputs $2^6=64$ coefficients. We are going to take the norm of each coefficient as a feature so, in the end, we will have $64$ features (from \quoted{aaaaaa} that leads from all the approximation coefficients to \quoted{dddddd} that that leads from all the detail coefficients instead, passing for all the combinations in between). The \gls{wpd} of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset is shown in \autoref{fig:IMS_WPD_health} as the bearing is new, and in \autoref{fig:IMS_WPD_fault} as the bearing is degraded. It is possible to see that the \gls{wpd} is able to capture the presence of the fault frequencies.
 
 \begin{figure}
     \centering
