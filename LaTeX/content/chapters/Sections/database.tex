@@ -18,15 +18,15 @@ The \gls{json} format is also human-readable, which makes it easy to understand 
   raw                 & time-series and information about them                 \\
   unconsumed          & snapshots to be evaluated                              \\
   quarantined         & {snapshots detected as novelty waiting to be declared  \\healthy, faulty or be discarded}\\
-  healthy             & snapshots declared as normal behavior                  \\
+  healthy             & snapshots declared as normal behaviour                 \\
   healthy train       & {training dataset (scaled, processed, packet)          \\for the \gls{nd} \gls{uml} model}\\
-  faulty              & snapshots declared as faulty behavior                  \\
+  faulty              & snapshots declared as faulty behaviour                 \\
   faulty train        & {training dataset (scaled, processed, packet)          \\for the \gls{nd} \gls{uml} model}\\
   models              & {models trained on healthy and faulty data the metrics \\and predictions to be shown}\\
   backup              & time-series, features, models, etc.
 \end{longtblr}
 
-MongoDB structure is based on collections, that are groups of (\gls{json}) documents. A document is a set of key-value pairs that can be nested in several layers. Documents have a dynamic schema, which means that documents in the same collection do not need to have the same set of fields or structure, and common fields in a collection's documents may hold different types of data. To store the data needed by the framework the collections reported in \autoref{tab:MongoDB_collections} are used.
+MongoDB structure is based on collections, which are groups of (\gls{json}) documents. A document is a set of key-value pairs that can be nested in several layers. Documents have a dynamic schema, which means that documents in the same collection do not need to have the same set of fields or structure, and common fields in a collection's documents may hold different types of data. To store the data needed by the framework the collections reported in \autoref{tab:MongoDB_collections} are used.
 In the following paragraphs, the structure and purposes of each collection are described.
 
 \paragraph{Raw}
@@ -53,7 +53,7 @@ where \texttt{\textunderscore id} is the unique identifier of the document, \tex
 Once defined the structure that the time-series will have in the database, let's define the structure of the snapshots. The features extracted from the time-series are stored in the {unconsumed} collection, with the \gls{json} structure described in \autoref{tab:unconsumed_json}.
 
 \begin{longtable}{lll}
-  \caption{Structure of the \quoted{unconsumed} collection \gls{json} configuration file.}\\ 
+  \caption{Structure of the \quoted{unconsumed} collection \gls{json} configuration file.}\label{tab:unconsumed_json}\\ 
   \toprule
   \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
   \hline
@@ -100,11 +100,11 @@ The idea behind the \quoted{healthy} collection is to store the snapshots that a
 \paragraph{Healthy train}
 In this collection the healthy snapshots are packed together in different documents, each of them useful in a different phase of the training process.
 
-{The first document hase the \texttt{id} \texttt{training\textunderscore set}, that contains all the \texttt{N} training snapshots, each of them with \texttt{n} sensors signals, characterized by \texttt{F} features. For ease of accessibility, every bottom-nested field is a list of \texttt{N} elements. The structure is resumed in \autoref{tab:train_json}.}
+{The first document has the \texttt{id} \texttt{training\textunderscore set}, that contains all the \texttt{N} training snapshots, each of them with \texttt{n} sensors signals, characterized by \texttt{F} features. For ease of accessibility, every bottom-nested field is a list of \texttt{N} elements. The structure is resumed in \autoref{tab:train_json}.}
 
 
 \begin{longtable}{lll}
-\caption{Structure of the \quoted{healthy train} collection \gls{json} configuration file.}\\ 
+\caption{Structure of the \quoted{healthy train} collection \gls{json} configuration file.}\label{tab:train_json}\\ 
 \toprule
 \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
 \hline
@@ -144,10 +144,10 @@ This collection serves the same exact purpose as the \quoted{healthy train} coll
 \paragraph{Models}
 This collection contains the models trained on the healthy and faulty data and a buffer of the predictions and metrics to be displayed to the user.
 
-The structure of the models documents is just an identifier and the \texttt{python} object of the model, encoded in \gls{glo:pickle}. The structure of the predictions and metrics documents is the \autoref{tab:model_json}:
+The structure of the models' documents is just an identifier and the \texttt{python} object of the model, encoded in \gls{glo:pickle}. The structure of the predictions and metrics documents is the \autoref{tab:model_json}:
 
 \begin{longtable}{lll}
-  \caption{Structure of the \quoted{models} collection \gls{json} configuration file.}\\ 
+  \caption{Structure of the \quoted{models} collection \gls{json} configuration file.}\label{tab:model_json}\\ 
   \toprule
   \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
   \hline
