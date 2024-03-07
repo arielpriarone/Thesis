@@ -70,10 +70,10 @@ In the study \cite{calabreseRUL}, a cloud-based \gls{pdm} system is proposed and
 
 
 \paragraph{Thermal imaging}
-Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being noninvasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify $11$~features of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, which has been enhanced to $84\%$ performing a graph cut.
+Yet another tool for detecting anomalies, mostly used for electrical devices, is gathering images of the device using an infrared camera. This method has the advantage of being noninvasive. The process of images is a whole discipline, in \cite{Thermography}, the authors use a multilayered perceptron \gls{mlp} to classify $11$~\gls{glo:feature}s of the images. They achieved $78\%$ accuracy using the \gls{mlp} alone, which has been enhanced to $84\%$ performing a graph cut.
 
 \paragraph{Algorithms for \gls{pdm}}
-To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two main categories of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}. \gls{ann}, \gls{dt}, \gls{svm}, \gls{knn}, \gls{pf}, \gls{art} and \gls{som} are \gls{ml} algorithms, while \gls{ae}, \gls{cnn}, \gls{rnn}, \gls{dbn}, \gls{gan}, \gls{tl} and \gls{dlr} are deep learning algorithms. The most common field of application of each algorithm is also reported in the table.
+To continue the overview of state-of-the-art \gls{pdm} techniques, we will now focus on the algorithms used to analyze the data. The two main categories of algorithms are \gls{glo:trad_ml} and \gls{glo:deep} (\gls{dl}).  The survey \cite{ran2019survey} provides a comprehensive overview of the most common algorithms used in \gls{pdm}, that we summarized in \autoref{tab:ML_algorithms}, that is a merge of \cite{ran2019survey},\cite{particlefilter},\cite{yang2018particle},\cite{VONBIRGELEN2018480} and \cite{lira2011adaptive}. \gls{ann}, \gls{dt}, \gls{svm}, \gls{knn}, \gls{pf}, \gls{art} and \gls{som} are \gls{ml} algorithms, while \gls{ae}, \gls{cnn}, \gls{rnn}, \gls{dbn}, \gls{gan}, \gls{tl} and \gls{dlr} are \gls{glo:deep} algorithms. The most common field of application of each algorithm is also reported in the table.
 
 \input{Tables/ML_algorithms.tex}
 
@@ -82,7 +82,7 @@ To continue the overview of state-of-the-art \gls{pdm} techniques, we will now f
 As anticipated in \autoref{sec:preface}, another distinction in the \gls{pdm} techniques arise from the data available to build a model and/or to train it.
 
 \subparagraph*{Fault detection}
-If there is a knowledge of the peculiar features of most faults, the algorithms can be trained to detect them. As anticipated, this is called \emph{fault detection} (\gls{fd}). For example, if the monitored system is a ball bearing, it is well known in the literature that there are four distinct fault modes, each of which has a specific frequency signature illustrated in \autoref{fig:bearing_faults} \cite{RollingSignature}:
+If there is a knowledge of the peculiar \gls{glo:feature}s of most faults, the algorithms can be trained to detect them. As anticipated, this is called \emph{fault detection} (\gls{fd}). For example, if the monitored system is a ball bearing, it is well known in the literature that there are four distinct fault modes, each of which has a specific frequency signature illustrated in \autoref{fig:bearing_faults} \cite{RollingSignature}:
 
 \begin{eqnarray*}
     \text{Ballpass frequency, outer race (\gls{bpfo})}&=& \frac{n\cdot f_r}{2}\left\{1-\frac{d}{D} \cos \phi \right\}\\
@@ -147,7 +147,7 @@ The task of detecting the novelty is often associated with the task of predictin
 
 A novel framework for performing \gls{nd}, \gls{fd} and \gls{rul} predictions has been proposed by researchers at PIC4SeR\footnote{\url{https://pic4ser.polito.it/}} \cite{Umberto}. It is based on several autonomous agents working together on a database.  The authors aimed to perform \gls{pdm} in a scenario in which there is no physical knowledge and no prior data collections about the maintained system. The framework is meant to be set in a \emph{training phase} on a new machine, to collect the \emph{normal} data and train the \gls{ml} model. After that, it will continuously work in \emph{testing mode}: the framework will compute a prediction error on the current data that is used as a novelty metric.
 
-The features are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Tree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the framework can decide which regressor to use in each specific case. 
+The \gls{glo:feature}s are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Tree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the framework can decide which regressor to use in each specific case. 
 
 The model can be retrained after a novelty has been detected, to update the model with the new data. Even if the framework is meant to be trained on a new machine, it can be used also on a machine that has been in service for years: the faults already present will be part of the training database, but the predictions will still be useful because of the tendency of the faults to worsen over time.
 
@@ -173,7 +173,7 @@ In the first two cases, the framework was able to detect the novelty and predict
 \paragraph*{Clustering}
 The most common unsupervised task is \gls{glo:clust}ing. In recent years, the volume of data collected in a typical factory has increased dramatically. Clustering is a collection of tools to extract information from huge amounts of unlabeled data. 
 
-These algorithms can be divided into: \emph{partitioning-based} where the task is to define the boundaries between the \gls{glo:clust}s; \emph{hierarchical-based} that shows the relation between each pair of \gls{glo:clust}s depending on the medium of similarity or dissimilarity; \emph{density-based} that describes the \gls{glo:clust}s as a dense region of data points separated by low-density regions; \emph{grid-based} that apply the transformation of the feature space into a grid before proceeding with the \gls{glo:clust}ing and \emph{model-based} that use a statistical or deep-learning model to describe the data.
+These algorithms can be divided into: \emph{partitioning-based} where the task is to define the boundaries between the \gls{glo:clust}s; \emph{hierarchical-based} that shows the relation between each pair of \gls{glo:clust}s depending on the medium of similarity or dissimilarity; \emph{density-based} that describes the \gls{glo:clust}s as a dense region of data points separated by low-density regions; \emph{grid-based} that apply the transformation of the \gls{glo:feature} space into a grid before proceeding with the \gls{glo:clust}ing and \emph{model-based} that use a statistical or deep-learning model to describe the data.
 
 Recently, the survey \cite{Abla2019survey} provided a comprehensive overview of the most common \gls{glo:clust}ing algorithms used in an industrial context, with reference studies. The comparison of the study is reported in \autoref{tab:clustcomparison}.
 

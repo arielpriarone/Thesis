@@ -20,7 +20,7 @@ A Gaussian Mixture Model is a probabilistic model that assumes that the data are
 
 \subsection{Training}
 \label{sec:gauss_train}
-As anticipated, the assumption is that every \gls{glo:clust} has a normal \gls{pdf} on each axis. So, for each feature, the total \gls{pdf} is a superposition of $k$ normal \gls{pdf}. 
+As anticipated, the assumption is that every \gls{glo:clust} has a normal \gls{pdf} on each axis. So, for each \gls{glo:feature}, the total \gls{pdf} is a superposition of $k$ normal \gls{pdf}. 
 The algorithm used to train the model is the Expectation Maximization (\gls{em}) algorithm. This is a generalization of the k-means algorithm that allows to find the centroids (means), the covariance matrices of the \gls{glo:clust}s, and their weights. Unlike the k-means, the \gls{em} is a soft \gls{glo:clust}ing algorithm, meaning that each point is assigned to each \gls{glo:clust} with a probability, instead of being assigned to a single \gls{glo:clust}.
 The \gls{em} algorithm is an iterative algorithm that aims to find the parameters that maximize the \gls{glo:likelihood}.
 
@@ -76,5 +76,5 @@ The main limitation of the \gls{gmm} is that it is not able to identify \gls{glo
 
 If the data are not shaped like some ellipsoids, the model can approximate the data anyway, splitting the \gls{glo:clust}s into smaller ellipsoids. For our purposes of novelty detection, this is not a limitation.
 
-The complexity of the algorithm is $\mathcal{O}(kmF^2+kF^3)$, where $k$ is the number of \gls{glo:clust}s, $m$ is the number of samples, and $F$ is the number of features \citepage{hands-on-geron2022}{281}. This means that the algorithm is not scalable to a large number of features, but it is scalable to a large number of samples.
+The complexity of the algorithm is $\mathcal{O}(kmF^2+kF^3)$, where $k$ is the number of \gls{glo:clust}s, $m$ is the number of samples, and $F$ is the number of \gls{glo:feature}s \citepage{hands-on-geron2022}{281}. This means that the algorithm is not scalable to a large number of \gls{glo:feature}s, but it is scalable to a large number of samples.
 For our purposes, it's more important to have an algorithm that is fast to evaluate a new instance, than an algorithm that is fast to train.

@@ -23,14 +23,14 @@ The \gls{json} format is also human-readable, which makes it easy to understand 
   faulty              & \gls{glo:snap}s declared as faulty behaviour                 \\
   faulty train        & {training dataset (scaled, processed, packet)          \\for the \gls{nd} \gls{uml} model}\\
   models              & {models trained on healthy and faulty data the metrics \\and predictions to be shown}\\
-  backup              & time-series, features, models, etc.
+  backup              & time-series, \gls{glo:feature}s, models, etc.
 \end{longtblr}
 
 MongoDB structure is based on collections, which are groups of (\gls{json}) documents. A document is a set of key-value pairs that can be nested in several layers. Documents have a dynamic schema, which means that documents in the same collection do not need to have the same set of fields or structure, and common fields in a collection's documents may hold different types of data. To store the data needed by the framework the collections reported in \autoref{tab:MongoDB_collections} are used.
 In the following paragraphs, the structure and purposes of each collection are described.
 
 \paragraph{Raw}
-Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain feature extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the \gls{json} structure summarized in \autoref{tab:raw_json}.
+Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain \gls{glo:feature} extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the \gls{json} structure summarized in \autoref{tab:raw_json}.
 \begin{longtable}{lll}
   \caption{Structure of the \quoted{raw} collection \gls{json} configuration file.}\\ 
   \toprule
@@ -50,7 +50,7 @@ Thinking about the data flow, the first interface between the hardware and the s
 where \texttt{\textunderscore id} is the unique identifier of the document, \texttt{timestamp} is the time at which the data was acquired, in \gls{iso} format, and \texttt{Sensor 1} to \texttt{Sensor n} are the names of the sensors. Each sensor has a \texttt{sampFreq} field that contains the sampling frequency of that particular sensor, and a \texttt{timeSerie} field that contains the data acquired by the sensor, as a list. The \texttt{timeSerie} field is a list of floating point numbers, that can be of any length. Note that the sampling frequencies of different sensors can be different, for example, if a timestamp contains $1\si{\s}$ period of data, a vibration sensor would be linked to an array with several thousands of samples, while a temperature sensor would be linked to only one sample.
 
 \paragraph{Unconsumed}
-Once defined the structure that the time-series will have in the database, let's define the structure of the \gls{glo:snap}s. The features extracted from the time-series are stored in the {unconsumed} collection, with the \gls{json} structure described in \autoref{tab:unconsumed_json}.
+Once defined the structure that the time-series will have in the database, let's define the structure of the \gls{glo:snap}s. The \gls{glo:feature}s extracted from the time-series are stored in the {unconsumed} collection, with the \gls{json} structure described in \autoref{tab:unconsumed_json}.
 
 \begin{longtable}{lll}
   \caption{Structure of the \quoted{unconsumed} collection \gls{json} configuration file.}\label{tab:unconsumed_json}\\ 
@@ -89,7 +89,7 @@ Once defined the structure that the time-series will have in the database, let's
   \bottomrule
   \end{longtable}
   
-Notice that different sensors can have different features. The \quoted{novelty evaluated} field is a boolean that is set to \texttt{false} when the \gls{glo:snap} is created, and is set to \texttt{true} when the \gls{nd} algorithm evaluates the \gls{glo:snap}. This field is used to avoid evaluating the same \gls{glo:snap} multiple times while leaving it in the collection until also the \gls{fd} algorithm is performed. At this point, the \gls{glo:snap} will be moved either to the backup collection, discarded or to the quarantine collection if either the \gls{nd} or the \gls{fd} flag it.
+Notice that different sensors can have different \gls{glo:feature}s. The \quoted{novelty evaluated} field is a boolean that is set to \texttt{false} when the \gls{glo:snap} is created, and is set to \texttt{true} when the \gls{nd} algorithm evaluates the \gls{glo:snap}. This field is used to avoid evaluating the same \gls{glo:snap} multiple times while leaving it in the collection until also the \gls{fd} algorithm is performed. At this point, the \gls{glo:snap} will be moved either to the backup collection, discarded or to the quarantine collection if either the \gls{nd} or the \gls{fd} flag it.
 
 \paragraph{Quarantined}
 The \quoted{quarantined} collection is used to store the \gls{glo:snap}s that were flagged as \quoted{novelty} by the \gls{nd} algorithm or as \quoted{faulty} by the \gls{fd} algorithm (or were flagged by both of them). The structure is the same as the \quoted{unconsumed} collection, but the \quoted{novelty evaluated} field is not present since, at this point, the \gls{glo:snap}s are guaranteed to have been evaluated. The \gls{glo:snap}s in this collection are waiting to be declared as \quoted{healthy} or \quoted{faulty} by the user or to be discarded.
@@ -100,7 +100,7 @@ The idea behind the \quoted{healthy} collection is to store the \gls{glo:snap}s 
 \paragraph{Healthy train}
 In this collection the healthy \gls{glo:snap}s are packed together in different documents, each of them useful in a different phase of the training process.
 
-{The first document has the \texttt{id} \texttt{training\textunderscore set}, that contains all the \texttt{N} training \gls{glo:snap}s, each of them with \texttt{n} sensors signals, characterized by \texttt{F} features. For ease of accessibility, every bottom-nested field is a list of \texttt{N} elements. The structure is resumed in \autoref{tab:train_json}.}
+{The first document has the \texttt{id} \texttt{training\textunderscore set}, that contains all the \texttt{N} training \gls{glo:snap}s, each of them with \texttt{n} sensors signals, characterized by \texttt{F} \gls{glo:feature}s. For ease of accessibility, every bottom-nested field is a list of \texttt{N} elements. The structure is resumed in \autoref{tab:train_json}.}
 
 
 \begin{longtable}{lll}
@@ -110,20 +110,20 @@ In this collection the healthy \gls{glo:snap}s are packed together in different 
 \hline
 \texttt{\textunderscore}id & - & string \\
 timestamp & - & list[\gls{iso} date] \\
-\vcell{sensor 1} & \vcell{feature 1} & \vcell{list[float]} \\*[-\rowheight]
+\vcell{sensor 1} & \vcell{\gls{glo:feature} 1} & \vcell{list[float]} \\*[-\rowheight]
 \printcelltop & \printcellmiddle & \printcellmiddle \\
- & feature 2 & list[float] \\
+ & \gls{glo:feature} 2 & list[float] \\
  & $\vdots$ & $\vdots$ \\
- & feature F & list[float] \\
-sensor 2 & feature 1 & list[float] \\
- & feature 2 & list[float] \\
+ & \gls{glo:feature} F & list[float] \\
+sensor 2 & \gls{glo:feature} 1 & list[float] \\
+ & \gls{glo:feature} 2 & list[float] \\
  & $\vdots$ & $\vdots$ \\
- & feature F & llist[loat] \\
+ & \gls{glo:feature} F & llist[loat] \\
 $\vdots$ & $\vdots$ & $\vdots$ \\
-sensor~$n$ & feature 1 & list[float] \\
- & feature 2 & llist[loat] \\
+sensor~$n$ & \gls{glo:feature} 1 & list[float] \\
+ & \gls{glo:feature} 2 & llist[loat] \\
  & $\vdots$ & $\vdots$ \\
- & \begin{tabular}[c]{@{}l@{}}feature F\\\end{tabular} & list[float] \\
+ & \begin{tabular}[c]{@{}l@{}}\gls{glo:feature} F\\\end{tabular} & list[float] \\
 \bottomrule
 \end{longtable}
 
@@ -131,7 +131,7 @@ sensor~$n$ & feature 1 & list[float] \\
 This collection contains other three documents:
 \begin{itemize}
   \item \texttt{training set scaled}, that contains the scaled training set, having the same structure as the \texttt{training set} document;
-  \item \texttt{training set MIN MAX}, that contains the minimum and maximum values of the features of the training set, useful to plot the features with a reference of the bounds of the training set. It has the same structure of the \texttt{training set} document, but the bottom-nested fields are lists of two elements (the minimum and the maximum value);
+  \item \texttt{training set MIN MAX}, that contains the minimum and maximum values of the \gls{glo:feature}s of the training set, useful to plot the \gls{glo:feature}s with a reference of the bounds of the training set. It has the same structure of the \texttt{training set} document, but the bottom-nested fields are lists of two elements (the minimum and the maximum value);
   \item \texttt{StandardScaler\textunderscore pickled}. It contains the \texttt{StandardScaler} object that was used to scale the training set. This object is encoded in \gls{glo:pickle}, and it is used during the evaluation phase to scale the \gls{glo:snap}s before evaluating them.
 \end{itemize}
 
@@ -161,5 +161,5 @@ The structure of the models' documents is just an identifier and the \texttt{\gl
   \end{longtable}
 
 \paragraph{Backup}
-The backup collection is a general-purpose container for any document that needs to be stored for backup purposes. It can contain time-series, features, models, etc. The structure of the documents in this collection is the same as the structure of the documents in the other collections.
+The backup collection is a general-purpose container for any document that needs to be stored for backup purposes. It can contain time-series, \gls{glo:feature}s, models, etc. The structure of the documents in this collection is the same as the structure of the documents in the other collections.
 

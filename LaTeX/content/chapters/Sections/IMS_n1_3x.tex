@@ -3,7 +3,7 @@
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Heatmap.pdf}
-    \caption{Heatmap of the \gls{glo:std} features value for the test $\text{n}^\circ$1 of \gls{ims} dataset}
+    \caption{Heatmap of the \gls{glo:std} \gls{glo:feature}s value for the test $\text{n}^\circ$1 of \gls{ims} dataset}
     \label{fig:Heatmap}
 \end{figure}
 
@@ -12,22 +12,22 @@ To start the validation, the test No.1 of the \gls{ims} dataset is subdivided in
 
 For all the algorithms, the assumption about the system is that, even if the degradation is continuous, the system is surely healthy until 2003-11-07. The threshold for performing the \gls{nd} is set conformingly to this assumption, for every model considered. Otherwise, the performance of any model could be artificially made as good as desired, by simply setting the threshold to a lower value.
 
-The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain features described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behaviour of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of test No.1 of the \gls{ims} dataset. For display purposes, the features are \gls{glo:std}, and the heatmap of the \gls{glo:std} features is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
+The configuration file is set to use the data from the \quoted{bearing 3x} sensor, extracting all the time-domain and frequency-domain \gls{glo:feature}s described in \autoref{ch:FeatureExtraction}. The training dataset is used to train the \gls{mla} to recognize the normal behaviour of the bearing, and the testing dataset is used to validate the trained model. The \autoref{tab:IMS_test_parameters} shows the parameters of test No.1 of the \gls{ims} dataset. For display purposes, the \gls{glo:feature}s are \gls{glo:std}, and the heatmap of the \gls{glo:std} \gls{glo:feature}s is shown in \autoref{fig:Heatmap} in normal and abnormal conditions.
 
-The abstract version of the \gls{fieldAg} has been used to extract the features from the dataset, creating all the \gls{glo:snap}s in the set $\gls{sym:snapset}=\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. These \gls{glo:snap}s are stored in the \emph{unconsumed} collection of the database.
+The abstract version of the \gls{fieldAg} has been used to extract the \gls{glo:feature}s from the dataset, creating all the \gls{glo:snap}s in the set $\gls{sym:snapset}=\{\gls{sym:snap}_1,\gls{sym:snap}_2,\dots,\gls{sym:snap}_{500}\}$. These \gls{glo:snap}s are stored in the \emph{unconsumed} collection of the database.
 
 \subsection{Training - K-means}
 
 Using the commands of the \gls{cli}, the training procedure has been launched:
 \begin{minted}[linenos,breaklines]{bash}
-    C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-feature-agent
+    C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-\gls{glo:feature}-agent
     C:/Users/JohnSmith/Code/framework> python ./MASTER.py run-machine-learning-agent novelty train
 \end{minted}
 
 where the first command runs the \gls{fieldAg} and the second one runs an \quoted{healthy} instance of the \gls{mla} in training mode.
 At this point, the \gls{mla} asks the user to move the \gls{glo:snap}s from the \emph{unconsumed} to the \emph{healthy} collection, since the \emph{healthy} collection is empty. After the confirmation, the \gls{mla} starts the training with a different number of \gls{glo:clust}s and outputs the scoring in the form of silhouette and inertia scores. The results are shown in \autoref{fig:SilScore_01} and \autoref{fig:InertiaScore_01}. The user can confirm that the best number of \gls{glo:clust}s is 2, as the silhouette score is the highest and the inertia score is at the \gls{pof} point, or insert another number of \gls{glo:clust}s, remembering that it is best to overestimate the number of \gls{glo:clust}s to increase the system sensitivity, as discussed in \autoref{sec:wrong_k}. 
 
-In this case, the number of \gls{glo:clust}s has been set to 2, so that the \gls{mla} saves the model trained with $n=2$ into the database. Even if the feature space has high dimensionality, the agent plot to the user also a scatter plot of a subset of features of the training dataset, to have a visual feedback of the \gls{glo:clust}ing, as shown in \autoref{fig:Clusters}, where the points are the \gls{glo:snap}s, the crosses are the centroids and the colours represent the assigned \gls{glo:clust}. We can observe that selecting 2 as the number of \gls{glo:clust}s is adequate and that the projections of the \gls{glo:clust}s' shapes on some planes are not perfectly spherical but, at least, they are not too elongated. This is a good sign for the K-means algorithm, as discussed in \autoref{sec:kmeans_limits}.
+In this case, the number of \gls{glo:clust}s has been set to 2, so that the \gls{mla} saves the model trained with $n=2$ into the database. Even if the \gls{glo:feature} space has high dimensionality, the agent plot to the user also a scatter plot of a subset of \gls{glo:feature}s of the training dataset, to have a visual feedback of the \gls{glo:clust}ing, as shown in \autoref{fig:Clusters}, where the points are the \gls{glo:snap}s, the crosses are the centroids and the colours represent the assigned \gls{glo:clust}. We can observe that selecting 2 as the number of \gls{glo:clust}s is adequate and that the projections of the \gls{glo:clust}s' shapes on some planes are not perfectly spherical but, at least, they are not too elongated. This is a good sign for the K-means algorithm, as discussed in \autoref{sec:kmeans_limits}.
 
 \begin{figure}
     \centering
@@ -51,7 +51,7 @@ In this case, the number of \gls{glo:clust}s has been set to 2, so that the \gls
 \end{figure}
 
 \subsection{\gls{nd} Validation - K-means}
-Using the validation partition of the dataset, it is possible to set the \gls{mla} in \emph{evaluate} mode. The \gls{fieldAg} uses the validation partition and fills the \emph{raw} collection with the time-series. The {\gls{fa}} extract the features and continuously fill the \emph{unconsumed} collection with the \gls{glo:snap}s. The \gls{mla} evaluates the \gls{glo:snap}s according to \autoref{alg:eval_new_snapshot}  and plots the result, as well as generating a warning if the novelty metric is greater than a certain threshold (in this case 50\%, but it is configurable in the usual \texttt{.yaml} file). The results are shown in \autoref{fig:NoveltyScore_01}, where we can see that the framework detects the novelty quite early, at 2003-11-16 07:46, while the dataset authors, declared the test finished because of bearing defects (not catastrophic failures) at 2003-11-25 23:40. The comparison of the margin of early detection for different algorithms will be resumed later.
+Using the validation partition of the dataset, it is possible to set the \gls{mla} in \emph{evaluate} mode. The \gls{fieldAg} uses the validation partition and fills the \emph{raw} collection with the time-series. The {\gls{fa}} extract the \gls{glo:feature}s and continuously fill the \emph{unconsumed} collection with the \gls{glo:snap}s. The \gls{mla} evaluates the \gls{glo:snap}s according to \autoref{alg:eval_new_snapshot}  and plots the result, as well as generating a warning if the novelty metric is greater than a certain threshold (in this case 50\%, but it is configurable in the usual \texttt{.yaml} file). The results are shown in \autoref{fig:NoveltyScore_01}, where we can see that the framework detects the novelty quite early, at 2003-11-16 07:46, while the dataset authors, declared the test finished because of bearing defects (not catastrophic failures) at 2003-11-25 23:40. The comparison of the margin of early detection for different algorithms will be resumed later.
 
 In \autoref{fig:NoveltyScore_01_detail}, a detailed view of the \gls{nd} metric becoming consistently greater than the threshold is shown.
 
@@ -218,7 +218,7 @@ This test shows that in an increasingly decaying system retrained with data very
 
 Another consideration is about the \gls{rul} threshold: since the model has been retrained with \quoted{worse} data, the threshold for the \gls{rul} prediction should be set to a lower value, because now the \gls{glo:clust}s are either more in quantity, distorted or bigger, so it is unlikely that the novelty metric can still reach the same high values estimated before the retraining.
 
-An intuition about why the sensitivity of the system is reduced after the retraining comes by examining the scatter plot of the \gls{glo:snap}s in the feature space, shown in \autoref{fig:Clusters_novelty}, where all the \gls{glo:snap}s extracted from the dataset are displayed. The \gls{glo:clust}s are more elongated and much bigger. These shapes arise gradually from the original ones of \autoref{fig:Clusters} so, by performing a retrain, both the effect of producing bigger \gls{glo:clust}s and one of the \gls{glo:clust}s being much more elongated play a role in reducing the sensitivity of the \gls{mla}.
+An intuition about why the sensitivity of the system is reduced after the retraining comes by examining the scatter plot of the \gls{glo:snap}s in the \gls{glo:feature} space, shown in \autoref{fig:Clusters_novelty}, where all the \gls{glo:snap}s extracted from the dataset are displayed. The \gls{glo:clust}s are more elongated and much bigger. These shapes arise gradually from the original ones of \autoref{fig:Clusters} so, by performing a retrain, both the effect of producing bigger \gls{glo:clust}s and one of the \gls{glo:clust}s being much more elongated play a role in reducing the sensitivity of the \gls{mla}.
 
 \begin{figure}
     \centering

@@ -1,8 +1,8 @@
 \chapter{Feature Extraction}
 \label{ch:FeatureExtraction}
 
-Before diving into the novelty detection framework itself, the features to be used need to be defined and extracted from the data. Since our goal is to detect a novel behaviour, we are interested in both \quoted{time-domain} and \quoted{frequency-domain} features. The former are used to capture the temporal evolution of the signal, while the latter are used to capture the spectral content of the signal. 
-In this chapter, we will first introduce the reference dataset that will be used to test the framework and then we will describe the features that will be used in the framework. The \gls{nd} framework will work on the complete collection of features $\vect{F}=\{\vect{F}_t, \vect{F}_f\}$, where $\vect{F}_t$ is the collection of time-domain features and $\vect{F}_f$ is the collection of frequency-domain features. Some of the features will be extracted for all the signals available, while some others only on a subset of the signals, depending on the settings of the framework, as it will be explained in \autoref{ch:Framework}. 
+Before diving into the novelty detection framework itself, the \gls{glo:feature}s to be used need to be defined and extracted from the data. Since our goal is to detect a novel behaviour, we are interested in both \quoted{time-domain} and \quoted{frequency-domain} \gls{glo:feature}s. The former are used to capture the temporal evolution of the signal, while the latter are used to capture the spectral content of the signal. 
+In this chapter, we will first introduce the reference dataset that will be used to test the framework and then we will describe the \gls{glo:feature}s that will be used in the framework. The \gls{nd} framework will work on the complete collection of \gls{glo:feature}s $\vect{F}=\{\vect{F}_t, \vect{F}_f\}$, where $\vect{F}_t$ is the collection of time-domain \gls{glo:feature}s and $\vect{F}_f$ is the collection of frequency-domain \gls{glo:feature}s. Some of the \gls{glo:feature}s will be extracted for all the signals available, while some others only on a subset of the signals, depending on the settings of the framework, as it will be explained in \autoref{ch:Framework}. 
 
 
 
@@ -59,10 +59,10 @@ To visualize what happens to the vibration signal as the bearing degrades over t
     }
     \end{table}
 
-\section{Time-domain features}
-Let's consider a timeserie $\vect{x}$ containing $n$ samples $x_1, x_2, \dots, x_n$. The goal of the feature extraction process is to extract a set of features $\vect{F}_t = \{F_1, F_2, \dots, F_m\}\in \mathbb{R}^F$ that can be used to describe the signal. In this section, we will describe the features that will be used in the developed framework.
+\section{Time-domain \gls{glo:feature}s}
+Let's consider a timeserie $\vect{x}$ containing $n$ samples $x_1, x_2, \dots, x_n$. The goal of the \gls{glo:feature} extraction process is to extract a set of \gls{glo:feature}s $\vect{F}_t = \{F_1, F_2, \dots, F_m\}\in \mathbb{R}^F$ that can be used to describe the signal. In this section, we will describe the \gls{glo:feature}s that will be used in the developed framework.
 \paragraph{Mean}
-The first feature to be considered is simply the mean of the signal. It is defined as
+The first \gls{glo:feature} to be considered is simply the mean of the signal. It is defined as
 \begin{equation}
     \mu = \frac{1}{n}\sum_{i=1}^n x_i
 \end{equation}
@@ -119,16 +119,16 @@ It can be estimated on sampled data as
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/TDfeatures.pdf}
-    \caption{All time-domain features for the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset}
+    \caption{All time-domain \gls{glo:feature}s for the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset}
     \label{fig:IMS_TD_features}
 \end{figure}
 
-To visualize the evolution of the features over time, consider all the \gls{glo:snap}s of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset and plot all the time-domain features described above. The result is shown in \autoref{fig:IMS_TD_features}. Having seen also \autoref{fig:IMS_bearing}, it's not surprising that the P2P and the kurtosis are the time domain features that capture the degradation of the bearing the earliest. 
+To visualize the evolution of the \gls{glo:feature}s over time, consider all the \gls{glo:snap}s of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset and plot all the time-domain \gls{glo:feature}s described above. The result is shown in \autoref{fig:IMS_TD_features}. Having seen also \autoref{fig:IMS_bearing}, it's not surprising that the P2P and the kurtosis are the time domain \gls{glo:feature}s that capture the degradation of the bearing the earliest. 
 
 
-\section{Frequency-domain features}
+\section{Frequency-domain \gls{glo:feature}s}
 
-To capture also the frequency behaviour of the signal, other tools are needed. In this section, we will describe the frequency-domain features  $\vect{F}_f = \{F_{m+1}, F_{m+2}, \dots, F_l\}$ that will be used in the developed framework.
+To capture also the frequency behaviour of the signal, other tools are needed. In this section, we will describe the frequency-domain \gls{glo:feature}s  $\vect{F}_f = \{F_{m+1}, F_{m+2}, \dots, F_l\}$ that will be used in the developed framework.
 
 \subsection{Fourier Transform}
 \label{sec:FFT}
@@ -228,7 +228,7 @@ In figure \autoref{fig:IMS} it is shown the effect of different preprocessing te
 
 \subsubsection{Application to the reference dataset}
 
-At this point, to see if the spectrum is representative of a fault, as it has been done for the time-domain features, we can plot all the spectrum for all the \gls{glo:snap}s of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset, as shown in \autoref{fig:IMS_FD}. Looking at the picture, we can see that the signature frequencies of faults are present in the spectrum, and they become more and more prominent as the bearing degrades. This is a good sign justifying to use of the spectrum to detect the novel behaviour.
+At this point, to see if the spectrum is representative of a fault, as it has been done for the time-domain \gls{glo:feature}s, we can plot all the spectrum for all the \gls{glo:snap}s of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset, as shown in \autoref{fig:IMS_FD}. Looking at the picture, we can see that the signature frequencies of faults are present in the spectrum, and they become more and more prominent as the bearing degrades. This is a good sign justifying to use of the spectrum to detect the novel behaviour.
 
 \begin{figure}
     \centering
@@ -244,15 +244,15 @@ At this point, to see if the spectrum is representative of a fault, as it has be
 
 \subsubsection{Motivation}
 
-In the previous \autoref{sec:FFT}, it has been shown that the spectrum of the signal contains useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the features extraction, and the memory usage. Considering only the \gls{fft} of all signals of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10 \text{kFeatures} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
+In the previous \autoref{sec:FFT}, it has been shown that the spectrum of the signal contains useful information for performing \gls{nd}. Remembering that the ultimate scope of this work is to develop a framework that runs in \gls{glo:edge}, it is important to consider the computational cost of the \gls{glo:feature}s extraction, and the memory usage. Considering only the \gls{fft} of all signals of the dataset shown in \autoref{fig:IMS_FD} and the fact that a floating point value uses $64$ bit, the memory usage is $64 \si{\bit} \times 10 \text{kFeatures} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 172.5 \text{Mb}$. This is not a big problem for a desktop computer, but it may be a problem for an \gls{iot} device. Moreover, the \gls{fft} is a very computationally expensive operation, with a complexity of $\mathcal{O}(n \log n)$, where $n$ is the number of samples.
 
 To overcome this problem it is necessary to find a method that exploits the same information in the frequency domain, but using much less computational power and memory. Other tools for the frequency analysis are the Wavelet Transform and, in particular, the Wavelet Packet Decomposition (\gls{wpd}) has been used in the developed framework. The theory behind this topic is briefly described in \autoref{app:wavelet}.
 
-Furthermore, most \gls{ml} algorithms perform better with a lower number of features, and the \gls{wpd} is able to extract a lower number of features. For example, for a signal like the ones in the \gls{ims} dataset $\vect{x} \in \mathbb{R}^{2000}$, the \gls{wpd} with a depth of $6$ will output $2^6=64$ coefficients, which are transformed into features. On the other hand, the \gls{fft} will output $2000$ coefficients, which can already be considered an high dimensionality space.
+Furthermore, most \gls{ml} algorithms perform better with a lower number of \gls{glo:feature}s, and the \gls{wpd} is able to extract a lower number of \gls{glo:feature}s. For example, for a signal like the ones in the \gls{ims} dataset $\vect{x} \in \mathbb{R}^{2000}$, the \gls{wpd} with a depth of $6$ will output $2^6=64$ coefficients, which are transformed into \gls{glo:feature}s. On the other hand, the \gls{fft} will output $2000$ coefficients, which can already be considered an high dimensionality space.
 
 \subsubsection{Application to the reference dataset}
 
-At this point, let's consider a \gls{wpd} with a depth of $6$, that outputs $2^6=64$ coefficients. We are going to take the norm of each coefficient as a feature so, in the end, we will have $64$ features (from \quoted{aaaaaa} that leads from all the approximation coefficients to \quoted{dddddd} that that leads from all the detail coefficients instead, passing for all the combinations in between). The \gls{wpd} of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset is shown in \autoref{fig:IMS_WPD_health} as the bearing is new, and in \autoref{fig:IMS_WPD_fault} as the bearing is degraded. It is possible to see that the \gls{wpd} is able to capture the presence of the fault frequencies.
+At this point, let's consider a \gls{wpd} with a depth of $6$, that outputs $2^6=64$ coefficients. We are going to take the norm of each coefficient as a \gls{glo:feature} so, in the end, we will have $64$ \gls{glo:feature}s (from \quoted{aaaaaa} that leads from all the approximation coefficients to \quoted{dddddd} that that leads from all the detail coefficients instead, passing for all the combinations in between). The \gls{wpd} of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset is shown in \autoref{fig:IMS_WPD_health} as the bearing is new, and in \autoref{fig:IMS_WPD_fault} as the bearing is degraded. It is possible to see that the \gls{wpd} is able to capture the presence of the fault frequencies.
 
 \begin{figure}
     \centering
@@ -268,8 +268,8 @@ At this point, let's consider a \gls{wpd} with a depth of $6$, that outputs $2^6
     \label{fig:IMS_WPD_fault}
 \end{figure}
 
-At this point, it is possible to extract the features with the \gls{wpd} and plot them over time, for the whole dataset, as it has been done for the \gls{fft} in \autoref{fig:IMS_FD}. The result is shown in \autoref{fig:IMS_WPD}. The memory consumption of the data in the second figure is $64 \si{\bit} \times 64 \text{Features} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 1.1 \text{Mb}$, that means that the memory saving obtained using \gls{wpd} instead of \gls{fft} exceeds $99\%$. 
-Despite this huge memory saving, it is possible to see that the \gls{wpd} is able to retain the information about the fault frequencies, and it is possible to see that the fault frequencies become more and more prominent as the bearing degrades over time. For this reason, the \gls{wpd} will be used in the developed framework, along with the time-domain features.
+At this point, it is possible to extract the \gls{glo:feature}s with the \gls{wpd} and plot them over time, for the whole dataset, as it has been done for the \gls{fft} in \autoref{fig:IMS_FD}. The result is shown in \autoref{fig:IMS_WPD}. The memory consumption of the data in the second figure is $64 \si{\bit} \times 64 \text{Features} \times 2156 \text{Snapshots} \div 8 \text{bit/byte} \approx 1.1 \text{Mb}$, that means that the memory saving obtained using \gls{wpd} instead of \gls{fft} exceeds $99\%$. 
+Despite this huge memory saving, it is possible to see that the \gls{wpd} is able to retain the information about the fault frequencies, and it is possible to see that the fault frequencies become more and more prominent as the bearing degrades over time. For this reason, the \gls{wpd} will be used in the developed framework, along with the time-domain \gls{glo:feature}s.
 
 \begin{figure}
     \centering
@@ -279,5 +279,5 @@ Despite this huge memory saving, it is possible to see that the \gls{wpd} is abl
 \end{figure}
 
 \section{Conclusions}
-Even just considering very simple time-domain features, we can already detect the degradation of the bearing by comparing these feature values to a threshold. On the other hand, also the frequency-domain features could be just compared with a threshold to detect novel behaviours. But, as we will see in \autoref{ch:Framework}, a general purpose framework based upon a more sophisticated approach based on the \gls{glo:clust}ing of the data, it will be possible to condense all the features from all the signals into a single metric that will be used to detect the novel behaviour. This will have several advantages. Some of them are being able to detect a novel behaviour even if it is not possible to define a threshold for each feature, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the framework will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain features, but only by the frequency-domain features.
+Even just considering very simple time-domain \gls{glo:feature}s, we can already detect the degradation of the bearing by comparing these \gls{glo:feature} values to a threshold. On the other hand, also the frequency-domain \gls{glo:feature}s could be just compared with a threshold to detect novel behaviours. But, as we will see in \autoref{ch:Framework}, a general purpose framework based upon a more sophisticated approach based on the \gls{glo:clust}ing of the data, it will be possible to condense all the \gls{glo:feature}s from all the signals into a single metric that will be used to detect the novel behaviour. This will have several advantages. Some of them are being able to detect a novel behaviour even if it is not possible to define a threshold for each \gls{glo:feature}, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the framework will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain \gls{glo:feature}s, but only by the frequency-domain \gls{glo:feature}s.
 

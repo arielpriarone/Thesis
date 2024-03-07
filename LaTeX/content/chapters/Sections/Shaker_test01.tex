@@ -50,11 +50,11 @@ In this case, an accelerometer, whose key specifications are shown in \autoref{t
     \end{table}
 
 \subsection{Training and evaluating}
-The framework was firstly set to gather the data, extract the features according to the configuration, and send the data to the \gls{pc} for training. The training signals are two waves with different harmonic content and the test signal is very similar to one used for training, except for the presence of an additional harmonic with a small amplitude. The train and test signals harmonic content is reported in \autoref{tab:shaker_param_01}. The amplitude of the vibration has been tuned at each test to ensure that the microcontroller was reading a signal of 1V$_{pp}$. The amplitude of the signals has been kept constant to test the capability of the framework to detect the frequency content of the signal in the feature extraction phase. The waveform of the test signals is shown with the one of one training signal in \autoref{fig:shaker}, to show the similarity of the two signals. 
+The framework was firstly set to gather the data, extract the \gls{glo:feature}s according to the configuration, and send the data to the \gls{pc} for training. The training signals are two waves with different harmonic content and the test signal is very similar to one used for training, except for the presence of an additional harmonic with a small amplitude. The train and test signals harmonic content is reported in \autoref{tab:shaker_param_01}. The amplitude of the vibration has been tuned at each test to ensure that the microcontroller was reading a signal of 1V$_{pp}$. The amplitude of the signals has been kept constant to test the capability of the framework to detect the frequency content of the signal in the \gls{glo:feature} extraction phase. The waveform of the test signals is shown with the one of one training signal in \autoref{fig:shaker}, to show the similarity of the two signals. 
 
 The setting of the framework can be resumed as follows:
 \begin{itemize}
-    \item 67 features extracted from the signal ($2^6=64$ features from the wavelet decomposition, mean, P2P, and \gls{rms});
+    \item 67 \gls{glo:feature}s extracted from the signal ($2^6=64$ \gls{glo:feature}s from the wavelet decomposition, mean, P2P, and \gls{rms});
     \item 110 samples for training for each signal.
     \item sampling frequency of 5kHz, for 1s of acquisition.
 \end{itemize}

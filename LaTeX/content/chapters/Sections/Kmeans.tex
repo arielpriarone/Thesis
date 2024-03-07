@@ -3,14 +3,14 @@
 
 This problem is called k-means because it aims to describe the \quoted{\gls{glo:clust}ing} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each \gls{glo:clust} with its mean ($\gls{sym:cent}$). Note that the mean of the \gls{glo:clust}, from a physical point of view, is the centre of mass of the \gls{glo:clust} itself as if it is composed of unitary point masses located at the positions of the data points. The mean is not necessarily a point belonging to the \gls{glo:clust}.
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ \gls{glo:clust}s ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the \gls{glo:clust}s they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the \gls{glo:clust}s themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ \gls{glo:feature}s from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of \gls{glo:feature}s $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ \gls{glo:clust}s ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the \gls{glo:clust}s they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the \gls{glo:clust}s themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
   \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \gls{sym:cent}_i}^2 = \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\abs{\gls{sym:cluster}_i}\mathrm{Var}\gls{sym:cluster}_i
   \label{eq:kmeans_problem}
 \end{equation}
 
-Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
+Unfortunately, this problem is NP-hard, even for as little as $F=2$ \gls{glo:feature}s considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
 
 Anyway, {\gls{glo:heuristic}} \gls{glo:clust}ing algorithms were already developed in the 1950s. 
 The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version, published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
@@ -50,7 +50,7 @@ Nowadays, the K-means algorithm is implemented in many libraries, such as \textt
   \end{algorithmic}
 \end{algorithm}
 
-As an example, we can consider $F=2$ features, and generate some test points shaped like three separated \gls{glo:clust}s. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iterations of the algorithm, and the final result. The K-means algorithm had $n=200$ {\gls{glo:snap}}s, and $k=3$ \gls{glo:clust}s as input. The colours of the dots and the shaded areas represent the \gls{glo:clust}s and the decision boundaries. The {\gls{glo:cent}}s are represented as black crosses.
+As an example, we can consider $F=2$ \gls{glo:feature}s, and generate some test points shaped like three separated \gls{glo:clust}s. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iterations of the algorithm, and the final result. The K-means algorithm had $n=200$ {\gls{glo:snap}}s, and $k=3$ \gls{glo:clust}s as input. The colours of the dots and the shaded areas represent the \gls{glo:clust}s and the decision boundaries. The {\gls{glo:cent}}s are represented as black crosses.
 The decision boundaries are a Voronoi tessellation of the space, and they are defined as the set of points that are equidistant from the {\gls{glo:cent}}s of two different \gls{glo:clust}s. The algorithm itself does not compute the boundaries, but it is useful to plot them for visualization purposes.
 
 \subsection{Variations of the K-means algorithm}
@@ -59,14 +59,14 @@ The decision boundaries are a Voronoi tessellation of the space, and they are de
 Finding the optimal solution to the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
 To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that most algorithms do not scale well as the number $n$ of {\gls{glo:snap}}s increases. With respect to the number of \gls{glo:clust}s, the problem has a linear complexity $\mathcal{O}(k)$.
 
-It is worth noticing that an exact solution to the problem has been published \cite{Kmeans_vornoi_japan}, with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of \gls{glo:clust}s and the number of features $F$.
+It is worth noticing that an exact solution to the problem has been published \cite{Kmeans_vornoi_japan}, with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of \gls{glo:clust}s and the number of \gls{glo:feature}s $F$.
 
 \paragraph*{Lloyd's algorithm}
 The classic Lloyd algorithm \cite{Lloyd1982} has a complexity $\mathcal{O}(n\cdot k\cdot F )$.
 
 \paragraph*{Various improvements to Lloyd's algorithm} Keeping the same basic idea, various modifications of the Lloyd algorithm have been proposed to improve the performances. For example, Kanugo \cite{kanungo2004local} proposed a local search algorithm that has a complexity $\mathcal{O}(n^3)$. Another result by Malay \cite{Kmeans_linear} has a linear complexity $\mathcal{O}(n)$. 
 
-Another improvement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances ({\gls{glo:snap}}s) and the {\gls{glo:cent}}s. This algorithm becomes convenient when the number $k$ of \gls{glo:clust}s is large ($\geq 20$), and up to a dimensionality of $F=1000$ features.
+Another improvement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances ({\gls{glo:snap}}s) and the {\gls{glo:cent}}s. This algorithm becomes convenient when the number $k$ of \gls{glo:clust}s is large ($\geq 20$), and up to a dimensionality of $F=1000$ \gls{glo:feature}s.
 
 A variant of the Lloyd algorithm regarding both the speed of execution and the memory consumption has been proposed by Sculley \cite{Sculley2010}. This solution achieves a reduction of the execution time by orders of magnitude and enables performing the classification even for datasets that don't fit in the memory of the machine. This is achieved by using a \emph{mini-batch} approach, where the {\gls{glo:cent}}s are updated after each batch of {\gls{glo:snap}}s.
 
@@ -151,7 +151,7 @@ In this case, the best value for $k$ is $k=3$, because it is the value that maxi
 \end{equation}
 
 \subsection{Assignation of the new instance to a \gls{glo:clust}}
-The procedure for assigning the new {\gls{glo:snap}} $\gls{sym:snap}_n$ to a \gls{glo:clust} is quite simple, it is sufficient to compute the distance between $\gls{sym:snap}_n$ and the {\gls{glo:cent}}s $\gls{sym:cent}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\gls{sym:snap}_n$ to the \gls{glo:clust} with the minimum distance.
+The procedure for assigning the new {\gls{glo:snap}} $\gls{sym:snap}_n$ to a \gls{glo:clust} is quite simple, it is sufficient to compute the distance between $\gls{sym:snap}_n$ and the {\gls{glo:cent}}s $\gls{sym:cent}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the \gls{glo:feature} space, it can be computed using the \autoref{eq:clust_dist}, and assign $\gls{sym:snap}_n$ to the \gls{glo:clust} with the minimum distance.
 
 \begin{equation}
   \label{eq:clust_dist}
@@ -161,9 +161,9 @@ The procedure for assigning the new {\gls{glo:snap}} $\gls{sym:snap}_n$ to a \gl
 \subsection{Evaluation of a new instance}
 
 At this point, with a model trained on the data, a generic $n$th new {\gls{glo:snap}} instance $\gls{sym:snap}_n$ can be evaluated using the K-means algorithm.
-From a geometric point of view, the {\gls{glo:snap}} $\gls{sym:snap}_n$ is a point in the ${F}$-dimensional space, where ${F}$ is the number of features used to train the model.
+From a geometric point of view, the {\gls{glo:snap}} $\gls{sym:snap}_n$ is a point in the ${F}$-dimensional space, where ${F}$ is the number of \gls{glo:feature}s used to train the model.
 
-For demonstration purposes, in this section, since it is still feasible to show 3D plots, it is considered an example with ${F}=3$ features.
+For demonstration purposes, in this section, since it is still feasible to show 3D plots, it is considered an example with ${F}=3$ \gls{glo:feature}s.
 
 \begin{figure}[htbp]
   \centering
@@ -172,7 +172,7 @@ For demonstration purposes, in this section, since it is still feasible to show 
   \label{fig:clust_spheres}
 \end{figure}
 
-In the \autoref{fig:clust_spheres}, the training data are represented in the $3$-dimensional space, where the axis are the features used to train the model. The K-means model has been ideally trained with an arbitrary number $k$ of \gls{glo:clust}s but, for display purposes, only two \gls{glo:clust}s  ($\gls{sym:cluster}_i$ and $\gls{sym:cluster}_j$) are plotted.
+In the \autoref{fig:clust_spheres}, the training data are represented in the $3$-dimensional space, where the axis are the \gls{glo:feature}s used to train the model. The K-means model has been ideally trained with an arbitrary number $k$ of \gls{glo:clust}s but, for display purposes, only two \gls{glo:clust}s  ($\gls{sym:cluster}_i$ and $\gls{sym:cluster}_j$) are plotted.
 \paragraph*{}
 The entities shown in the \autoref{fig:clust_spheres} are:
 \begin{itemize}
@@ -199,7 +199,7 @@ Once the new {\gls{glo:snap}} $\gls{sym:snap}_n$ has been assigned to the right 
 Few consideration about the result of the \autoref{eq:clust_eval}:
 \begin{itemize}
   \item if $e_{n} > 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centred in $\gls{sym:cent}_i$, so it is probably a novel {\gls{glo:snap}};
-  \item if $e_{n} < 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal {\gls{glo:snap}}. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the \gls{glo:clust} size, and use it for novelty detection would not be reasonable. \textbf{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
+  \item if $e_{n} < 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal {\gls{glo:snap}}. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the \gls{glo:clust} size, and use it for novelty detection would not be reasonable. \textbf{This emphasizes the importance of the standardization procedure applied to the \gls{glo:feature}s before the training phase};
 \end{itemize}
 
 

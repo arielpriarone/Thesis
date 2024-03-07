@@ -12,8 +12,8 @@ So, in general, the ingredients of \gls{ml} are:
     \item an algorithm that learns how to perform the task on specific data
 \end{itemize}
 
-The data are usually preprocessed before giving them to the algorithm. The processed data are called \emph{features}. This is a generic term that refers to the information content of the data.
-For example, if the data are recordings of temperatures over time, the features could be the mean, the standard deviation, the minimum, and the maximum of the temperature or, in some cases if the algorithm is able to learn directly from them, the raw data themself.
+The data are usually preprocessed before giving them to the algorithm. The processed data are called \emph{\gls{glo:feature}s}. This is a generic term that refers to the information content of the data.
+For example, if the data are recordings of temperatures over time, the \gls{glo:feature}s could be the mean, the standard deviation, the minimum, and the maximum of the temperature or, in some cases if the algorithm is able to learn directly from them, the raw data themself.
 
 The tasks can be divided into main categories:
 \begin{itemize}
@@ -30,9 +30,9 @@ The tasks can be divided into main categories:
 \subsection{Least Squares}
 \label{subsec:LS}
 
-Let's consider a set of $m$ observations of a variable $y \in \mathbb{R}^{n_y}$ (output features) that depends on a variable $x \in \mathbb{R}^{n_x}$ (input features) and a set of $n_f \cdot n_y$ parameters $\theta \in \mathbb{R}^{n_f \times n_y}$.
+Let's consider a set of $m$ observations of a variable $y \in \mathbb{R}^{n_y}$ (output \gls{glo:feature}s) that depends on a variable $x \in \mathbb{R}^{n_x}$ (input \gls{glo:feature}s) and a set of $n_f \cdot n_y$ parameters $\theta \in \mathbb{R}^{n_f \times n_y}$.
 
-Suppose to know that the output features are linked to the input features with $n_f$ functions linear in the parameters $\theta$, so that:
+Suppose to know that the output \gls{glo:feature}s are linked to the input \gls{glo:feature}s with $n_f$ functions linear in the parameters $\theta$, so that:
 \begin{multline*}
     \begin{bmatrix}
         y_1 & y_2 & \dots & y_{n_y} 
@@ -128,7 +128,7 @@ That is why this method is called \emph{Least Squares} (\gls{ls}). It is proven 
     \lim_{m \to \infty} \vect{\Theta_{LS}} = \vect{\Theta}_{\text{true}}
 \end{equation}
 
-Is this considered machine learning? Yes, even being just a simple implementation of linear algebra, once programmed in a computer, it qualifies as the (simplest) machine learning algorithm because fitting new data does not require any human intervention. Let's see an example. Suppose to have 400 data points, shown in \autoref{fig:LinearRegressiondData}, of the variable $x$, $y_1$ and $y_2$ sampled with noise, that we call Feature 1, Feature 2 and Feature 3, respectively. Suppose that it is known that the output features are linked to the input feature with a linear combination of the functions $e^x$, $x^3$, $\cos(x)$, $\sin(x)$ and $\cos^3(x)$, but the parameters $\theta$ are unknown:
+Is this considered machine learning? Yes, even being just a simple implementation of linear algebra, once programmed in a computer, it qualifies as the (simplest) machine learning algorithm because fitting new data does not require any human intervention. Let's see an example. Suppose to have 400 data points, shown in \autoref{fig:LinearRegressiondData}, of the variable $x$, $y_1$ and $y_2$ sampled with noise, that we call Feature 1, Feature 2 and Feature 3, respectively. Suppose that it is known that the output \gls{glo:feature}s are linked to the input \gls{glo:feature} with a linear combination of the functions $e^x$, $x^3$, $\cos(x)$, $\sin(x)$ and $\cos^3(x)$, but the parameters $\theta$ are unknown:
 
 \begin{eqnarray}
     y_1 &=& \theta_{1,1} e^x + \theta_{2,1} x^3 + \theta_{3,1} \cos(x) + \theta_{4,1} \sin(x) + \theta_{5,1} \cos^3(x) \\
@@ -199,12 +199,12 @@ that is quite close to the real parameters used to generate the data:
     \end{bmatrix}
 \end{equation*}
 
-Using the estimated parameters, it is possible to estimate the output features for new input features, the regression line is shown in \autoref{fig:LinearRegression}.
+Using the estimated parameters, it is possible to estimate the output \gls{glo:feature}s for new input \gls{glo:feature}s, the regression line is shown in \autoref{fig:LinearRegression}.
 
 \subsubsection{Applicability}
 This is an elegant closed-form solution for a regression problem, however, it has some limitations:
 \begin{itemize}
-    \item if the noise is not white, or it is present also in the input features, the solution is not guaranteed to converge to the real parameters;
+    \item if the noise is not white, or it is present also in the input \gls{glo:feature}s, the solution is not guaranteed to converge to the real parameters;
     \item if there are nonlinearities in the parameters (for example $\sin(\theta_{1,1}x)$), the solution is not applicable;
 \end{itemize}
 
@@ -264,15 +264,15 @@ The \gls{gd} algorithm is very powerful, but it can overfit the data. To avoid t
 
 \section{Classification}
 \label{sec:Classification}
-Another common task in \gls{ml} is classification. In this case, the algorithm is trained to assign a label to a new instance, based on the training dataset of labelled instances. Naively, it aims to define a set of rules that divide the space of the input features in regions, each one associated with a label. The two main approaches are \emph{hard} and \emph{soft} classification. In the former, the algorithm is trained to assign a single label to each instance, while in the latter, the algorithm is trained to output a probability for each label, and the label with the highest probability is assigned to the instance.
+Another common task in \gls{ml} is classification. In this case, the algorithm is trained to assign a label to a new instance, based on the training dataset of labelled instances. Naively, it aims to define a set of rules that divide the space of the input \gls{glo:feature}s in regions, each one associated with a label. The two main approaches are \emph{hard} and \emph{soft} classification. In the former, the algorithm is trained to assign a single label to each instance, while in the latter, the algorithm is trained to output a probability for each label, and the label with the highest probability is assigned to the instance.
 
 Classification is a \emph{supervised} learning task because the training dataset is labelled. The labels can be provided by a human or can be generated by another algorithm. Some classification algorithms are available also in the unsupervised version, where the labels are not provided, and the task is usually novelty detection.
 
 \subsection{Support Vector Machines \gls{svm}}
 \label{subsec:svm}
-Support Vector Machines are simple but powerful classification algorithms that can be used both for hard and soft classification, with medium size datasets. They are based on the idea of finding the hyperplane that best divides the space of the input features into two regions, each one associated with a label.
+Support Vector Machines are simple but powerful classification algorithms that can be used both for hard and soft classification, with medium size datasets. They are based on the idea of finding the hyperplane that best divides the space of the input \gls{glo:feature}s into two regions, each one associated with a label.
 
-The main drawback is that, natively, they can only be used for binary classification (two classes), but there are some extensions that allow to use of them for multiclass classification. Furthermore, as will be explained in \autoref{sec:OneClassSupportVectorMachine}, they can be used also for novelty detection (one class). Another limitation is that, being a linear classifier, they can only be used for linearly separable data, but using the \emph{kernel trick}, they can be used also for nonlinearly separable data.
+The main drawback is that, natively, they can only be used for binary classification (two classes), but there are some extensions that allow to use of them for multiclass classification. Furthermore, as will be explained in \autoref{sec:OneClassSupportVectorMachine}, they can be used also for novelty detection (one class). Another limitation is that, being a linear classifier, they can only be used for \gls{glo:lin-sep} data, but using the \emph{kernel trick}, they can be used also for non\gls{glo:lin-sep} data.
 
 \subsubsection{Linear \gls{svm}}
 \label{subsubsec:LinearSVM}
@@ -284,11 +284,11 @@ The main drawback is that, natively, they can only be used for binary classifica
     \label{fig:LinearSVM}
 \end{figure}
 
-Looking at \autoref{fig:LinearSVM}, it is possible to visualize what the algorithm does: it finds the plane that separates one class from the other, and vice-versa for the second class. In other words, it finds the most distant parallel hyperplanes that separate the two classes. As evident from the figure, the distance between the hyperplanes (called \emph{margin}) is sensitive to the features scaling. The term \quoted{support} derives from the fact that only the instances that are on the margin, define (support) the two planes. Those instances are called \emph{support vectors}, and in the figure are highlighted with a grey circle.
+Looking at \autoref{fig:LinearSVM}, it is possible to visualize what the algorithm does: it finds the plane that separates one class from the other, and vice-versa for the second class. In other words, it finds the most distant parallel hyperplanes that separate the two classes. As evident from the figure, the distance between the hyperplanes (called \emph{margin}) is sensitive to the \gls{glo:feature}s scaling. The term \quoted{support} derives from the fact that only the instances that are on the margin, define (support) the two planes. Those instances are called \emph{support vectors}, and in the figure are highlighted with a grey circle.
 
 \subsubsection{Noninear \gls{svm}}
 \label{subsubsec:NoninearSVM}
-As said before, the \gls{svm} algorithm can be used also for nonlinearly separable data, using the \emph{kernel trick}. The idea is to project the data into a higher dimensional space, where they are linearly separable, and then use the linear \gls{svm} algorithm. The projection is done using a \emph{kernel mapping}. 
+As said before, the \gls{svm} algorithm can be used also for non\gls{glo:lin-sep} data, using the \emph{kernel trick}. The idea is to project the data into a higher dimensional space, where they are \gls{glo:lin-sep}, and then use the linear \gls{svm} algorithm. The projection is done using a \emph{kernel mapping}. 
 
 Let's have a look at what is the function for classifying an instance $\vect{x}^{(i)}$:
 \begin{equation}
@@ -354,7 +354,7 @@ So, transforming with a polynomial mapping of degree $d$, does not require compu
     \label{fig:KernelTrick}
 \end{figure}
 
-The \autoref{fig:KernelTrick} shows an example of \gls{svm} classification of data that are not linearly separable.
+The \autoref{fig:KernelTrick} shows an example of \gls{svm} classification of data that are not \gls{glo:lin-sep}.
 
 This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneClassSupportVectorMachine} we will see how to use the \gls{svm} algorithm for novelty detection, as a one-class classifier.
 
@@ -369,7 +369,7 @@ This topic seems unrelated to the scope of this thesis, but in \autoref{sec:OneC
     \label{fig:DecisionTree}
 \end{figure}
 
-Decision Trees are very powerful classification algorithms that can also be used for regression, thinking of feature values as classes. The classification process is based on a tree structure, where each sample starts from the root node, and is filtered through a bunch of \emph{if - then} statements until it reaches a leaf node, that outputs the predicted class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
+Decision Trees are very powerful classification algorithms that can also be used for regression, thinking of \gls{glo:feature} values as classes. The classification process is based on a tree structure, where each sample starts from the root node, and is filtered through a bunch of \emph{if - then} statements until it reaches a leaf node, that outputs the predicted class. In \autoref{fig:DecisionTree}, it is illustrated the structure of a very simple binary tree with only a split node and three leaf nodes.
 
 \paragraph*{Gini impurity}
 The classification algorithm is hence very simple, the \gls{ml} part is the training process. Let's consider a leaf node, and imagine processing all the training samples through the tree. Ideally, all the samples that reach the leaf node (and any other leaf node) should have the same class. This is possible, but a tree that does that is most likely very overfitted to the training dataset and will not perform well on future data. Anyway, the aim of training is to obtain a tree close enough to the ideal one, without overfitting. To do that, there exists a metric called \emph{Gini impurity} that assumes a value of zero if the leaf node is pure (all the samples that reach it have the same class), or a positive value $\in (0,0.5]$ that measures how different the classes in the node are, 0.5 being the maximum value that means that all the classes are present in the node with equal frequency. The mathematical definition is the following:
@@ -382,7 +382,7 @@ Then the training procedure tries to grow a tree defining the binary conditions 
 \begin{equation}
     J(k, t_k) = \frac{m_{\text{left}}}{m}G_{\text{left}} + \frac{m_{\text{right}}}{m}G_{\text{right}}
 \end{equation}
-where $k$ is the feature index, $t_k$ is the threshold value, $m_{\text{left}}$ and $m_{\text{right}}$ are the number of instances in the left and right child nodes, and $G_{\text{left}}$ and $G_{\text{right}}$ are the Gini impurity of the left and right child nodes.
+where $k$ is the \gls{glo:feature} index, $t_k$ is the threshold value, $m_{\text{left}}$ and $m_{\text{right}}$ are the number of instances in the left and right child nodes, and $G_{\text{left}}$ and $G_{\text{right}}$ are the Gini impurity of the left and right child nodes.
 
 A common way for minimization of the cost function is to use the \emph{Classification and Regression Tree} (\gls{cart}) algorithm, which is a greedy algorithm that searches for the optimal split at each node, but not for the global optimal tree. The algorithm complexity is $\mathcal{O}(n \times m \log_2(m))$.
 
@@ -401,7 +401,7 @@ To avoid overfitting the data, the \gls{cart} algorithm implementation in \textt
     \item \texttt{min\_samples\_split}: the minimum number of samples a node must have before it can be split;
     \item \texttt{min\_samples\_leaf}: the minimum number of samples a leaf node must have;
     \item \texttt{max\_leaf\_nodes}: the maximum number of leaf nodes;
-    \item \texttt{max\_features}: the maximum number of features that are evaluated for splitting at each node.
+    \item \texttt{max\_\gls{glo:feature}s}: the maximum number of \gls{glo:feature}s that are evaluated for splitting at each node.
 \end{itemize}
 Increasing the \texttt{min} bound, or decreasing the \texttt{max} bound, will regularize the model, and reduce the risk of overfitting.
 In \autoref{fig:DecisionTreeOverfitting} it is shown an example of overfitting, where the left plot shows the decision boundaries of a tree with no regularization, and the right plot shows the decision boundaries of a tree with regularization.
@@ -420,7 +420,7 @@ As anticipated, the \gls{dt}s can also be used for regression, in this case, the
 \end{equation}
 
 \paragraph{Advantages and limitations}
-The main disadvantages of \gls{dt}s are that the classification procedure uses thresholds on the value of the features (cutting the hyperspace in orthogonal hyperplanes), so they are sensitive to axis orientation, and they are very sensitive to small variations in the training data. They are also very sensitive to the \gls{glo:hyperparameter}s, so a small variation in constraints leads to very different trees. The main advantages are that they are very fast to train, and the resulting model is very fast to make predictions, they are very easy to understand and visualize and they do not require any feature scaling or centring.
+The main disadvantages of \gls{dt}s are that the classification procedure uses thresholds on the value of the \gls{glo:feature}s (cutting the hyperspace in orthogonal hyperplanes), so they are sensitive to axis orientation, and they are very sensitive to small variations in the training data. They are also very sensitive to the \gls{glo:hyperparameter}s, so a small variation in constraints leads to very different trees. The main advantages are that they are very fast to train, and the resulting model is very fast to make predictions, they are very easy to understand and visualize and they do not require any \gls{glo:feature} scaling or centring.
 
 \subsection{Random Forests \gls{rf}}
 \label{subsec:rf}
