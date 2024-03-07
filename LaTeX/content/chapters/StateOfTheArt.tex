@@ -102,7 +102,7 @@ Where $f_r$ is the shaft speed, $n$ is the number of rolling elements, and $\phi
 
 An automated method for bearing diagnosis has been developed by \cite{sawalhi2008semi}. The method is parametric and can be adapted to a large variety of cases. In the study, it has been tested on a helicopter gearbox, a high speed ($\approx 12000$rpm) test bench application and a low speed ($\approx 1800$rpm) radar tower. 
 
-The automated procedure \cite{sawalhi2008semi} has been extended by a more recent study \cite{schlechtingen2019automated} where the authors applied a Cepstral Editing Procedure (\gls{cep}) based signal Pre-Whitening (\gls{pw}). The framework has been tested on data collected from seventeen wind turbines. The procedure was successful in this case study, the preprocessing flow applied to the time-series, and the resulting spectral in which the \gls{bpfi} is exploited to detect the fault, are shown in \autoref{fig:turbine_faults}.
+The automated procedure \cite{sawalhi2008semi} has been extended by a more recent study \cite{schlechtingen2019automated} where the authors applied a Cepstral Editing Procedure (\gls{cep}) based signal Pre-Whitening (\gls{pw}). The \gls{glo:frmwrk} has been tested on data collected from seventeen wind turbines. The procedure was successful in this case study, the preprocessing flow applied to the time-series, and the resulting spectral in which the \gls{bpfi} is exploited to detect the fault, are shown in \autoref{fig:turbine_faults}.
 
 \begin{figure}
     \centering
@@ -145,22 +145,22 @@ The task of detecting the novelty is often associated with the task of predictin
     \label{fig:pattern_types}
 \end{figure}
 
-A novel framework for performing \gls{nd}, \gls{fd} and \gls{rul} predictions has been proposed by researchers at PIC4SeR\footnote{\url{https://pic4ser.polito.it/}} \cite{Umberto}. It is based on several autonomous agents working together on a database.  The authors aimed to perform \gls{pdm} in a scenario in which there is no physical knowledge and no prior data collections about the maintained system. The framework is meant to be set in a \emph{training phase} on a new machine, to collect the \emph{normal} data and train the \gls{ml} model. After that, it will continuously work in \emph{testing mode}: the framework will compute a prediction error on the current data that is used as a novelty metric.
+A novel \gls{glo:frmwrk} for performing \gls{nd}, \gls{fd} and \gls{rul} predictions has been proposed by researchers at PIC4SeR\footnote{\url{https://pic4ser.polito.it/}} \cite{Umberto}. It is based on several autonomous agents working together on a database.  The authors aimed to perform \gls{pdm} in a scenario in which there is no physical knowledge and no prior data collections about the maintained system. The \gls{glo:frmwrk} is meant to be set in a \emph{training phase} on a new machine, to collect the \emph{normal} data and train the \gls{ml} model. After that, it will continuously work in \emph{testing mode}: the \gls{glo:frmwrk} will compute a prediction error on the current data that is used as a novelty metric.
 
-The \gls{glo:feature}s are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Tree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the framework can decide which regressor to use in each specific case. 
+The \gls{glo:feature}s are pre-processed using a windowing function and a cumulative absolute sum. Three regression models are used to perform \gls{nd} and \gls{fd}: a Linear Regressor \gls{lr}, a Decision Tree (\gls{dt}) and a Random Forest (\gls{rf}). The user of the \gls{glo:frmwrk} can decide which regressor to use in each specific case. 
 
-The model can be retrained after a novelty has been detected, to update the model with the new data. Even if the framework is meant to be trained on a new machine, it can be used also on a machine that has been in service for years: the faults already present will be part of the training database, but the predictions will still be useful because of the tendency of the faults to worsen over time.
+The model can be retrained after a novelty has been detected, to update the model with the new data. Even if the \gls{glo:frmwrk} is meant to be trained on a new machine, it can be used also on a machine that has been in service for years: the faults already present will be part of the training database, but the predictions will still be useful because of the tendency of the faults to worsen over time.
 
 The \gls{rul} predictions are made by averaging the prediction error in two intervals and then performing a linear regression on the two points. 
 
-This framework has been successfully tested on:  
+This \gls{glo:frmwrk} has been successfully tested on:  
 \begin{itemize}
     \item a synthetic dataset that the authors created to emulate a bearing fault (using the definitions of the 4 typical faults \cite{RollingSignature}).
     \item a real dataset of bearing faults provided by the Center for Intelligent Maintenance Systems \cite{IMSpaper}
     \item a laboratory test on spring probes
 \end{itemize}
 
-In the first two cases, the framework was able to detect the novelty and predict the \gls{rul}, in the laboratory test, it was able to recognise the new data as \emph{healthy} because the probes were not yet damaged. The graphical results of one test on real-world data are shown in \autoref{fig:umbertoresult}.
+In the first two cases, the \gls{glo:frmwrk} was able to detect the novelty and predict the \gls{rul}, in the laboratory test, it was able to recognise the new data as \emph{healthy} because the probes were not yet damaged. The graphical results of one test on real-world data are shown in \autoref{fig:umbertoresult}.
 
 \begin{figure}
     \centering

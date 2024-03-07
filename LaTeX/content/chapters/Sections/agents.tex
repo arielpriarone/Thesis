@@ -8,7 +8,7 @@
     \label{fig:Framework_structure}
 \end{figure}
 
-In the previous sections, the software agents were mentioned as the main actors in the framework. This section will provide a more detailed description of the software agents, their role and their interaction with the environment and the data, following the flow from the hardware through the time-series, the \gls{glo:feature} domain to the \gls{ml} algorithms. The reference layout is the one in \autoref{fig:Framework_structure}. 
+In the previous sections, the software agents were mentioned as the main actors in the \gls{glo:frmwrk}. This section will provide a more detailed description of the software agents, their role and their interaction with the environment and the data, following the flow from the hardware through the time-series, the \gls{glo:feature} domain to the \gls{ml} algorithms. The reference layout is the one in \autoref{fig:Framework_structure}. 
 
 Software \gls{glo:agent}s are autonomous programs that perform a specific task in a cycle. In the proposed \texttt{\gls{glo:python}} implementation, the agents are classes that are instanced and run in a loop.
 
@@ -102,12 +102,12 @@ This agent is designed to be configured as a \gls{nd} or \gls{fd} agent with jus
     \end{longtable}
     
 \newpage
-\subsection{Configuration of the framework}
+\subsection{Configuration of the \gls{glo:frmwrk}}
 All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the agents at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. The \autoref{tab:yaml} shows the structure of the configuration file.
 
 
 \begin{longtable}{>{\hspace{0pt}}m{0.26\linewidth}>{\hspace{0pt}}m{0.113\linewidth}>{\hspace{0pt}}m{0.569\linewidth}}
-  \caption{Structure of the framework configuration file.\label{tab:yaml}}\\ 
+  \caption{Structure of the \gls{glo:frmwrk} configuration file.\label{tab:yaml}}\\ 
   \toprule
   \rowcolor[rgb]{0.929,0.929,0.923}\textbf{Field} & \textbf{Type} & \textbf{Description} \endfirsthead 
   \hline
@@ -153,7 +153,7 @@ All the configurations described in this chapter are stored in the \texttt{confi
   \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Fit points & int & Number of samples used for fitting the prediction curve \\
   $\dots$/Outlier filter & int & Number of consecutive outliers to filter \\
   \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Regressor & string & Type of curve to fit (exp or scipy to select the closed form solution or the iterative solution) \\
-  Log & string & Path where to store the logs of the framework \\
+  Log & string & Path where to store the logs of the \gls{glo:frmwrk} \\
   \bottomrule
   \end{longtable}
   
@@ -161,7 +161,7 @@ All the configurations described in this chapter are stored in the \texttt{confi
 \subsection{Command Line Interface (\gls{cli})}
 \label{subsec:CLI}
 
-To ease the interaction with the user, a \gls{cli} has been implemented. It relies on the \texttt{click} and \texttt{typer} libraries for \texttt{\gls{glo:python}}. The \gls{cli} allows the user to instance the agents, to configure the framework, to monitor the agents and to interact with the database. All the commands are provided with a help message that can be accessed by typing \texttt{{-}{-}help} after the command, as shown in \autoref{fig:cli} for the command \texttt{run-machine-learning-agent}.
+To ease the interaction with the user, a \gls{cli} has been implemented. It relies on the \texttt{click} and \texttt{typer} libraries for \texttt{\gls{glo:python}}. The \gls{cli} allows the user to instance the agents, to configure the \gls{glo:frmwrk}, to monitor the agents and to interact with the database. All the commands are provided with a help message that can be accessed by typing \texttt{{-}{-}help} after the command, as shown in \autoref{fig:cli} for the command \texttt{run-machine-learning-agent}.
 The commands implemented in the \gls{cli} are shown in \autoref{tab:CLI_commands}.
 
 \begin{figure}[h!]

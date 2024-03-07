@@ -1,6 +1,6 @@
 \section{Experiments on a laboratory shaker - Test 2}
 \label{sec:shaker_test02}
-In the previous section, the first test on the shaker was presented. The test has shown the capability of the framework to detect unknown harmonics. A second test was done to evaluate the capability to detect time-domain variations and the effect of reducing the frequency resolution. 
+In the previous section, the first test on the shaker was presented. The test has shown the capability of the \gls{glo:frmwrk} to detect unknown harmonics. A second test was done to evaluate the capability to detect time-domain variations and the effect of reducing the frequency resolution. 
 
 \subsection{Training and evaluating}
 This new configuration has been set to use only 4 frequency-domain \gls{glo:feature}s and the same 3 time-domain \gls{glo:feature}s of the previous test, for a total of 7 \gls{glo:feature}s. The signal used for training and testing is resumed in \autoref{tab:shaker_param_02}. The set is composed of the same signal at different amplitudes used for training and testing, plus another signal with different frequency content but the same amplitude as a training signal used for testing. 
@@ -57,7 +57,7 @@ For completness, in \autoref{fig:shaker_conf_matrix}, also the true positive res
 \clearpage
 
 \subsection{Possible improvements}
-The environment of this test is very challenging for the k-means algorithm. As discussed in \autoref{ch:Unsupervised}, there are algorithms that are not affected by the \gls{glo:clust}s' shapes. The candidate algorithms that may perform better in this situation are the \gls{lof}, the \gls{iforest} and \gls{dbscan}. Future work could be to implement these algorithms in the \gls{glo:edge} framework, despite being more demanding in computational power and memory, and test them in this environment.
+The environment of this test is very challenging for the k-means algorithm. As discussed in \autoref{ch:Unsupervised}, there are algorithms that are not affected by the \gls{glo:clust}s' shapes. The candidate algorithms that may perform better in this situation are the \gls{lof}, the \gls{iforest} and \gls{dbscan}. Future work could be to implement these algorithms in the \gls{glo:edge} \gls{glo:frmwrk}, despite being more demanding in computational power and memory, and test them in this environment.
 
 As proof of concept, the \gls{lof} implementation in \texttt{\gls{glo:python}} has been used to perform \gls{nd} on the same dataset used in this section in \gls{glo:edge}. The results are reported in \autoref{label:lof_results}. The \gls{lof} algorithm has been able to correctly identify all the \gls{nd} events, even the signals with just 20mV variation from the training dataset, and the 800mV signal that was problematic for the K-means. The \gls{lof}, however, generated a false positive on the 580mV signal. This false positive may be avoided by increasing the threshold, but this would also increase the false negative rate. 
 

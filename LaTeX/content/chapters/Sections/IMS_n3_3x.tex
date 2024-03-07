@@ -3,7 +3,7 @@
 
 \subsection{\gls{nd} instance}
 
-In the previous section about the \gls{ims} dataset No.2, the framework capability for detecting novelties and known faults has been tested. The third dataset exploits the same fault as the second dataset. This enables testing the framework capability on detecting novelties and known faults on a new bearing, without retraining the model from scratch. In this case, the outer race failure is experienced by Bearing 3, so the sensor declared in the configuration file is the one for this bearing.
+In the previous section about the \gls{ims} dataset No.2, the \gls{glo:frmwrk} capability for detecting novelties and known faults has been tested. The third dataset exploits the same fault as the second dataset. This enables testing the \gls{glo:frmwrk} capability on detecting novelties and known faults on a new bearing, without retraining the model from scratch. In this case, the outer race failure is experienced by Bearing 3, so the sensor declared in the configuration file is the one for this bearing.
 
 Running the \gls{mla} in evaluation mode, the novelty metric computed for the first 300 \gls{glo:snap}s of the dataset, is shown in \autoref{fig:IMS_n3_3x_nd}. All the \gls{glo:snap}s are considered novelties. This means that the new bearing behaves differently from the previous ones. 
 
@@ -36,7 +36,7 @@ At this point, the \gls{rul} can be predicted. The predictions made considering 
 
 \subsection{\gls{fd} instance}
 
-The same test done for the \gls{nd} instance, can be repeated for the \gls{fd} instance of the \gls{mla}. The threshold is the same as for the previous test on dataset No. 2. The framework is set in fault evaluation mode, and all the dataset is analyzed. 
+The same test done for the \gls{nd} instance, can be repeated for the \gls{fd} instance of the \gls{mla}. The threshold is the same as for the previous test on dataset No. 2. The \gls{glo:frmwrk} is set in fault evaluation mode, and all the dataset is analyzed. 
 
 The fault score evolution over time is shown in \autoref{fig:IMS_n3_3x_fd}. 
 The \gls{fd} event is triggered at 2004-04-17 17:33, hours before the fault.
