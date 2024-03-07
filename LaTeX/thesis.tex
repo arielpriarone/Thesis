@@ -68,7 +68,7 @@
 % 2) or
 
 \ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
-\ringraziamenti % acknowledgements
+\ifprint \else \ringraziamenti  \fi% acknowledgements
 \input{content/acknowledgements}
 
 \ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page

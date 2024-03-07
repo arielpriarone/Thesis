@@ -15,7 +15,7 @@ The candidate algorithms described in \autoref{ch:Unsupervised} will be applied 
 
 All of the tests will be carried out trying to follow the most unsupervised approach possible, so the only information used to train the algorithm will be the data itself. Every user input needed by the algorithm will be chosen using an easily automatable method, to preserve the unsupervised nature of the \gls{glo:frmwrk} that will be developed. For example, user inputs are the number of \gls{glo:clust}s in K-means, or the radius in the \gls{dbscan}.
 
-\maskkk{At the end of the analysis, considering the trade-off between the performance of the algorithm, the computational cost and the simplicity, K-means will be chosen as the algorithm to implement in a real-time \gls{glo:frmwrk}, developed in \texttt{\gls{glo:python}}. Then, the data of the dataset will be polled from a database at regular intervals and fed to the \gls{glo:frmwrk} to simulate a real sensor \gls{glo:polling} the signal directly from the machine and evaluate the real-time performance of the implementation. 
+At the end of the analysis, considering the trade-off between the performance of the algorithm, the computational cost and the simplicity, K-means will be chosen as the algorithm to implement in a real-time \gls{glo:frmwrk}, developed in \texttt{\gls{glo:python}}. Then, the data of the dataset will be polled from a database at regular intervals and fed to the \gls{glo:frmwrk} to simulate a real sensor \gls{glo:polling} the signal directly from the machine and evaluate the real-time performance of the implementation. 
 
-After that, a version of the \gls{glo:frmwrk} with simplified architecture was implemented in \texttt{C} and tested on a \texttt{STM32F767ZI} microcontroller board.}
+After that, a version of the \gls{glo:frmwrk} with simplified architecture was implemented in \texttt{C} and tested on a \texttt{STM32F767ZI} microcontroller board.
 
