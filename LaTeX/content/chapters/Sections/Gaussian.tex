@@ -60,7 +60,7 @@ weight to some \gls{glo:clust}s, meaning that those \gls{glo:clust}s are not use
 \end{figure}
 Once the model is well-trained, we can use it to evaluate a new instance. The \autoref{fig:gauss_example} shows the result of the training of the \gls{gmm} on the example dataset. The ellipsoids represent the \gls{glo:clust}s, the size of the ellipsoids is proportional to the weight of the \gls{glo:clust}, while the orientation and the size of the ellipsoids are determined by the covariance matrix of the \gls{glo:clust}. 
 
-The \texttt{pyhton} implementation of the \gls{gmm} used in this project is the one provided by the \texttt{sklearn} library. It has an attribute called \texttt{score\_samples} that returns the log value of the \gls{pdf} of the samples.
+The \texttt{pyhton} implementation of the \gls{gmm} used in this project is the one provided by the \gls{glo:sklearn} library. It has an attribute called \texttt{score\_samples} that returns the log value of the \gls{pdf} of the samples.
 The bigger the value, the more likely it is to be inside a \gls{glo:clust}. 
 To maintain the same philosophy of the other algorithms, we can take the negative value of \texttt{score\_samples} as a metric to evaluate the novelty of a new instance. 
 

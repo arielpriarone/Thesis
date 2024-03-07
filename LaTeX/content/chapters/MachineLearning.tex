@@ -395,7 +395,7 @@ Another metric that can be used instead of Gini impurity inside the same cost fu
 This renders trees very similar to the ones obtained using Gini impurity, but the entropy is slightly slower to compute, due to the logarithm. however, it tends to produce slightly more balanced trees \cite{raschka2013decisiontrees}.
 
 \paragraph{Avoid overfitting}
-To avoid overfitting the data, the \gls{cart} algorithm implementation in \texttt{sklearn} has some \gls{glo:hyperparameter}s that can be tuned:
+To avoid overfitting the data, the \gls{cart} algorithm implementation in \gls{glo:sklearn} has some \gls{glo:hyperparameter}s that can be tuned:
 \begin{itemize}
     \item \texttt{max\_depth}: the maximum depth of the tree;
     \item \texttt{min\_samples\_split}: the minimum number of samples a node must have before it can be split;

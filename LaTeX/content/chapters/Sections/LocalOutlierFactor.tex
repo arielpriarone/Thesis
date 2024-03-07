@@ -16,14 +16,14 @@ Using this approach, this algorithm is able to identify outliers in a dataset wi
     \caption{Local Outlier Factor decision function.}
     \label{fig:LocalOutlierFactor}
 \end{figure}
-This algorithm is implemented in \texttt{sklearn} library and requires the number $MinPts$ of k-nearest neighbours to be specified. According to the authors, the value of \gls{lof} of a particular \gls{glo:snap} is neither increasing nor decreasing with the value of $MinPts$. They also suggest an \gls{glo:heuristic} to select the value of $MinPts$ that is hardly automatable. 
+This algorithm is implemented in \gls{glo:sklearn} library and requires the number $MinPts$ of k-nearest neighbours to be specified. According to the authors, the value of \gls{lof} of a particular \gls{glo:snap} is neither increasing nor decreasing with the value of $MinPts$. They also suggest an \gls{glo:heuristic} to select the value of $MinPts$ that is hardly automatable. 
 For this reason, it's difficult to use this algorithm in a real-time scenario in an unsupervised way.
 
 Anyway, as an example, using the same dataset used in \autoref{fig:dbscandata}, and running the \gls{lof} algorithm with the default value of $MinPts=20$, we obtain the results shown in \autoref{fig:LocalOutlierFactor}.
 
 \subsection{Evaluation of a new instance}
 \label{sec:lof_eval}
-The \texttt{sklearn} implementation of the \gls{lof} algorithm has a method that returns the \gls{lof} of a new instance. Since the bigger the value is, the more likely it is that the new \gls{glo:snap} is an outlier, we can take directly this value as a metric to evaluate the novelty of a new instance.
+The \gls{glo:sklearn} implementation of the \gls{lof} algorithm has a method that returns the \gls{lof} of a new instance. Since the bigger the value is, the more likely it is that the new \gls{glo:snap} is an outlier, we can take directly this value as a metric to evaluate the novelty of a new instance.
 
 To select a threshold value, it holds what has been said in \autoref{sec:iforest_threshold} about \gls{iforest}.
 

@@ -61,7 +61,7 @@ The \gls{glo:feature}s are then \gls{glo:std} using the same mean and standard d
 When the microcontroller is in the evaluation phase, the \gls{glo:feature} vector is processed to compute the novelty metric. The model \gls{glo:clust} centroids and radiuses were saved in the code in the training phase, so now it is possible to run the \autoref{alg:eval_new_snapshot}. 
 
 \subsection{Custom \texttt{C} functions}
-The \texttt{C} main loop, which executes all the behaviours that in the \texttt{\gls{glo:python}} implementation were executed by the various agents, relies on the library functions as well as on the custom functions resumed in \autoref{tab:custom_functions}.
+The \texttt{C} main loop, which executes all the behaviours that in the \texttt{\gls{glo:python}} implementation were executed by the various \gls{glo:agent}s, relies on the library functions as well as on the custom functions resumed in \autoref{tab:custom_functions}.
 
 \begin{longtable}{p{0.4\textwidth}p{0.5\textwidth}}
     \caption{Custom function implemented in \texttt{C}\label{tab:custom_functions}}\\ 

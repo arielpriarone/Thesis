@@ -4,7 +4,7 @@
 This algorithm is based on the kernelized \gls{svm} algorithm. While the standard application is to find the hyperplane that separates two classes, in this case, the aim is to separate the instances from the origin. If a new instance is too close to the origin (of an augmented hyperspace), then it is considered an outlier. It was introduced in 2001 by M\"{u}ller \cite{mullerOneClassSVM}.
 
 \subsection{Training}
-As an example, we refer to the same dataset used in the previous sections for the \gls{dbscan} and {\gls{gmm}} algorithms. The training of the version implemented in \texttt{sklearn} requires specifying the kernel to use, and the parameter $\nu$ that is the upper bound on the fraction of outlier. Training the algorithm on the dataset, with Gaussian kernel and $\nu=0.002$, we obtain the result shown in \autoref{fig:OneClassSupportVectorMachine}. 
+As an example, we refer to the same dataset used in the previous sections for the \gls{dbscan} and {\gls{gmm}} algorithms. The training of the version implemented in \gls{glo:sklearn} requires specifying the kernel to use, and the parameter $\nu$ that is the upper bound on the fraction of outlier. Training the algorithm on the dataset, with Gaussian kernel and $\nu=0.002$, we obtain the result shown in \autoref{fig:OneClassSupportVectorMachine}. 
 
 \begin{figure}
     \centering

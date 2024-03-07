@@ -8,20 +8,20 @@
     \label{fig:Framework_structure}
 \end{figure}
 
-In the previous sections, the software agents were mentioned as the main actors in the \gls{glo:frmwrk}. This section will provide a more detailed description of the software agents, their role and their interaction with the environment and the data, following the flow from the hardware through the time-series, the \gls{glo:feature} domain to the \gls{ml} algorithms. The reference layout is the one in \autoref{fig:Framework_structure}. 
+In the previous sections, the software \gls{glo:agent}s were mentioned as the main actors in the \gls{glo:frmwrk}. This section will provide a more detailed description of the software \gls{glo:agent}s, their role and their interaction with the environment and the data, following the flow from the hardware through the time-series, the \gls{glo:feature} domain to the \gls{ml} algorithms. The reference layout is the one in \autoref{fig:Framework_structure}. 
 
-Software \gls{glo:agent}s are autonomous programs that perform a specific task in a cycle. In the proposed \texttt{\gls{glo:python}} implementation, the agents are classes that are instanced and run in a loop.
+Software \gls{glo:agent}s are autonomous programs that perform a specific task in a cycle. In the proposed \texttt{\gls{glo:python}} implementation, the \gls{glo:agent}s are classes that are instanced and run in a loop.
 
 \subsection{Field Agent}
 \label{subsec:FieldAgent}
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/Framework/Field_Agent_flowchart.pdf}
-    \caption{Field Agent flowchart}
+    \caption{\gls{glo:fieldagent} flowchart}
     \label{fig:Field_Agent_flowchart}
 \end{figure}
 
-The \gls{glo:fieldagent} is the interface between the hardware and the software. It is responsible for the acquisition of the data from the sensors and the communication with the database. Since some \gls{glo:feature}s are related to the spectrum of the data, a precise and fixed sampling frequency is needed. Hence, the \gls{fieldAg} must incorporate a synchronization with the \gls{adc}. It stores data in the \emph{raw} collection and the \emph{backup} collection. In \autoref{fig:Field_Agent_flowchart}, the flow of operations is shown as a flowchart, emphasizing the importance of the synchronization with the \gls{adc}. This software agent has not been implemented in \texttt{\gls{glo:python}}, because the experimental validation of this work, as it will be described in \autoref{sec:Validation}, has been performed directly on the \gls{glo:edge} platform. During the tests on the publicly available datasets, an abstract version of the \gls{fieldAg} has been used, that reads the data from the \gls{csv} files.
+The \gls{glo:fieldagent} is the interface between the hardware and the software. It is responsible for the acquisition of the data from the sensors and the communication with the database. Since some \gls{glo:feature}s are related to the spectrum of the data, a precise and fixed sampling frequency is needed. Hence, the \gls{fieldAg} must incorporate a synchronization with the \gls{adc}. It stores data in the \emph{raw} collection and the \emph{backup} collection. In \autoref{fig:Field_Agent_flowchart}, the flow of operations is shown as a flowchart, emphasizing the importance of the synchronization with the \gls{adc}. This software \gls{glo:agent} has not been implemented in \texttt{\gls{glo:python}}, because the experimental validation of this work, as it will be described in \autoref{sec:Validation}, has been performed directly on the \gls{glo:edge} platform. During the tests on the publicly available datasets, an abstract version of the \gls{fieldAg} has been used, that reads the data from the \gls{csv} files.
 
 
 \subsection{Feature Agent (\gls{fa})}
@@ -29,7 +29,7 @@ The \gls{glo:fieldagent} is the interface between the hardware and the software.
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/Framework/FA_flowchart.pdf}
-    \caption{Feature Agent flowchart}
+    \caption{\gls{glo:featAg} flowchart}
     \label{fig:FA_flowchart}
 \end{figure}
 
@@ -49,7 +49,7 @@ The \gls{fa} is responsible for the \gls{glo:feature} extraction from the raw da
     writeToUnconsumed & write the extracted \gls{glo:feature}s to the \emph{unconsumed} collection \\
     initialize\_barPlotFeatures & initializes the bar plot of the \gls{glo:feature}s that is shown to the user \\
     barPlotFeatures & updates the bar plot with new \gls{glo:feature}s \\
-    run & perform the agent operations in a loop. idle until new data are available in \emph{raw} collection \\
+    run & perform the \gls{glo:agent} operations in a loop. idle until new data are available in \emph{raw} collection \\
     \bottomrule
 \end{longtable}
     
@@ -58,12 +58,12 @@ The \gls{fa} is responsible for the \gls{glo:feature} extraction from the raw da
 \label{subsec:MLA}
 The \gls{mla} is responsible for the training and the evaluation of the \gls{ml} models. It reads the data from the \emph{unconsumed} collection, evaluates the \gls{glo:snap} and stores the result in the \emph{models} collection, it also constantly updates the information about the novelty or fault metric to the user. The flow of operation is shown in \autoref{fig:MLA_structure}. The methods implemented in the \gls{mla} class are shown in \autoref{tab:MLA_methods}.
 
-This agent is designed to be configured as a \gls{nd} or \gls{fd} agent with just one \gls{glo:hyperparameter}. If it is instanced for \gls{nd}, it uses the healthy collection as a training dataset, if it is instanced for \gls{fd} it uses the faulty collection. The metric used to evaluate the \gls{glo:snap}s is the novelty metric for \gls{nd} and the fault metric for \gls{fd}. According to the procedure defined in \autoref{alg:eval_new_snapshot}.
+This \gls{glo:agent} is designed to be configured as a \gls{nd} or \gls{fd} \gls{glo:agent} with just one \gls{glo:hyperparameter}. If it is instanced for \gls{nd}, it uses the healthy collection as a training dataset, if it is instanced for \gls{fd} it uses the faulty collection. The metric used to evaluate the \gls{glo:snap}s is the novelty metric for \gls{nd} and the fault metric for \gls{fd}. According to the procedure defined in \autoref{alg:eval_new_snapshot}.
 
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=\textwidth]{images/Framework/MLA.pdf}
-    \caption{Machine Learning Agent flowchart. When it is instanced for \gls{nd}, the \gls{mla} uses the healthy collection as a training dataset, when it is instanced for \gls{fd} it uses the faulty collection.}
+    \caption{\gls{glo:mla} flowchart. When it is instanced for \gls{nd}, the \gls{mla} uses the healthy collection as a training dataset, when it is instanced for \gls{fd} it uses the faulty collection.}
     \label{fig:MLA_structure}
 \end{figure}
 
@@ -103,7 +103,7 @@ This agent is designed to be configured as a \gls{nd} or \gls{fd} agent with jus
     
 \newpage
 \subsection{Configuration of the \gls{glo:frmwrk}}
-All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the agents at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. The \autoref{tab:yaml} shows the structure of the configuration file.
+All the configurations described in this chapter are stored in the \texttt{config.yaml} file. This file is read by the \gls{glo:agent}s at the beginning of their execution. The configuration file is divided into sections by topic: database, models etc. The \autoref{tab:yaml} shows the structure of the configuration file.
 
 
 \begin{longtable}{>{\hspace{0pt}}m{0.26\linewidth}>{\hspace{0pt}}m{0.113\linewidth}>{\hspace{0pt}}m{0.569\linewidth}}
@@ -112,7 +112,7 @@ All the configurations described in this chapter are stored in the \texttt{confi
   \rowcolor[rgb]{0.929,0.929,0.923}\textbf{Field} & \textbf{Type} & \textbf{Description} \endfirsthead 
   \hline
   Database & structure & Database configuration \\
-  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/URI & string & MongoDB URI \\
+  \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/URI & string & \gls{glo:mongodb} URI \\
   $\dots$/DB & string & Database name \\
   \rowcolor[rgb]{0.929,0.929,0.923}$\dots$/Collection & structure & Collections configuration \\
   $\dots$/$\dots$/Backup & string & Backup collection name \\
@@ -161,7 +161,7 @@ All the configurations described in this chapter are stored in the \texttt{confi
 \subsection{Command Line Interface (\gls{cli})}
 \label{subsec:CLI}
 
-To ease the interaction with the user, a \gls{cli} has been implemented. It relies on the \texttt{click} and \texttt{typer} libraries for \texttt{\gls{glo:python}}. The \gls{cli} allows the user to instance the agents, to configure the \gls{glo:frmwrk}, to monitor the agents and to interact with the database. All the commands are provided with a help message that can be accessed by typing \texttt{{-}{-}help} after the command, as shown in \autoref{fig:cli} for the command \texttt{run-machine-learning-agent}.
+To ease the interaction with the user, a \gls{cli} has been implemented. It relies on the \texttt{click} and \texttt{typer} libraries for \texttt{\gls{glo:python}}. The \gls{cli} allows the user to instance the \gls{glo:agent}s, to configure the \gls{glo:frmwrk}, to monitor the \gls{glo:agent}s and to interact with the database. All the commands are provided with a help message that can be accessed by typing \texttt{{-}{-}help} after the command, as shown in \autoref{fig:cli} for the command \texttt{run-machine-learning-\gls{glo:agent}}.
 The commands implemented in the \gls{cli} are shown in \autoref{tab:CLI_commands}.
 
 \begin{figure}[h!]
@@ -177,13 +177,13 @@ The commands implemented in the \gls{cli} are shown in \autoref{tab:CLI_commands
     \textbf{Command} & \textbf{Description} \endfirsthead 
     \hline
     copy-collection            &Move all the documents from one collection to another\\
-    create-empty-db            &Create an empty database in MongoDB. The database should not exist already. It is configured according with "config.yaml" file.\\
-    ims-converter              &Transfer the data from the gls{ims} textual files into the MongoDB database in a suitable way.\\
+    create-empty-db            &Create an empty database in \gls{glo:mongodb}. The database should not exist already. It is configured according with "config.yaml" file.\\
+    ims-converter              &Transfer the data from the gls{ims} textual files into the \gls{glo:mongodb} database in a suitable way.\\
     fault-indicator            &This function plots the fault metric.\\
     novelty-indicator          &This function plots the novelty metric.\\
     move-collection            &Move all the documents from one collection to another\\
     plot-\gls{glo:feature}s              &Plot the \gls{glo:feature}s of the last \gls{glo:snap} in the UNCONSUMED collection\\
-    run-\gls{glo:feature}-agent          &Run the Feature Agent - takes the last \gls{glo:snap} from RAW collection, extracts \gls{glo:feature}s and writes them to UNCONSUMED collection\\
-    run-machine-learning-agent &Run the Machine Learning Agent \\
+    run-\gls{glo:feature}-\gls{glo:agent}          &Run the \gls{glo:featAg} - takes the last \gls{glo:snap} from RAW collection, extracts \gls{glo:feature}s and writes them to UNCONSUMED collection\\
+    run-machine-learning-\gls{glo:agent} &Run the \gls{glo:mla} \\
     \bottomrule
     \end{longtable}

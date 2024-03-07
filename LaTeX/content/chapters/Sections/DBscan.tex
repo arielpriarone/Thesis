@@ -82,7 +82,7 @@ In the paper \cite{dbscan} the authors propose a detailed pseudocode of the algo
 \end{algorithm}
 
 \subsection{Choosing the parameters}
-Running the algorithm implemented in the \texttt{sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.78$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ \gls{glo:clust}s, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
+Running the algorithm implemented in the \gls{glo:sklearn} library on the dataset of \autoref{fig:dbscandata} with $\varepsilon = 0.78$ and $MinPts = 10$ we obtain the result of \autoref{fig:dbscanresult}. The algorithm correctly identifies the $3$ \gls{glo:clust}s, also the noise points number is affected by the choice of $\varepsilon$ and $MinPts$.
 
 Note that the \gls{dbscan} is able to identify \gls{glo:clust}s with arbitrary shapes, even if they are not convex and are not \gls{glo:lin-sep}. This is a big advantage over the K-means, which is not able to identify \gls{glo:clust}s with arbitrary shapes.
 
