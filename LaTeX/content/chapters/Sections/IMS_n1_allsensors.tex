@@ -11,12 +11,12 @@ In the previous section, an extensive test of the framework has been performed o
 
 In \autoref{fig:IMS_n1_allsensors}, the evolution of the novelty metric over time is shown. Ignoring an outlier that appeared at the end of 2003-11-19, the \gls{nd} event triggered at 2003-11-20 23:44, 5~days before the end of the data acquisition. After the event, the novelty metric stays consistently over the threshold.
 
-Let's compare now this result to the classic approach of just using the RMS of the signals. The maximum value of the RMS among all the bearings is shown in \autoref{fig:IMS_n1_allsensors_RMS}. It is clear that the \gls{ml} approach is much more robust, as there is no threshold that would have both minimised the false positives and triggered a \gls{nd} event sufficiently in advance.
+Let's compare now this result to the classic approach of just using the \gls{rms} of the signals. The maximum value of the \gls{rms} among all the bearings is shown in \autoref{fig:IMS_n1_allsensors_RMS}. It is clear that the \gls{ml} approach is much more robust, as there is no threshold that would have both minimised the false positives and triggered a \gls{nd} event sufficiently in advance.
 
 \begin{figure}
     \centering
     \includegraphics{images/IMS/Novelty_01_RMS_allsensors.pdf}
-    \caption{Maximum value of RMS vibration among all bearings}
+    \caption{Maximum value of \gls{rms} vibration among all bearings}
     \label{fig:IMS_n1_allsensors_RMS}
 \end{figure}
 

@@ -1,4 +1,4 @@
-\section{DBSCAN}
+\section{\gls{dbscan}}
 \label{sec:dbscan}
 
 \subsection{Overview}
@@ -15,7 +15,7 @@
     \caption{training result}
     \label{fig:dbscanresult}
     \end{subfigure}
-    \caption{DBSCAN clustering}
+    \caption{\gls{dbscan} clustering}
     \label{fig:dbscan}
 \end{figure}
 
@@ -54,10 +54,10 @@ Some of the definitions presented in \cite{dbscan} can be resumed for our purpos
 
 In the paper \cite{dbscan} the authors propose a detailed pseudocode of the algorithm, \autoref{alg:dbscan} is a more abstract version of it.
 \begin{algorithm}
-    \caption{Train DBSCAN}
+    \caption{Train \gls{dbscan}}
   \label{alg:dbscan}
   \begin{algorithmic}[1]
-    \Procedure{DBSCAN}{$D, \varepsilon, MinPts$}
+    \Procedure{\gls{dbscan}}{$D, \varepsilon, MinPts$}
     \For {$p \in D$}
         \If {$\abs{N_\varepsilon(p)} \ge MinPts$}
             \State mark $p$ as a core point

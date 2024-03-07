@@ -253,7 +253,7 @@ In the \autoref{fig:SGD} it is visualized graphically what has been said about G
 
 \subsection{Avoid overfitting}
 \label{subsec:overfitting}
-The \gls{gd} algorithm is very powerful, but it can overfit the data. To avoid that, the problem of when to stop the iterations has to be addressed. A common way to do that is to split the dataset into a training set and a validation set. The training set is used to train the algorithm, and the validation set is used to evaluate the performance of the algorithm on new data. The training is stopped when the performance on the validation set starts to degrade, even if the performance on the training set is still improving. This is called \emph{early stopping}. In the \autoref{fig:overfitting} it is shown an example of early stopping using as metric the \emph{Root Mean Square Error} (RMSE), that is just the square root of MSE, on the validation set.
+The \gls{gd} algorithm is very powerful, but it can overfit the data. To avoid that, the problem of when to stop the iterations has to be addressed. A common way to do that is to split the dataset into a training set and a validation set. The training set is used to train the algorithm, and the validation set is used to evaluate the performance of the algorithm on new data. The training is stopped when the performance on the validation set starts to degrade, even if the performance on the training set is still improving. This is called \emph{early stopping}. In the \autoref{fig:overfitting} it is shown an example of early stopping using as metric the \emph{Root Mean Square Error} (\gls{rmse}), that is just the square root of MSE, on the validation set.
 
 \begin{figure}
     \centering
@@ -280,7 +280,7 @@ The main drawback is that, natively, they can only be used for binary classifica
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/MachineLearning/LinearSVM.pdf}
-    \caption{Linear SVM example \citepage{hands-on-geron2022}{176}}
+    \caption{Linear \gls{svm} example \citepage{hands-on-geron2022}{176}}
     \label{fig:LinearSVM}
 \end{figure}
 
