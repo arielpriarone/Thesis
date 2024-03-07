@@ -119,7 +119,7 @@ Once the novelty detection algorithm is trained, it can be used to give an estim
 In \autoref{tab:novelTechniques}, the novelty detection techniques described in the comprehensive review \cite{NoveltyReview} are summarized. The review makes clear that in the field of \gls{nd}, both supervised and unsupervised techniques are used. It categorize the techniques into:
 \begin{itemize}
     \item \textbf{Probabilistic} - involves a density estimation of the data;
-    \item \textbf{Distance-based} - are the class of clustering techniques used traditionally for classification;
+    \item \textbf{Distance-based} - are the class of \gls{glo:clust}ing techniques used traditionally for classification;
     \item \textbf{Reconstruction-based} - use a regression model to reconstruct the data, then the error is used to detect the novelty;
     \item \textbf{Domain-based} - try to define a boundary that contains all the normal data;
     \item \textbf{Information-theoretic} - is based on the idea that novel data significantly alter the information content of the dataset.
@@ -171,10 +171,10 @@ In the first two cases, the framework was able to detect the novelty and predict
 
 
 \paragraph*{Clustering}
-The most common unsupervised task is clustering. In recent years, the volume of data collected in a typical factory has increased dramatically. Clustering is a collection of tools to extract information from huge amounts of unlabeled data. 
+The most common unsupervised task is \gls{glo:clust}ing. In recent years, the volume of data collected in a typical factory has increased dramatically. Clustering is a collection of tools to extract information from huge amounts of unlabeled data. 
 
-These algorithms can be divided into: \emph{partitioning-based} where the task is to define the boundaries between the clusters; \emph{hierarchical-based} that shows the relation between each pair of clusters depending on the medium of similarity or dissimilarity; \emph{density-based} that describes the clusters as a dense region of data points separated by low-density regions; \emph{grid-based} that apply the transformation of the feature space into a grid before proceeding with the clustering and \emph{model-based} that use a statistical or deep-learning model to describe the data.
+These algorithms can be divided into: \emph{partitioning-based} where the task is to define the boundaries between the \gls{glo:clust}s; \emph{hierarchical-based} that shows the relation between each pair of \gls{glo:clust}s depending on the medium of similarity or dissimilarity; \emph{density-based} that describes the \gls{glo:clust}s as a dense region of data points separated by low-density regions; \emph{grid-based} that apply the transformation of the feature space into a grid before proceeding with the \gls{glo:clust}ing and \emph{model-based} that use a statistical or deep-learning model to describe the data.
 
-Recently, the survey \cite{Abla2019survey} provided a comprehensive overview of the most common clustering algorithms used in an industrial context, with reference studies. The comparison of the study is reported in \autoref{tab:clustcomparison}.
+Recently, the survey \cite{Abla2019survey} provided a comprehensive overview of the most common \gls{glo:clust}ing algorithms used in an industrial context, with reference studies. The comparison of the study is reported in \autoref{tab:clustcomparison}.
 
 {\small\input{Tables/ClusteringComparison.tex}}

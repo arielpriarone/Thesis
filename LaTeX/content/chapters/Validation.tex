@@ -1,11 +1,11 @@
 \chapter{Validation}
 \label{sec:Validation}
 
-This chapter is dedicated to the validation of the framework on real-world data. In \autoref{ch:FeatureExtraction}, the reference dataset \cite{lee2007bearingdataset} has been introduced. Firstly, the \texttt{python} implementation of the framework is validated on the \gls{ims} dataset several times with different configurations to show the flexibility of the framework, and try to find the best configuration for the dataset. 
+This chapter is dedicated to the validation of the framework on real-world data. In \autoref{ch:FeatureExtraction}, the reference dataset \cite{lee2007bearingdataset} has been introduced. Firstly, the \texttt{\gls{glo:python}} implementation of the framework is validated on the \gls{ims} dataset several times with different configurations to show the flexibility of the framework, and try to find the best configuration for the dataset. 
 
-The first test in the \gls{ims} dataset is carried out with all the implemented machine learning models, then only the K-mean model is used in the following tests. In all tests an outlier filter has been implemented, so that the \gls{mla} will warn about the novelty behaviour only if two consecutive snapshots are labelled as outliers. The number of consecutive snapshots is a parameter that can be adjusted in the framework settings.
+The first test in the \gls{ims} dataset is carried out with all the implemented machine learning models, then only the K-mean model is used in the following tests. In all tests an outlier filter has been implemented, so that the \gls{mla} will warn about the novelty behaviour only if two consecutive \gls{glo:snap}s are labelled as outliers. The number of consecutive \gls{glo:snap}s is a parameter that can be adjusted in the framework settings.
 
-Then, the \gls{glo:edge} implementation of the framework based on the K-means clustering is validated experimentally on a machine and with a laboratory shaker.
+Then, the \gls{glo:edge} implementation of the framework based on the K-means \gls{glo:clust}ing is validated experimentally on a machine and with a laboratory shaker.
 
 
 \input{content/chapters/Sections/IMS_n1_3x.tex}

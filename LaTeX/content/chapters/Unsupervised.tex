@@ -5,7 +5,7 @@ In the previous \autoref{ch:MachineLearning}, an overview of the most common sup
 
 To address this scenario, two approaches are possible: either label the data or use an unsupervised learning algorithm. The former would be tedious and time-consuming in the case the dataset contains both healthy and faulty data. This is because the faulty data would have to be labelled by hand. If the dataset contains only healthy data, it would be trivial to automatically label all the instances as healthy and use a supervised learning algorithm, but this would be a stretch of the definition of supervised learning. The latter is a more linear approach since unsupervised learning algorithms are designed to work with unlabeled data.
 
-The most common unsupervised task is dimensionality reduction \citepage{hands-on-geron2022}{260} but, in this thesis, the main focus will be on novelty detection, fault detection and predictive maintenance, so the considered \gls{uml} algorithms will be clustering and density estimation.
+The most common unsupervised task is dimensionality reduction \citepage{hands-on-geron2022}{260} but, in this thesis, the main focus will be on novelty detection, fault detection and predictive maintenance, so the considered \gls{uml} algorithms will be \gls{glo:clust}ing and density estimation.
 
 \paragraph[]{Clustering}
 Clustering is the task of grouping together similar instances. The definition of \emph{similar} depends on the algorithm used. The most common algorithms are {k-means} and \gls{dbscan}. The former is a \gls{glo:cent}-based algorithm, it is fast to evaluate a new instance and produce a lightweight model but performs poorly in some conditions that will be described in detail. The latter is a density-based algorithm, it performs better in the condition where k-means fails but has the drawbacks of being much slower to evaluate a new instance, and to perform novelty detection, the \gls{dbscan} implementation would have to keep all the train data in memory. Both will be described in detail in the following \autoref{sec:kmeans} and \autoref{sec:dbscan}.
@@ -14,7 +14,7 @@ Clustering is the task of grouping together similar instances. The definition of
 The second approach to novelty detection is the use of Gaussian Mixture Models (\gls{gmm}). This approach is based on the assumption that the data is generated from a mixture of several Gaussian distributions with unknown parameters \citepage{hands-on-geron2022}{283}. Then the distribution model can be used for novelty detection. This approach will be described in detail in the following \autoref{sec:gaussian}.
 
 \paragraph{Other approaches}
-At the end of the chapter, some other approaches will be briefly described and tested on the same dataset used for demonstrating clustering and \gls{gmm}. These approaches are: \gls{iforest}, \gls{lof} and $\nu$-\gls{svm}. The first two are based on the assumption that outliers are instances that are isolated from the rest of the data, while the latter is based on a kernelized \gls{svm} algorithm. 
+At the end of the chapter, some other approaches will be briefly described and tested on the same dataset used for demonstrating \gls{glo:clust}ing and \gls{gmm}. These approaches are: \gls{iforest}, \gls{lof} and $\nu$-\gls{svm}. The first two are based on the assumption that outliers are instances that are isolated from the rest of the data, while the latter is based on a kernelized \gls{svm} algorithm. 
 
 \input{content/chapters/Sections/Kmeans.tex}
 \input{content/chapters/Sections/DBscan.tex}

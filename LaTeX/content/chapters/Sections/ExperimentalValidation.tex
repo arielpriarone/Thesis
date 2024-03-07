@@ -36,9 +36,9 @@ Although not useful for the training, the microcontroller has been set not only 
 
 In the time-series set it is possible to see some outliers, for example, there is a record in which profile 1 started being actuated by the axis with a delay \gls{wrt} the others. Profile 4, instead, has some outliers due to the axis sometimes overshooting the reference position. These outliers are caused by the axis control, and the investigation about why it happens is out of the scope of this work. 
 
-The training set contains 100 snapshots for each profile, for a total of 400 snapshots. The K-means model is then trained for $n=5$ clusters, according to the silhouette criterion.
+The training set contains 100 \gls{glo:snap}s for each profile, for a total of 400 \gls{glo:snap}s. The K-means model is then trained for $n=5$ \gls{glo:clust}s, according to the silhouette criterion.
 
-As done previously, the training is performed with the user confirming the correct number of clusters. And updating the model into the microcontroller.
+As done previously, the training is performed with the user confirming the correct number of \gls{glo:clust}s. And updating the model into the microcontroller.
 
 \begin{figure}
     \centering
@@ -86,7 +86,7 @@ To address the problem of the non-significative features, a feature scaling meth
 
 This approach goes against the principle of the framework being fully automatic to train. To address this problem, an unsupervised and automatic method is proposed. The idea is to scale the features in such a way that the most significant features will have a higher weight in the model. To do that, it's possible to exploit the fact that, at this point, the K-means model is already trained and the training procedure provided labels for the dataset. It's now possible to apply a \emph{supervised} \gls{ml} algorithm in a way that is transparent to the user, so the whole procedure remains \emph{unsupervised}.
 
-The framework is then extended to include the possibility of applying feature scaling. The two possibilities are to use the Random Forest classifier or the SelectKBest algorithm to provide the weights. Since this scaling will affect also future snapshots, a new train of the \gls{mla} is necessary. The new model is then trained with the same training set but with the scaled features. This approach is illustrated in \autoref{fig:scalingprocedure}.
+The framework is then extended to include the possibility of applying feature scaling. The two possibilities are to use the Random Forest classifier or the SelectKBest algorithm to provide the weights. Since this scaling will affect also future \gls{glo:snap}s, a new train of the \gls{mla} is necessary. The new model is then trained with the same training set but with the scaled features. This approach is illustrated in \autoref{fig:scalingprocedure}.
 
 \begin{figure}[h!]
     \centering
@@ -104,7 +104,7 @@ This scaling technique is used with several configurations for both scaling the 
     \resizebox{\linewidth}{!}{%
     \begin{tabular}{ccccccccc} 
     \toprule
-    \multirow{2}{*}{\textbf{Model}} & \multicolumn{2}{c}{\textbf{Feature Scaling}} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{Feature}\\\textbf{Subset}\end{tabular}} & \multicolumn{4}{c}{\begin{tabular}[c]{@{}c@{}}\textbf{Training Snapshots}\\(per each profile)\\\end{tabular}} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{N of}\\\textbf{clusters}\end{tabular}} \\
+    \multirow{2}{*}{\textbf{Model}} & \multicolumn{2}{c}{\textbf{Feature Scaling}} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{Feature}\\\textbf{Subset}\end{tabular}} & \multicolumn{4}{c}{\begin{tabular}[c]{@{}c@{}}\textbf{Training Snapshots}\\(per each profile)\\\end{tabular}} & \multirow{2}{*}{\begin{tabular}[c]{@{}c@{}}\textbf{N of}\\\textbf{\gls{glo:clust}s}\end{tabular}} \\
      & SelectKBest & Random Forest &  & 1 & 2 & 3 & 4 &  \\ 
     \hline
     Model 1 &  &  &  & 100 & 100 & 100 & 100 & 5 \\
@@ -137,15 +137,15 @@ At this point, both the training of the \gls{rf} and SelectKBest is performed. T
     \label{fig:axis_weights}
 \end{figure}
 
-To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 snapshots for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. Then, the novelty score becomes positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the datasets without any false positive result, even without the activation of the outlier filter.
+To further refine the model, a fourth version is provided, this time extending the training set to include the first 100 samples of this testing set. So the Model 4 will be trained on a total of 200 \gls{glo:snap}s for profile 2. In the \autoref{fig:axis_testing}, of course, the novelty score is always negative for the first 100 samples, because they are part of the training set. Then, the novelty score becomes positive only in isolated cases, and even then it remains quite low. In this scenario, a novelty threshold of 20\% is enough to run all the datasets without any false positive result, even without the activation of the outlier filter.
 
 \subsection{Testing the \gls{nd}}
 \subsubsection{Test 1}
-The previous experiment was done to test the capability of the framework to identify a known profile. Now the framework is tested to identify a profile that is not part of the training set, so it should trigger a \gls{nd} event. The test consists of actuating the axis alternating between unknown profiles and known profiles (10 snapshots each repetition). For reference, also Model 1, Model 2, and Model 3 are used, even if they were discarded in the previous section. 
+The previous experiment was done to test the capability of the framework to identify a known profile. Now the framework is tested to identify a profile that is not part of the training set, so it should trigger a \gls{nd} event. The test consists of actuating the axis alternating between unknown profiles and known profiles (10 \gls{glo:snap}s each repetition). For reference, also Model 1, Model 2, and Model 3 are used, even if they were discarded in the previous section. 
 
 The results are shown in \autoref{fig:axis_testing2}. Model 4 performs poorly because, even if it avoids completely giving false positive results, it gives a lot of false negative results. Unknown profiles are not detected as novelties, or they are detected only in isolated cases, with a very low novelty score that is not enough to trigger the \gls{nd} event, considering the threshold discussed in the previous section.
 
-Model 5 is a further refinement: instead of using the features importance metric for scaling them, it is used to select a subset of features to be used. In this case $F=7$ features are selected, and the model is trained with the standardized features. The training set consists of the original 400 snapshots, as the first three models. In \autoref{fig:axis_testing2} it's evident that this is the best model that clearly distinguishes between known and unknown profiles, without giving any false positive or false negative results.
+Model 5 is a further refinement: instead of using the features importance metric for scaling them, it is used to select a subset of features to be used. In this case $F=7$ features are selected, and the model is trained with the \gls{glo:std} features. The training set consists of the original 400 \gls{glo:snap}s, as the first three models. In \autoref{fig:axis_testing2} it's evident that this is the best model that clearly distinguishes between known and unknown profiles, without giving any false positive or false negative results.
 
 The better performance of Model 5 is due to both the fact that the most important features are used, and the fact that the number of features is reduced. The latter phenomenon is known as \emph{curse of dimensionality}, and it's a common problem in \gls{ml} that arises when the number of dimensions of the feature space increases. In general, regressors and classifiers have an optimal number of features, and the performance decreases if the number of features is too high \cite{curse_dim}. 
 
@@ -159,9 +159,9 @@ The better performance of Model 5 is due to both the fact that the most importan
 \subsubsection{Test 2}
 At this point, Model 5 seems promising. The Previous test gave just a qualitative result, so a further test is performed to quantify the performance of the model. The test consists of actuating the axis with several known and unknown profiles and finding the limit of the capability of the model. The profiles used for training and testing are resumed in \autoref{tab:etel_profiles_2}. The results are shown in \autoref{fig:axis_testing3}. The novelty score is always negative for the known profiles, and always positive (and very large) for the profiles 4, 5, 7 and 8. 
 
-Profile 6 has a small variation in acceleration $\approx 17\%$, and this causes the novelty to be detected only in some instances, with a low score. This can be considered the sensitivity limit in this specific case. On the other hand, a variation in acceleration of $\approx 33\%$ is enough to trigger the \gls{nd} event for all the snapshots of profile 5. 
+Profile 6 has a small variation in acceleration $\approx 17\%$, and this causes the novelty to be detected only in some instances, with a low score. This can be considered the sensitivity limit in this specific case. On the other hand, a variation in acceleration of $\approx 33\%$ is enough to trigger the \gls{nd} event for all the \gls{glo:snap}s of profile 5. 
 
-Profile 9 shows a variation in speed of $\approx 50\%$, and this is enough to trigger the \gls{nd} event for most snapshots, but not all. This performance is considered acceptable because the speed reference is quite rarely actuated during the execution of the movement. Moreover, the sensor measures acceleration, not speed. So the expectation to detect a change in speed relies on the assumption that the change in speed will cause a change in the acceleration evolution.
+Profile 9 shows a variation in speed of $\approx 50\%$, and this is enough to trigger the \gls{nd} event for most \gls{glo:snap}s, but not all. This performance is considered acceptable because the speed reference is quite rarely actuated during the execution of the movement. Moreover, the sensor measures acceleration, not speed. So the expectation to detect a change in speed relies on the assumption that the change in speed will cause a change in the acceleration evolution.
 
 \begin{table}
     \centering
@@ -169,7 +169,7 @@ Profile 9 shows a variation in speed of $\approx 50\%$, and this is enough to tr
     \label{tab:etel_profiles_2}
     \begin{tabular}{cccccc} 
     \toprule
-    \multirow{2}{*}{\textbf{Profile N.}} & \multirow{2}{*}{\textbf{Speed}{[}$\text{m}\text{s}^{-1}$]} & \multirow{2}{*}{\textbf{ Acc.}{[}$\text{m}\text{s}^{-2}$]} & \multirow{2}{*}{\textbf{Jerk}{[}$\text{s}$]} & \multicolumn{2}{c}{\textbf{N. of snapshots}} \\
+    \multirow{2}{*}{\textbf{Profile N.}} & \multirow{2}{*}{\textbf{Speed}{[}$\text{m}\text{s}^{-1}$]} & \multirow{2}{*}{\textbf{ Acc.}{[}$\text{m}\text{s}^{-2}$]} & \multirow{2}{*}{\textbf{Jerk}{[}$\text{s}$]} & \multicolumn{2}{c}{\textbf{N. of \gls{glo:snap}s}} \\
      &  &  &  & \textbf{Train} & \textbf{Test} \\ 
     \hline
     1 & 0.4 & 6 & 0.02 & 100 & 10 \\

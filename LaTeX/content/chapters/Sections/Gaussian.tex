@@ -20,18 +20,18 @@ A Gaussian Mixture Model is a probabilistic model that assumes that the data are
 
 \subsection{Training}
 \label{sec:gauss_train}
-As anticipated, the assumption is that every cluster has a normal \gls{pdf} on each axis. So, for each feature, the total \gls{pdf} is a superposition of $k$ normal \gls{pdf}. 
-The algorithm used to train the model is the Expectation Maximization (\gls{em}) algorithm. This is a generalization of the k-means algorithm that allows to find the centroids (means), the covariance matrices of the clusters, and their weights. Unlike the k-means, the \gls{em} is a soft clustering algorithm, meaning that each point is assigned to each cluster with a probability, instead of being assigned to a single cluster.
+As anticipated, the assumption is that every \gls{glo:clust} has a normal \gls{pdf} on each axis. So, for each feature, the total \gls{pdf} is a superposition of $k$ normal \gls{pdf}. 
+The algorithm used to train the model is the Expectation Maximization (\gls{em}) algorithm. This is a generalization of the k-means algorithm that allows to find the centroids (means), the covariance matrices of the \gls{glo:clust}s, and their weights. Unlike the k-means, the \gls{em} is a soft \gls{glo:clust}ing algorithm, meaning that each point is assigned to each \gls{glo:clust} with a probability, instead of being assigned to a single \gls{glo:clust}.
 The \gls{em} algorithm is an iterative algorithm that aims to find the parameters that maximize the \gls{glo:likelihood}.
 
-\subsection{Selecting the number of clusters}
+\subsection{Selecting the number of \gls{glo:clust}s}
 \begin{figure}[htbp]
     \centering
     \includegraphics{images/Gaussian/Figure_1.pdf}
-    \caption{Criteria for selecting the number of clusters}
+    \caption{Criteria for selecting the number of \gls{glo:clust}s}
     \label{fig:gauss_criterion}
 \end{figure}
-In \autoref{sec:gauss_train} we have seen that the \gls{em} algorithm needs to know in advance the number of clusters $k$ to train the model. To select the best $k$ we could use the same criteria used for the k-means, that is the elbow method or the silhouette score. But, since the \gls{em} is most suitable for ellipsoids-shaped clusters of very different sizes, it is better to avoid those metrics that work best with spherical clusters. Instead, we can use the \gls{aic} or the \gls{bic} criteria, which are functions of the size $m$ of the training dataset, the number $p$ of parameters, and the max value of \gls{glo:likelihood} $\hat{\mathcal{L}}$.
+In \autoref{sec:gauss_train} we have seen that the \gls{em} algorithm needs to know in advance the number of \gls{glo:clust}s $k$ to train the model. To select the best $k$ we could use the same criteria used for the k-means, that is the elbow method or the silhouette score. But, since the \gls{em} is most suitable for ellipsoids-shaped \gls{glo:clust}s of very different sizes, it is better to avoid those metrics that work best with spherical \gls{glo:clust}s. Instead, we can use the \gls{aic} or the \gls{bic} criteria, which are functions of the size $m$ of the training dataset, the number $p$ of parameters, and the max value of \gls{glo:likelihood} $\hat{\mathcal{L}}$.
 
 \begin{equation}
     \begin{matrix}
@@ -48,7 +48,7 @@ Considering, as an example, the same dataset used in \autoref{fig:dbscandata}, a
 \subsubsection{Totally automated approach}
 \label{sec:gauss_unsupervised}
 Another advantage of the \gls{gmm} is that it can be used in a totally automated way. This can be done using the variation called Bayesian Gaussian Mixture Model \gls{bgmm}. This variation is able to assign $0$ as 
-weight to some clusters, meaning that those clusters are not used to generate the \gls{pdf} of the samples. In this case, we can set the number of clusters as high as the size of the training dataset, and the \gls{bgmm} will select the best number of clusters to use to generate the \gls{pdf} of the samples. 
+weight to some \gls{glo:clust}s, meaning that those \gls{glo:clust}s are not used to generate the \gls{pdf} of the samples. In this case, we can set the number of \gls{glo:clust}s as high as the size of the training dataset, and the \gls{bgmm} will select the best number of \gls{glo:clust}s to use to generate the \gls{pdf} of the samples. 
 
 \subsection{Evaluation of a new instance}
 \label{sec:gauss_eval}
@@ -58,10 +58,10 @@ weight to some clusters, meaning that those clusters are not used to generate th
     \caption{Trained Gaussian Mixture Model}
     \label{fig:gauss_example}
 \end{figure}
-Once the model is well-trained, we can use it to evaluate a new instance. The \autoref{fig:gauss_example} shows the result of the training of the \gls{gmm} on the example dataset. The ellipsoids represent the clusters, the size of the ellipsoids is proportional to the weight of the cluster, while the orientation and the size of the ellipsoids are determined by the covariance matrix of the cluster. 
+Once the model is well-trained, we can use it to evaluate a new instance. The \autoref{fig:gauss_example} shows the result of the training of the \gls{gmm} on the example dataset. The ellipsoids represent the \gls{glo:clust}s, the size of the ellipsoids is proportional to the weight of the \gls{glo:clust}, while the orientation and the size of the ellipsoids are determined by the covariance matrix of the \gls{glo:clust}. 
 
 The \texttt{pyhton} implementation of the \gls{gmm} used in this project is the one provided by the \texttt{sklearn} library. It has an attribute called \texttt{score\_samples} that returns the log value of the \gls{pdf} of the samples.
-The bigger the value, the more likely it is to be inside a cluster. 
+The bigger the value, the more likely it is to be inside a \gls{glo:clust}. 
 To maintain the same philosophy of the other algorithms, we can take the negative value of \texttt{score\_samples} as a metric to evaluate the novelty of a new instance. 
 
 \subsubsection{Selecting the threshold}
@@ -72,9 +72,9 @@ If the scenario is that the training dataset is composed of both normal and anom
 Suppose for example that $1\%$ of the training dataset is anomalous, since the model gives us the \gls{pdf} of the samples, we can compute the threshold as the $1\%$ percentile of the \gls{pdf} of the training dataset. This will ensure that the $1\%$ of the training instances will be classified as anomalous. If the model is correct, also future evaluations will have the same ratio of anomalous instances.
 
 \subsection{Limitations of the algorithm}
-The main limitation of the \gls{gmm} is that it is not able to identify clusters with arbitrary shapes.
+The main limitation of the \gls{gmm} is that it is not able to identify \gls{glo:clust}s with arbitrary shapes.
 
-If the data are not shaped like some ellipsoids, the model can approximate the data anyway, splitting the clusters into smaller ellipsoids. For our purposes of novelty detection, this is not a limitation.
+If the data are not shaped like some ellipsoids, the model can approximate the data anyway, splitting the \gls{glo:clust}s into smaller ellipsoids. For our purposes of novelty detection, this is not a limitation.
 
-The complexity of the algorithm is $\mathcal{O}(kmF^2+kF^3)$, where $k$ is the number of clusters, $m$ is the number of samples, and $F$ is the number of features \citepage{hands-on-geron2022}{281}. This means that the algorithm is not scalable to a large number of features, but it is scalable to a large number of samples.
+The complexity of the algorithm is $\mathcal{O}(kmF^2+kF^3)$, where $k$ is the number of \gls{glo:clust}s, $m$ is the number of samples, and $F$ is the number of features \citepage{hands-on-geron2022}{281}. This means that the algorithm is not scalable to a large number of features, but it is scalable to a large number of samples.
 For our purposes, it's more important to have an algorithm that is fast to evaluate a new instance, than an algorithm that is fast to train.

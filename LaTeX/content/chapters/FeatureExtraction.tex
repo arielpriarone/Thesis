@@ -123,7 +123,7 @@ It can be estimated on sampled data as
     \label{fig:IMS_TD_features}
 \end{figure}
 
-To visualize the evolution of the features over time, consider all the snapshots of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset and plot all the time-domain features described above. The result is shown in \autoref{fig:IMS_TD_features}. Having seen also \autoref{fig:IMS_bearing}, it's not surprising that the P2P and the kurtosis are the time domain features that capture the degradation of the bearing the earliest. 
+To visualize the evolution of the features over time, consider all the \gls{glo:snap}s of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset and plot all the time-domain features described above. The result is shown in \autoref{fig:IMS_TD_features}. Having seen also \autoref{fig:IMS_bearing}, it's not surprising that the P2P and the kurtosis are the time domain features that capture the degradation of the bearing the earliest. 
 
 
 \section{Frequency-domain features}
@@ -133,7 +133,7 @@ To capture also the frequency behaviour of the signal, other tools are needed. I
 \subsection{Fourier Transform}
 \label{sec:FFT}
 
-One powerful tool to analyze the frequency content of a signal is the Fourier transform or, in the case of a discrete signal, the Discrete Fourier Transform(\gls{dft}), which has a very efficient implementation in the Fast Fourier Transform (\gls{fft}) algorithm \cite{cooley1965algorithm}. This algorithm is implemented in many programming languages and libraries, including \texttt{python} and \texttt{C}. The theory behind this topic is briefly described in \autoref{app:FFT}. 
+One powerful tool to analyze the frequency content of a signal is the Fourier transform or, in the case of a discrete signal, the Discrete Fourier Transform(\gls{dft}), which has a very efficient implementation in the Fast Fourier Transform (\gls{fft}) algorithm \cite{cooley1965algorithm}. This algorithm is implemented in many programming languages and libraries, including \texttt{\gls{glo:python}} and \texttt{C}. The theory behind this topic is briefly described in \autoref{app:FFT}. 
 
 To have a better understanding of the capability of the \gls{fft} to capture the frequency content of a signal (and the presence of a disturbance in a portion of the signal), consider the following signal, composed by the sum of four sinusoids with different frequencies that are plotted with its \gls{dft} in \autoref{fig:FD_known}:
 \begin{multline}
@@ -154,21 +154,21 @@ So, we were processing a signal that has a period of one second, sampled for exa
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/FeatureExtraction/FD_known.pdf}
-    \caption{FFT of the signal with known frequency components}
+    \caption{\gls{fft} of the signal with known frequency components}
     \label{fig:FD_known}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_known_dist.pdf}
-    \caption{FFT of the signal with known frequency components, and an additive disturbance}
+    \caption{\gls{fft} of the signal with known frequency components, and an additive disturbance}
     \label{fig:FD_known_dist}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_known_outofsync.pdf}
-    \caption{FFT of the signal with known frequency components, with a domain that is not an integer multiple of the period}
+    \caption{\gls{fft} of the signal with known frequency components, with a domain that is not an integer multiple of the period}
     \label{fig:FD_known_leackage}
 \end{figure}
 
@@ -207,33 +207,33 @@ In figure \autoref{fig:IMS} it is shown the effect of different preprocessing te
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_Preproc_sync.pdf}
-    \caption{FFT of the signal  with a domain that is an integer multiple of the period, and preprocessing techniques applied}
+    \caption{\gls{fft} of the signal  with a domain that is an integer multiple of the period, and preprocessing techniques applied}
     \label{fig:FD_preprocessing}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_Preproc_outofsync.pdf}
-    \caption{FFT of the signal with a domain that is not an integer multiple of the period, and preprocessing techniques applied}
+    \caption{\gls{fft} of the signal with a domain that is not an integer multiple of the period, and preprocessing techniques applied}
     \label{fig:FD_preprocessing_dist}
 \end{figure}
 
 \begin{figure}
     \centering
     \includegraphics[scale=1]{images/FeatureExtraction/FD_PreprocIMS.pdf}
-    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions, with preprocessing techniques applied}
+    \caption{\gls{fft} of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions, with preprocessing techniques applied}
     \label{fig:IMS}
 \end{figure}
 
 
 \subsubsection{Application to the reference dataset}
 
-At this point, to see if the spectrum is representative of a fault, as it has been done for the time-domain features, we can plot all the spectrum for all the snapshots of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset, as shown in \autoref{fig:IMS_FD}. Looking at the picture, we can see that the signature frequencies of faults are present in the spectrum, and they become more and more prominent as the bearing degrades. This is a good sign justifying to use of the spectrum to detect the novel behaviour.
+At this point, to see if the spectrum is representative of a fault, as it has been done for the time-domain features, we can plot all the spectrum for all the \gls{glo:snap}s of the \quoted{Bearing 3 x} signal from the \gls{ims} dataset, as shown in \autoref{fig:IMS_FD}. Looking at the picture, we can see that the signature frequencies of faults are present in the spectrum, and they become more and more prominent as the bearing degrades. This is a good sign justifying to use of the spectrum to detect the novel behaviour.
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{images/FeatureExtraction/FD_IMS.png}
-    \caption{FFT of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions with Hann window preprocessing
+    \caption{\gls{fft} of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions with Hann window preprocessing
     applied}
     \label{fig:IMS_FD}
 \end{figure}
@@ -279,5 +279,5 @@ Despite this huge memory saving, it is possible to see that the \gls{wpd} is abl
 \end{figure}
 
 \section{Conclusions}
-Even just considering very simple time-domain features, we can already detect the degradation of the bearing by comparing these feature values to a threshold. On the other hand, also the frequency-domain features could be just compared with a threshold to detect novel behaviours. But, as we will see in \autoref{ch:Framework}, a general purpose framework based upon a more sophisticated approach based on the clustering of the data, it will be possible to condense all the features from all the signals into a single metric that will be used to detect the novel behaviour. This will have several advantages. Some of them are being able to detect a novel behaviour even if it is not possible to define a threshold for each feature, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the framework will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain features, but only by the frequency-domain features.
+Even just considering very simple time-domain features, we can already detect the degradation of the bearing by comparing these feature values to a threshold. On the other hand, also the frequency-domain features could be just compared with a threshold to detect novel behaviours. But, as we will see in \autoref{ch:Framework}, a general purpose framework based upon a more sophisticated approach based on the \gls{glo:clust}ing of the data, it will be possible to condense all the features from all the signals into a single metric that will be used to detect the novel behaviour. This will have several advantages. Some of them are being able to detect a novel behaviour even if it is not possible to define a threshold for each feature, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the framework will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain features, but only by the frequency-domain features.
 

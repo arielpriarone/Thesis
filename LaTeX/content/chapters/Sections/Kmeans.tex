@@ -1,9 +1,9 @@
 \section{K-means}
 \label{sec:kmeans}
 
-This problem is called k-means because it aims to describe the \quoted{clustering} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each cluster with its mean ($\gls{sym:cent}$). Note that the mean of the cluster, from a physical point of view, is the centre of mass of the cluster itself as if it is composed of unitary point masses located at the positions of the data points. The mean is not necessarily a point belonging to the cluster.
+This problem is called k-means because it aims to describe the \quoted{\gls{glo:clust}ing} by separating the data into \gls{glo:clust}s ($\gls{sym:cluster}$), and define each \gls{glo:clust} with its mean ($\gls{sym:cent}$). Note that the mean of the \gls{glo:clust}, from a physical point of view, is the centre of mass of the \gls{glo:clust} itself as if it is composed of unitary point masses located at the positions of the data points. The mean is not necessarily a point belonging to the \gls{glo:clust}.
 
-Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ clusters ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the clusters they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the clusters themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
+Let's assume to have extrapolated $F$ features from each of our signals, to produce a set $\gls{sym:snapset}$ of $n$ {\gls{glo:snap}}s $\gls{sym:snap}_i, i \in [1,n], \gls{sym:snap}_i \in \gls{sym:snapset} $ (every {\gls{glo:snap}} is a vector of features $\in \mathbb{R}^F$). The task is to define a set $\gls{sym:cluster}$ of $k$ \gls{glo:clust}s ($k \leq n$) $\gls{sym:cluster}_i, i \in [1,k], \gls{sym:cluster}_i \in \gls{sym:cluster}$ that minimize the squared sum of the distances between the {\gls{glo:snap}}s and the {\gls{glo:cent}}s $\gls{sym:cent}_i$ of the \gls{glo:clust}s they belong to. This is equivalent to finding the {\gls{glo:cent}}s that minimize the \textbf{variance} of the \gls{glo:clust}s themselves, so the problem can be formulated as in the \autoref{eq:kmeans_problem}.
 
 \begin{equation}
   \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\sum_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \norm{\gls{sym:snap}_j - \gls{sym:cent}_i}^2 = \argmin{\gls{sym:cluster}}\sum_{i=1}^{k}\abs{\gls{sym:cluster}_i}\mathrm{Var}\gls{sym:cluster}_i
@@ -12,10 +12,10 @@ Let's assume to have extrapolated $F$ features from each of our signals, to prod
 
 Unfortunately, this problem is NP-hard, even for as little as $F=2$ features considered \cite{MAHAJAN201213}, so it is not possible to guarantee to find the global optimum in a reasonable time.
 
-Anyway, {\gls{glo:heuristic}} clustering algorithms were already developed in the 1950s. 
+Anyway, {\gls{glo:heuristic}} \gls{glo:clust}ing algorithms were already developed in the 1950s. 
 The first appearance of the term \quoted{K-means} was used in 1957 by MacQueen \cite{macqueen1967some}, and the algorithm settled to a \quoted{standard} version, published by Stuart Lloyd in 1982 \cite{Lloyd1982} (but developed at Bell Labs in 1957).
 
-Among all the unsupervised clustering algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular clustering algorithm used in scientific and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cited this algorithm as first in the group of four most popular algorithms.
+Among all the unsupervised \gls{glo:clust}ing algorithms, a survey from 2002 \cite{berkhin2002survey} stated that K-means \quoted{is by far the most popular \gls{glo:clust}ing algorithm used in scientific and industrial applications}. A more recent survey from 2019 \cite{Abla2019survey}, cited this algorithm as first in the group of four most popular algorithms.
 
 Nowadays, the K-means algorithm is implemented in many libraries, such as \texttt{scikit-learn} for \texttt{Python}, and others for \texttt{C}, \texttt{R}, \texttt{MATLAB}, etc. However, the runtime performances vary widely depending on the implementation \cite{Kmeans-performances-Kriegel2017}. The problem of the algorithm returning a local minima instead of the global one is still present. Most implementations try to minimize the probability of returning this sub-optimal result by running the algorithm multiple times with different initializations and then selecting the best result, so the problem of getting a sub-optimal result is not a common issue in practice.
 
@@ -35,38 +35,38 @@ Nowadays, the K-means algorithm is implemented in many libraries, such as \textt
   \label{alg:kmeans}
   \begin{algorithmic}[1]
     \Function{K-means.train}{$\gls{sym:snapset}, k$}
-    \LineComment{$\gls{sym:snapset}$ is the set of snapshots to be clustered}
-    \LineComment{$k$ is the number of clusters to be obtained}
+    \LineComment{$\gls{sym:snapset}$ is the set of \gls{glo:snap}s to be \gls{glo:clust}ed}
+    \LineComment{$k$ is the number of \gls{glo:clust}s to be obtained}
     \State $\gls{sym:cent}_i \gets \text{random initialization}, \forall i \in [1,k], \gls{sym:cent}_i \in \text{Domain of }\gls{sym:snapset}$
     \Repeat
-    \LineComment{Every snapshot is assigned to the nearest centroid. Every centroid defines a cluster containing the assigned snapshots}
+    \LineComment{Every \gls{glo:snap} is assigned to the nearest \gls{glo:cent}. Every \gls{glo:cent} defines a \gls{glo:clust} containing the assigned \gls{glo:snap}s}
     \State $\gls{sym:cluster}_i \gets \left\{ \gls{sym:snap}_p : \norm{\gls{sym:snap}_p - \gls{sym:cent}_i}^2 \leq  \norm{\gls{sym:snap}_p - \gls{sym:cent}_j}^2  \forall j \in [1,k] \right\} \forall i \in [1,k] $
-    \LineComment{The centroids are updated as the mean of their snapshots}
-    \State $\gls{sym:cent}_i \gets \dfrac{1}{\abs{\gls{sym:cluster}_i}}\Sigma_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \gls{sym:snap}_j, \forall i \in [1,k]$, \Comment{$\abs{\gls{sym:cluster}_i}$ is the cluster size}
+    \LineComment{The centroids are updated as the mean of their \gls{glo:snap}s}
+    \State $\gls{sym:cent}_i \gets \dfrac{1}{\abs{\gls{sym:cluster}_i}}\Sigma_{\gls{sym:snap}_j \in \gls{sym:cluster}_i} \gls{sym:snap}_j, \forall i \in [1,k]$, \Comment{$\abs{\gls{sym:cluster}_i}$ is the \gls{glo:clust} size}
     \Until{All the centroids do not change anymore, or max iterations reached}
     \State $r_i \gets \max{\norm{\gls{sym:snap}_j-\gls{sym:cent}_i}, \, \forall \gls{sym:snap}_j \in \gls{sym:cluster}_i}, \, \forall i \in [1,k]$
-    \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
+    \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the \gls{glo:clust}s, and the labels of the \gls{glo:snap}s}
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
 
-As an example, we can consider $F=2$ features, and generate some test points shaped like three separated clusters. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iterations of the algorithm, and the final result. The K-means algorithm had $n=200$ {\gls{glo:snap}}s, and $k=3$ clusters as input. The colours of the dots and the shaded areas represent the clusters and the decision boundaries. The {\gls{glo:cent}}s are represented as black crosses.
-The decision boundaries are a Voronoi tessellation of the space, and they are defined as the set of points that are equidistant from the {\gls{glo:cent}}s of two different clusters. The algorithm itself does not compute the boundaries, but it is useful to plot them for visualization purposes.
+As an example, we can consider $F=2$ features, and generate some test points shaped like three separated \gls{glo:clust}s. In the \autoref{fig:kmeans_vornoi} are shown the original data, the first two iterations of the algorithm, and the final result. The K-means algorithm had $n=200$ {\gls{glo:snap}}s, and $k=3$ \gls{glo:clust}s as input. The colours of the dots and the shaded areas represent the \gls{glo:clust}s and the decision boundaries. The {\gls{glo:cent}}s are represented as black crosses.
+The decision boundaries are a Voronoi tessellation of the space, and they are defined as the set of points that are equidistant from the {\gls{glo:cent}}s of two different \gls{glo:clust}s. The algorithm itself does not compute the boundaries, but it is useful to plot them for visualization purposes.
 
 \subsection{Variations of the K-means algorithm}
 \label{sec:kmeans_improvements}
 \paragraph*{Kmeans}
 Finding the optimal solution to the k-means problem (\autoref{eq:kmeans_problem}), as said, is NP-hard.
-To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that most algorithms do not scale well as the number $n$ of {\gls{glo:snap}}s increases. With respect to the number of clusters, the problem has a linear complexity $\mathcal{O}(k)$.
+To address this problem, some other {\gls{glo:heuristic}}s algorithms have been proposed in the last two decades. Simple implementations have time complexity $\mathcal{O}(n^2)$ \cite{Kmeans_linear}.  This means that most algorithms do not scale well as the number $n$ of {\gls{glo:snap}}s increases. With respect to the number of \gls{glo:clust}s, the problem has a linear complexity $\mathcal{O}(k)$.
 
-It is worth noticing that an exact solution to the problem has been published \cite{Kmeans_vornoi_japan}, with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of clusters and the number of features $F$.
+It is worth noticing that an exact solution to the problem has been published \cite{Kmeans_vornoi_japan}, with a time complexity $\mathcal{O}(n^{k\cdot F})$. This is still impractical for actual applications, as it is exponential with respect to both the number of \gls{glo:clust}s and the number of features $F$.
 
 \paragraph*{Lloyd's algorithm}
 The classic Lloyd algorithm \cite{Lloyd1982} has a complexity $\mathcal{O}(n\cdot k\cdot F )$.
 
 \paragraph*{Various improvements to Lloyd's algorithm} Keeping the same basic idea, various modifications of the Lloyd algorithm have been proposed to improve the performances. For example, Kanugo \cite{kanungo2004local} proposed a local search algorithm that has a complexity $\mathcal{O}(n^3)$. Another result by Malay \cite{Kmeans_linear} has a linear complexity $\mathcal{O}(n)$. 
 
-Another improvement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances ({\gls{glo:snap}}s) and the {\gls{glo:cent}}s. This algorithm becomes convenient when the number $k$ of clusters is large ($\geq 20$), and up to a dimensionality of $F=1000$ features.
+Another improvement has been developed by Elkan \cite{kmeans-accelerated}, by keeping track of the bounds from the instances ({\gls{glo:snap}}s) and the {\gls{glo:cent}}s. This algorithm becomes convenient when the number $k$ of \gls{glo:clust}s is large ($\geq 20$), and up to a dimensionality of $F=1000$ features.
 
 A variant of the Lloyd algorithm regarding both the speed of execution and the memory consumption has been proposed by Sculley \cite{Sculley2010}. This solution achieves a reduction of the execution time by orders of magnitude and enables performing the classification even for datasets that don't fit in the memory of the machine. This is achieved by using a \emph{mini-batch} approach, where the {\gls{glo:cent}}s are updated after each batch of {\gls{glo:snap}}s.
 
@@ -76,35 +76,35 @@ Concerning the problem of converging to a local minimum, the most common approac
 \paragraph{K-means\texttt{++}} 
 The last improved algorithm reported in this section has its own paragraph because it is the one used in this thesis. It was developed and named Kmeans\texttt{++} by Arthur and Vassilvitskii in 2007 \cite{Kmeanspp}. The difference from the Lloyd algorithm is only in the first initialization of the {\gls{glo:cent}}s $\gls{sym:cent}_i \forall i \in [1,n]$. In this case, instead of a random initialization for all the {\gls{glo:cent}}s, the first {\gls{glo:cent}} $\gls{sym:cent}_1$ is chosen randomly from the {\gls{glo:snap}}s, and then the other {\gls{glo:cent}}s are chosen from the remaining {\gls{glo:snap}}s with a probability that depends on the distance of the candidate {\gls{glo:snap}} to the closest already chosen {\gls{glo:cent}}. This approach is summarized in the \autoref{alg:kmeanspp}.
 
-For the development of the framework of this thesis, the K-means\texttt{++} algorithm has been implemented in \texttt{Python}, using the \texttt{scikit-learn} library. The library function has been modified, adding a method that returns the radii of the clusters, this information is crucial for our scope, as it will be needed for evaluating if a new {\gls{glo:snap}} is a novelty, normal or fault, as it will be explained in the \autoref{sec:clust_metric} and \autoref{sec:clust_threshold}.
+For the development of the framework of this thesis, the K-means\texttt{++} algorithm has been implemented in \texttt{Python}, using the \texttt{scikit-learn} library. The library function has been modified, adding a method that returns the radii of the \gls{glo:clust}s, this information is crucial for our scope, as it will be needed for evaluating if a new {\gls{glo:snap}} is a novelty, normal or fault, as it will be explained in the \autoref{sec:clust_metric} and \autoref{sec:clust_threshold}.
 
 \begin{algorithm}
   \caption{K-means\texttt{++} algorithm}
   \label{alg:kmeanspp}
 \begin{algorithmic}[1]
   \Function{K-means\texttt{++}.train}{$\gls{sym:snapset}, k$}
-  \LineComment{$\gls{sym:snapset} = \{\gls{sym:snap}_1,\gls{sym:snap}_2, \dots , \gls{sym:snap}_n\}$ is the set of snapshots to be clustered}
-  \LineComment{$k$ is the number of clusters to be obtained}
+  \LineComment{$\gls{sym:snapset} = \{\gls{sym:snap}_1,\gls{sym:snap}_2, \dots , \gls{sym:snap}_n\}$ is the set of \gls{glo:snap}s to be \gls{glo:clust}ed}
+  \LineComment{$k$ is the number of \gls{glo:clust}s to be obtained}
   \State $\gls{sym:cent}_1 \gets \text{random initialization}, \gls{sym:cent}_1 \in \gls{sym:snapset}$
   \For{$i \gets 2$ to $k$}
-  \LineComment{$D(\gls{sym:snap})$ is the distance of the snapshot $\gls{sym:snap}$ from the closest centroid already chosen}
+  \LineComment{$D(\gls{sym:snap})$ is the distance of the \gls{glo:snap} $\gls{sym:snap}$ from the closest \gls{glo:cent} already chosen}
   \State $c_i \gets \gls{sym:snap}' \in \gls{sym:snapset} \text{ with probability } \dfrac{D(\gls{sym:snap}')^2}{\Sigma_{\gls{sym:snap}\in\gls{sym:snapset}}D(\gls{sym:snap})^2}$
   \EndFor
   \State perform the Lloyd algorithm using the calculated $\gls{sym:cent}_i, \forall i \in [1,k]$ as initialization, get the model.
-  \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the clusters, and the labels of the snapshots}
+  \State \Return $\mathcal{M}_{\text{\texttt{k-means}}}$  \Comment{The model contains the centroids $\gls{sym:cent}_i$, the radii ${r}_i$ of the \gls{glo:clust}s, and the labels of the \gls{glo:snap}s}
   \EndFunction
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Selecting the number of clusters}
-It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of clusters $k$ in advance. There are some methods to decide what is the best number of clusters, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is automatable so, during the training phase, the user can decide the number of clusters to be used, or leave the selection to the algorithm itself.
+\subsection{Selecting the number of \gls{glo:clust}s}
+It is important to notice that, even being an \emph{unsupervised} learning algorithm, the K-means algorithm needs to know the number of \gls{glo:clust}s $k$ in advance. There are some methods to decide what is the best number of \gls{glo:clust}s, but they usually need to perform more iterations of the algorithm with different values of $k$, and then compare the results. This task is automatable so, during the training phase, the user can decide the number of \gls{glo:clust}s to be used, or leave the selection to the algorithm itself.
 
 To compare the results of the different iterations, it is possible to use some metrics on the data and the {\gls{glo:cent}}s. The most common metrics are the \emph{inertia} and the \emph{silhouette score}, described in the following paragraphs.
 
 \paragraph*{Inertia}
-The inertia metric measures the total (sum) distance of each point belonging to a cluster from the {\gls{glo:cent}} of the cluster itself, as shown in the \autoref{eq:inertia}. This is called inertia because, in the physical sense, it is the sum of the moment of inertia of each cluster if all the {\gls{glo:snap}}s were considered as point masses (with unitary mass). This analogy is useful to understand that the lower the inertia, the more compact the clusters are.
+The inertia metric measures the total (sum) distance of each point belonging to a \gls{glo:clust} from the {\gls{glo:cent}} of the \gls{glo:clust} itself, as shown in the \autoref{eq:inertia}. This is called inertia because, in the physical sense, it is the sum of the moment of inertia of each \gls{glo:clust} if all the {\gls{glo:snap}}s were considered as point masses (with unitary mass). This analogy is useful to understand that the lower the inertia, the more compact the \gls{glo:clust}s are.
 
-Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of $k$, on the previous dataset. The result is shown in the \autoref{fig:kmeans_inertia}. As expected, the inertia decreases as the number of clusters increases. This is not desirable behaviour, if the aim is selecting the number of clusters, the best guess is to select (by eye or with some automatism) the Pareto optimal point (\glsxtrshort{pof}) of the curve \cite{pareto}. 
+Let's span $k \in [1,9]$ and plot the inertia of the \gls{glo:clust}s for each value of $k$, on the previous dataset. The result is shown in the \autoref{fig:kmeans_inertia}. As expected, the inertia decreases as the number of \gls{glo:clust}s increases. This is not desirable behaviour, if the aim is selecting the number of \gls{glo:clust}s, the best guess is to select (by eye or with some automatism) the Pareto optimal point (\glsxtrshort{pof}) of the curve \cite{pareto}. 
 
 \begin{equation}
   \label{eq:inertia}
@@ -114,26 +114,26 @@ Let's span $k \in [1,9]$ and plot the inertia of the clusters for each value of 
 \begin{figure}
   \begin{subfigure}{\textwidth}
     \includegraphics[width=\textwidth]{images/Kmeans/Kmeans_inertia.pdf}
-    \caption{Inertia of the clusters for different values of $k$}
+    \caption{Inertia of the \gls{glo:clust}s for different values of $k$}
     \label{fig:kmeans_inertia}
   \end{subfigure}
   \begin{subfigure}{\textwidth}
     \includegraphics[width=\textwidth]{images/Kmeans/Kmeans_silhouette.pdf}
-    \caption{Silhouette score of the clusters for different values of $k$}
+    \caption{Silhouette score of the \gls{glo:clust}s for different values of $k$}
     \label{fig:kmeans_silhouette}
   \end{subfigure}
   \label{fig:kmeans_metrics}
-  \caption{Metrics for selecting the number of clusters}
+  \caption{Metrics for selecting the number of \gls{glo:clust}s}
 \end{figure}
 
 \paragraph*{Silhouette score}
-A better metric that can be used to select the number of clusters is the silhouette score.
-The silhouette score is defined for each {\gls{glo:snap}} as in \autoref{eq:silhouette}, where $a$ is the mean distance of the {\gls{glo:snap}} from the other {\gls{glo:snap}}s in the same cluster, and $b$ is the mean distance of the {\gls{glo:snap}} from the {\gls{glo:snap}}s in the nearest cluster. The resulting silhouette $S_i$ of a {\gls{glo:snap}} $\gls{sym:snap}_i$ is a scalar: $S_i \in [-1,1]$.
+A better metric that can be used to select the number of \gls{glo:clust}s is the silhouette score.
+The silhouette score is defined for each {\gls{glo:snap}} as in \autoref{eq:silhouette}, where $a$ is the mean distance of the {\gls{glo:snap}} from the other {\gls{glo:snap}}s in the same \gls{glo:clust}, and $b$ is the mean distance of the {\gls{glo:snap}} from the {\gls{glo:snap}}s in the nearest \gls{glo:clust}. The resulting silhouette $S_i$ of a {\gls{glo:snap}} $\gls{sym:snap}_i$ is a scalar: $S_i \in [-1,1]$.
 The three relevant cases are:
 \begin{itemize}
-  \item a value close to $1$ means that the {\gls{glo:snap}} is far inside its own cluster and far from {\gls{glo:snap}}s of other clusters;
-  \item a value close to $0$ means that the {\gls{glo:snap}} is on the boundary between two clusters;
-  \item a value close to $-1$ means that the {\gls{glo:snap}} is far from its own cluster and close to another cluster, so it may have been misassigned.
+  \item a value close to $1$ means that the {\gls{glo:snap}} is far inside its own \gls{glo:clust} and far from {\gls{glo:snap}}s of other \gls{glo:clust}s;
+  \item a value close to $0$ means that the {\gls{glo:snap}} is on the boundary between two \gls{glo:clust}s;
+  \item a value close to $-1$ means that the {\gls{glo:snap}} is far from its own \gls{glo:clust} and close to another \gls{glo:clust}, so it may have been misassigned.
 \end{itemize}
 
 \begin{equation}
@@ -141,7 +141,7 @@ The three relevant cases are:
   S_i = \frac{b_i - a_i}{\max{(a_i,b_i)}}
 \end{equation}
 
-At this point, the global silhouette score $S_g$ can be computed as the mean of the silhouette scores of all the {\gls{glo:snap}}s (\autoref{eq:silhouette_global}). The global silhouette score, for the same example dataset, is shown as a function of the number of clusters $k$ in the \autoref{fig:kmeans_silhouette}. Note that this time $k \in [2,9]$, because the silhouette score is not defined for a single cluster.
+At this point, the global silhouette score $S_g$ can be computed as the mean of the silhouette scores of all the {\gls{glo:snap}}s (\autoref{eq:silhouette_global}). The global silhouette score, for the same example dataset, is shown as a function of the number of \gls{glo:clust}s $k$ in the \autoref{fig:kmeans_silhouette}. Note that this time $k \in [2,9]$, because the silhouette score is not defined for a single \gls{glo:clust}.
 
 In this case, the best value for $k$ is $k=3$, because it is the value that maximizes the silhouette score. This approach is simpler and easier to automate than the inertia one. 
 
@@ -150,8 +150,8 @@ In this case, the best value for $k$ is $k=3$, because it is the value that maxi
   S_g = \frac{1}{n}\sum_{i=1}^{n} S_i
 \end{equation}
 
-\subsection{Assignation of the new instance to a cluster}
-The procedure for assigning the new {\gls{glo:snap}} $\gls{sym:snap}_n$ to a cluster is quite simple, it is sufficient to compute the distance between $\gls{sym:snap}_n$ and the {\gls{glo:cent}}s $\gls{sym:cent}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\gls{sym:snap}_n$ to the cluster with the minimum distance.
+\subsection{Assignation of the new instance to a \gls{glo:clust}}
+The procedure for assigning the new {\gls{glo:snap}} $\gls{sym:snap}_n$ to a \gls{glo:clust} is quite simple, it is sufficient to compute the distance between $\gls{sym:snap}_n$ and the {\gls{glo:cent}}s $\gls{sym:cent}_m$, $\forall m \in  [1, \dots , k]$. The distance is defined as the $l^2$-norm in the feature space, it can be computed using the \autoref{eq:clust_dist}, and assign $\gls{sym:snap}_n$ to the \gls{glo:clust} with the minimum distance.
 
 \begin{equation}
   \label{eq:clust_dist}
@@ -168,38 +168,38 @@ For demonstration purposes, in this section, since it is still feasible to show 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{images/Kmeans/Spheres_2.pdf}
-  \caption{Cluster model in the $3$-dimensional space, with new snapshot $\gls{sym:snap}_n$}
+  \caption{Cluster model in the $3$-dimensional space, with new \gls{glo:snap} $\gls{sym:snap}_n$}
   \label{fig:clust_spheres}
 \end{figure}
 
-In the \autoref{fig:clust_spheres}, the training data are represented in the $3$-dimensional space, where the axis are the features used to train the model. The K-means model has been ideally trained with an arbitrary number $k$ of clusters but, for display purposes, only two clusters  ($\gls{sym:cluster}_i$ and $\gls{sym:cluster}_j$) are plotted.
+In the \autoref{fig:clust_spheres}, the training data are represented in the $3$-dimensional space, where the axis are the features used to train the model. The K-means model has been ideally trained with an arbitrary number $k$ of \gls{glo:clust}s but, for display purposes, only two \gls{glo:clust}s  ($\gls{sym:cluster}_i$ and $\gls{sym:cluster}_j$) are plotted.
 \paragraph*{}
 The entities shown in the \autoref{fig:clust_spheres} are:
 \begin{itemize}
-  \item $\gls{sym:cent}_{i(j)}$ is the centroid of the $i$th ($j$th) cluster;
-  \item $\gls{sym:radius}_{i(j)}$ is the radius of the $i$th ($j$th) cluster, it is defined as the distance between the centroid $\gls{sym:cent}_{i(j)}$ and the farthest point belonging to the cluster itself;
-  \item $\gls{sym:cluster}_{i(j)}$ is the set of training snapshots belonging to the $i$th ($j$th) cluster, it has a centroid $\gls{sym:cent}_{i(j)}$ and a radius $\gls{sym:radius}_{i(j)}$;
-  \item $\gls{sym:snap}_n$ is the new snapshot to be evaluated;
+  \item $\gls{sym:cent}_{i(j)}$ is the \gls{glo:cent} of the $i$th ($j$th) \gls{glo:clust};
+  \item $\gls{sym:radius}_{i(j)}$ is the radius of the $i$th ($j$th) \gls{glo:clust}, it is defined as the distance between the \gls{glo:cent} $\gls{sym:cent}_{i(j)}$ and the farthest point belonging to the \gls{glo:clust} itself;
+  \item $\gls{sym:cluster}_{i(j)}$ is the set of training \gls{glo:snap}s belonging to the $i$th ($j$th) \gls{glo:clust}, it has a \gls{glo:cent} $\gls{sym:cent}_{i(j)}$ and a radius $\gls{sym:radius}_{i(j)}$;
+  \item $\gls{sym:snap}_n$ is the new \gls{glo:snap} to be evaluated;
   \item $\gls{sym:dist}_{n,i}$ is the vector between $\gls{sym:snap}_n$ and $\gls{sym:cent}_i$;
   \item $\gls{sym:dist}_{n,j}$ is the vector between $\gls{sym:snap}_n$ and $\gls{sym:cent}_j$;
-  \item the semi-transparent spheres represent the cluster sizes, the radius of the spheres is the radius of the cluster itself, and the centre is the centroid of the cluster;
+  \item the semi-transparent spheres represent the \gls{glo:clust} sizes, the radius of the spheres is the radius of the \gls{glo:clust} itself, and the centre is the \gls{glo:cent} of the \gls{glo:clust};
 \end{itemize}
 
 
 
 \subsection{Metric for the new instance evaluation}
 \label{sec:clust_metric}
-Once the new {\gls{glo:snap}} $\gls{sym:snap}_n$ has been assigned to the right cluster $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (\gls{aka} metric) linked to how novel this {\gls{glo:snap}} is needs to be computed. In this document, this measure, referred to the $n$-th cluster, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. The first simple approach used in this project is computing the difference between the distance of $\gls{sym:snap}_n$ from the {\gls{glo:cent}} $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the cluster itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current {\gls{glo:snap}}, so it is possible to use that as a novelty measure.
+Once the new {\gls{glo:snap}} $\gls{sym:snap}_n$ has been assigned to the right \gls{glo:clust} $\gls{sym:cluster}_i$ using \autoref{eq:clust_dist}, some kind of measure (\gls{aka} metric) linked to how novel this {\gls{glo:snap}} is needs to be computed. In this document, this measure, referred to the $n$-th \gls{glo:clust}, will be called $e_n$, in order to remind some sort of error, even if it is not an error in the strict sense. The first simple approach used in this project is computing the difference between the distance of $\gls{sym:snap}_n$ from the {\gls{glo:cent}} $\gls{sym:cent}_i$ and the radius $\gls{sym:radius}_i$ of the \gls{glo:clust} itself. With this approach, the measure defined in the \autoref{eq:clust_eval} is relative to the current {\gls{glo:snap}}, so it is possible to use that as a novelty measure.
 
 \begin{equation}
   \label{eq:clust_eval}
-  e_{n} = ||\gls{sym:dist}_{n,i}||_2 - ||\gls{sym:radius}_{i}||_2, \text{ where $i$ is the of the assigned cluster}
+  e_{n} = ||\gls{sym:dist}_{n,i}||_2 - ||\gls{sym:radius}_{i}||_2, \text{ where $i$ is the of the assigned \gls{glo:clust}}
 \end{equation}
 
 Few consideration about the result of the \autoref{eq:clust_eval}:
 \begin{itemize}
   \item if $e_{n} > 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is outside the sphere of radius $\gls{sym:radius}_i$ centred in $\gls{sym:cent}_i$, so it is probably a novel {\gls{glo:snap}};
-  \item if $e_{n} < 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal {\gls{glo:snap}}. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the cluster size, and use it for novelty detection would not be reasonable. \textbf{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
+  \item if $e_{n} < 0$, the new {\gls{glo:snap}} $\gls{sym:snap}_n$ is inside the sphere of radius $\gls{sym:radius}_i$, so it is probably a normal {\gls{glo:snap}}. In this case, it is worth noticing that this assumption is reasonable only if the shape of the point cloud resembles a sphere, otherwise, the radius $\gls{sym:radius}_i$ is not a good measure of the \gls{glo:clust} size, and use it for novelty detection would not be reasonable. \textbf{This emphasizes the importance of the standardization procedure applied to the features before the training phase};
 \end{itemize}
 
 
@@ -208,19 +208,19 @@ Using this metric it is possible to define as \emph{novelty} all the {\gls{glo:s
 
 \subsection{Introducing a threshold for the metric evaluation}
 \label{sec:clust_threshold}
-In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each cluster $\gls{sym:cluster}_i$ and use it to detect if a {\gls{glo:snap}} is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > {t}_i$.
+In order to improve the robustness of the novelty detection algorithm, it is possible to define a threshold ${t}_i$ for each \gls{glo:clust} $\gls{sym:cluster}_i$ and use it to detect if a {\gls{glo:snap}} is a novelty or not. Once the threshold ${t}_i$ is defined, the detection of the novelty can be triggered by the condition $e_{n} > {t}_i$.
 
 \paragraph*{}
-At this point, the problem is that the user would have to define a threshold for each cluster, and this is not a trivial task. This is because it is likely that the clusters have different sizes, and so one threshold for all the clusters would be more conservative for the smaller clusters and less conservative for the bigger ones. Moreover, most of the times, the clusters' shape and size will not have a physical meaning, and the act of manually defining a threshold for each cluster would go against our goal of designing a fully unsupervised framework.
+At this point, the problem is that the user would have to define a threshold for each \gls{glo:clust}, and this is not a trivial task. This is because it is likely that the \gls{glo:clust}s have different sizes, and so one threshold for all the \gls{glo:clust}s would be more conservative for the smaller \gls{glo:clust}s and less conservative for the bigger ones. Moreover, most of the times, the \gls{glo:clust}s' shape and size will not have a physical meaning, and the act of manually defining a threshold for each \gls{glo:clust} would go against our goal of designing a fully unsupervised framework.
 
 \paragraph*{}
-To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the cluster size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\gls{sym:radius}_i$ of the cluster itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the cluster size, so that the user can define a single threshold for all the clusters, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version.
+To address this problem, it is possible to change the definition of the metric itself, so that is not dependent on the \gls{glo:clust} size. This can be done by normalizing the already defined metric $e_{n}$ with the radius $\gls{sym:radius}_i$ of the \gls{glo:clust} itself, as shown in the \autoref{eq:clust_eval_norm}. In this way, $t_i$ can be defined as a percentage of the \gls{glo:clust} size, so that the user can define a single threshold for all the \gls{glo:clust}s, and selecting the number to assign to $t_i$ has a more intuitive meaning. From now on if not otherwise specified, the metric $e_{n}$ will be this normalized version.
 Obviously, the metric can be easily displayed as a percentage: $e_{n,\%} = e_n \cdot 100$.
 This value can be evaluated in real time and plotted in a graph so that the user can see the novelty metric behaviour over time.
 
 \begin{equation}
   \label{eq:clust_eval_norm}
-  e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}} - 1, \text{ where $i$ is the of the assigned cluster}
+  e_{n} = \frac{\norm{\vect d_{n,i}}-\norm{\vect r_{n,i}}}{\norm{\vect r_{n,i}}} = \frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}} - 1, \text{ where $i$ is the of the assigned \gls{glo:clust}}
 \end{equation}
 
 After applying this scaling, the metric now follows this rule of thumb:
@@ -235,16 +235,16 @@ In the previous \autoref{sec:clust_threshold} a metric has been proposed to dete
 
 Let's assume now to have trained the model on a dataset of {\gls{glo:snap}}s collected in a period in which the system was having a known malfunction. In this case, the metric applied to any future {\gls{glo:snap}} will carry the information of \quoted{how faulty} the system is, or better \quoted{how similarly the system is behaving \gls{wrt} a known malfunction}.
 
-Since the metric already defined is the normalized distance of the current \gls{glo:snap} from the {\gls{glo:cent}} of the cluster, if the clustered data are indicative of a malfunction, the metric $e_n$ will be in the range $[-1,0]$ when the system has a known malfunction present in the training data and $e_n$ will be in the range $(0,+\infty)$ when the system is not behaving as a known malfunction.
+Since the metric already defined is the normalized distance of the current \gls{glo:snap} from the {\gls{glo:cent}} of the \gls{glo:clust}, if the \gls{glo:clust}ed data are indicative of a malfunction, the metric $e_n$ will be in the range $[-1,0]$ when the system has a known malfunction present in the training data and $e_n$ will be in the range $(0,+\infty)$ when the system is not behaving as a known malfunction.
 
 To maintain the same behavior of the metric as in \autoref{sec:clust_threshold}, a trasformation that maps the range $[-1,0]$ into $(0,+\infty)$, and the range $(0,+\infty)$ into $[-1,0]$ is needed. This can be done by applying a logarithmic transformation to the metric, as shown in the \autoref{eq:clust_eval_log}. This transformation is applied only if the model is working in fault detection mode, otherwise, the metric has to remain the same as in \autoref{eq:clust_eval_norm}.
 
 \begin{equation}
   \label{eq:clust_eval_log}
-  e'_{n} = -\ln(e_n+1) = -\ln{\left(\frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}}\right)}, \text{ where $i$ is the the assigned cluster}
+  e'_{n} = -\ln(e_n+1) = -\ln{\left(\frac{\norm{\gls{sym:dist}_{n,i}}}{\norm{\gls{sym:radius}_{i}}}\right)}, \text{ where $i$ is the the assigned \gls{glo:clust}}
 \end{equation}
 
-In practice, to avoid numerical representation problems, it is mandatory to avoid mapping $-1$ (when the new snapshot happens to be perfectly in the centre of a cluster) into $+\infty$. To do that, a constant slightly smaller than $1$ is multiplied to the metric before applying the logarithmic transformation, so that the function will have the vertical asymptote slightly before $-1$, and all the inputs $\in [-1,0]$ will be mapped into real values. The plot of the settled function is shown in the \autoref{fig:kmeans_fault}.
+In practice, to avoid numerical representation problems, it is mandatory to avoid mapping $-1$ (when the new \gls{glo:snap} happens to be perfectly in the centre of a \gls{glo:clust}) into $+\infty$. To do that, a constant slightly smaller than $1$ is multiplied to the metric before applying the logarithmic transformation, so that the function will have the vertical asymptote slightly before $-1$, and all the inputs $\in [-1,0]$ will be mapped into real values. The plot of the settled function is shown in the \autoref{fig:kmeans_fault}.
 
 \begin{figure}[htbp]
   \centering
@@ -258,15 +258,15 @@ In practice, to avoid numerical representation problems, it is mandatory to avoi
 The evaluation procedure developed to address the novelty/fault detection scope of this thesis can be summarized in the \autoref{alg:eval_new_snapshot}.
 
 \begin{algorithm}
-  \caption{Evaluation of a new snapshot with a K-means model}
+  \caption{Evaluation of a new \gls{glo:snap} with a K-means model}
   \label{alg:eval_new_snapshot}
   \begin{algorithmic}[1]
     \Procedure{eval}{$\mathcal{M}_{\text{\texttt{k-means}}},\gls{sym:snap}, t$}
     \LineComment{$\mathcal{M}_{\text{\texttt{k-means}}}$ is the trained K-means model}
-    \LineComment{the model contain the centroids $\gls{sym:cent}_i$ and the radii $\gls{sym:radius}_i$ of the clusters}
-    \LineComment{$\gls{sym:snap}$ is the new snapshot to be evaluated}
+    \LineComment{the model contain the centroids $\gls{sym:cent}_i$ and the radii $\gls{sym:radius}_i$ of the \gls{glo:clust}s}
+    \LineComment{$\gls{sym:snap}$ is the new \gls{glo:snap} to be evaluated}
     \LineComment{$t$ is the threshold for the novelty detection}
-    \State $k \gets \text{number of clusters in $\mathcal{M}_{\text{\texttt{k-means}}}$}$
+    \State $k \gets \text{number of \gls{glo:clust}s in $\mathcal{M}_{\text{\texttt{k-means}}}$}$
     \State min $\gets \infty$ \Comment {initialize the minimum distance}
     \For{$i \gets 1$ to $k$}
     \State $\gls{sym:dist}_{i} \gets \gls{sym:snap} - \gls{sym:cent}_{i}$
@@ -280,9 +280,9 @@ The evaluation procedure developed to address the novelty/fault detection scope 
     \State $e \gets -\ln(e+1-10^{-6})$ \Comment {apply the logarithmic trasformation}
     \EndIf
     \If {$e > t$}
-    \State \Return novelty flag, $e$  \Comment {the snapshot is novelty}
+    \State \Return novelty flag, $e$  \Comment {the \gls{glo:snap} is novelty}
     \Else
-    \State \Return normal flag, $e$ \Comment {the snapshot is normal}
+    \State \Return normal flag, $e$ \Comment {the \gls{glo:snap} is normal}
     \EndIf
     \EndProcedure
     %\end{small}
@@ -292,13 +292,13 @@ The evaluation procedure developed to address the novelty/fault detection scope 
 
 \subsection{Comment about selecting the wrong value of $k$}
 \label{sec:wrong_k}
-A brief comment about what has been done in the experimental phase, in the cases where the number of clusters $k$ was difficult to define based on the silhouette plots. This happened when the maximum value of $k$ was shared between more than one value of $k$ (multiple peaks with similar values or a flat shape of the peak).
+A brief comment about what has been done in the experimental phase, in the cases where the number of \gls{glo:clust}s $k$ was difficult to define based on the silhouette plots. This happened when the maximum value of $k$ was shared between more than one value of $k$ (multiple peaks with similar values or a flat shape of the peak).
 
 In this case, the best choice is to select the maximum value of $k$ that is still compliant with the silhouette criterion. This is because the in scope of this thesis the final goal is to detect novelty. 
 
-For display purposes, let's consider an example in the plane ($F$ = 2), with a dataset that clearly has three distinct clusters. Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of clusters, rather than selecting it too small. This is because, if $k$ is larger than the actual number of clusters, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two clusters together, and a new {\gls{glo:snap}} that happens to be in the middle of the two clusters will not be detected as novelty. 
+For display purposes, let's consider an example in the plane ($F$ = 2), with a dataset that clearly has three distinct \gls{glo:clust}s. Looking at \autoref{fig:kmeans_wrongk} it is clear why it is better to select $k$ larger than the actual number of \gls{glo:clust}s, rather than selecting it too small. This is because, if $k$ is larger than the actual number of \gls{glo:clust}s, the algorithm will still be able to detect the novelty, but if $k$ is too small, somewhere the algorithm will be forced to join two \gls{glo:clust}s together, and a new {\gls{glo:snap}} that happens to be in the middle of the two \gls{glo:clust}s will not be detected as novelty. 
 
-In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of clusters was $k=3$, so selecting $k=2$ the algorithm would have joined the two clusters on the right, and the new {\gls{glo:snap}} would not have been detected as a novelty. On the other hand, by selecting $k=4$, the algorithm would have correctly detected the novelty, even if one cluster had been split in two.
+In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of \gls{glo:clust}s was $k=3$, so selecting $k=2$ the algorithm would have joined the two \gls{glo:clust}s on the right, and the new {\gls{glo:snap}} would not have been detected as a novelty. On the other hand, by selecting $k=4$, the algorithm would have correctly detected the novelty, even if one \gls{glo:clust} had been split in two.
 
 \begin{figure}
   \centering
@@ -312,12 +312,12 @@ In the case of the \autoref{fig:kmeans_wrongk}, the best actual number of cluste
 \label{sec:kmeans_limits}
 This algorithm has many advantages: it's simple, popular (easy to find in libraries), it's fast, produces a model that does not need to store the original data in order to perform the classification of a new instance and is well scalable. But it has also some limits, the most important are \citepage{hands-on-geron2022}{273}:
 \begin{itemize}
-  \item it performs poorly if the clusters are not spherical;
-  \item it performs poorly if the clusters have very different sizes;
-  \item it performs poorly if the clusters have different densities.
+  \item it performs poorly if the \gls{glo:clust}s are not spherical;
+  \item it performs poorly if the \gls{glo:clust}s have very different sizes;
+  \item it performs poorly if the \gls{glo:clust}s have different densities.
 \end{itemize}
 
-For this reason, it is very important to perform a good preconditioning of the data. In this thesis, the data are \gls{glo:std} before the training phase, this makes the clusters more spherical and with similar sizes. 
+For this reason, it is very important to perform a good preconditioning of the data. In this thesis, the data are \gls{glo:std} before the training phase, this makes the \gls{glo:clust}s more spherical and with similar sizes. 
 
 
 
