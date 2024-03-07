@@ -274,9 +274,31 @@ Despite this huge memory saving, it is possible to see that the \gls{wpd} is abl
 \begin{figure}
     \centering
     \includegraphics[scale=0.99]{images/FeatureExtraction/WPD_IMS.pdf}
-    \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, in normal conditions}
+    \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, for all the \gls{glo:snap}s}
     \label{fig:IMS_WPD}
 \end{figure}
+
+\subsection{Feature standardization}
+Most \gls{ml} algorithms are sensitive to the \gls{glo:feature} scale. For this reason, it is important to apply a preprocessing step to the \gls{glo:feature}s to make them span similar ranges which are neither too small or too wide \citepage{hands-on-geron2022}{76}.
+
+There are several way to pre-scale the features, like the \emph{min-max scaling}, the \emph{standardization} and the \emph{robust scaling}. In this work, the \emph{standardization} will be used, which is defined as
+\begin{equation}
+    \hat{F}_i = \frac{F_i - \mu_i}{\sigma_i}
+\end{equation}
+
+where $\mu_i$ is the mean of the $i$-th \gls{glo:feature} and $\sigma_i$ is the standard deviation of the $i$-th \gls{glo:feature}. This will make the \gls{glo:feature}s to have a mean of zero and a unitary standard deviation.
+
+In order to visualize the effect of the standardization, consider the same features shown in \autoref{fig:IMS_WPD}. 
+The first 300 \gls{glo:snap}s will be used to calculate the mean and the standard deviation of each \gls{glo:feature}, and then the \gls{glo:feature}s will be standardized for all the dataset.
+The result of the standardization is shown in \autoref{fig:IMS_WPD_std}. It is possible to see that the standardization has the effect of making the \gls{glo:feature}s to have much more evident increase as the system degrades, and this will make the \gls{glo:feature}s to be more sensitive to the degradation of the maintained device.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.99]{images/FeatureExtraction/WPD_IMS_standardization.pdf}
+    \caption{Wavelet Packet Decomposition of the \quoted{Bearing 3 x} vibration signal from the \gls{ims} dataset, for all the \gls{glo:snap}s after the standardization} 
+    \label{fig:IMS_WPD_std}
+\end{figure}
+
 
 \section{Conclusions}
 Even just considering very simple time-domain \gls{glo:feature}s, we can already detect the degradation of the bearing by comparing these \gls{glo:feature} values to a threshold. On the other hand, also the frequency-domain \gls{glo:feature}s could be just compared with a threshold to detect novel behaviours. But, as we will see in \autoref{ch:Framework}, a general purpose \gls{glo:frmwrk} based upon a more sophisticated approach based on the \gls{glo:clust}ing of the data, it will be possible to condense all the \gls{glo:feature}s from all the signals into a single metric that will be used to detect the novel behaviour. This will have several advantages. Some of them are being able to detect a novel behaviour even if it is not possible to define a threshold for each \gls{glo:feature}, and the single threshold to be defined on the metric will be easier to interpret and tune. Moreover, the \gls{glo:frmwrk} will be able to detect the novelty even earlier and even if the degradation of the bearing is not captured by the time-domain \gls{glo:feature}s, but only by the frequency-domain \gls{glo:feature}s.
