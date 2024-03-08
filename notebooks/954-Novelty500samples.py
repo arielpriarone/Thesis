@@ -34,7 +34,9 @@ ax.hlines(threshold, timestamps[0], timestamps[-1], colors='k', linestyles='dash
 ax.annotate("Novel behaviour\n2003-11-16 07:46", (dt.datetime.fromisoformat("2003-11-16T07:46"), threshold), textcoords="offset points", xytext=(-100,50), ha='center', fontsize=10, color='k', arrowprops=dict(facecolor='black', arrowstyle='->'))
 ax.set_xlabel("Sample")
 ax.set_ylabel("Novelty metric [%]")
-ax.set_yscale("symlog")
+ax.set_yscale("linear")
+ax.xaxis.set_major_formatter(
+    mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
 ax.legend()
 
 fig, ax = plt.subplots()
@@ -63,6 +65,14 @@ PRED_INSTANTS = ["2003-11-16 16:49",
 "2003-11-23 12:00",
 "2003-11-24 17:27"]
 fig, ax = plt.subplots()
+plt.subplots_adjust(
+    top=1.0,
+bottom=0.188,
+left=0.105,
+right=0.994,
+hspace=0.2,
+wspace=0.2
+)
 ax.scatter(timestamps,novelty_metric,c='k',marker='.', s=2, label='Novelty metric')
 colormap = [mpl.colors.to_hex(plt.cm.tab10(i)) for i in range(len(PRED_INSTANTS))]
 timestamp_plot = [timestamp_float for timestamp_float in np.linspace(timestamps_float[0],timestamps_float[-1]+86400*2,500)]
@@ -90,6 +100,8 @@ ax.axhline(7000, color='k', linestyle='dashed',label= 'RUL threshold',linewidth=
 ax.set_ylim(-300,7500)  
 ax.set_xlabel("Timestamp")
 ax.set_ylabel("Novelty metric [%]")  
+ax.xaxis.set_major_formatter(
+    mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
 ax.legend()
 
 PRED_INSTANTS = ["2003-11-21 16:49"]

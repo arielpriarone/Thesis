@@ -1203,11 +1203,11 @@
  \else
   % for single sided the bound side is always on the left
   % make this the wide margin
-  \oddsidemargin\@IEEEmarginW
-  \evensidemargin\@IEEEmarginW
+%   \oddsidemargin\@IEEEmarginW
+%   \evensidemargin\@IEEEmarginW
  \fi
- \addtolength{\oddsidemargin}{-1.0in}%  compensate for LaTeX's 1in offset
- \addtolength{\evensidemargin}{-1.0in}%
+%  \addtolength{\oddsidemargin}{-1.0in}%  compensate for LaTeX's 1in offset
+%  \addtolength{\evensidemargin}{-1.0in}%
 \fi}
 
 
@@ -3632,7 +3632,7 @@ which is provided to fool Hyperref.}}
    \begin{minipage}{2.5cm}%
        \includegraphics[width=\linewidth]{images/logos/logo_pic4ser.png}\par%
    \end{minipage}%
-   \begin{minipage}{12cm}%
+   \begin{minipage}{13cm}%
    \begin{center}%
        {\LARGE\@title\par}%   
    \end{center}

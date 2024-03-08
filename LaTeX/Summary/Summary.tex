@@ -4,13 +4,22 @@
 
 %\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out
                                                           % if you need a4paper
-\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4
+\documentclass[a4paper, 10pt, conference, oneside]{ieeeconf}      % Use this line for a4
                                                           % paper
 
 % \IEEEoverridecommandlockouts                              % This command is only
                                                           % needed if you want to
                                                           % use the \thanks command
 \overrideIEEEmargins
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=15mm,
+ right=15mm,
+ top=15mm,
+    bottom=15mm,
+ }
 % See the \addtolength command later in the file to balance the column lengths
 % on the last page of the document
 
@@ -49,8 +58,8 @@ Unsupervised Machine Learning Algorithms for Edge Novelty Detection} \\ \normals
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{content/introduction}
-\input{content/features}
 \input{content/framework}
+\input{content/features}
 \input{content/validation}
 \input{content/conclusion}
 
