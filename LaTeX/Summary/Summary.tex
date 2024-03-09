@@ -31,11 +31,14 @@
 %\usepackage{epsfig} % for postscript graphics files
 %\usepackage{mathptmx} % assumes new font selection scheme installed
 %\usepackage{mathptmx} % assumes new font selection scheme installed
+\usepackage{amsmath}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{multirow}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{lipsum}
+
+\newcommand{\quoted}[1]{``#1''} % for quotes
 
 \title{{\LARGE \bf
 Unsupervised Machine Learning Algorithms for Edge Novelty Detection} \\ \normalsize \vspace*{5pt} \textit{April 2024}
@@ -52,9 +55,9 @@ Unsupervised Machine Learning Algorithms for Edge Novelty Detection} \\ \normals
 \pagestyle{empty}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{abstract}
-\input{content/abstract}
-\end{abstract}
+% \begin{abstract}
+% \input{content/abstract}
+% \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \input{content/introduction}

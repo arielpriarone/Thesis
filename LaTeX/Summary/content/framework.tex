@@ -7,11 +7,11 @@
 \end{figure}
 
 The solution developed in this project is thought to be set up on a new device, and linked to the sensors of the most informative quantities of the system.
-In the first phase of commissioning, the framework collects the data, extracts the features and stores them. When the data collected is enough to characterize all the modes of operation of the maintained system, the UML model can be trained. Finally, the framework continues collecting new data, extracting the features, and evaluating the new data. The framework now produces a Novelty Metric (NM) that quantifies the novelty of new data. 
-This phase can last indefinitely, when the NM overshoots a certain threshold, a warning is issued to the maintenance team. They can then decide to perform a maintenance action or to continue monitoring the system. If they declare the system as healthy, the framework can be retrained with the new data, to update the UML model. Otherwise, a second UML model can be trained to characterize the newly discovered fault and perform FD in the future.
+In the first phase of commissioning, the framework collects the data, extracts the features and stores them. When the data collected is enough to characterize all the modes of operation of the maintained system, the UML model can be trained. Finally, the framework continues collecting new data, extracting the features, and evaluating the new data. The framework now produces a Novelty Metric (NM) that quantifies how abnormal the new data are. 
+This phase can last indefinitely. When the NM overshoots a certain threshold, a warning is issued to the maintenance team. They can then decide to perform a maintenance action or to continue monitoring the system. If they declare the system as healthy, the framework can be retrained with the new data, to update the UML model. Otherwise, a second UML model can be trained to characterize the newly discovered fault and perform FD in the future.
 
-\subsection{software agent}
-The proposed framework is based on software agents. Each agent is autonomous and performs a specific task. The developed agents, as shown in Fig. \ref{fig:framework_structure}, are:
+\subsection{Software Agents}
+The proposed framework is based on software agents. Each agent is autonomous and performs a specific task. The developed agents, as shown in Fig.~\ref{fig:framework_structure}, are:
 \begin{itemize}
     \item \textbf{Field Agent (FiA)}: responsible for the synchronous sampling of the data.
     \item \textbf{Feature Agent (FA)}: extracts the features from the time series.
@@ -20,13 +20,24 @@ The proposed framework is based on software agents. Each agent is autonomous and
 
 \subsection{Database}
 All the Agents are connected to a common database. In the case of the PC implementation, MongoDB has been used. In the case of the Edge implementation, the data are stored directly in the microcontroller's memory.
-Regarding the structure shown in Fig. \ref{fig:framework_structure}, the MongoDB database is composed of seven collections: \emph{Raw} containing the time series, \emph{Unconsumed} containing the features to be evaluated by the MLA, \emph{Quarantined, Healthy and Faulty} containing the features that have been flagged as novelty, normal or faulty, respectively, and \emph{Models} containing the UML models. The collection \emph{Backup} is general purpose.
+Regarding the structure shown in Fig.~\ref{fig:framework_structure}, the MongoDB database is composed of seven collections: \emph{Raw} containing the time series, \emph{Unconsumed} containing the features to be evaluated by the MLA, \emph{Quarantined, Healthy} and \emph{Faulty} containing the features that have been flagged as novelty, normal or faulty, respectively, and \emph{Models} containing the UML models. The collection \emph{Backup} is general purpose.
 
 \subsection{Multiple Instances}
-As shown in Fig. \ref{fig:multiple_instances}, the framework can be implemented in multiple instances. This is useful to better isolate the location of the anomaly in a complex system. The larger the sensors that a single instance of the framework is connected to, the more difficult it is to isolate the anomaly.
+As shown in Fig.~\ref{fig:multiple_instances}, the framework can be implemented in multiple instances. This is useful to better isolate the location of the anomaly in a complex system. The larger the set of sensors that a single instance of the framework is connected to, the more difficult it is to isolate the anomaly. On the other hand, configuring a large group of sensors allows the detection of complex anomalies.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{images/FrameworkInstances.pdf}
     \caption{Multiple instances implementation of the framework}
     \label{fig:multiple_instances}
 \end{figure}
+
+
+\subsection{Unsupervised Machine Learning Models}
+
+The considered UML implemented in the framework are: \emph{K-means}, \emph{DBSCAN}, \emph{Gaussian Mixture Model} (GMM), \emph{Isolation Forest} (IF), \emph{Local Outlier Factor} (LOF), \emph{One-Class Support Vector Machine} ($\nu$-SVM).
+
+K-means and DBSCAN are traditionally clustering algorithms, so a custom NM has been developed for this project. In the case of the K-means, the NM is the distance of a new instance in the feature space from the closest centroid, normalized by the cluster radius. For the DBSCAN, the NM is the distance to the new instance from the closest instance in a cluster, normalized by the neighborhood radius.
+
+The other models are already commonly used for ND, so the NM has been linked to the \quoted{score} provided by the library functions.
+
+If the UML is trained with faulty data to perform FD, the NM measures \quoted{how not faulty} the new data are. In this case, the value is transformed into a Fault Metric (FM) with the function $\text{FM} = - \ln(\text{NM} + 1)$ to preserve the coherence. 
