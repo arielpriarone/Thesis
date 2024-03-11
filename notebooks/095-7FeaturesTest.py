@@ -164,42 +164,49 @@ for filepath in [featfilepath,faultfilepath]:
     metric['7 mask'] = [x for i,x in enumerate(metric['7 mask']) if not i in exclude]
     metric['select'] = [x for i,x in enumerate(metric['select']) if not i in exclude]
 
-    fig, ax = plt.subplots(2,1,sharex=True)#, figsize=(7.68,5.78))
+    fig, ax = plt.subplots(1,1)#, figsize=(7.68,5.78))
     fig.set_linewidth(0.5)
-    ax[0].plot(metric['standard'], label='Model 1')              # label='Standard - train day 1')
-    ax[0].plot(metric['scaled'], label='Model 2')    # label='Scaled Random Forest - train day 1')
-    ax[0].plot(metric['select'], label='Model 3')            # label='Scaled scipy - train day 1')
-    # ax[0].plot(metric['standard refined'], label='Standard all train novelty metric - train day 1 and 2')
-    # ax[0].plot(metric['standard notworking'], label='Standard notworking novelty metric')
-    ax[0].plot(metric['scaled subset'], label='Model 4')    # label='Scaled subset - train day 1 and partially 2')
-    ax[0].plot(metric['7 features'], label='Model 5')                         # label='7 features novelty metric')
-    #ax[0].plot(metric['7 mask'], label='7 mask novelty metric')
+    ax.plot(metric['standard'], label='Model 1')              # label='Standard - train day 1')
+    ax.plot(metric['scaled'], label='Model 2')    # label='Scaled Random Forest - train day 1')
+    ax.plot(metric['select'], label='Model 3')            # label='Scaled scipy - train day 1')
+    # ax.plot(metric['standard refined'], label='Standard all train novelty metric - train day 1 and 2')
+    # ax.plot(metric['standard notworking'], label='Standard notworking novelty metric')
+    ax.plot(metric['scaled subset'], label='Model 4')    # label='Scaled subset - train day 1 and partially 2')
+    ax.plot(metric['7 features'], label='Model 5')                         # label='7 features novelty metric')
+    #ax.plot(metric['7 mask'], label='7 mask novelty metric')
 
-    ax[0].set_ylabel('Novelty metric')
+    ax.set_ylabel('Novelty metric [-]')
 
-    ax[0].set_title('Novelty metric comparison')
-    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['standard']))
-    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['scaled']))
-    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['select']))
-    # ax[1].plot(mobileAverage(metric['standard refined']))
-    # ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
-    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['scaled subset']))
-    ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['7 features']))
+    # ax.set_title('Novelty metric comparison')
+    # ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['standard']))
+    # ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['scaled']))
+    # ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['select']))
+    # # ax[1].plot(mobileAverage(metric['standard refined']))
+    # # ax[1].plot(mobileAverage(metric['standard notworking']), label='Standard notworking novelty metric')
+    # ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['scaled subset']))
+    # ax[1].plot(np.array(range(0,len(mobileAverage(metric['standard']))))+5,mobileAverage(metric['7 features']))
     #ax[1].plot(mobileAverage(metric['7 mask']), label='7 mask novelty metric')
    
-    ax[1].set_xlabel('Sample')
-    ax[1].set_ylabel('Novelty metric')
-    ax[1].set_title('Novelty metric comparison Moving Average (last 5 samples)')
+    # ax[1].set_xlabel('Sample')
+    # ax[1].set_ylabel('Novelty metric')
+    # ax[1].set_title('Novelty metric comparison Moving Average (last 5 samples)')
 
-    ax[0].xaxis.set_major_locator(ticker.AutoLocator())
-    ax[0].xaxis.set_minor_locator(ticker.AutoMinorLocator())
-    ax[1].xaxis.set_major_locator(ticker.AutoLocator())
-    ax[1].xaxis.set_minor_locator(ticker.AutoMinorLocator())
-    ax[0].set_xlim(0, len(metric['standard']))
-    ax[1].set_xlim(0, len(metric['standard']))
-    ax[0].hlines(0, 0, len(metric['standard']), color='grey', linestyle='-', label='__nolegend__')
-    ax[1].hlines(0, 0, len(metric['standard']), color='grey', linestyle='-', label='__nolegend__')
- 
+    ax.xaxis.set_major_locator(ticker.AutoLocator())
+    ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+    # ax[1].xaxis.set_major_locator(ticker.AutoLocator())
+    # ax[1].xaxis.set_minor_locator(ticker.AutoMinorLocator())
+    ax.set_xlim(0, len(metric['standard']))
+    # ax[1].set_xlim(0, len(metric['standard']))
+    ax.hlines(0, 0, len(metric['standard']), color='grey', linestyle='-', label='__nolegend__')
+    # ax[1].hlines(0, 0, len(metric['standard']), color='grey', linestyle='-', label='__nolegend__')
+    ax.set_xlabel('Sample [-]')
+    plt.subplots_adjust(
+        top=0.845,
+        bottom=0.215,
+        left=0.083,
+        right=0.985,
+        hspace=0.2,
+        wspace=0.2)
     fig.legend(loc='upper center', ncol = 5)
 
 plt.show()

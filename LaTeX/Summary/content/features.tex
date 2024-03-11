@@ -13,7 +13,7 @@ The time domain features are computed in the corrected form for sampled data. In
 \subsection{Scaling and selection}
 \begin{figure}
     \includegraphics[width=\linewidth]{images/Feat_scaling.pdf}
-    \caption{Feature scaling and selection}
+    \caption{Feature scaling and selection procedure}
     \label{fig:feature_scaling}
 \end{figure}
 Despite the standardization, during the experimental validation, it has been observed that some features are more informative than others. To reduce the impact of the less informative features, an optional feature scaling step can be performed. The scaling is done by multiplying the features by a weight array. The weights can be computed by performing a Random Forest training or using the SelectKBest library method. Alternatively, the weights can be used to remove the less informative features, reducing the dimensionality of the feature space. This procedure is shown in Fig.~\ref{fig:feature_scaling}.

@@ -3,6 +3,7 @@ from itertools import count
 from operator import le
 from os import times
 from pathlib import Path
+from tracemalloc import stop
 from matplotlib import lines
 import pandas as pd
 import numpy as np
@@ -11,6 +12,7 @@ import datetime as dt
 from rich import print
 import src
 from sklearn.preprocessing import StandardScaler
+from matplotlib import ticker
 src.visualization.set_matplotlib_params()
 
 from pandas.plotting import scatter_matrix
@@ -82,8 +84,11 @@ for i, test in enumerate(tests):
     print(f"Test {i} - {tests_names[i]}")
     print(f"Novelty: {(test)}")
 ax.axhline(y=5, color='k', linestyle='-.', label='threshold')
-ax.set_xticklabels([])
-ax.set_xlabel("snapshots")
+ax.xaxis.set_major_locator(ticker.AutoLocator())
+ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+ax.set_xlabel("Sample [-]")
+ax.set_ylabel("Novelty Metric [%]")
+ax.set_xlabel("Sample [-]")
 ax.set_ylabel("Novelty Metric [%]")
 fig.legend(ncol=3, loc='outside upper right')
 
@@ -141,16 +146,18 @@ for i, samples in enumerate(tests_separators):
     start = end
 
 fig, ax = plt.subplots()
-
+start = 1
 for i, test in enumerate(tests):
     xlabels = [dt.datetime.fromisoformat(ts) for ts in timestamps[i]]
-    ax.plot(timestamps[i],test*100, label=tests_names[i])
+    ax.plot(range(start,start+len(test)),test*100, label=tests_names[i])
+    start += len(test)
     print(f"Test {i} - {tests_names[i]}")
     print(f"Novelty: {(test)}")
 ax.axhline(y=0, color='k', linestyle='-.', label='threshold')
-ax.set_xticklabels([])
-ax.set_xlabel("snapshots")
-ax.set_ylabel("Novelty Metric [-]")
-fig.legend(ncol=3, loc='outside upper right')
+ax.xaxis.set_major_locator(ticker.AutoLocator())
+ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
+ax.set_xlabel("Sample [-]")
+ax.set_ylabel("Novelty Metric [%]")
+fig.legend(ncol=3, bbox_to_anchor=(0.5, 1.02), loc='upper center')
 
 plt.show()
