@@ -1,5 +1,5 @@
 \section{FEATURE EXTRACTION}
-The framework is developed to acquire time series data from an arbitrary configuration of sensors. The FiA provides time series records according to a predefined cycle or synchronized with the device operation. It ensures that the sampling process is synchronized with the correct sampling frequency. Once a time series is available, the FA extracts the features from the time-domain data. Every time series is linked to a specific set of features to be extracted, configurable in the \texttt{.config} file of the framework.
+The framework is developed to acquire time series data from an arbitrary configuration of sensors. The Field Agent provides time series records according to a predefined cycle or synchronized with the device operation. It ensures that the sampling process is synchronized with the correct sampling frequency. Once a time series is available, the FA extracts the features from the time-domain data. Every time series is linked to a specific set of features to be extracted.
 
 \subsection{Feature set}
 The considered features are divided into two categories:
@@ -13,7 +13,7 @@ The time domain features are computed in the corrected form for sampled data. In
 \subsection{Scaling and selection}
 \begin{figure}
     \includegraphics[width=\linewidth]{images/Feat_scaling.pdf}
-    \caption{Feature scaling and selection procedure}
+    \caption{Feature scaling and selection procedure. The features are standardized and then scaled by a weight array or selected to form a smaller feature space. This enhances the performance of the UML models.}
     \label{fig:feature_scaling}
 \end{figure}
 Despite the standardization, during the experimental validation, it has been observed that some features are more informative than others. To reduce the impact of the less informative features, an optional feature scaling step can be performed. The scaling is done by multiplying the features by a weight array. The weights can be computed by performing a Random Forest training or using the SelectKBest library method. Alternatively, the weights can be used to remove the less informative features, reducing the dimensionality of the feature space. This procedure is shown in Fig.~\ref{fig:feature_scaling}.

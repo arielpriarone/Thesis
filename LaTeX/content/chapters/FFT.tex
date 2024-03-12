@@ -1,2 +1,13 @@
-\chapter{Fast Fourier Transform}
+\chapter{Fourier Transform}
 \label{app:FFT}
+This appendix aims to provide a brief and non-exhaustive introduction to the Fourier Transform. The various types of Fourier Transform are key tools in a vast range of fields in engineering, physics and mathematics. In computer science, the Fourier Transform is used in signal processing, image processing, data compression, and many other applications.
+
+\section{Continuous Fourier Transform}
+\label{sec:ContinuousFourierTransform}
+Most of the modern signal processing techniques find their roots in the Fourier Transform, which is a mathematical tool that allows the decomposition of a non-periodic signal into its frequency components. For periodic signals, The transform is a train of impulses, whose amplitudes are linked to the Fourier series coefficients.
+
+The Continuous Fourier Transform (\gls{cft}) of a signal $x(t)$ is defined as:
+$$
+X(f) = \int_{-\infty}^{\infty} x(t) e^{-j2\pi ft} dt, \qquad \forall f \in \mathbb{R}
+$$
+where $X(f)$ is the Fourier Transform of $x(t)$, $f$ is the frequency variable and $j$ is the imaginary unit. The quantity $2\pi f$ is the angular frequency.
