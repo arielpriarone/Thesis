@@ -1,0 +1,15 @@
+\section{INTRODUCTION}
+\label{sec:introduction}
+
+Predictive Maintenance (PM) and Novelty Detection (ND) are important topics in modern industrial engineering, aimed at proactively identifying equipment failures before they affect system functionality. Embracing these practices is crucial for reducing equipment downtime and optimizing maintenance efforts. PM aims to quantify and forecast the state of degradation of a system. A quite novel frontier is the direct implementation of PM algorithms within the maintained device, using the principles of Edge Computing.
+
+\subsection{Motivation}
+Despite the Fourth Industrial Revolution, the maintenance approach remained unchanged in many industrial applications. The primary factor impeding the advancement of the maintenance approach is the significant expense associated with implementing Condition Based (CB) or PM strategies, coupled with a lack of knowledge about the modelling or behaviour of a failing system.
+
+According to a recent survey by the U.S. Department of Commerce, the top 25\% of establishments relying on reactive maintenance
+were associated with 3.3 times more downtime than those in the bottom 25\%. 
+
+\subsection{Objective}
+The goal of this project is to design, develop and test a \emph{degradation} based CB framework
+that performs ND, Fault Detection (FD) and PM, using one or several Unsupervised Machine Learning (UML) algorithms. 
+The structure of the framework is thought to be modular and general-purpose to ease the implementation into different systems. It is developed following an unsupervised approach to overcome the common lack of physical models and labelled data of the maintained device. This framework has to be deployed for both PC and Edge Computing: the former developed in Python, the latter in C.

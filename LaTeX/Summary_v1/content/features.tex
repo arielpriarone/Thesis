@@ -1,0 +1,19 @@
+\section{FEATURE EXTRACTION}
+The framework is developed to acquire time series data from an arbitrary configuration of sensors. The FiA provides time series records according to a predefined cycle or synchronized with the device operation. It ensures that the sampling process is synchronized with the correct sampling frequency. Once a time series is available, the FA extracts the features from the time-domain data. Every time series is linked to a specific set of features to be extracted, configurable in the \texttt{.config} file of the framework.
+
+\subsection{Feature set}
+The considered features are divided into two categories:
+\begin{itemize}
+    \item \textbf{Time domain features}: Mean, Standard deviation, Peak-to-peak value (P2P), Root Mean Square value (RMS), Skewness and Kurtosis.
+    \item \textbf{Frequency domain features}: Energy of the Wavelet Packet Decomposition (WPD) coefficients, Fast Fourier Transform (FFT) coefficients. The WPD is based on the PyWavelets\footnote{\url{https://github.com/PyWavelets/pywt.git}} library, for Python, and on the Wavelib\footnote{\url{https://github.com/rafat/wavelib.git}} library, for C.
+\end{itemize}
+
+The time domain features are computed in the corrected form for sampled data. In the frequency domain, the WPD is preferred in this work, because it reduces the dimensionality of the feature space. The features are standardized along the training dataset, so that the mean and standard deviation are 0 and 1, respectively. This is done to ease the training of the UML algorithms.
+
+\subsection{Scaling and selection}
+\begin{figure}
+    \includegraphics[width=\linewidth]{images/Feat_scaling.pdf}
+    \caption{Feature scaling and selection procedure}
+    \label{fig:feature_scaling}
+\end{figure}
+Despite the standardization, during the experimental validation, it has been observed that some features are more informative than others. To reduce the impact of the less informative features, an optional feature scaling step can be performed. The scaling is done by multiplying the features by a weight array. The weights can be computed by performing a Random Forest training or using the SelectKBest library method. Alternatively, the weights can be used to remove the less informative features, reducing the dimensionality of the feature space. This procedure is shown in Fig.~\ref{fig:feature_scaling}.
