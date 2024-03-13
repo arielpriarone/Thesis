@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.12.11)  13 MAR 2024 15:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.12.11)  13 MAR 2024 16:04
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -683,16 +683,16 @@ pdfTeX warning: pdflatex (file ./images/FrameworkInstances.pdf): PDF inclusion:
 <images/FrameworkInstances.pdf, id=107, 351.23218pt x 216.81pt>
 File: images/FrameworkInstances.pdf Graphic file (type pdf)
 <use images/FrameworkInstances.pdf>
-Package pdftex.def Info: images/FrameworkInstances.pdf  used on input line 178.
+Package pdftex.def Info: images/FrameworkInstances.pdf  used on input line 180.
 
 (pdftex.def)             Requested size: 248.84793pt x 153.61526pt.
 
-Underfull \hbox (badness 6204) in paragraph at lines 188--190
+Underfull \hbox (badness 6204) in paragraph at lines 190--192
 []\T1/ptm/m/n/10 K-means and DB-SCAN are tra-di-tion-ally clus-ter-ing
  []
 
 LaTeX Font Info:    Trying to load font information for T1+pcr on input line 19
-5.
+7.
 (C:\Users\ariel\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
@@ -702,28 +702,28 @@ pdfTeX warning: pdflatex (file ./images/Feat_scaling.pdf): PDF inclusion: found
 <images/Feat_scaling.pdf, id=112, 276.07141pt x 109.3686pt>
 File: images/Feat_scaling.pdf Graphic file (type pdf)
 <use images/Feat_scaling.pdf>
-Package pdftex.def Info: images/Feat_scaling.pdf  used on input line 209.
+Package pdftex.def Info: images/Feat_scaling.pdf  used on input line 211.
 (pdftex.def)             Requested size: 248.84793pt x 98.58601pt.
 
-Underfull \hbox (badness 3514) in paragraph at lines 213--213
+Underfull \hbox (badness 3514) in paragraph at lines 215--215
 []\T1/ptm/m/n/10 Despite the stan-dard-iza-tion, dur-ing the ex-per-i-men-tal
  []
 
 <images/ND_IMS.pdf, id=115, 417.7206pt x 175.6161pt>
 File: images/ND_IMS.pdf Graphic file (type pdf)
 <use images/ND_IMS.pdf>
-Package pdftex.def Info: images/ND_IMS.pdf  used on input line 224.
+Package pdftex.def Info: images/ND_IMS.pdf  used on input line 226.
 (pdftex.def)             Requested size: 248.84793pt x 104.61748pt.
 [2 <./images/FrameworkInstances.pdf> <./images/Feat_scaling.pdf>]
 <images/RUL_IMS.pdf, id=166, 417.7206pt x 163.3302pt>
 File: images/RUL_IMS.pdf Graphic file (type pdf)
 <use images/RUL_IMS.pdf>
-Package pdftex.def Info: images/RUL_IMS.pdf  used on input line 250.
+Package pdftex.def Info: images/RUL_IMS.pdf  used on input line 252.
 (pdftex.def)             Requested size: 248.84793pt x 97.29855pt.
 <images/FD_IMS.pdf, id=168, 417.7206pt x 119.9682pt>
 File: images/FD_IMS.pdf Graphic file (type pdf)
 <use images/FD_IMS.pdf>
-Package pdftex.def Info: images/FD_IMS.pdf  used on input line 257.
+Package pdftex.def Info: images/FD_IMS.pdf  used on input line 259.
 (pdftex.def)             Requested size: 248.84793pt x 71.46707pt.
 
 
@@ -732,24 +732,20 @@ found PDF version <1.7>, but at most version <1.5> allowed
 <images/EmbeddedStructure.pdf, id=170, 340.3917pt x 147.67169pt>
 File: images/EmbeddedStructure.pdf Graphic file (type pdf)
 <use images/EmbeddedStructure.pdf>
-Package pdftex.def Info: images/EmbeddedStructure.pdf  used on input line 266.
+Package pdftex.def Info: images/EmbeddedStructure.pdf  used on input line 268.
 (pdftex.def)             Requested size: 248.84793pt x 107.95715pt.
 <images/Test02_LOF.pdf, id=172, 417.7206pt x 234.8775pt>
 File: images/Test02_LOF.pdf Graphic file (type pdf)
 <use images/Test02_LOF.pdf>
-Package pdftex.def Info: images/Test02_LOF.pdf  used on input line 277.
+Package pdftex.def Info: images/Test02_LOF.pdf  used on input line 279.
 (pdftex.def)             Requested size: 248.84793pt x 139.92049pt.
 [3 <./images/ND_IMS.pdf> <./images/RUL_IMS.pdf> <./images/FD_IMS.pdf> <./images
 /EmbeddedStructure.pdf> <./images/Test02_LOF.pdf>]
 <images/linear.pdf, id=374, 417.7206pt x 158.99399pt>
 File: images/linear.pdf Graphic file (type pdf)
 <use images/linear.pdf>
-Package pdftex.def Info: images/linear.pdf  used on input line 290.
+Package pdftex.def Info: images/linear.pdf  used on input line 292.
 (pdftex.def)             Requested size: 248.84793pt x 94.7154pt.
-
-Underfull \hbox (badness 2368) in paragraph at lines 297--298
-\T1/ptm/m/n/10 not al-ways enough to make the clus-ters in the data
- []
 
 
 ** Conference Paper **
@@ -775,7 +771,7 @@ Package rerunfilecheck Info: File `diff.out' has not changed.
 Here is how much of TeX's memory you used:
  14418 strings out of 474491
  231928 string characters out of 5743833
- 1999473 words of memory out of 5000000
+ 2000473 words of memory out of 5000000
  36460 multiletter control sequences out of 15000+600000
  672406 words of font info for 145 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -793,7 +789,7 @@ sers/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:
 /Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:
 /Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:
 /Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on diff.pdf (4 pages, 1620617 bytes).
+Output written on diff.pdf (4 pages, 1621112 bytes).
 PDF statistics:
  476 PDF objects out of 1000 (max. 8388607)
  32 named destinations out of 1000 (max. 500000)

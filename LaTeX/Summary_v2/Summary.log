@@ -1,10 +1,10 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.12.11)  13 MAR 2024 13:28
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.12.11)  13 MAR 2024 16:02
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
  %&-line parsing enabled.
-**c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary/Summary.tex
-(c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary/Summary.tex
+**c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary_v2/Summary.tex
+(c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary_v2/Summary.tex
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-12-08>
 (ieeeconf.cls
@@ -530,68 +530,71 @@ Package pdftex.def Info: images/Framework_structure.pdf  used on input line 4.
  <./images/logos/logo_pic4ser.png> <./images/logos/logo_poli.jpg> <./images/Framework_structure.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/FrameworkInstances.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/FrameworkInstances.pdf, id=102, 351.23218pt x 216.81pt>
+<images/FrameworkInstances.pdf, id=107, 351.23218pt x 216.81pt>
 File: images/FrameworkInstances.pdf Graphic file (type pdf)
 <use images/FrameworkInstances.pdf>
-Package pdftex.def Info: images/FrameworkInstances.pdf  used on input line 29.
+Package pdftex.def Info: images/FrameworkInstances.pdf  used on input line 30.
 (pdftex.def)             Requested size: 248.84793pt x 153.61526pt.
 
-Underfull \hbox (badness 6204) in paragraph at lines 39--40
+Underfull \hbox (badness 6204) in paragraph at lines 40--41
 []\T1/ptm/m/n/10 K-means and DB-SCAN are tra-di-tion-ally clus-ter-ing
  []
 
 ) (content/features.tex
-LaTeX Font Info:    Trying to load font information for T1+pcr on input line 2.
+LaTeX Font Info:    Trying to load font information for T1+pcr on input line 8.
  (C:\Users\ariel\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 
 pdfTeX warning: pdflatex (file ./images/Feat_scaling.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/Feat_scaling.pdf, id=107, 294.13892pt x 109.3686pt>
+<images/Feat_scaling.pdf, id=112, 276.07141pt x 109.3686pt>
 File: images/Feat_scaling.pdf Graphic file (type pdf)
 <use images/Feat_scaling.pdf>
 Package pdftex.def Info: images/Feat_scaling.pdf  used on input line 15.
-(pdftex.def)             Requested size: 248.84793pt x 92.53151pt.
+(pdftex.def)             Requested size: 248.84793pt x 98.58601pt.
 ) (content/validation.tex
 Underfull \hbox (badness 3514) in paragraph at lines 19--1
 []\T1/ptm/m/n/10 Despite the stan-dard-iza-tion, dur-ing the ex-per-i-men-tal
  []
 
-<images/ND_IMS.pdf, id=109, 417.7206pt x 175.6161pt>
+<images/ND_IMS.pdf, id=114, 417.7206pt x 175.6161pt>
 File: images/ND_IMS.pdf Graphic file (type pdf)
 <use images/ND_IMS.pdf>
 Package pdftex.def Info: images/ND_IMS.pdf  used on input line 11.
 (pdftex.def)             Requested size: 248.84793pt x 104.61748pt.
-[2 <./images/FrameworkInstances.pdf> <./images/Feat_scaling.pdf> <./images/ND_IMS.pdf>]
-<images/RUL_IMS.pdf, id=195, 417.7206pt x 163.3302pt>
+<images/RUL_IMS.pdf, id=117, 417.7206pt x 163.3302pt>
 File: images/RUL_IMS.pdf Graphic file (type pdf)
 <use images/RUL_IMS.pdf>
 Package pdftex.def Info: images/RUL_IMS.pdf  used on input line 37.
 (pdftex.def)             Requested size: 248.84793pt x 97.29855pt.
-<images/FD_IMS.pdf, id=197, 417.7206pt x 119.9682pt>
+<images/FD_IMS.pdf, id=119, 417.7206pt x 119.9682pt>
 File: images/FD_IMS.pdf Graphic file (type pdf)
 <use images/FD_IMS.pdf>
 Package pdftex.def Info: images/FD_IMS.pdf  used on input line 44.
 (pdftex.def)             Requested size: 248.84793pt x 71.46707pt.
-
+[2 <./images/FrameworkInstances.pdf> <./images/Feat_scaling.pdf> <./images/ND_IMS.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/EmbeddedStructure.pdf): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<images/EmbeddedStructure.pdf, id=199, 333.16469pt x 129.6042pt>
+<images/EmbeddedStructure.pdf, id=211, 340.3917pt x 147.67169pt>
 File: images/EmbeddedStructure.pdf Graphic file (type pdf)
 <use images/EmbeddedStructure.pdf>
 Package pdftex.def Info: images/EmbeddedStructure.pdf  used on input line 53.
-(pdftex.def)             Requested size: 248.84793pt x 96.80539pt.
-<images/Test02_LOF.pdf, id=201, 417.7206pt x 234.8775pt>
+(pdftex.def)             Requested size: 248.84793pt x 107.95715pt.
+<images/Test02_LOF.pdf, id=213, 417.7206pt x 234.8775pt>
 File: images/Test02_LOF.pdf Graphic file (type pdf)
 <use images/Test02_LOF.pdf>
-Package pdftex.def Info: images/Test02_LOF.pdf  used on input line 61.
+Package pdftex.def Info: images/Test02_LOF.pdf  used on input line 63.
 (pdftex.def)             Requested size: 248.84793pt x 139.92049pt.
-<images/linear.pdf, id=205, 417.7206pt x 158.99399pt>
+<images/linear.pdf, id=217, 417.7206pt x 158.99399pt>
 File: images/linear.pdf Graphic file (type pdf)
 <use images/linear.pdf>
-Package pdftex.def Info: images/linear.pdf  used on input line 72.
+Package pdftex.def Info: images/linear.pdf  used on input line 74.
 (pdftex.def)             Requested size: 248.84793pt x 94.7154pt.
 ) (content/conclusion.tex)
+Underfull \hbox (badness 2478) in paragraph at lines 5--68
+\T1/ptm/m/n/10 shown that the stan-dard-iza-tion of the fea-tures is not
+ []
+
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -612,17 +615,17 @@ Package rerunfilecheck Info: File `Summary.out' has not changed.
 (rerunfilecheck)             Checksum: 6AE45A236ABF41A91331853EC418A3B0;2132.
  ) 
 Here is how much of TeX's memory you used:
- 12930 strings out of 474491
- 211208 string characters out of 5743833
- 1949473 words of memory out of 5000000
- 34972 multiletter control sequences out of 15000+600000
- 672300 words of font info for 144 fonts, out of 8000000 for 9000
+ 12928 strings out of 474491
+ 211237 string characters out of 5743833
+ 1950473 words of memory out of 5000000
+ 34971 multiletter control sequences out of 15000+600000
+ 671679 words of font info for 142 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,10n,93p,1294b,457s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,10n,93p,1171b,457s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy6.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on Summary.pdf (3 pages, 1595255 bytes).
+Output written on Summary.pdf (3 pages, 1599583 bytes).
 PDF statistics:
- 452 PDF objects out of 1000 (max. 8388607)
+ 465 PDF objects out of 1000 (max. 8388607)
  31 named destinations out of 1000 (max. 500000)
  176 words of extra memory for PDF output out of 10000 (max. 10000000)
 

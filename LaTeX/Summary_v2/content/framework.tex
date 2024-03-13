@@ -21,7 +21,7 @@ The proposed framework is based on software agents. Each agent is autonomous and
 
 \subsection{Database}
 All the Agents are connected to a common database. In the case of the PC implementation, MongoDB has been used. In the case of the Edge implementation, the data are stored directly in the microcontroller's memory.
-Regarding the structure shown in Fig.~\ref{fig:framework_structure}, the MongoDB database is composed of seven collections. Every collection has a specific role in the framework. For example, the \emph{Quarantined, Healthy} and \emph{Faulty} collections contain the features that have been flagged as novelty, normal or faulty, respectively, and \emph{Models} contain the UML models.
+Regarding the structure shown in Fig.~\ref{fig:framework_structure}, the MongoDB database is composed of seven collections. Every collection has a specific role in the framework. For example, the \emph{Quarantined, Healthy} and \emph{Faulty} collections contain the features that have been flagged as novelty, normal or faulty, respectively.
 
 \subsection{Multiple Instances}
 As shown in Fig.~\ref{fig:multiple_instances}, the framework can be implemented in multiple instances. This is useful to better isolate the location of the anomaly in a complex system. The larger the set of sensors that a single instance of the framework is connected to, the more difficult it is to isolate the anomaly. On the other hand, configuring a large group of sensors allows the detection of complex anomalies.
