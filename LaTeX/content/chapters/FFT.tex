@@ -11,3 +11,30 @@ $$
 X(f) = \int_{-\infty}^{\infty} x(t) e^{-j2\pi ft} dt, \qquad \forall f \in \mathbb{R}
 $$
 where $X(f)$ is the Fourier Transform of $x(t)$, $f$ is the frequency variable and $j$ is the imaginary unit. The quantity $2\pi f$ is the angular frequency.
+
+\section{Discrete Fourier Transform}
+\label{sec:DiscreteFourierTransform}
+The Discrete Fourier Transform (\gls{dft}) is a sampled version of the Continuous Fourier Transform. 
+From an engineering perspective, the DFT is of particular interest because most of the signals are sampled in time and therefore, the \gls{dft} is the most commonly used form of the Fourier Transform.
+
+The \gls{dft} is used to transform a sequence of $N$ complex numbers $x(n)$ into another sequence of $N$ complex numbers $X(k)$. The DFT is defined as:
+\begin{equation}
+\label{eq:DFT}
+X(k) = \sum_{n=0}^{N-1} x(n) e^{-j2\pi kn/N}, \qquad \forall k \in \{0, 1, \ldots, N-1\}
+\end{equation}
+where $X(k)$ is the \gls{dft} of $x(n)$, $k$ is the frequency index and $N$ is the number of samples in the sequence.
+
+The output spectrum given by the \gls{dft} is also discrete and finite, with the same number of samples as the input signal. 
+The sampling frequency of the signal $x(n)$ determines the upper frequency limit of the \gls{dft} output, as the faster the sampling rate, the higher the frequencies that can be represented. The length of the signal $x(n)$ determines the frequency resolution of the \gls{dft} output, as the longer the signal, the finer the frequency resolution is.
+
+\paragraph{Computational complexity}
+Examining the definition of the \gls{dft} in Equation \ref{eq:DFT}, we can notice that it requires $N$ complex multiplications and $N(N)$ complex additions. Therefore, the computational complexity of the \gls{dft} is $\mathcal{O}(N^2)$, which does not scale well for large values of $N$.
+
+\section{Fast Fourier Transform}
+\label{sec:FastFourierTransform}
+
+To overcome the computational complexity of the \gls{dft}, the Fast Fourier Transform (\gls{fft}) algorithm was developed in the 1960s by Cooley and Tukey \cite{cooley1965algorithm}. Choosing a data length $N$ that is a power of 2, the \gls{fft} algorithm reduces the computational complexity of the \gls{dft} from $\mathcal{O}(N^2)$ to $\mathcal{O}(N \log_2 N)$. This becomes particularly important for large values of $N$, where the \gls{fft} algorithm is significantly faster than the \gls{dft}.
+
+In the classic algorithm, a single multiplication happens many times. The general idea of this fast algorithm is to exploit the periodicity of the complex exponentials in the \gls{dft} to divide the computation into smaller sub-problems and reuse the already computed multiplication. 
+
+Breaking the exponential into its sine and cosine components, it becomes intuitive that the same result appears multiple times in the computation. The \gls{fft} algorithm takes advantage of this redundancy to reduce the number of operations, recursively dividing the problem into half-sized subproblems up to the point that the subproblems have only one sample.
