@@ -77,10 +77,11 @@ left=0.135,
 right=0.974,
 hspace=0.2,
 wspace=0.2)
-
+start = 1
 for i, test in enumerate(tests):
     xlabels = [dt.datetime.fromisoformat(ts) for ts in timestamps[i]]
-    ax.plot(timestamps[i],test*100, label=tests_names[i])
+    ax.plot(range(start,start+len(test)),test*100, label=tests_names[i])
+    start += len(test)
     print(f"Test {i} - {tests_names[i]}")
     print(f"Novelty: {(test)}")
 ax.axhline(y=5, color='k', linestyle='-.', label='threshold')

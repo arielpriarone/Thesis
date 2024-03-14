@@ -15,6 +15,7 @@
     numerazioneromana, % roman numbering for appendixes and preambles, up to Table of Contents
     openright, % to force opening on the right for double-sided printing
     cucitura=0mm, % for printing, 7mm should be enough
+    %draft,
     %dvipsnames, % for compatibility with xcolor, it does not work
 ]{toptesi}
 
@@ -66,6 +67,9 @@
 %\cleardoublepage
 %\thispagestyle{empty} % to have empty page, without numbers
 % 2) or
+
+\ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
+\includegraphics[height=.95\textwidth,angle=90,origin=c]{images/wordcloud_svg-raw.pdf}
 
 \ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
 \ifprint \else \ringraziamenti  \fi% acknowledgements
