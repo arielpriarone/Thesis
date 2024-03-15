@@ -18,7 +18,7 @@ A mother wavelet is a function that complies with the following conditions:
 
 The Morlet wavelet is a complex wavelet, which complies with the above conditions. It is defined as:
 \begin{equation}
-\psi(t) = \frac{1}{\sqrt{\pi f_b}} e^{i 2 \pi f_c t} e^{-t^2/f_b}
+\psi(t) = \frac{1}{\sqrt{\pi f_b}} e^{i 2 \pi f_c t} e^{-t^2/f_b} =  \frac{1}{\sqrt{\pi f_b}}[ \cos(2 \pi f_c t) + j\cdot \sin(2 \pi f_c t)] e^{-t^2/f_b}
 \end{equation}
 where $f_c$ is the central frequency and $f_b$ is the bandwidth. The Morlet wavelet is a complex wavelet, which means that it has a real and an imaginary part, as shown in Figure \ref{fig:morlet}. 
 
