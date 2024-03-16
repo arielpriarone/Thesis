@@ -28,3 +28,49 @@ where $f_c$ is the central frequency and $f_b$ is the bandwidth. The Morlet wave
 \caption{Real and imaginary part of the Morlet wavelet}
 \label{fig:morlet}
 \end{figure}
+
+\section{Scaling and translation}
+The wavelet is a function of time, and it can be scaled and translated. The scaling allows to investigate the frequency content of the signal, while the translation allows to investigate the time evolution of the signal.
+
+So a general wavelet is obtained by scaling and translating a mother wavelet:
+\begin{equation}
+\psi_{a,b}(t) =  \psi \left( \frac{t-b}{a} \right)
+\end{equation}
+where $a$ is the scaling factor and $b$ is the translation factor. $\psi_{1,0}$ is the mother wavelet. Some wavelets are shown in Figure \ref{fig:wavelets}.
+
+\begin{figure}
+\centering
+\includegraphics{images/morlet_trasl.pdf}
+\caption{Effect of scaling and translation on the Morlet wavelet}
+\label{fig:wavelets}
+\end{figure}
+
+\section{Wavelet Transform}
+Intuitively, the \gls{wt} is a tool that allows to investigate the frequency content of a signal at a given time. The trasform is defined as a function of the scaling and translation factors:
+\begin{equation}
+W(a,b) =\frac{1}{\sqrt{a}} \int_{-\infty}^{\infty} x(t) \psi_{a,b} dt
+\end{equation}
+where $x(t)$ is the signal. The wavelet transform is a 2D plane, where one axis is the scaling factor and the other axis is the translation factor.
+
+\section{Wavelet Packet Decomposition}
+The \gls{wpd} is a tool that allows to decompose a signal into a tree of sub-bands, down-sampled signals. Each level is computed by the decomposition of the previous level, forming a binary tree \cite{akansu1991}. Being a binary tree, as shown in the \autoref{fig:wpd}, the number of sub-bands at level $n$ is $2^n$. The downsampling, done at each level, reduces the number of datapoints by a factor of 2, so the overall number of datapoints is preserved.
+
+\begin{figure}
+\centering
+\includegraphics{images/wpd.pdf}
+\caption{Wavelet Packet Decomposition tree}
+\label{fig:wpd}
+\end{figure}
+
+
+At each stage, the signal is passed through a low-pass filter and a high-pass filter. The low-pass filter is used to compute the approximation coefficients, while the high-pass filter is used to compute the detail coefficients. The filters are finite impulse response filters, and the coefficients are computed by convolution. The decomposition is done recursively, until the desired level is reached.
+
+Since this is just a transformation, the original signal can be reconstructed by the inverse wavelet packet decomposition. The reconstruction is done by upsampling the coefficients and passing them through the inverse filters.
+
+
+\begin{figure}
+\centering
+\includegraphics{images/WPD_result.pdf}
+\caption{Wavelet Packet Decomposition of a signal}
+\end{figure}
+
