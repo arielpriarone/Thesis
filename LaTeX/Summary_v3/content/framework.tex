@@ -41,4 +41,4 @@ The UML implemented in the framework are: \emph{K-means}, \emph{DBSCAN}, \emph{G
 
 K-means and DBSCAN are traditionally clustering algorithms, so a custom NM has been developed for these algorithms. For example, if K-means is used, the NM is defined as the distance of a sample from the closest centroid, normalized by the cluster radius. The other models are already commonly used for ND, so the NM has been linked to the \quoted{score} provided by the library functions.
 
-If the UML is trained with faulty data, instead of normal ones, then it performs FD. The NM measures \quoted{how not faulty} the new data are. In this case, the value is transformed into a Fault Metric (FM) with the function $\text{FM} = - \ln(\text{NM} + 1)$ to preserve the coherence. 
+If the UML is trained with faulty data, instead of normal ones, then it performs FD. The NM measures \quoted{how not faulty} the new data are. In this case, the value is transformed into a Fault Metric (FM) with the function $\text{FM} = - \ln(\text{NM} + 1)$ to preserve the coherence (the lower the metric, the healthier the system). 

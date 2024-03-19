@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1710849599 "c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary_v3/Summary.tex" "Summary.pdf" "Summary" 1710849600 0
+["pdflatex"] 1710855845 "c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary_v3/Summary.tex" "Summary.pdf" "Summary" 1710855846 0
   "C:/Users/ariel/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1710353823 282630 a9d18d171a15472046409dcd03510ddc ""
   "C:/Users/ariel/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1702315174 24224316 b3145bceefbf2a0404675e71529be0e5 ""
   "C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -112,15 +112,15 @@
   "C:/Users/ariel/AppData/Local/Programs/MiKTeX/tex/latex/tools/array.sty" 1700599895 12667 e4b5eb11e4b7239e6c8a52bbe074a6c6 ""
   "C:/Users/ariel/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/ariel/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1700127522 55487 80a65caedd3722f4c20a14a69e785d8f ""
-  "Summary.aux" 1710849600 7954 40535e3b583295c2682cc7217e0bced3 "pdflatex"
-  "Summary.out" 1710849600 2132 6ae45a236abf41a91331853ec418a3b0 "pdflatex"
+  "Summary.aux" 1710855846 7958 5268b40356db932d5311a7c063edd927 "pdflatex"
+  "Summary.out" 1710855846 2132 6ae45a236abf41a91331853ec418a3b0 "pdflatex"
   "Summary.tex" 1710849596 2648 900566463e83b7975393599bd91285ee ""
   "c:/Users/ariel/Documents/Courses/Tesi/Code/LaTeX/Summary_v3/Summary.tex" 1710849596 2648 900566463e83b7975393599bd91285ee ""
   "content/conclusion.tex" 1710847932 758 c6147dc7f935c78664bca5f823a276ef ""
   "content/features.tex" 1710781878 2057 65a916d39d0e9d2094f87cb0949576d6 ""
-  "content/framework.tex" 1710846741 5157 c4999ad5ea974731d27a503ece3a4f5b ""
-  "content/introduction.tex" 1710845101 1713 cb24abb82fea048f07264ba664a4196f ""
-  "content/validation.tex" 1710847445 6385 b49d07fe303d087fdd9206d73abeb4e9 ""
+  "content/framework.tex" 1710855039 5206 b3db25735b5e7a35829b3e601b4d84c5 ""
+  "content/introduction.tex" 1710854343 1711 3c4fbfe2852073d9379e8084dd5f662e ""
+  "content/validation.tex" 1710855844 6385 5436bb38851f8a55203eb873500ac649 ""
   "ieeeconf.cls" 1709920174 197951 f2c307a3685ac9065e9bc7824a1f72be ""
   "images/DB_icon-cropped.pdf" 1710777672 2379 f4a42a7fb3599d2803aedc45dd1e4c86 ""
   "images/EmbeddedStructure.pdf" 1710333061 31383 5a0a754898e0118fe914535736a57957 ""
