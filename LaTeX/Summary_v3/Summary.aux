@@ -1,0 +1,46 @@
+\relax 
+\providecommand\babel@aux[2]{}
+\@nameuse{bbl@beforestart}
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\babel@aux{english}{}
+\@writefile{toc}{\contentsline {section}{\numberline {I}INTRODUCTION}{1}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{I}{1}{INTRODUCTION}{section.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {I-A}Motivation}{1}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {I-B}Objective}{1}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {II}PROPOSED FRAMEWORK}{1}{section.2}\protected@file@percent }
+\newlabel{sec:framework}{{II}{1}{PROPOSED FRAMEWORK}{section.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The structure of the proposed framework. The Field Agent collects the time series, the Feature Agent extracts the features, and the Machine Learning Agent evaluates the health of the maintained device. The agents are connected to collections of a common database. The \includegraphics [height = 1em]{images/DB_icon-cropped.pdf} icon represents a collection of a database that every agent can read and write.}}{1}{figure.1}\protected@file@percent }
+\newlabel{fig:framework_structure}{{1}{1}{The structure of the proposed framework. The Field Agent collects the time series, the Feature Agent extracts the features, and the Machine Learning Agent evaluates the health of the maintained device. The agents are connected to collections of a common database. The \includegraphics [height = 1em]{images/DB_icon-cropped.pdf} icon represents a collection of a database that every agent can read and write}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-A}Software Agents}{1}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-B}Database}{1}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-C}Multiple Instances}{1}{subsection.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Multiple instances implementation of the framework. Every instance is linked to a different set of sensors, to monitor different parts of the system.}}{2}{figure.2}\protected@file@percent }
+\newlabel{fig:multiple_instances}{{2}{2}{Multiple instances implementation of the framework. Every instance is linked to a different set of sensors, to monitor different parts of the system}{figure.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {II-D}Unsupervised Machine Learning Models}{2}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}FEATURE EXTRACTION}{2}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Feature set}{2}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Feature scaling and selection procedure. The features are standardized and then scaled by a weight array or selected to reduce the feature space dimensionality, discarding the less informative features.}}{2}{figure.3}\protected@file@percent }
+\newlabel{fig:feature_scaling}{{3}{2}{Feature scaling and selection procedure. The features are standardized and then scaled by a weight array or selected to reduce the feature space dimensionality, discarding the less informative features}{figure.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Results of ND on the IMS dataset. When the Novelty Metric crosses the threshold, a warning is issued. The malfunction happens at the end of the dataset.}}{2}{figure.4}\protected@file@percent }
+\newlabel{fig:ND_IMS}{{4}{2}{Results of ND on the IMS dataset. When the Novelty Metric crosses the threshold, a warning is issued. The malfunction happens at the end of the dataset}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}Scaling and selection}{2}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IV}VALIDATION}{2}{section.4}\protected@file@percent }
+\newlabel{sec:validation}{{IV}{2}{VALIDATION}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}On bearings vibration datasets}{2}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Comparison of the results for the test n$^\circ $1 of IMS dataset.}}{2}{table.1}\protected@file@percent }
+\newlabel{tab:ims01_comparision}{{I}{2}{Comparison of the results for the test n$^\circ $1 of IMS dataset}{table.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Results of Remaining Useful Life predictions on the IMS dataset. The Vertical lines indicate the time when the predictions are performed. The RUL is the time remaining before the fitted curve crosses the threshold.}}{3}{figure.5}\protected@file@percent }
+\newlabel{fig:RUL_IMS}{{5}{3}{Results of Remaining Useful Life predictions on the IMS dataset. The Vertical lines indicate the time when the predictions are performed. The RUL is the time remaining before the fitted curve crosses the threshold}{figure.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Results of FD on the IMS dataset. The malfunction is detected when the Fault Metric crosses the threshold. The RUL is the time remaining before the fitted curve crosses the threshold.}}{3}{figure.6}\protected@file@percent }
+\newlabel{fig:FD_IMS}{{6}{3}{Results of FD on the IMS dataset. The malfunction is detected when the Fault Metric crosses the threshold. The RUL is the time remaining before the fitted curve crosses the threshold}{figure.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Laboratory tests}{3}{subsection.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Structure of the Edge implementation. The microcontroller autonomously evaluates the status of the maintained system. Only during the training phase, the PC implementation computes the model for the Edge.}}{3}{figure.7}\protected@file@percent }
+\newlabel{fig:embedded}{{7}{3}{Structure of the Edge implementation. The microcontroller autonomously evaluates the status of the maintained system. Only during the training phase, the PC implementation computes the model for the Edge}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Results of laboratory test on the shaker. The first five lines are evaluations of known vibrations, correctly flagged as normal samples. The remaining lines are the successful detections of the novelty of new vibrations.}}{3}{figure.8}\protected@file@percent }
+\newlabel{fig:shaker}{{8}{3}{Results of laboratory test on the shaker. The first five lines are evaluations of known vibrations, correctly flagged as normal samples. The remaining lines are the successful detections of the novelty of new vibrations}{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Results of laboratory test on linear actuator acceleration profiles. The dimensionality of the feature space has been reduced to train Model~5, which performs a clear and sharp detection of the alternating pattern between known and unknown movement profiles.}}{3}{figure.9}\protected@file@percent }
+\newlabel{fig:linear}{{9}{3}{Results of laboratory test on linear actuator acceleration profiles. The dimensionality of the feature space has been reduced to train Model~5, which performs a clear and sharp detection of the alternating pattern between known and unknown movement profiles}{figure.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}CONCLUSION AND FUTURE WORK}{3}{section.5}\protected@file@percent }
+\gdef \@abspage@last{3}
