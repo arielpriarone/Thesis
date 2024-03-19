@@ -1,8 +1,8 @@
 @echo off
 setlocal
 
-set "old_path=..\Summary_v1\"
-set "new_path=..\Summary_v2\"
+set "old_path=..\Summary_v2\"
+set "new_path=..\Summary_v3\"
 set "doc_name_filename=Summary"
 
 echo Generate %doc_name_filename%_flat.tex for %new_path%
