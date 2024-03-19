@@ -2,13 +2,13 @@
 % !TEX TS-program = pdflatex
 \newif\ifprint % to compile the print version or the digital one
 \printtrue     % to compile the print version
-\printfalse    % to compile the digital version  (default) - comment this line to compile the print version
+%\printfalse    % to compile the digital version  (default) - comment this line to compile the print version
 % toptesti document class
 \documentclass[%
     a4paper, % not needed, by default it is a4paper, or also b5paper can be used
     corpo=12pt, % dimension of basic font
     % oneside is generally the way to go
-    oneside, % two side optimizes for two-face printing, having chapters open on the right (aka odd numbers), if you don't want blank pages put oneside here
+    teoside, % two side optimizes for two-face printing, having chapters open on the right (aka odd numbers), if you don't want blank pages put oneside here
     stile=standard,
     %evenboxes, % not needed, to put supervisors and candidate at the same level
     tipotesi=magistrale,
@@ -69,7 +69,12 @@
 % 2) or
 
 \ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
-\includegraphics[height=.95\textwidth,angle=90,origin=c]{images/wordcloud_svg-raw.pdf}
+
+\vspace*{\fill}
+\begin{center}
+    \includegraphics[width=\textwidth]{images/wordcloud.pdf}
+\end{center}
+\vspace*{\fill}
 
 \ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
 \ifprint \else \ringraziamenti  \fi% acknowledgements

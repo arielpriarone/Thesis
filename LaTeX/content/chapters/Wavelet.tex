@@ -16,7 +16,7 @@ A mother wavelet is a function that complies with the following conditions:
 \int_{-\infty}^{\infty} |\psi(t)|^2 dt = 1 & \qquad &\text{\gls{ie} it has a unitary energy.}
 \end{align}
 
-The Morlet wavelet is a complex wavelet, which complies with the above conditions. It is defined as:
+For example, the Morlet wavelet is a complex wavelet, which complies with the above conditions. It is defined as:
 \begin{equation}
 \psi(t) = \frac{1}{\sqrt{\pi f_b}} e^{i 2 \pi f_c t} e^{-t^2/f_b} =  \frac{1}{\sqrt{\pi f_b}}[ \cos(2 \pi f_c t) + j\cdot \sin(2 \pi f_c t)] e^{-t^2/f_b}
 \end{equation}
@@ -34,7 +34,7 @@ The wavelet is a function of time, and it can be scaled and translated. The scal
 
 So a general wavelet is obtained by scaling and translating a mother wavelet:
 \begin{equation}
-\psi_{a,b}(t) =  \psi \left( \frac{t-b}{a} \right)
+\psi_{a,b}(t) = \frac{1}{\sqrt{a}} \psi \left( \frac{t-b}{a} \right)
 \end{equation}
 where $a$ is the scaling factor and $b$ is the translation factor. $\psi_{1,0}$ is the mother wavelet. Some wavelets are shown in Figure \ref{fig:wavelets}.
 
@@ -46,9 +46,9 @@ where $a$ is the scaling factor and $b$ is the translation factor. $\psi_{1,0}$ 
 \end{figure}
 
 \section{Wavelet Transform}
-Intuitively, the \gls{wt} is a tool that allows to investigate the frequency content of a signal at a given time. The trasform is defined as a function of the scaling and translation factors:
+Intuitively, the \gls{wt} is a tool that allows to investigate the frequency content of a signal at a given time. The transform is defined as a function of the scaling and translation factors:
 \begin{equation}
-W(a,b) =\frac{1}{\sqrt{a}} \int_{-\infty}^{\infty} x(t) \psi_{a,b} dt
+W(a,b) =\frac{1}{\sqrt{a}} \int_{-\infty}^{\infty} x(t) \psi \left( \frac{t-b}{a} \right)dt
 \end{equation}
 where $x(t)$ is the signal. The wavelet transform is a 2D plane, where one axis is the scaling factor and the other axis is the translation factor.
 
@@ -71,6 +71,10 @@ Since this is just a transformation, the original signal can be reconstructed by
 \begin{figure}
 \centering
 \includegraphics{images/WPD_result.pdf}
-\caption{Wavelet Packet Decomposition of a signal}
+\caption{Wavelet Packet Decomposition of a signal using a tree of depth 2 to get 4 sub-bands}
+\label{fig:wpd_result}
 \end{figure}
 
+As an example, the \autoref{fig:wpd_result} shows the result of the \gls{wpd} of a signal using a tree of depth 2 to get 4 sub-bands. The original signal is shown in the top left corner. In the top right corner, the norm of the coefficients is shown. The rest of the sub-bands are shown in the central and bottom rows. It's possible to see that $x_{aa}(n)$ is the approximation of the original signal, while  $x_{dd}(n)$ contains the high-frequency content of the original signal. 
+
+The signals $x_{aa}(n)$, $x_{ad}(n)$, $x_{da}(n)$, and $x_{dd}(n)$ can be used to reconstruct exactly the original signal, using the inverse wavelet packet decomposition. For the purpose of this thesis, the \gls{wpd} is used to decompose the signals into sub-bands, and the coefficients $l^2$-norms are used as features for the \gls{ml} algorithms.

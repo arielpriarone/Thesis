@@ -39,7 +39,7 @@ for index in nodes:
     new_wp[index]=wp[index].data
     print(index)
     print(wp[index].data)
-powers=[np.linalg.norm(wp[index].data) for index in nodes]
+powers=[np.linalg.norm(wp[index].data,2) for index in nodes]
 print(new_wp.reconstruct(update=True))
 print(sigUndisturbed-new_wp.data)
 
@@ -54,7 +54,7 @@ ax[0,0].set_ylabel('Amplitude [-]')
 ax[0,0].plot(sigUndisturbed, color='k', linewidth=0.4)
 ax[0,0].set_title('$x(n)$')
 
-ticks=['$|x_{'+node+'}(n)|$' for node in nodes]
+ticks=['$|x_{'+node+'}(n)|_2$' for node in nodes]
 ax[0,1].bar(ticks,powers, color='k')
 ax[0,1].set_yscale('log')
 ax[0,1].set_xlabel('Node')
