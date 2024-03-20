@@ -62,21 +62,16 @@ def f(x,a,b,c): #function to fit for novelty prediction
         return a*np.exp(b*x)+c
 
 if __name__ == '__main__':
-   
     import src
     import matplotlib.pyplot as plt
     src.visualization.set_matplotlib_params()
     import matplotlib as mpl
-
     fig_width = mpl.rcParams['figure.figsize'][0]
     fig_height = mpl.rcParams['figure.figsize'][1]
     mpl.rcParams['figure.figsize'] = (fig_width, 0.5 * fig_height) # Set figure size to 1:2 ratio
     mpl.rcParams["text.usetex"] = True
 
-    
-
     # Generate data
-
     x = np.linspace(-10, 5, 300)
     noise = np.random.normal(0, 1, x.size)
 
@@ -103,7 +98,6 @@ if __name__ == '__main__':
     ax.set_ylabel('Novelty\n metric')
     ax.legend()
     fig.tight_layout()
-
 
     x_fit = x[int(np.ceil(x.size/3)):]
     y_fit = y1[int(np.ceil(x.size/3)):]

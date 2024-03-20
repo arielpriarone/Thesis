@@ -39,7 +39,7 @@ def FFT(array, samplFreq=1, preproc=None):
         case 'Flip':
             _prepArray = np.concatenate([array, np.flip(array)],axis=0) # preprocessed array
             __indeces = np.arange(0, len(_prepArray), 2) # indeces of the odd numbers
-            _prepArray = _prepArray[__indeces] # drop the odd numbers
+            _prepArray = _prepArray[__indeces]       # drop the odd numbers
         case _:
             _prepArray = array
     _aux = np.fft.fft(_prepArray) / len(_prepArray)  # Normalize amplitude
@@ -67,7 +67,7 @@ def packTrasform(timeSerie: list,wavelet='db10', mode='symmetric',maxlevel=6, pl
         plt.show()
     return _coefs, _powers, _nodes, fig, axs
 
-class FA(src.data.DB_Manager):
+class FA(src.data.DB_Manager): # feature agent
     '''
     empty the RAW collection and populate the Unconsumed collection with extracted features:
     '''
@@ -75,8 +75,8 @@ class FA(src.data.DB_Manager):
         super().__init__(configStr)
         if order not in [-1,1]:
             raise ValueError('order must be either latest or oldest')
-        self.order  =   order                                                           # pick -1=latest / 1=oldest raw data available
-        self.__last_snap_timestamp = None                                               # timestamp of the last snapshot plotted
+        self.order  =   order                       # pick -1=latest / 1=oldest raw data available
+        self.__last_snap_timestamp = None           # timestamp of the last snapshot plotted
     
     def _readFromRaw(self):
         ''' Read the data from the RAW collection '''
@@ -90,10 +90,10 @@ class FA(src.data.DB_Manager):
 
     def _extractFeatures(self):
         ''' extract features from the data '''
-        for sensor in self.sensors:                                                         # for each sensor (names are keys of the dict)
-            self.features["timestamp"] = self.snap["timestamp"]                             # add the timestamp to the features
-            self._extractTimeFeautures(sensor)                                                   # extract time domain features
-            self._extractFreqFeautures(sensor)                                                   # extract frequency domain features
+        for sensor in self.sensors:                                  # for each sensor (names are keys of the dict)
+            self.features["timestamp"] = self.snap["timestamp"]      # add the timestamp to the features
+            self._extractTimeFeautures(sensor)                       # extract time domain features
+            self._extractFreqFeautures(sensor)                       # extract frequency domain features
 
     def _extractTimeFeautures(self, sensor):
         ''' extract time domain features '''
@@ -144,6 +144,9 @@ class FA(src.data.DB_Manager):
         self.col_unconsumed.insert_one(__dummy) # insert the features in the Unconsumed collection, without changing the dictionary
 
     def initialize_barPlotFeatures(self,axs: plt.Axes):
+        """
+        Initializes the bar chart of the latest features for each sensor in the collection.
+        """
         src.vis.set_matplotlib_params()
         try:
             snap = self.col_unconsumed.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
@@ -200,10 +203,8 @@ class FA(src.data.DB_Manager):
     def barPlotFeatures(self,axs: plt.Axes):
         """
         Plots a bar chart of the latest features for each sensor in the collection.
-
         Parameters:
         axs (matplotlib.axes.Axes): The axes on which to plot the bar chart.
-
         Returns:
         matplotlib.axes.Axes: The axes on which the bar chart was plotted.
         """
