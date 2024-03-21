@@ -1,7 +1,7 @@
 
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL ..\Summary_v2\Summary_flat.tex   Tue Mar 19 14:47:10 2024
-%DIF ADD Summary_flat.tex                 Tue Mar 19 14:47:07 2024
+%DIF DEL ..\Summary_v3\Summary_flat.tex   Thu Mar 21 18:29:03 2024
+%DIF ADD Summary_flat.tex                 Thu Mar 21 18:29:00 2024
 
 \documentclass[a4paper, 10pt, conference, oneside]{ieeeconf}      
 
@@ -9,9 +9,6 @@
 \usepackage{geometry}
  \geometry{
  a4paper,
-%DIF 9d9
-%DIF <  total={170mm,257mm},
-%DIF -------
 left=15mm,
  right=15mm,
  top=15mm,
@@ -29,12 +26,16 @@ left=15mm,
 \usepackage{multirow}
 \usepackage[table,xcdraw]{xcolor}
 \usepackage{lipsum}
-%DIF 27a26-29
-\setlength{\textfloatsep}{.4\baselineskip} %DIF > 
- \setlength{\abovecaptionskip}{.4\baselineskip}  %DIF > 
- \setlength{\belowcaptionskip}{.4\baselineskip}  %DIF > 
- %DIF > 
+%DIF 26-28c26-28
+%DIF < \setlength{\textfloatsep}{.4\baselineskip}
+%DIF <  \setlength{\abovecaptionskip}{.4\baselineskip} 
+%DIF <  \setlength{\belowcaptionskip}{.4\baselineskip} 
 %DIF -------
+\setlength{\textfloatsep}{.382\baselineskip} %DIF > 
+\setlength{\abovecaptionskip}{0pt}  %DIF > 
+\setlength{\belowcaptionskip}{0pt}  %DIF > 
+%DIF -------
+
 
 \newcommand{\quoted}[1]{``#1''} 
 
@@ -138,28 +139,28 @@ Unsupervised Machine Learning Algorithms for Edge Novelty Detection} \\ \normals
 \section{INTRODUCTION}
 \label{sec:introduction}
 
-Predictive Maintenance (PM) and Novelty Detection (ND) are important topics in modern industrial engineering, \DIFdelbegin \DIFdel{aimed at }\DIFdelend \DIFaddbegin \DIFadd{focused on }\DIFaddend proactively identifying equipment failures before they affect system functionality. Embracing these practices is crucial for reducing equipment downtime and optimizing maintenance efforts. PM aims to quantify and forecast the state of degradation of a system. A quite novel frontier is the direct implementation of PM algorithms within the maintained device, using the principles of Edge Computing.
+Predictive Maintenance (PM) and Novelty Detection (ND) are important topics in modern industrial engineering, focused on proactively identifying equipment failures before they affect system functionality. Embracing these practices is crucial for reducing equipment downtime and optimizing maintenance efforts. PM aims to quantify and forecast the state of degradation of a system. A quite novel frontier is the direct implementation of PM algorithms within the maintained device, using the principles of Edge Computing.
 
 \subsection{Motivation}
 Despite the Fourth Industrial Revolution, the maintenance approach remained unchanged in many industrial applications. The primary factor impeding the advancement of the maintenance approach is the significant expense associated with implementing PM strategies, coupled with a lack of knowledge about the modelling or behaviour of a failing system.
 
-According to a recent survey by the U.S. Department of Commerce, establishments \DIFdelbegin \DIFdel{relying on fixing failures are associated with }\DIFdelend \DIFaddbegin \DIFadd{focusing on preventing equipment failures experience }\DIFaddend 3.3 times \DIFdelbegin \DIFdel{more downtime than those actively preventing failures}\DIFdelend \DIFaddbegin \DIFadd{less downtime compared to those only fixing issues after they occur}\DIFaddend .
+According to a recent survey by the U.S. Department of Commerce, establishments focusing on preventing equipment failures experience 3.3 times less downtime compared to those only fixing issues after they occur.
 
 \subsection{Objective}
 The goal of this project is to design, develop and test a \emph{degradation} based framework
 that performs ND using one or several Unsupervised Machine Learning (UML) algorithms. 
-The structure of the framework is thought to be modular and general-purpose to ease the implementation into different systems. \DIFdelbegin \DIFdel{It is }\DIFdelend \DIFaddbegin \DIFadd{The framework has been }\DIFaddend developed following an unsupervised approach to overcome the common lack of physical models and labelled data of the maintained device. \DIFdelbegin \DIFdel{This framework has to be }\DIFdelend \DIFaddbegin \DIFadd{It has been }\DIFaddend deployed for both PC and Edge Computing. \section{PROPOSED FRAMEWORK}
+The structure of the framework is thought to be modular and general-purpose to ease the implementation into different systems. The framework has been developed following an unsupervised approach to overcome the common lack of physical models and labelled data of the maintained device. It has been deployed for both \DIFdelbegin \DIFdel{PC and Edge Computing}\DIFdelend \DIFaddbegin \DIFadd{PCs and embedded devices}\DIFaddend . \section{PROPOSED FRAMEWORK}
 \label{sec:framework}
 \begin{figure}
     \includegraphics[width=\linewidth]{images/Framework_structure.pdf}
-    \caption{The structure of the proposed framework. The Field Agent collects the time series, the Feature Agent extracts the features, and the Machine Learning Agent evaluates the health of the maintained device. The agents are connected to collections of a common database. \DIFaddbeginFL \DIFaddFL{The }\includegraphics[height = 1em]{images/DB_icon-cropped.pdf} \DIFaddFL{icon represents a collection of a database that every agent can read and write.}\DIFaddendFL }
+    \caption{The structure of the proposed framework. The Field Agent collects the time series, the Feature Agent extracts the features, and the Machine Learning Agent evaluates the health of the maintained device. The agents are connected to collections of a common database. The \includegraphics[height = 1em]{images/DB_icon-cropped.pdf} icon represents a collection of a database that every agent can read and write.}
     \label{fig:framework_structure}
 \end{figure}
 
-The solution developed in this thesis is thought to be set up on a new device, and linked to the sensors of the most informative quantities of the system.
-In the first phase of commissioning, the framework collects the data, extracts the features and stores them. When the \DIFdelbegin \DIFdel{data collected is }\DIFdelend \DIFaddbegin \DIFadd{collected data are }\DIFaddend enough to characterize all the modes of operation of the maintained system, the UML model can be trained. Finally, the framework continues collecting new \DIFdelbegin \DIFdel{data}\DIFdelend \DIFaddbegin \DIFadd{time series}\DIFaddend , extracting the features \DIFdelbegin \DIFdel{, and evaluating the new data. The framework now }\DIFdelend \DIFaddbegin \DIFadd{and evaluating these new samples. Now, the framework }\DIFaddend produces a Novelty Metric (NM) that quantifies how \DIFdelbegin \DIFdel{abnormal }\DIFdelend \DIFaddbegin \DIFadd{anomalous }\DIFaddend the new data are. 
-This phase \DIFdelbegin \DIFdel{can last indefinitely }\DIFdelend \DIFaddbegin \DIFadd{lasts indefinitely (until the maintenance team performs a model update)}\DIFaddend . When the NM overshoots a certain threshold, a warning is issued to the maintenance team. 
-Then, the team can \DIFdelbegin \DIFdel{then }\DIFdelend decide to perform a maintenance action or to continue monitoring the system. If \DIFdelbegin \DIFdel{they declare the }\DIFdelend \DIFaddbegin \DIFadd{the team declares the }\DIFaddend system as healthy, the framework can be retrained with the new data, to update the UML model. Otherwise, \DIFdelbegin \DIFdel{a second UML model }\DIFdelend \DIFaddbegin \DIFadd{the framework }\DIFaddend can be trained to characterize \DIFaddbegin \DIFadd{also }\DIFaddend the newly discovered fault \DIFdelbegin \DIFdel{and }\DIFdelend \DIFaddbegin \DIFadd{in order to }\DIFaddend perform Fault Detection (FD) in the future.
+The solution developed in this thesis is thought to be set up on a new device, and linked to the \DIFdelbegin \DIFdel{sensors }\DIFdelend \DIFaddbegin \DIFadd{signals }\DIFaddend of the most informative \DIFdelbegin \DIFdel{quantities }\DIFdelend \DIFaddbegin \DIFadd{sensors }\DIFaddend of the system.
+In the first phase of commissioning, the framework collects the data, extracts the features and stores them. When the collected data are enough to characterize all the modes of operation of the maintained system, the UML model can be trained. Finally, the framework continues collecting new time series, extracting the features and evaluating these new samples. Now, the framework produces a Novelty Metric (NM) that quantifies how anomalous the new data are. 
+This phase lasts indefinitely (until the maintenance team performs a model update). When the NM overshoots a certain threshold, a warning is issued to the maintenance team. 
+Then, the team can decide to perform a maintenance action or to continue monitoring the system. If the team declares the system as healthy, the framework can be retrained with the new data, to update the UML model. Otherwise, the framework can be trained to characterize also the newly discovered fault in order to perform Fault Detection (FD) in the future.
 
 \subsection{Software Agents}
 The proposed framework is based on software agents. Each agent is autonomous and performs a specific task. The developed agents, as shown in Fig.~\ref{fig:framework_structure}, are:
@@ -170,16 +171,18 @@ The proposed framework is based on software agents. Each agent is autonomous and
 \end{itemize}
 
 \subsection{Database}
-All the Agents are connected to a common database. In the case of the PC implementation, MongoDB has been used. In the case of the Edge implementation, the data are stored directly in the microcontroller's memory.
+\DIFaddbegin {
+\DIFaddend All the Agents are connected to \DIFaddbegin \DIFadd{different collections of }\DIFaddend a common database. In the case of the PC implementation, MongoDB has been used. In the case of the Edge \DIFdelbegin \DIFdel{implementation, }\DIFdelend \DIFaddbegin \DIFadd{implemen- tation }\DIFaddend the data are stored directly in the microcontroller's memory.
 Regarding the structure shown in Fig.~\ref{fig:framework_structure}, the MongoDB database is composed of seven collections. Every collection has a specific role in the framework. For example, the \emph{Quarantined, Healthy} and \emph{Faulty} collections contain the features that have been flagged as novelty, normal or faulty, respectively.
+\DIFaddbegin }
+\DIFaddend 
 
 \subsection{Multiple Instances}
-As shown in Fig.~\ref{fig:multiple_instances}, \DIFaddbegin \DIFadd{multiple instances of }\DIFaddend the framework can be implemented \DIFdelbegin \DIFdel{in multiple instances. This is useful }\DIFdelend to better isolate the location of the anomaly in a complex system. The larger the set of sensors that a single instance of the framework is connected to, the more difficult it is to isolate the anomaly. On the other hand, configuring a large group of sensors allows the detection of complex anomalies. 
+As shown in Fig.~\ref{fig:multiple_instances}, multiple instances of the framework can be implemented to better isolate the location of the anomaly in a complex system. The larger the set of sensors that a single instance of the framework is connected to, the more difficult it is to isolate the anomaly. On the other hand, configuring a large group of sensors allows the detection of complex anomalies. 
 
-\DIFaddbegin \DIFadd{For example, a shaft with two bearings can be monitored by two instances of the framework, one for each bearing vibration signal. Another instance can be linked to the signals of both bearings to detect more complex novelty patterns. The latter instance can exploit the case where the bearings signals are normally correlated (e.g. proportional in amplitude) to detect a novelty that is not detectable by analyzing the signals separately.   
-}
+For example, a shaft with two bearings can be monitored by two instances of the framework, one for each bearing vibration signal. Another instance can be linked to the signals of both bearings to detect more complex novelty patterns \DIFdelbegin \DIFdel{. The latter instance can exploit the case where the bearings signals are normally correlated (e.g. proportional in amplitude) to detect a novelty that is }\DIFdelend \DIFaddbegin \DIFadd{that are }\DIFaddend not detectable by analyzing the signals separately.   
 
-\DIFaddend \begin{figure}
+\begin{figure}
     \includegraphics[width=\linewidth]{images/FrameworkInstances.pdf}
     \caption{Multiple instances implementation of the framework. Every instance is linked to a different set of sensors, to monitor different parts of the system.}
     \label{fig:multiple_instances}
@@ -188,12 +191,12 @@ As shown in Fig.~\ref{fig:multiple_instances}, \DIFaddbegin \DIFadd{multiple ins
 
 \subsection{Unsupervised Machine Learning Models}
 
-The \DIFdelbegin \DIFdel{considered }\DIFdelend UML implemented in the framework are: \emph{K-means}, \emph{DBSCAN}, \emph{Gaussian Mixture Model} (GMM), \emph{Isolation Forest} (IF), \emph{Local Outlier Factor} (LOF), \emph{One-Class Support Vector Machine} ($\nu$-SVM).
+The UML implemented in the framework are: \emph{K-means}, \emph{DBSCAN}, \emph{Gaussian Mixture Model} (GMM), \emph{Isolation Forest} (IF), \emph{Local Outlier Factor} (LOF), \emph{One-Class Support Vector Machine} ($\nu$-SVM).
 
-K-means and DBSCAN are traditionally clustering algorithms, so a custom NM has been developed for these algorithms. \DIFaddbegin \DIFadd{For example, if K-means is used, the NM is defined as the distance of a sample from the closest centroid, normalized by the cluster radius. }\DIFaddend The other models are already commonly used for ND, so the NM has been linked to the \quoted{score} provided by the library functions.
+K-means and DBSCAN are traditionally clustering algorithms, so a custom NM has been developed for these algorithms. For example, if K-means is used, the NM is defined as the distance of a sample from the closest centroid, normalized by the cluster radius. The other models are already commonly used for ND, so the NM has been linked to the \quoted{score} provided by the library functions.
 
-If the UML is trained with faulty data\DIFdelbegin \DIFdel{to perform FD, the }\DIFdelend \DIFaddbegin \DIFadd{, instead of normal ones, then it performs FD. The }\DIFaddend NM measures \quoted{how not faulty} the new data are. In this case, the value is transformed into a Fault Metric (FM) with the function $\text{FM} = - \ln(\text{NM} + 1)$ to preserve the coherence \DIFaddbegin \DIFadd{(the lower the metric, the healthier the system)}\DIFaddend .  \section{FEATURE EXTRACTION}
-The framework is developed to acquire time series data from an arbitrary configuration of sensors. When a time series is available, the FA extracts the features. \DIFdelbegin \DIFdel{Every }\DIFdelend \DIFaddbegin \DIFadd{Each }\DIFaddend time series is linked to a specific set of features to be extracted.
+If the UML is trained with faulty data, instead of normal ones, then it performs FD. The NM measures \quoted{how not faulty} the new data are. In this case, the value is transformed into a Fault Metric (FM) with the function $\text{FM} = - \ln(\text{NM} + 1)$ to preserve the coherence (the lower the metric, the healthier the system).  \section{FEATURE EXTRACTION}
+The framework is developed to acquire time series data from an arbitrary configuration of sensors. When a time series is available, the FA extracts the features. Each time series is linked to a specific set of features to be extracted.
 
 \subsection{Feature set}
 The considered features are divided into two categories:
@@ -210,13 +213,13 @@ The time domain features are computed in the corrected form for sampled data. In
     \caption{Feature scaling and selection procedure. The features are standardized and then scaled by a weight array or selected to reduce the feature space dimensionality, discarding the less informative features.}
     \label{fig:feature_scaling}
 \end{figure}
-Despite the standardization, during the experimental validation, it has been observed that some features are more informative than others. To reduce the impact of the less informative features, an optional feature scaling and selection step can be performed, as shown in Fig.~\ref{fig:feature_scaling}. The weights \DIFaddbegin \DIFadd{used for scaling the features }\DIFaddend can be computed by performing a Random Forest training or using the SelectKBest library method. \section{VALIDATION}
+Despite the standardization, during the experimental validation, it has been observed that some features are more informative than others. To reduce the impact of the less informative features, an optional feature scaling and selection step can be performed, as shown in Fig.~\ref{fig:feature_scaling}. The weights used for scaling the features can be computed by performing a Random Forest training or using the SelectKBest library method. \section{VALIDATION}
 \label{sec:validation}
 
 \subsection{On bearings vibration datasets}
 
 The PC implementation of the framework has been thoroughly tested on a publicly available dataset collected by the Center for Intelligent Maintenance Systems (IMS).
-The dataset contains time series of \DIFdelbegin \DIFdel{vibrations of bearings . It contains }\DIFdelend \DIFaddbegin \DIFadd{bearings vibrations collected during }\DIFaddend three separate \quoted{run to failure} experiences. 
+The dataset contains time series of bearings vibrations collected during three separate \quoted{run to failure} experiences. 
 
 \begin{figure}
     \includegraphics[width=\linewidth]{images/ND_IMS.pdf}
@@ -225,7 +228,7 @@ The dataset contains time series of \DIFdelbegin \DIFdel{vibrations of bearings 
 \end{figure}
 \begin{table}
     \centering
-    \caption{Comparison of the results for the test n$^\circ$1 of IMS dataset.}
+    \DIFaddbeginFL \setlength{\abovecaptionskip}{-2pt} \DIFaddendFL \caption{Comparison of the results for the test n$^\circ$1 of IMS dataset.}
     \label{tab:ims01_comparision}
     \begin{tabular}{lcrr} 
     \toprule
@@ -249,14 +252,14 @@ The ND capability of the framework has been tested using all the cited UML model
     \caption{Results of Remaining Useful Life predictions on the IMS dataset. The Vertical lines indicate the time when the predictions are performed. The RUL is the time remaining before the fitted curve crosses the threshold.}
     \label{fig:RUL_IMS}
 \end{figure}
-To perform PM, the framework has to estimate the Remaining Useful Life (RUL) of the component. The RUL is predicted by a curve fitted to the data. The type of curve to fit is configurable\DIFdelbegin \DIFdel{, in }\DIFdelend \DIFaddbegin \DIFadd{. In }\DIFaddend this work $y = a \cdot e^{b \cdot x} + c$ has been used. The results of the RUL predictions are shown in Fig.~\ref{fig:RUL_IMS}.
+To perform PM, the framework has to estimate the Remaining Useful Life (RUL) of the component. The RUL is predicted by a curve fitted to the data. The type of curve to fit is configurable. In this work $y = a \cdot e^{b \cdot x} + c$ has been used. The results of the RUL predictions are shown in Fig.~\ref{fig:RUL_IMS}.
 
 \begin{figure}
     \includegraphics[width=\linewidth]{images/FD_IMS.pdf}
     \caption{Results of FD on the IMS dataset. The malfunction is detected when the Fault Metric crosses the threshold. The RUL is the time remaining before the fitted curve crosses the threshold.}
     \label{fig:FD_IMS}
 \end{figure}
-Since the second and third tests of the IMS dataset share the same type of fault, the framework has been trained to perform FD with the faulty data of the second test and then \DIFaddbegin \DIFadd{it has been }\DIFaddend evaluated on the third \DIFaddbegin \DIFadd{test}\DIFaddend . Analogously to the ND, \DIFdelbegin \DIFdel{after }\DIFdelend \DIFaddbegin \DIFadd{when }\DIFaddend the FM crosses a certain threshold, a warning is issued and RUL predictions are performed. The results of the FD are shown in Fig.~\ref{fig:FD_IMS}.
+Since the second and third tests of the IMS dataset share the same type of fault, the framework has been trained to perform FD with the faulty data of the second test and then it has been evaluated on the third test. Analogously to the ND, when the FM crosses a certain threshold, a warning is issued and RUL predictions are performed. The results of the FD are shown in Fig.~\ref{fig:FD_IMS}.
 
 \subsection{Laboratory tests}
 
@@ -266,19 +269,24 @@ Since the second and third tests of the IMS dataset share the same type of fault
     \label{fig:embedded}
 \end{figure}
 
-K-means, IF and LOF are the three models that performed the best on the dataset. \DIFdelbegin \DIFdel{K-means performed equally or only slightly better than IF and LOF. }\DIFdelend Notably, the K-means model has advantages such as minimal parameter storage requirements and low computational costs for calculating the NM. For these reasons, the K-means model has been chosen for the Edge implementation.
+K-means, IF and LOF are the three models that performed the best on the dataset. Notably, the K-means model has advantages such as minimal parameter storage requirements and low computational costs for calculating the NM. For these reasons, the K-means model has been chosen for the Edge implementation.
 
-In the first phase, the framework gathers the data and extracts the features. The UML model is trained on a PC and then included in the Edge. After, the microcontroller autonomously evaluates the status of the maintained system. The structure of the Edge implementation is shown in Fig.~\ref{fig:embedded}. 
+In the first phase, the framework gathers the data and extracts the features. The UML model is trained on a PC and then included in the \DIFdelbegin \DIFdel{Edge}\DIFdelend \DIFaddbegin \DIFadd{embedded application}\DIFaddend . After, the microcontroller autonomously evaluates the status of the maintained system. The structure of the Edge implementation is shown in Fig.~\ref{fig:embedded}. 
 
 \begin{figure}
     \includegraphics[width=\linewidth]{images/Test02_LOF.pdf}
-    \caption{Results of \DIFaddbeginFL \DIFaddFL{a }\DIFaddendFL laboratory test on the shaker. The first five lines are evaluations of known vibrations, correctly flagged as normal samples. The remaining lines are the successful detections of the novelty of new vibrations.}
+    \caption{Results of a laboratory test on the shaker. The first five lines are evaluations of known vibrations, correctly flagged as normal samples. The remaining lines are the successful detections of the novelty of new vibrations.}
     \label{fig:shaker}
 \end{figure}
 
-Extensive tests have been performed on a laboratory shaker, simulating the vibrations generated by a generic mechanical system. The tests have been carried out to evaluate the sensitivity to variations in both amplitude and frequency content. The results of \DIFdelbegin \DIFdel{the ND }\DIFdelend \DIFaddbegin \DIFadd{a ND test }\DIFaddend are shown in Fig.~\ref{fig:shaker}.
+Extensive tests have been performed on a laboratory shaker, simulating the vibrations generated by a generic mechanical system. The tests have been carried out to evaluate the sensitivity to variations in both amplitude and frequency content. 
+\DIFdelbegin \DIFdel{The results of a ND test are shown in }\DIFdelend Fig.~\ref{fig:shaker} \DIFaddbegin \DIFadd{shows the evolution of the NM and its capability of discerning between normal and anomalous vibrations}\DIFaddend .
 
-A second series of tests has been performed mounting the accelerometer on a linear actuator. The axis of the accelerometer has been aligned with the direction of the movement of the actuator \DIFdelbegin \DIFdel{, to sense more the acceleration actuated }\DIFdelend \DIFaddbegin \DIFadd{to sense the actuated acceleration, }\DIFaddend rather than the vibrations. A set of predefined movement profiles has been used for training, while another set for testing. This series of tests exploited a high number of non-significant features. This is because the WPD gave high resolution \DIFdelbegin \DIFdel{on }\DIFdelend \DIFaddbegin \DIFadd{over }\DIFaddend a wide range of frequency content, but the actuator excited only a few, and very low, frequencies. The remaining features were almost all noise, and the standardization procedure had the side effect of amplifying them to the same level as the significant ones. An effort has been made to fine-tune the model to reduce the impact of the noise (see Fig.~\ref{fig:linear}, models 1 to 4). The best result, however, has been obtained by removing the less informative features and using a reduced feature space. The benefit of this approach is evident in Fig.~\ref{fig:linear}.
+A second series of tests has been performed mounting the accelerometer on a linear actuator. The axis of the accelerometer has been aligned with the direction of the movement of the actuator to sense the actuated acceleration, rather than the vibrations. A set of predefined movement profiles has been used for training, while another set for testing. This series of tests exploited a high number of non-significant features. This is because the WPD gave high resolution over a wide range of frequency content, but the actuator excited only a few, and very low, frequencies. The remaining features were almost all noise, and the standardization procedure had the side effect of amplifying them to the same level as the significant ones. An effort has been made to fine-tune the model to reduce the impact of the noise (see Fig.~\ref{fig:linear} \DIFdelbegin \DIFdel{, models }\DIFdelend \DIFaddbegin \DIFadd{that shows the response of the NM to a pattern of alternating known and anomalous profiles, where Model }\DIFaddend 1 \DIFdelbegin \DIFdel{to 4).
+}\DIFdelend \DIFaddbegin \DIFadd{is the original model and Model 2-4 are tuned).
+}
+
+\DIFaddend The best result, however, has been obtained by removing the less informative features and using a reduced feature space \DIFdelbegin \DIFdel{. The benefit of this approach is evident }\DIFdelend \DIFaddbegin \DIFadd{that allows a clear and sharp detection of novel profiles, as shown }\DIFaddend in Fig.~\ref{fig:linear} \DIFaddbegin \DIFadd{(Model 5)}\DIFaddend .
 
 
 \begin{figure}
@@ -289,5 +297,5 @@ A second series of tests has been performed mounting the accelerometer on a line
 
 The proposed solution has been proven effective in performing Novelty Detection in both public datasets and laboratory tests. The flexibility of the framework allows it to be easily adapted to different systems. 
 
-Some laboratory tests on the Edge implementation have shown that the standardization of the features is not always enough to make the clusters in the feature space meaningful. When this happened, \DIFdelbegin \DIFdel{in the PC implementation, }\DIFdelend Isolation Forest and Local Outlier Factor \DIFdelbegin \DIFdel{Models}\DIFdelend \DIFaddbegin \DIFadd{models were tested in the PC implementation and}\DIFaddend , being not cluster-based, \DIFdelbegin \DIFdel{were tested and resulted as }\DIFdelend \DIFaddbegin \DIFadd{proved to be }\DIFaddend more effective. As future work, the deployment of these models also in the Edge implementation would improve the performance of the \DIFaddbegin \DIFadd{Edge }\DIFaddend framework in some specific applications. 
+Some laboratory tests on the Edge implementation have shown that the standardization of the features is not always enough to make the clusters in the feature space meaningful. When this happened, Isolation Forest and Local Outlier Factor models were tested in the PC implementation and, being not cluster-based, proved to be more effective. As future work, the deployment of these models also in \DIFdelbegin \DIFdel{the Edge implementation }\DIFdelend \DIFaddbegin \DIFadd{embedded devices }\DIFaddend would improve the performance of the Edge framework in some specific applications. 
 \end{document}

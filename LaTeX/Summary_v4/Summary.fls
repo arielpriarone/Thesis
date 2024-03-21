@@ -1,6 +1,6 @@
-PWD c:\Users\ariel\Documents\Courses\Tesi\Code\LaTeX\Summary_v3
+PWD c:\Users\ariel\Documents\Courses\Tesi\Code\LaTeX\Summary_v4
 INPUT C:\Users\ariel\AppData\Local\MiKTeX\miktex\data\le\pdftex\pdflatex.fmt
-INPUT c:\Users\ariel\Documents\Courses\Tesi\Code\LaTeX\Summary_v3\Summary.tex
+INPUT c:\Users\ariel\Documents\Courses\Tesi\Code\LaTeX\Summary_v4\Summary.tex
 OUTPUT Summary.log
 INPUT .\ieeeconf.cls
 INPUT ieeeconf.cls
@@ -356,6 +356,12 @@ INPUT .\images\ND_IMS.pdf
 INPUT .\images\ND_IMS.pdf
 INPUT .\images\ND_IMS.pdf
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\times\ptmrc8t.tfm
+INPUT .\images\RUL_IMS.pdf
+INPUT .\images\RUL_IMS.pdf
+INPUT .\images\RUL_IMS.pdf
+INPUT .\images\RUL_IMS.pdf
+INPUT .\images\RUL_IMS.pdf
+INPUT .\images\RUL_IMS.pdf
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\times\ptmr8t.vf
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\times\ptmr8t.vf
@@ -366,12 +372,6 @@ INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\times\ptmrc8t.
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\times\ptmr8r.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\times\ptmb8t.vf
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\times\ptmb8r.tfm
-INPUT .\images\RUL_IMS.pdf
-INPUT .\images\RUL_IMS.pdf
-INPUT .\images\RUL_IMS.pdf
-INPUT .\images\RUL_IMS.pdf
-INPUT .\images\RUL_IMS.pdf
-INPUT .\images\RUL_IMS.pdf
 INPUT .\images\FD_IMS.pdf
 INPUT .\images\FD_IMS.pdf
 INPUT .\images\FD_IMS.pdf

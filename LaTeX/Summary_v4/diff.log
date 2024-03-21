@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.12.11)  19 MAR 2024 14:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.10.12) (preloaded format=pdflatex 2023.12.11)  21 MAR 2024 18:29
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -507,14 +507,14 @@ Package: settobox 2016/05/16 v1.5 Assign box dimensions to length registers (HO
 \DIFdelgraphicsbox=\box60
 \DIFdelgraphicswidth=\skip64
 \DIFdelgraphicsheight=\skip65
-LaTeX Info: Redefining \DIFaddbegin on input line 100.
-LaTeX Info: Redefining \DIFaddend on input line 101.
-LaTeX Info: Redefining \DIFdelbegin on input line 102.
-LaTeX Info: Redefining \DIFdelend on input line 103.
-LaTeX Info: Redefining \DIFaddbeginFL on input line 108.
-LaTeX Info: Redefining \DIFaddendFL on input line 109.
-LaTeX Info: Redefining \DIFdelbeginFL on input line 110.
-LaTeX Info: Redefining \DIFdelendFL on input line 111.
+LaTeX Info: Redefining \DIFaddbegin on input line 101.
+LaTeX Info: Redefining \DIFaddend on input line 102.
+LaTeX Info: Redefining \DIFdelbegin on input line 103.
+LaTeX Info: Redefining \DIFdelend on input line 104.
+LaTeX Info: Redefining \DIFaddbeginFL on input line 109.
+LaTeX Info: Redefining \DIFaddendFL on input line 110.
+LaTeX Info: Redefining \DIFdelbeginFL on input line 111.
+LaTeX Info: Redefining \DIFdelendFL on input line 112.
 
 (C:\Users\ariel\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
 \lst@mode=\count305
@@ -543,24 +543,24 @@ Package: listings 2023/02/27 1.9 (Carsten Heinz)
 (diff.aux)
 \openout1 = `diff.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 130.
-LaTeX Font Info:    ... okay on input line 130.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 131.
+LaTeX Font Info:    ... okay on input line 131.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -622,7 +622,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 fg
 File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
-Package hyperref Info: Link coloring OFF on input line 130.
+Package hyperref Info: Link coloring OFF on input line 131.
  (diff.out) (diff.out)
 \@outlinefile=\write3
 \openout3 = `diff.out'.
@@ -631,25 +631,25 @@ Package hyperref Info: Link coloring OFF on input line 130.
 <images/logos/logo_pic4ser.png, id=63, 225.84375pt x 225.84375pt>
 File: images/logos/logo_pic4ser.png Graphic file (type png)
 <use images/logos/logo_pic4ser.png>
-Package pdftex.def Info: images/logos/logo_pic4ser.png  used on input line 133.
+Package pdftex.def Info: images/logos/logo_pic4ser.png  used on input line 134.
 
 (pdftex.def)             Requested size: 71.13188pt x 71.13081pt.
 <images/logos/logo_poli.jpg, id=65, 1461.46pt x 1461.46pt>
 File: images/logos/logo_poli.jpg Graphic file (type jpg)
 <use images/logos/logo_poli.jpg>
-Package pdftex.def Info: images/logos/logo_poli.jpg  used on input line 133.
+Package pdftex.def Info: images/logos/logo_poli.jpg  used on input line 134.
 (pdftex.def)             Requested size: 64.01825pt x 64.00116pt.
 File: images/logos/logo_pic4ser.png Graphic file (type png)
 <use images/logos/logo_pic4ser.png>
-Package pdftex.def Info: images/logos/logo_pic4ser.png  used on input line 133.
+Package pdftex.def Info: images/logos/logo_pic4ser.png  used on input line 134.
 
 (pdftex.def)             Requested size: 71.13188pt x 71.13081pt.
 File: images/logos/logo_poli.jpg Graphic file (type jpg)
 <use images/logos/logo_poli.jpg>
-Package pdftex.def Info: images/logos/logo_poli.jpg  used on input line 133.
+Package pdftex.def Info: images/logos/logo_poli.jpg  used on input line 134.
 (pdftex.def)             Requested size: 64.01825pt x 64.00116pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 144--145
+Underfull \hbox (badness 10000) in paragraph at lines 145--146
 \T1/ptm/m/n/10 ap-proach re-mained un-changed in many in-dus-trial
  []
 
@@ -660,7 +660,7 @@ pdfTeX warning: pdflatex (file ./images/Framework_structure.pdf): PDF inclusion
 <images/Framework_structure.pdf, id=66, 432.65637pt x 271.97609pt>
 File: images/Framework_structure.pdf Graphic file (type pdf)
 <use images/Framework_structure.pdf>
-Package pdftex.def Info: images/Framework_structure.pdf  used on input line 154
+Package pdftex.def Info: images/Framework_structure.pdf  used on input line 155
 .
 (pdftex.def)             Requested size: 248.84793pt x 156.43481pt.
 
@@ -670,12 +670,17 @@ und PDF version <1.7>, but at most version <1.5> allowed
 <images/DB_icon-cropped.pdf, id=67, 36.938pt x 37.05844pt>
 File: images/DB_icon-cropped.pdf Graphic file (type pdf)
 <use images/DB_icon-cropped.pdf>
-Package pdftex.def Info: images/DB_icon-cropped.pdf  used on input line 155.
+Package pdftex.def Info: images/DB_icon-cropped.pdf  used on input line 156.
 (pdftex.def)             Requested size: 7.97363pt x 8.0pt.
 File: images/DB_icon-cropped.pdf Graphic file (type pdf)
 <use images/DB_icon-cropped.pdf>
-Package pdftex.def Info: images/DB_icon-cropped.pdf  used on input line 155.
+Package pdftex.def Info: images/DB_icon-cropped.pdf  used on input line 156.
 (pdftex.def)             Requested size: 7.97363pt x 8.0pt.
+
+Underfull \hbox (badness 3148) in paragraph at lines 175--179
+\T1/ptm/m/n/10 Mon-goDB has been used. In the case of the Edge
+ []
+
 [1{C:/Users/ariel/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/ar
 iel/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}
 
@@ -685,70 +690,70 @@ mework_structure.pdf> <./images/DB_icon-cropped.pdf>]
 
 pdfTeX warning: pdflatex (file ./images/FrameworkInstances.pdf): PDF inclusion:
  found PDF version <1.7>, but at most version <1.5> allowed
-<images/FrameworkInstances.pdf, id=111, 351.23218pt x 216.81pt>
+<images/FrameworkInstances.pdf, id=112, 351.23218pt x 216.81pt>
 File: images/FrameworkInstances.pdf Graphic file (type pdf)
 <use images/FrameworkInstances.pdf>
-Package pdftex.def Info: images/FrameworkInstances.pdf  used on input line 183.
+Package pdftex.def Info: images/FrameworkInstances.pdf  used on input line 186.
 
 (pdftex.def)             Requested size: 248.84793pt x 153.61526pt.
 
-Underfull \hbox (badness 6204) in paragraph at lines 193--194
+Underfull \hbox (badness 6204) in paragraph at lines 196--197
 []\T1/ptm/m/n/10 K-means and DB-SCAN are tra-di-tion-ally clus-ter-ing
  []
 
 LaTeX Font Info:    Trying to load font information for T1+pcr on input line 20
-2.
+5.
 (C:\Users\ariel\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\t1pcr.fd
 File: t1pcr.fd 2001/06/04 font definitions for T1/pcr.
 )
 
 pdfTeX warning: pdflatex (file ./images/Feat_scaling.pdf): PDF inclusion: found
  PDF version <1.7>, but at most version <1.5> allowed
-<images/Feat_scaling.pdf, id=116, 276.07141pt x 109.3686pt>
+<images/Feat_scaling.pdf, id=117, 276.07141pt x 109.3686pt>
 File: images/Feat_scaling.pdf Graphic file (type pdf)
 <use images/Feat_scaling.pdf>
-Package pdftex.def Info: images/Feat_scaling.pdf  used on input line 209.
+Package pdftex.def Info: images/Feat_scaling.pdf  used on input line 212.
 (pdftex.def)             Requested size: 248.84793pt x 98.58601pt.
 
-Underfull \hbox (badness 3514) in paragraph at lines 213--213
+Underfull \hbox (badness 3514) in paragraph at lines 216--216
 []\T1/ptm/m/n/10 Despite the stan-dard-iza-tion, dur-ing the ex-per-i-men-tal
  []
 
-<images/ND_IMS.pdf, id=118, 417.7206pt x 175.6161pt>
+<images/ND_IMS.pdf, id=119, 417.7206pt x 175.6161pt>
 File: images/ND_IMS.pdf Graphic file (type pdf)
 <use images/ND_IMS.pdf>
-Package pdftex.def Info: images/ND_IMS.pdf  used on input line 222.
+Package pdftex.def Info: images/ND_IMS.pdf  used on input line 225.
 (pdftex.def)             Requested size: 248.84793pt x 104.61748pt.
-<images/RUL_IMS.pdf, id=121, 417.7206pt x 163.3302pt>
+<images/RUL_IMS.pdf, id=122, 417.7206pt x 163.3302pt>
 File: images/RUL_IMS.pdf Graphic file (type pdf)
 <use images/RUL_IMS.pdf>
-Package pdftex.def Info: images/RUL_IMS.pdf  used on input line 248.
+Package pdftex.def Info: images/RUL_IMS.pdf  used on input line 251.
 (pdftex.def)             Requested size: 248.84793pt x 97.29855pt.
 [2 <./images/FrameworkInstances.pdf> <./images/Feat_scaling.pdf> <./images/ND_I
 MS.pdf>]
-<images/FD_IMS.pdf, id=210, 417.7206pt x 119.9682pt>
+<images/FD_IMS.pdf, id=212, 417.7206pt x 119.9682pt>
 File: images/FD_IMS.pdf Graphic file (type pdf)
 <use images/FD_IMS.pdf>
-Package pdftex.def Info: images/FD_IMS.pdf  used on input line 255.
+Package pdftex.def Info: images/FD_IMS.pdf  used on input line 258.
 (pdftex.def)             Requested size: 248.84793pt x 71.46707pt.
 
 
 pdfTeX warning: pdflatex (file ./images/EmbeddedStructure.pdf): PDF inclusion: 
 found PDF version <1.7>, but at most version <1.5> allowed
-<images/EmbeddedStructure.pdf, id=212, 340.3917pt x 147.67169pt>
+<images/EmbeddedStructure.pdf, id=214, 340.3917pt x 147.67169pt>
 File: images/EmbeddedStructure.pdf Graphic file (type pdf)
 <use images/EmbeddedStructure.pdf>
-Package pdftex.def Info: images/EmbeddedStructure.pdf  used on input line 264.
+Package pdftex.def Info: images/EmbeddedStructure.pdf  used on input line 267.
 (pdftex.def)             Requested size: 248.84793pt x 107.95715pt.
-<images/Test02_LOF.pdf, id=214, 417.7206pt x 234.8775pt>
+<images/Test02_LOF.pdf, id=216, 417.7206pt x 234.8775pt>
 File: images/Test02_LOF.pdf Graphic file (type pdf)
 <use images/Test02_LOF.pdf>
-Package pdftex.def Info: images/Test02_LOF.pdf  used on input line 274.
+Package pdftex.def Info: images/Test02_LOF.pdf  used on input line 277.
 (pdftex.def)             Requested size: 248.84793pt x 139.92049pt.
-<images/linear.pdf, id=218, 417.7206pt x 158.99399pt>
+<images/linear.pdf, id=220, 417.7206pt x 158.99399pt>
 File: images/linear.pdf Graphic file (type pdf)
 <use images/linear.pdf>
-Package pdftex.def Info: images/linear.pdf  used on input line 285.
+Package pdftex.def Info: images/linear.pdf  used on input line 293.
 (pdftex.def)             Requested size: 248.84793pt x 94.7154pt.
 [3 <./images/RUL_IMS.pdf> <./images/FD_IMS.pdf> <./images/EmbeddedStructure.pdf
 > <./images/Test02_LOF.pdf> <./images/linear.pdf>]
@@ -776,11 +781,11 @@ Package rerunfilecheck Info: File `diff.out' has not changed.
 Here is how much of TeX's memory you used:
  14423 strings out of 474491
  232163 string characters out of 5743833
- 1985473 words of memory out of 5000000
+ 1958473 words of memory out of 5000000
  36466 multiletter control sequences out of 15000+600000
  671785 words of font info for 143 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 79i,10n,93p,1257b,458s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 79i,10n,93p,1085b,481s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/
 cmmi10.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/public/ams
 fonts/cm/cmmi7.pfb><C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/pu
@@ -794,7 +799,7 @@ sers/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/courier/ucrr8a.pfb><C:
 /Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:
 /Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:
 /Users/ariel/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on diff.pdf (4 pages, 1612272 bytes).
+Output written on diff.pdf (4 pages, 1608540 bytes).
 PDF statistics:
  478 PDF objects out of 1000 (max. 8388607)
  32 named destinations out of 1000 (max. 500000)
