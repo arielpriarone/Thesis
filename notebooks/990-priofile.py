@@ -42,9 +42,9 @@ for (max_spd, acc) in zip([0.8,0.4,0.4,0.8],[6,3,6,8]):
                 v -= acc*t_step
             x = np.append(x, x[-1]+v*t_step)
     print(f"ref={ref}, acc={acc}, max_spd={max_spd}, x={x}")
-    ax.plot(x*1000, label=f"$a={acc}, v={max_spd}$", linestyle=linestles[i], color='black')
+    ax.plot(x*1000, label=f"Profile N. {i+1}", linestyle=linestles[i], color='black')
     i += 1
-ax.legend(ncol=4, loc='upper center outside')
+ax.legend(ncol=4, loc='upper center', bbox_to_anchor=(0.5, 1.2))
 ax.set_xlabel("Time [ms]")
 ax.set_ylabel("Position [mm]")
 ax.xaxis.set_major_locator(ticker.AutoLocator())

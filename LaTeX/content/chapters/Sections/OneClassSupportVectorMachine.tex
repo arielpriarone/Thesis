@@ -21,7 +21,7 @@ This allows us to take directly the negative of this value as a metric to evalua
 
 Furthermore, similarly to the \gls{gmm} case (\autoref{sec:gaussian}), if the training dataset contains only normal instances, we have to guess a positive value for the threshold by looking at the value of the metric on the training dataset, but if we have a dataset with a known fraction of outliers, we can use the fact that $\nu$ is the upper bound on the fraction of outliers to select $\nu$ correctly in the training phase, and then use a threshold of zero for the decision function. This should make at most a $\nu$ fraction of future evaluation to be considered outliers.
 
-\subsection{Limitations of $\nu$-\gls{svm}}
+\subsection{Limitations of \gls{nu_svm}}
 
 The limitations are about the sensitivity to the choice of the kernel and the parameter $\nu$, making it difficult to use in a completely unsupervised manner. 
 

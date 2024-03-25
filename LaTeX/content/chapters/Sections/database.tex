@@ -30,9 +30,11 @@ The \gls{json} format is also human-readable, which makes it easy to understand 
 In the following paragraphs, the structure and purposes of each collection are described.
 
 \paragraph{Raw}
-Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain \gls{glo:feature} extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the \gls{json} structure summarized in \autoref{tab:raw_json}.
+Thinking about the data flow, the first interface between the hardware and the software would be the sensor readings. Every sensor should have a name and be sampled at a constant frequency (or, at least, the sensors that provide data for frequency-domain \gls{glo:feature} extraction should have a constant sampling frequency). This data is stored in the {raw} collection, with the \gls{json} structure summarized in \autoref{tab:raw_json},
+where \texttt{\textunderscore id} is the unique identifier of the document, \texttt{timestamp} is the time at which the data was acquired, in \gls{iso} format, and \texttt{Sensor 1} to \texttt{Sensor n} are the names of the sensors. 
+
 \begin{longtable}{lll}
-  \caption{Structure of the \quoted{raw} collection \gls{json} configuration file.}\\ 
+  \caption{Structure of the \quoted{raw} collection \gls{json} configuration file.}\label{tab:raw_json}\\ 
   \toprule
   \textbf{Field} & \textbf{Sub-Field} & \textbf{Type} \endfirsthead 
   \hline
@@ -47,8 +49,9 @@ Thinking about the data flow, the first interface between the hardware and the s
    & time-serie & list[float] \\
   \bottomrule
   \end{longtable}
-where \texttt{\textunderscore id} is the unique identifier of the document, \texttt{timestamp} is the time at which the data was acquired, in \gls{iso} format, and \texttt{Sensor 1} to \texttt{Sensor n} are the names of the sensors. Each sensor has a \texttt{sampFreq} field that contains the sampling frequency of that particular sensor, and a \texttt{timeSerie} field that contains the data acquired by the sensor, as a list. The \texttt{timeSerie} field is a list of floating point numbers, that can be of any length. Note that the sampling frequencies of different sensors can be different, for example, if a timestamp contains $1\si{\s}$ period of data, a vibration sensor would be linked to an array with several thousands of samples, while a temperature sensor would be linked to only one sample.
 
+  Each sensor has a \texttt{sampFreq} field that contains the sampling frequency of that particular sensor, and a \texttt{timeSerie} field that contains the data acquired by the sensor, as a list. The \texttt{timeSerie} field is a list of floating point numbers, that can be of any length. Note that the sampling frequencies of different sensors can be different, for example, if a timestamp contains $1\si{\s}$ period of data, a vibration sensor would be linked to an array with several thousands of samples, while a temperature sensor would be linked to only one sample.
+  
 \paragraph{Unconsumed}
 Once defined the structure that the time-series will have in the database, let's define the structure of the \gls{glo:snap}s. The \gls{glo:feature}s extracted from the time-series are stored in the {unconsumed} collection, with the \gls{json} structure described in \autoref{tab:unconsumed_json}.
 
