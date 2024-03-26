@@ -14,7 +14,9 @@ if src.visualization.isNotebook(): # run widget only if in interactive mode
     get_ipython().run_line_magic('matplotlib', 'widget')
     auxpath='.'
 src.visualization.set_matplotlib_params()                  # set nicer plot parameters
-
+plt.plot([1,2,3,4])
+plt.ylabel('some numbers')
+plt.show()
 # script settings
 dirPath     = auxpath + "./data/raw/1st_test_IMSBearing/"   # folder path
 savepath    = os.path.join(auxpath + "./data/processed/", "wavanaly_standardized.pickle") #file to save the analisys

@@ -132,7 +132,7 @@ ax.quiver(kmeans.cluster_centers_[1][0], kmeans.cluster_centers_[1][1], kmeans.c
           farthest_instance[0] - kmeans.cluster_centers_[1][0], farthest_instance[1] - kmeans.cluster_centers_[1][1], farthest_instance[2] - kmeans.cluster_centers_[1][2],
           color="red", arrow_length_ratio=1.5/length, label=r'$\bm{r}_j$',zorder=4)
 
-ax.legend(loc='right',bbox_to_anchor=(1.7, 0.5)) 
+# ax.legend(loc='right',bbox_to_anchor=(1.7, 0.5)) 
 
 ax.set_aspect('equal')
 ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))

@@ -96,8 +96,8 @@ feat_importance_Kbest = selector.scores_/np.max(selector.scores_)
 # %% select important features
 fig, ax = plt.subplots()
 x = np.array(range(len(feat_importance)))+1
-ax.bar(x,feat_importance,color='k', width=0.4, label='Random Forest')
-ax.bar(x+0.4,feat_importance_Kbest,color='gray', width=0.4, label='SelectKBest')
+ax.bar(x,feat_importance,color='#002B49', width=0.4, label='Random Forest')
+ax.bar(x+0.4,feat_importance_Kbest,color='#EF7B00', width=0.4, label='SelectKBest')
 ax.set_xlabel('feature')
 ax.set_ylabel('weight')
 ax.set_xticks(x+0.2)
