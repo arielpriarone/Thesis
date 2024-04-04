@@ -1,0 +1,772 @@
+\chapter{Code}
+\label{ch:code}
+Including all the code used for the development of this thesis is not feasible. However, the complete code is available on GitHub at the link shown in the introduction. In this appendix, the code of just some of the agents methods is shown. The code is written in \gls{glo:python}.
+\section{Feature Agent (\gls{fa})}
+\label{sec:fa}
+\begin{minted}[linenos,tabsize=2,breaklines]{python}
+class FA(src.data.DB_Manager): # feature agent
+    '''
+    empty the RAW collection and populate the Unconsumed collection with extracted features:
+    '''
+    def __init__(self, configStr: str, order: int = 1):
+        super().__init__(configStr)
+        if order not in [-1,1]:
+            raise ValueError('order must be either latest or oldest')
+        self.order  =   order                       # pick -1=latest / 1=oldest raw data available
+        self.__last_snap_timestamp = None           # timestamp of the last snapshot plotted
+    
+    def _readFromRaw(self):
+        ''' Read the data from the RAW collection '''
+        try:
+            self.snap = self.col_raw.find(). sort('timestamp',self.order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] gets the dicttionary
+            print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {self.col_raw}")
+            return True    
+        except IndexError:
+            print(f"No data in collection {self.col_raw.full_name}, waiting for new data...")
+            return False
+    def _extractFeatures(self):
+        ''' extract features from the data '''
+        for sensor in self.sensors:                                  # for each sensor (names are keys of the dict)
+            self.features["timestamp"] = self.snap["timestamp"]      # add the timestamp to the features
+            self._extractTimeFeautures(sensor)                       # extract time domain features
+            self._extractFreqFeautures(sensor)                       # extract frequency domain features
+    def _extractTimeFeautures(self, sensor):
+        ''' extract time domain features '''
+        # if Mean Enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['mean']:
+            self.features[sensor].update({'mean': np.mean(self.snap[sensor]['timeSerie'])})
+            print(f"Mean extracted from [purple]{sensor}[/]")
+        # if RMS Enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['rms']:
+            self.features[sensor].update({'rms': np.sqrt(np.mean(np.square(self.snap[sensor] ['timeSerie'])))})
+            print(f"RMS extracted from [purple]{sensor}[/]")
+        # if peak2peak Enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['peak']:
+            self.features[sensor].update({'peak2peak': np.ptp(self.snap[sensor]['timeSerie'])})
+            print(f"Peak2Peak extracted from [purple]{sensor}[/]")
+        # if std Enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['std']:
+            self.features[sensor].update({'std': np.std(self.snap[sensor]['timeSerie'])})
+            print(f"Standard deviation extracted from [purple]{sensor}[/]")
+        # if skewness Enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['skew']:
+            self.features[sensor].update({'skewness': scipy.stats.skew(self.snap[sensor]['timeSerie'])})
+            print(f"Skewness extracted from [purple]{sensor}[/]")
+        # if kurtosis Enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['kurt']:
+            self.features[sensor].update({'kurtosis': scipy.stats.kurtosis(self.snap[sensor]['timeSerie'])})
+            print(f"Kurtosis extracted from [purple]{sensor}[/]")
+    def _extractFreqFeautures(self, sensor):
+        # if Wavelet is enabled
+        if self.Config['Database']['sensors'] [sensor]['features']['wavPowers']:    
+            _, pows, nodes, _, _ = packTrasform(self.snap[sensor]['timeSerie'],     # perform the wavelet trasform
+                wavelet=self.Config["wavelet"]["type"],
+                mode=self.Config["wavelet"]["mode"],
+                maxlevel=self.Config["wavelet"]["maxlevel"], 
+                plot=False)
+            self.features[sensor].update(dict(zip(nodes, pows)))  # create a dictionary with nodes as keys and powers as values
+            print(f"Wavelet coefs extracted from [purple]{sensor}[/]")
+                
+    def _deleteFromraw(self):
+        ''' delete current snap record from the RAW collection '''
+        self.col_raw.delete_one({'_id':self.snap['_id']})
+        print(f"Deleted snapshot with timestamp {self.snap['timestamp']} from {self.col_raw}")
+    def _writeToUnconsumed(self):
+        ''' write the extracted features to the Unconsumed collection '''
+        __dummy=self.features.copy() # create a copy of the features dictionary
+        self.col_unconsumed.insert_one(__dummy) # insert the features in the Unconsumed collection, without changing the dictionary
+    def initialize_barPlotFeatures(self,axs: plt.Axes):
+        """
+        Initializes the bar chart of the latest features for each sensor in the collection.
+        """
+        src.vis.set_matplotlib_params()
+        try:
+            snap = self.col_unconsumed.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
+        except IndexError:
+            print('No data in collection, wait for new data...')
+            return None
+        try:
+            self.MinMax = self.col_healthy_train.find({'_id': 'training set MIN/MAX'})[0]
+        except IndexError:
+            self.MinMax = None
+        tab10_cmap = cm.get_cmap("Set1")
+        self.__colors = [tab10_cmap(indx) for indx, _ in enumerate(self.sensors)] # convert tuple to list
+        self.__base_width = 1.0     # the width of the bars
+        self.__separator  = 0.5   # the space between the bars
+        self.__features_list = []  # list of all features
+        self.__Scaler = src.models.MLA.retrieve_StdScaler( col=self.col_healthy_train)
+        for sensor in self.sensors:
+            self.__features_list.append(list(snap[sensor].keys()))
+        self.features_list = list(chain.from_iterable(self.__features_list))  # flatten list
+        self.features_list = list(dict.fromkeys(self.features_list))  # remove duplicates
+        self.__feature_mask = {key: [False] * len(self.sensors) for key in self.features_list} # initialize dictionary
+        for sensor_number, sensor in enumerate(self.sensors):
+            for feature in self.features_list:
+                if feature in snap[sensor].keys():
+                    self.__feature_mask[feature][sensor_number] = True
+        self.__locator_bars = [0.0]  # the x locations for the groups
+        self.__locator_ticks = []  # the x locations for the ticks
+        self.__minMax = [0.0,0.0]
+        for feature in self.features_list:        
+            for sensor_number, sensor in enumerate(self.sensors):
+                if self.__feature_mask[feature][sensor_number] and  self.MinMax is not None:                        
+                    self.__minMax[0] = min(self.__minMax[0], self.MinMax[sensor][feature][0])
+                    self.__minMax[1] = max(self.__minMax[1], self.MinMax[sensor][feature][1])
+        
+        for feature in self.features_list:
+            width = self.__base_width
+            offset = 0.0          
+            for sensor_number, sensor in enumerate(self.sensors):
+                if self.__feature_mask[feature][sensor_number]:                        
+                    offset += width
+            self.__locator_ticks.append(self.__locator_bars[-1] + (offset-width) / 2 if offset > 0 else self.__locator_bars[-1])
+            self.__locator_bars.append(self.__locator_bars[-1] + offset + self.__separator)
+        self.__legend_lines = [Line2D([0], [0], color=self.__colors[indx], lw=4, label=sensor) for indx, sensor in enumerate(self.sensors)] # type: ignore
+        self.__legend_labels = copy.deepcopy(self.sensors)
+        if self.MinMax is not None:
+            self.__legend_lines.extend([Line2D([0], [0],marker=6, color='w',markerfacecolor=self.__colors[indx], lw=4, alpha=1) for indx, sensor in enumerate(self.sensors)]) # type: ignore
+            minmax_legend = [f"{sensor} min/max" for sensor in self.sensors]
+            self.__legend_labels.extend(minmax_legend)
+            axs.set_ylim(ymin=self.__minMax[0]*1.1, ymax=self.__minMax[1]*1.3) # type: ignore
+        return axs
+    def barPlotFeatures(self,axs: plt.Axes):
+        """
+        Plots a bar chart of the latest features for each sensor in the collection.
+        Parameters:
+        axs (matplotlib.axes.Axes): The axes on which to plot the bar chart.
+        Returns:
+        matplotlib.axes.Axes: The axes on which the bar chart was plotted.
+        """
+        try:
+            snap = self.col_unconsumed.find().sort('timestamp', pymongo.DESCENDING).limit(1)[0]  # latest document in collection
+        except IndexError:
+            print('No data in collection, wait for new data...')
+            return
+        if snap['timestamp'] == self.__last_snap_timestamp:
+            print('Latest data already plotted... waiting for new data...')
+            return
+        axs.clear()  # Clear last data frame
+        axs.set_title(f"Latest features for each sensor. Timestamp: {snap['timestamp']}")  # set title
+        if self.__Scaler is not None:      # if the scaler is available, scale the data
+            for sensor in self.sensors:
+                _data_to_scale = np.array(list(snap[sensor].values())). transpose().reshape(1,-1)
+                _data_scaled = self.__Scaler[sensor].transform(_data_to_scale). transpose().tolist()
+                snap[sensor] = dict(zip(list(snap[sensor].keys()), _data_scaled))
+                axs.set_title(f"Latest standardized features for each sensor. Timestamp: {snap['timestamp']}")
+    
+        for bar_group, feature in enumerate(self.features_list):
+            width = self.__base_width
+            offset = 0.0          
+            for sensor_number, sensor in enumerate(self.sensors):
+                if self.__feature_mask[feature][sensor_number]:                        
+                    axs.bar(self.__locator_bars[bar_group]+offset, snap[sensor][feature], width, color=self.__colors[sensor_number], alpha=1)
+                    if self.MinMax is not None:
+                        axs.scatter(self.__locator_bars[bar_group] +offset,self.MinMax[sensor][feature][0], marker=6, s=15, color=self.__colors[sensor_number], alpha=1) # type: ignore
+                        axs.scatter(self.__locator_bars[bar_group] +offset,self.MinMax[sensor][feature][1], marker=7, s=15, color=self.__colors[sensor_number], alpha=1) # type: ignore
+                    offset += width
+        axs.set_xticks(self.__locator_ticks,self.features_list)
+        axs.tick_params(axis='x',rotation = 90)
+        axs.legend(self.__legend_lines, self.__legend_labels, loc='upper right',  ncol=len(self.sensors))
+        axs.set_ylabel('Feature value [-]')
+        axs.set_xlabel('Features [-]')
+        axs.spines['left'].set_visible(True)
+        axs.spines['bottom'].set_visible(True)
+        axs.grid(True,which='both',axis='x')
+        self.__last_snap_timestamp = snap['timestamp']
+        plt.tight_layout()
+        if __name__=='__main__':
+            plt.show()
+        return axs
+                
+    def run(self):
+        while True:
+            os.system('cls')
+            while not self._readFromRaw(): pass  # wait for new data
+            self._extractFeatures()
+            self._writeToUnconsumed()
+            self._deleteFromraw()    
+\end{minted}
+\section{Machine Learning Agent (\gls{mla})}
+\label{sec:mla}
+\begin{minted}[linenos,tabsize=2,breaklines]{python}
+class MLA(src.data.DB_Manager):
+    '''
+    Machine Learning Agent:
+    '''
+    def __init__(self, configStr: str, type: str = 'novelty'):
+        super().__init__(configStr)
+        self.type = type              #  type of the MLA (novelty/fault) - how normal/how faulty the data are
+        self.__max_clusters = self.Config['kmeans']['max_clusters']
+        self.__max_iter = self.Config['kmeans']['max_iterations']
+        self.__error_queue_size = self.Config['kmeans']['error_queue_size']
+        self.__error_plot_size = self.Config['kmeans']['error_plot_size']
+        if self.__error_queue_size > self.__error_plot_size:
+            raise ValueError('Error queue size cannot be bigger than the error plot size in "config.yaml"')
+        self.novelty_threshold = self.Config['novelty']['threshold']
+        self.forecast_threshold = self.Config['novelty']['forecast_threshold']
+        self.outlier_filter = self.Config['novelty']['outlier_filter']
+        self.n_fit = self.Config['novelty']['n_fit']
+        if self.n_fit > self.__error_plot_size:
+            raise ValueError('N_fit cannot be bigger than the error plot size in "config.yaml"')
+        self.regType = self.Config['novelty']['regressor']
+        self.err_dict = {'values': List[float], 'timestamp': List[datetime.datetime],
+                         'assigned_cluster': List[int], 'anomaly': List[bool]} # dictionary of the error
+        self.err_dict['values'] = []  # initialize the error array
+        self.err_dict['timestamp'] = [] # initialize the timestamp array
+        self.err_dict['assigned_cluster'] = []  # initialize the assigned cluster array
+        self.err_dict['anomaly'] = []# initialize the anomaly array
+        self.err_dict['pred_parameters'] = [] # initialize the pred_parameters array
+        self.__mode = None              #  mode of the MLA (evaluate/train/retrain)
+        match self.type:
+            case 'novelty':
+                self.col_features = self.col_healthy
+                self.col_train = self.col_healthy_train
+            case 'fault':
+                self.col_features = self.col_faulty
+                self.col_train = self.col_faulty_train
+            case _:
+                raise ValueError('Type of MLA is not valid. It should be either "novelty" or "fault", but it is: ' + self.type)
+        try:
+            self.__retrieve_StdScaler() # retrieve the scaler
+        except:
+            self.StdScaler: Dict[str, StandardScaler] = {} # if the scaler is not found, initialize it
+        try:
+            self.retrieve_KMeans() # retrieve the Kmeans model
+        except:
+            self.kmeans=KMeans()
+        # logger init
+        logging.basicConfig(filename=os.path.join(self.Config ['miscellanea']["logpath"],'MLA.log'), filemode='w', format='%(asctime)s - %(message)s', level=logging.INFO)
+    @property
+    def mode(self):
+        return self.__mode
+    
+    @mode.setter
+    def mode(self, value: str):
+        if value not in ['evaluate', 'train', 'retrain']:
+            print('Mode not valid. It should be either "evaluate", "train" or "retrain", but it is: ' + value)
+        else:
+            self.__mode = value
+    def run(self):
+        '''Run the MLA according to its state'''
+        while True:
+            os.system('cls')
+            match self.mode:
+                case 'evaluate':
+                    self.evaluate()
+                case 'train':
+                    if typer.confirm(f"The training procedure will take all the data from the collection '{self.col_features.full_name}' and pack it in the collection '{self.col_train.full_name}'. This will also ERASE the current training data, do you want to PROCEED?", abort=True):
+                        self.col_train.delete_many({})
+                    if self.col_features.count_documents({}) == 0:
+                        self.__move_to_train(source=self.col_ unconsumed) # empty, ask to move all data from unconsumed to train dataset
+                    while not self.prepare_train_data():
+                        pass    # wait for data to be available
+                    self.train()
+                    if typer.confirm("Do you want to change the 'mode' to 'evaluate'", abort=True):
+                        self.mode = 'evaluate'
+                case 'retrain':
+                    if self.col_features.count_documents({}) == 0:
+                        self.__move_to_train(source=self.col_ quarantined) # empty, ask to move all data from unconsumed to train dataset
+                    while not self.prepare_train_data():
+                        pass    # wait for data to be available
+                    self.train()
+                    if typer.confirm("Do you want to change the 'mode' to 'evaluate'", abort=True):
+                        self.mode = 'evaluate'
+                case _:
+                    self.mode = typer.prompt('Please select the mode of the MLA. The options are: "evaluate", "train" or "retrain"')
+    def evaluate(self):
+        self.retrieve_KMeans()      # retrieve the Kmeans model
+        self.num_clusters = self.kmeans.get_params()['n_clusters'] # get the number of clusters
+        self.packFeaturesMatrix()      # pack the training features in a matrix
+        while True:
+            self.calculate_train_cluster_dist() # calculate the maximum distance of each cluster in the train dataset
+            evaluate=False
+            printed=False
+            while not evaluate: # read the features from the collection
+                try:
+                    self.snap=self.col_unconsumed.find({f'{self.type} evaluated': {"$exists": False}}). sort('timestamp', pymongo.ASCENDING). limit(1)[0] # get the oldest not evaluated snap
+                    evaluate=True
+                except IndexError:
+                    if not printed:
+                        print(f"No data to evaluate in the '{self.col_unconsumed.full_name}' collection, waiting for new data...")
+                        printed=True
+            self.scale_features()
+            if self.evaluate_error():      # evaluate the error - if novelty detected, move to quarantine
+                if self.type == 'novelty':
+                    self._find_snap(self.snap["_id"], self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
+                    self._write_snap(self.col_quarantined) # move the snap to the quarantine collection
+                self.predict() # predict the fault
+            self._mark_snap_evaluated() # mark the snap as evaluated
+            if self.type == 'novelty':
+                self._delete_evaluated_snap() # delete the snap from the unconsumed collection
+            print(f"Distance Novelty: {self.err_dict['values'][-1]}")
+    
+    def predict(self):
+        print("Predicting the fault...")
+        ''' This method predicts the fault '''
+        if len(self.err_dict['values']) < src.data.f.__code__.co_argcount:
+            print("Not enough data to predict the fault")
+            return
+        start_fit = min(len(self.err_dict['timestamp']),self.n_fit) # start of the error samples to fit
+        range_to_fit = range(-start_fit,0) # range of the error samples to fit
+        x = np.array([self.err_dict['timestamp'][i].timestamp() for i in range_to_fit])
+        xscale = float(max(x)-min(x))
+        xoffset = float(min(x))
+        x = (x-xoffset)/xscale # scale the x axis
+        y = np.array(self.err_dict['values'][-self.n_fit:])
+        params = None
+        match self.regType:
+            case 'exp':
+                params = src.ExpRegressor(x,y) #fitting
+            case 'scipy':
+                try:
+                    params, cv = opt.curve_fit(src.data.f, x, y) #fitting
+                except:
+                    pass
+        if params is None:
+            print("Error in the fitting procedure of the prediction curve")
+            return
+        __pickled_data = pickle.dumps([xoffset, xscale, params])
+        print(f"Fault predicted with parameters: {params}")
+        self.err_dict['pred_parameters'].append(__pickled_data)
+        self.err_dict['pred_parameters'] = self.err_dict['pred_parameters'][-self.__error_queue_size:]
+    def _mark_snap_evaluated(self): # to leave at least one snap in the collection for plotting reasons
+        self._find_snap(self.snap["_id"],self.col_unconsumed) # find the snap in the features collection (to preserve unscaled version)
+        self.snap[f'{self.type} evaluated'] = True
+        self._replace_snap(self.col_unconsumed) # mark the snap as evaluated
+        print(f"Snap '{self.snap['_id']}' marked as evaluated in the '{self.col_unconsumed.full_name}' collection")
+    
+    def _delete_evaluated_snap(self): # to leave at least one snap in the collection for plotting reasons
+        while self.col_unconsumed.count_documents({'novelty evaluated': True, 'fault evaluated': True}) > 1: # while there are more than one snap to delete
+            snap_to_delete = self.col_unconsumed.find({'novelty evaluated': True, 'fault evaluated': True}).sort('timestamp',pymongo.ASCENDING).limit(1)[0] # get the oldest snap to delete
+            self.col_unconsumed.delete_one({'_id': snap_to_delete['_id']}) # delete the snap from the collection
+            print(f"Snap '{snap_to_delete['_id']}' deleted from the '{self.col_unconsumed.full_name}' collection")
+    def scale_features(self):
+        for sensor in self.sensors:
+            _data_to_scale = np.array(list(self.snap[sensor].values())).transpose(). reshape(1,-1)
+            _data_scaled = self.StdScaler[sensor].transform(_data_to_scale). tolist()[0]
+            self.snap[sensor] = dict(zip(list(self.snap[sensor].keys()), _data_scaled))
+    def evaluate_error(self):
+        _features_values = []
+        for sensor in self.sensors:
+            _features_values.append([float(value) for value in self.snap[sensor].values()])
+        _features_values_flat = [item for sublist in _features_values for item in sublist] # flatten the list
+        y=self.kmeans.predict(np.array(_features_values_flat). reshape(1,-1)) # predict the cluster for the new snap
+        distance_to_assigned_center = self.kmeans.transform(np.array(_features_values_flat). reshape(1,-1))[0,y]
+        # the actual estimator of the error is the relative distance margin to the assigned cluster
+        current_error=float((distance_to_assigned_center - self.train_cluster_dist[int(y)]) / self. train_cluster_dist [int(y)]) # calculate the error
+        if self.type == 'fault':
+            try:
+                current_error = float(-np.log(current_error+0.999)) # if the type is fault, the error is negative
+                print("Error transformed with log function")
+            except ZeroDivisionError:
+                float('inf')
+        anomaly = current_error > self.novelty_threshold # check if the error is above the threshold
+        
+        self.err_dict['values'].append(current_error) # append the new error to the error array
+        self.err_dict['timestamp'].append(self.snap['timestamp']) # append the new error to the timestamp array
+        self.err_dict['assigned_cluster'].append(int(y)) # append the new error to the assigned_cluster array
+        self.err_dict['anomaly'].append(anomaly) # append the new error to the assigned_cluster array
+        print(f"Relative distance margin to the assigned cluster #{y}: {current_error}")
+        if len(self.err_dict['values']) > self.__error_plot_size: # if the error array is bigger than the error queue size, remove the oldest error
+            self.err_dict['values'] = self.err_dict['values'][1:] # remove the oldest error from the error array
+            self.err_dict['timestamp'] = self.err_dict['timestamp'][1:] # remove the oldest error from the  timestamp array
+            self.err_dict['assigned_cluster'] = self.err_dict['assigned_cluster'][1:] # remove the oldest error from the  assigned_cluster array
+            self.err_dict['anomaly'] = self.err_dict['anomaly'][1:] # remove the oldest error from the  assigned_cluster array
+        
+        # save the error dictionary
+        self.col_models.replace_one({'_id': f'Kmeans cluster {self.type} indicator'}, self.err_dict, upsert=True) # update the error dictionary
+        n_anomaly = self.err_dict['anomaly'][-1-self.outlier_filter:] # get the last consecutive outlier_filter elements
+        n_anomaly_mask = [True]*(self.outlier_filter+1) # all the allowed elements are True
+        if n_anomaly == n_anomaly_mask: # if the number of anomalies is bigger than the outlier filter, move to quarantine
+            print("alarm - NOVELTY DETECTED")
+            match self.type:
+                case 'novelty':
+                    logging.warning(f"alarm - NOVELTY DETECTED in the sample with timestamp '{self.snap['timestamp']}'")
+                case 'fault':
+                    logging.warning(f"alarm - FAULT DETECTED in the sample with timestamp '{self.snap['timestamp']}'")
+            return True  # return True if novelty/fault detected
+        else:
+            return False # return False if no novelty/fault detected
+    def calculate_train_cluster_dist(self):
+        ''' This method computes the maximum distance of each cluster in the train dataset '''
+        self.labels_train_data  = self.kmeans.predict(self.trainMatrix) # predict the cluster of each sample in the train dataset
+        self.cluster_distances  = self.kmeans.transform(self.trainMatrix) # gives the distance of each sample to each cluster
+        self.train_cluster_dist=[] # maximum distance to eah cluster in the train dataset
+        for cluster in range(0,self.num_clusters):
+            self.train_cluster_dist.append(max(self.cluster_distances[ self.labels_train_data==cluster,cluster])) # get the maximum distance of the samples in the train dataset to tjis cluster
+        
+    def prepare_train_data(self):
+        ''' This method prepares the training data for the MLA '''
+        if not self.pack_train_data(): # if the healthy/faulty set is empty, nothing to update
+            return False
+        self.standardize_features()
+        self.save_features_limits()
+        self.save_StdScaler()
+        return True
+    def pack_train_data(self):
+            """
+            Packs the training data by appending healthy documents to the dataset.
+            If the training set is empty, it is initialized with the oldest snapshot.
+            """
+            __train_data = self.col_train.find_one({'_id': 'training set'}) # find the training set
+            if __train_data is None:  # if the training set is empty, initialize it with the oldest snapshot
+                self.snap = self.col_features.find().sort('timestamp', pymongo.ASCENDING).limit(1)[0]  # get the oldest snapshot
+                __id_to_remove = copy.deepcopy(self.snap['_id'])                  # copy the id of the snapshot to remove
+                self.snap['_id']='training set'                                                      # rename it for initializing the training set
+                self.col_train.insert_one(self.snap)                                                  # insert it in the training set   
+                self.col_features.delete_one({'_id': __id_to_remove})                  # delete the snapshot from the features collection
+                print("Training set initialized to '{self.col_train.full_name}' with '_id': 'training set'") 
+            else:                   # append healty documents to the dataset
+                cursor = self.col_features.find().sort('timestamp', pymongo.ASCENDING)  # get the oldest snapshot
+                for self.snap in cursor:
+                    if isinstance(__train_data['timestamp'],list):                     # if the training set is a list, pass
+                        pass
+                    else:                                                            # convert everityng to list
+                        __train_data['timestamp'] = [__train_data['timestamp']]
+                        for sensor in self.sensors:
+                            for feature in __train_data[sensor].keys():
+                                __train_data[sensor][feature] = [__train_data[sensor][feature]]          
+                    __train_data['timestamp'].append( self.snap['timestamp'])                  # append the timestamp
+                    for sensor in self.sensors:
+                        for feature in __train_data[sensor].keys():
+                            __train_data[sensor][feature].append(self. snap[sensor][feature])  # append the sensor data
+                    self.col_features.delete_one({'_id': self.snap['_id']})                  # delete the snapshot from the features collection
+                self.col_train.replace_one({'_id': 'training set'}, __train_data)         # replace the training set with the updated one 
+                print(f"Training set updated to '{self.col_train.full_name}' with '_id': 'training set' ")
+                return True # return True if the training set has been updated
+    def __move_to_train(self,source:Collection):
+        print(f"No data in the '{self.col_features.full_name}' collection, waiting for new data...")
+        if typer.confirm(f"Do you want to move 'ALL' data  from '{source.full_name}' to '{self.col_features.full_name}'?",default=False):
+            if source.count_documents({}) == 0:
+                raise Exception("No data in the collection, cannot initialize the training set")
+            self.moveCollection(source, self.col_features)
+            self.snap = self.col_features.find().sort('timestamp',pymongo. ASCENDING).limit(1)[0]  # get the oldest snapshot
+        else:
+            print("No data in the collection, cannot initialize the training set...")
+            #raise Exception("No data in the collection, cannot initialize the training set")
+    def standardize_features(self):
+        # now this method scales the data
+        __train_data = self.col_train.find_one({'_id': 'training set'})             # get the training set
+        if __train_data is None:
+            raise Exception('Training set not initialized')
+        _train_data_scaled = copy.deepcopy(__train_data)                                   # copy the training set
+        _train_data_scaled['_id'] = 'training set scaled'                        # rename it
+        self.features_minmax = copy.deepcopy(__train_data)                                   # copy the training set
+        self.features_minmax['_id'] = 'training set MIN/MAX'                        # rename it
+        
+        print(id(__train_data), id(_train_data_scaled), id(self.features_minmax))
+        
+        # scale the features
+        for sensor in self.sensors:
+            self.StdScaler[sensor] = StandardScaler()
+            __data = np.array(list(__train_data[sensor].values())) # the scaler wants the data in the form (n_samples, n_features)
+            self.StdScaler[sensor].fit(__data.transpose()) # fit the scaler
+            data_scaled = self.StdScaler[sensor].transform(__data.transpose()). transpose() # the scaler returns the data in the form (n_features, n_samples)
+            data_scaled = data_scaled.tolist() # convert the data to list    
+            for indx, feature in enumerate(_train_data_scaled[sensor].keys()):
+                _train_data_scaled[sensor][feature] = data_scaled[indx] # the scaler returns the data in the form (n_features, n_samples)
+                self.features_minmax[sensor][feature] = [float(np.min(data_scaled[indx])), float(np.max(data_scaled[indx]))]
+        # save the scaled data
+        self.col_train.delete_many({"_id": 'training set scaled'}) 
+        self.col_train.insert_one(_train_data_scaled) 
+        print(f"Training set scaled and saved into the collection '{self.col_train.full_name}' with '_id': 'training set scaled'")
+    def save_features_limits(self):
+        self.col_train.delete_many({"_id": 'training set MIN/MAX'}) 
+        self.col_train.insert_one(self.features_minmax)
+    def save_StdScaler(self):
+        # save the scaler
+        __pickled_data = pickle.dumps(self.StdScaler)
+        try:
+            self.col_train.insert_one({'_id': 'StandardScaler_pickled', 'data': __pickled_data})
+        except:
+            try:
+                self.col_train.replace_one({'_id': 'StandardScaler_pickled'}, {'_id': 'StandardScaler_pickled', 'data': __pickled_data})
+            except:
+                raise Exception('Error saving the StandardScaler')
+        print(f"StandardScaler saved as picled data into '{self.col_train.full_name}' with '_id': 'StandardScaler_pickled'")
+    
+    def save_KMeans(self):
+        # save the scaler
+        __pickled_data = pickle.dumps(self.kmeans)
+        __id =f"KMeans_'{str(self.type)}'_pickled"
+        try:
+            self.col_models.delete_many({"_id": __id})
+        except:
+            pass # if the document is not found, pass
+        try:
+            self.col_models.insert_one({'_id': __id, 'data': __pickled_data})
+        except:
+            res = self.col_train.update_one({'_id': __id}, {'$set': {'_id': __id, 'data': __pickled_data}})
+            print(f"Document with _id {__id} modified with result counter: {res.modified_count}")
+            if res.modified_count == 0:
+                raise Exception('Error saving the KMeans model')
+        print(f"KMeans model saved as picled data into '{self.col_models.full_name}' with '_id': {__id}")
+    
+    def retrieve_KMeans(self):
+            """
+            Retrieves a KMeans model from the MongoDB collection specified by `self.col_models` and with an ID
+            constructed from the model's `type` attribute. If the model is not found in the collection, an exception
+            is raised. Otherwise, the model is loaded from the pickled data and stored in `self.kmeans`. The method
+            also prints out the retrieved model's configuration.
+            Raises:
+                Exception: If the KMeans model is not found in the specified MongoDB collection.
+            """
+            __id =f"KMeans_'{str(self.type)}'_pickled"
+            __retrieved_data: Collection | None = self.col_models.find_one({'_id': __id})
+            if __retrieved_data is None:
+                raise Exception('KMeans model not found in collection ' + self.col_models.full_name + ' with _id: ' + __id)
+            else:
+                self.kmeans:KMeans = pickle.loads(__retrieved_data['data'])
+                print(f"KMeans retrieved from picled data @ {self.col_models.full_name}")
+                print(f"with config:\n {self.kmeans.get_params()}")
+                print(f"with n of features:\n {self.kmeans.n_features_in_}")
+                pass
+    
+    def __retrieve_StdScaler(self):
+        __retrieved_data: Collection | None = self.col_train.find_one({'_id': 'StandardScaler_pickled'})
+        if __retrieved_data is None:
+            raise Exception('Scaler not found in collection ' + self.col_train.full_name)
+        else:
+            self.StdScaler: Dict[str, StandardScaler] = pickle.loads(__retrieved_data['data'])
+            print(f"StdScaler retrieved from picled data @ {self.col_train.full_name}")
+    @staticmethod
+    def retrieve_StdScaler(col: Collection):
+        __retrieved_data: Collection | None = col.find_one({'_id': 'StandardScaler_pickled'})
+        scaler : Dict[str, StandardScaler] | None
+        if __retrieved_data is None:
+            scaler = None
+        else:
+            scaler = pickle.loads(__retrieved_data['data'])
+            return scaler
+    def _append_features(self, col: Collection):
+        ''' Append the features to the collection collection '''
+        col.update_one({'_id': 'trainig set'}, {'$set': {}})
+    
+    def train(self):
+        self.packFeaturesMatrix()       # pack the training features in a matrix
+        self.__clusters_range = range(2,min(self.__max_clusters+1,self.trainMatrix.shape[0])) # range of clusters to evaluate
+        self.evaluate_silhouette()
+        self.evaluate_inertia()
+        fig, axs=plt.subplots(1,2)
+        fig.tight_layout()
+        self.__plot_silhouette(axs[0])
+        self.__plot_inertia(axs[1])
+        print("Please decide the number of cluster for the training. The silhouette and inertia plots will be shown.")
+        print("The silhouette should be maximized, while the inertia should be in a Pareto optimal point.")
+        print("close the plot to continue...")
+        plt.show()
+        self.num_clusters=typer.prompt("Number of clusters", type=int)
+        self.kmeans=KMeans(self.num_clusters,n_init='auto',max_iter= self.__max_iter) #reinitialize the kmeans
+        self.kmeans.fit(self.trainMatrix)
+        print(f"Kmeans trained with config:\n {self.kmeans.get_params()}")
+        self.save_KMeans()
+    
+    def evaluate_silhouette(self):
+        ''' This method evaluates the silhouette score for the training set '''
+        self.__sil_score=[]
+        for n_blobs in self.__clusters_range:
+            __kmeans=KMeans(n_blobs,n_init='auto',max_iter= self.__max_iter)
+            __y_pred_train=__kmeans.fit_predict(self.trainMatrix )
+            self.__sil_score.append(silhouette_score(self.trainMatrix, __y_pred_train))
+    
+    def evaluate_inertia(self):
+        self.__inertia=[]
+        
+        for n_blobs in self.__clusters_range:
+            kmeans=KMeans(n_blobs,n_init='auto',max_iter=1000)
+            kmeans.fit_predict(self.trainMatrix)
+            self.__inertia.append(kmeans.inertia_)
+    def packFeaturesMatrix(self):
+        ''' This method packs the training features in a matrix'''
+        __train_data = self.col_train.find_one({'_id': 'training set scaled'})             # get the training set
+        if __train_data is None:
+            raise Exception("'_id': 'training set scaled' not found in collection " + self.col_train.full_name)
+        __features_values = []
+        __features_names = []
+        for sensor in self.sensors:
+            for feature in __train_data[sensor].keys():
+                __features_names.append(sensor + '_' + feature)
+                __features_values.append(__train_data[sensor][feature])
+        self.features_names, self.trainMatrix = (__features_names, np.array(__features_values).transpose())
+        print("Features packed in a matrix: " + str(self.trainMatrix.shape))
+    def __plot_silhouette(self, ax):
+        ax.plot(self.__clusters_range,self.__sil_score)
+        ax.set_ylabel('Silhouette')
+        ax.set_xlabel('Num. of clusters')
+    def __plot_inertia(self, ax):
+        ax.plot(self.__clusters_range,self.__inertia)
+        ax.set_ylabel('Inertia')
+        ax.set_xlabel('Num. of clusters')
+\end{minted}
+\section{Exponential Regressor}
+\label{sec:expreg}
+\begin{minted}[linenos,tabsize=2,breaklines]{python}
+def ExpRegressor(x,y):
+    """
+    Fits the function a*exp(b*x)+c to the given data points.
+    Parameters:
+    x (array-like): The x-coordinates of the data points.
+    y (array-like): The y-coordinates of the data points.
+    Returns:
+    list: A list containing the fitted parameters [a,b,c].
+    """
+    # the original procedure fits a+b*e^(c*x): 
+    x_f=np.array(x)
+    y_f=np.array(y)
+    S=np.array([0])
+    for k in range(1,len(x_f)):
+        S=np.append(S,S[-1]+0.5*(y_f[k]+y_f[k-1])*(x_f[k]-x_f[k-1]))
+    A=np.linalg.norm(x_f-x_f[0])**2
+    B=np.sum((x_f-x_f[0])*S)
+    C=B
+    D=np.linalg.norm(S)**2
+    MAT1=np.matrix([[A,B],[C,D]])
+    print(MAT1)
+    A=np.sum((y_f-y_f[0])*(x_f-x_f[0]))
+    B=np.sum((y_f-y_f[0])*S)
+    MAT2=np.matrix([[A],[B]])
+    print(MAT2)
+    RES=MAT1**(-1)*MAT2
+    print(RES)
+    A1=RES[0]
+    B1=RES[1]
+    a1=-A1/B1
+    c1=B1.copy()
+    c2=B1.copy()
+    theta=np.exp(c2*x_f)
+    A=x_f.size
+    B=np.sum(theta)
+    C=B.copy()
+    D=np.linalg.norm(theta)**2
+    MAT1=np.matrix([[A,B],[C,D]])
+    A=np.sum(y_f)
+    B=np.sum(y_f*theta.reshape(-1,1))
+    MAT2=np.matrix([[A],[B]])
+    RES=MAT1**(-1)*MAT2
+    A2=RES[0]
+    B2=RES[1]
+    return np.array([B2,c2,A2]).reshape(-1).tolist()
+\end{minted}
+\section{Database Manager}
+\label{sec:dbmanager}
+\begin{minted}[linenos,tabsize=2,breaklines]{python}
+class DB_Manager:
+    def __init__(self, configStr: str):
+        self.configStr = configStr    #  path to config file (.yaml)
+        try:
+            with open(self.configStr,'r') as f:
+                self.Config = yaml.safe_load(f)
+                print(f'Loaded config file @ {self.configStr}')
+        except:
+            raise Exception(f'Error reading config file @ {self.configStr}')
+        self.sensors: List[str] = list(self.Config['Database']['sensors'].keys()) # list of sensors4
+        self.features = {}                                                              # initialize the features dict
+        self.features["timestamp"] = None                                               # initialize the features dict with timestamp
+        self.features.update({key: {} for key in self.sensors})                         # initialize the features dict with sensors                              
+        self.client, self.db, self.col_back = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['back'], self.Config['Database']['URI'])
+        _, _, self.col_raw = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['raw'], self.Config['Database']['URI'])
+        _, _, self.col_unconsumed = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['unconsumed'], self.Config['Database']['URI'])
+        _, _, self.col_healthy = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['healthy'], self.Config['Database']['URI'])
+        _, _, self.col_healthy_train = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['healthy_train'], self.Config['Database']['URI'])
+        _, _, self.col_quarantined = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['quarantined'], self.Config['Database']['URI'])
+        _, _, self.col_faulty= mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['faulty'], self.Config['Database']['URI'])
+        _, _, self.col_faulty_train = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['faulty_train'], self.Config['Database']['URI'])
+        _, _, self.col_models = mongoConnect( self.Config['Database']['db'], self.Config['Database']['collection']['models'], self.Config['Database']['URI'])
+    
+    def __repr__(self) -> str:
+        return "Loded the configuration:\n" + str(self.Config)
+    
+    @staticmethod
+    def eraseDB(configStr: str):
+        '''
+        delete the database specified in the config file
+        '''
+        try:
+            Config = DB_Manager.loadConfig(configStr)
+        except:
+            raise Exception(f'Error reading config file @ {configStr}')
+        client  = MongoClient(Config['Database']['URI'])                                    # connect to MongoBD
+        if Config['Database']['db'] in client.list_database_names():
+            client.drop_database(Config['Database']['db'])                                  # delete database
+            print(f'Deleted database \'{Config["Database"]["db"]}\' @ \'{Config["Database"]["URI"]}\'')
+        else:
+            print(f'Tried to delete database, but Database \'{Config["Database"]["db"]}\' not found @ \'{Config["Database"]["URI"]}\'')
+        client.close()
+    @staticmethod
+    def createEmptyDB(configStr: str):
+        '''
+        create an empty database with the collections specified in the config file.
+        '''
+        try:
+            Config = DB_Manager.loadConfig(configStr)
+        except:
+            raise Exception(f'Error reading config file @ {configStr}')
+        client  = MongoClient(Config['Database']['URI'])                                    # connect to MongoBD
+        if Config['Database']['db'] in client.list_database_names():
+            raise Exception(f'Database \'{Config["Database"]["db"]}\' already exists @ \'{Config["Database"]["URI"]}\'')
+        else:
+            db = client[Config['Database']['db']]                                           # create database
+            print(f'Created empty database \'{Config["Database"]["db"]}\' @ \'{Config["Database"]["URI"]}\'')
+            for cols in Config['Database']['collection'].values():
+                db.create_collection(cols)                                                  # create empty collections
+                print(f'Created empty collection \'{cols}\' @ \'{Config["Database"]["db"]}\'')
+        client.close() 
+    @staticmethod
+    def loadConfig(configStr: str):
+        '''
+        load the configuration file
+        '''
+        try:
+            with open(configStr,'r') as f:
+                Config = yaml.safe_load(f)
+        except:
+            raise Exception(f'Error reading config file @ {configStr}')
+        return Config                                                                     # close connection
+    
+    def moveCollection(self,source_collection: Collection,destination_collection: Collection, keep_source: bool = False):
+        '''
+        move all the documents from one collection to another   
+        '''
+        # Query all documents from the source collection
+        documents_to_move = source_collection.find({})
+        # Iterate through the documents and insert them into the destination collection
+        for document in documents_to_move:
+            destination_collection.insert_one(document)
+        print(f'All documents copied from {source_collection.full_name} and inserted into {destination_collection.full_name}')  
+        if not keep_source:
+            source_collection.delete_many({}) # delete all the documents from the source collection
+            print(f'All documents deleted from {source_collection.full_name}') 
+    
+    def _find_snap(self,_id:str, col: Collection):
+        ''' find the snapshot with the specified timestamp in the specified collection '''
+        self.snap = col.find({'_id': _id})[0]            #pick the right snapshot
+    def _read_features(self, col: Collection, order = pymongo.ASCENDING):
+        ''' Read the data from the collection - put data in self.snap
+            return True if data are available, False otherwise '''
+        try:
+            self.snap    = col.find().sort('timestamp',order).limit(1)[0]     # oldest/newest record - sort gives a cursor, the [0] is the dict
+            print(f"Imported snapshot with timestamp {self.snap['timestamp']} from {col}")
+            return True    
+        except IndexError:
+            print(f"No data in collection {col.full_name}, waiting for new data...")
+            return False
+        
+    def _write_snap(self, col: Collection):
+        ''' Write the data to the collection '''
+        try:
+            col.insert_one(self.snap)
+            print(f"Inserted snapshot with timestamp {self.snap['timestamp']} into {col.full_name}")
+        except:
+            print(f"Error inserting snapshot with timestamp {self.snap['timestamp']} into {col.full_name}")
+        
+    def _replace_snap(self, col: Collection):
+        ''' Replace the data in the collection '''
+        col.replace_one({'_id': self.snap['_id']},self.snap)
+        print(f"Replaced snapshot with timestamp {self.snap['timestamp']} in {col.full_name}")
+    
+    def _delete_snap(self, col: Collection):
+        ''' delete the data from the collection '''
+        col.delete_one({'_id': self.snap['_id']})
+        print(f"Deleted snapshot with timestamp {self.snap['timestamp']} from {col.full_name}")
+    
+\end{minted}

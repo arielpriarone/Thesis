@@ -91,7 +91,7 @@ ax.set_xlabel("Sample [-]")
 ax.set_ylabel("Novelty Metric [%]")
 ax.set_xlabel("Sample [-]")
 ax.set_ylabel("Novelty Metric [%]")
-fig.legend(ncol=3, loc='outside upper right')
+# fig.legend(ncol=3, loc='outside upper right')
 
 # plot the features in s confusion matrix
 features = train_data.keys()[1:-1]
@@ -159,6 +159,6 @@ ax.xaxis.set_major_locator(ticker.AutoLocator())
 ax.xaxis.set_minor_locator(ticker.AutoMinorLocator())
 ax.set_xlabel("Sample [-]")
 ax.set_ylabel("Novelty Metric [%]")
-fig.legend(ncol=3, bbox_to_anchor=(0.5, 1.02), loc='upper center')
+# fig.legend(ncol=3, bbox_to_anchor=(0.5, 1.02), loc='upper center')
 
 plt.show()

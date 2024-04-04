@@ -98,10 +98,9 @@ fig, ax = plt.subplots()
 x = np.array(range(len(feat_importance)))+1
 ax.bar(x,feat_importance,color='#002B49', width=0.4, label='Random Forest')
 ax.bar(x+0.4,feat_importance_Kbest,color='#EF7B00', width=0.4, label='SelectKBest')
-ax.set_xlabel('feature')
-ax.set_ylabel('weight')
 ax.set_xticks(x+0.2)
-ax.set_xticklabels(x,rotation=90)
+ax.set_xticklabels([])
+ax.set_yticklabels([])
 ax.legend()
 
 

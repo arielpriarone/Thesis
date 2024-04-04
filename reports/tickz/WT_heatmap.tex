@@ -22,19 +22,18 @@ ylabel={n\(\displaystyle ^\circ\) of record},
 ymin=-0.5, ymax=63.5,
 ytick style={color=black}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-052.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-056.png};
 
 \nextgroupplot[
 colorbar,
-colorbar style={ytick={-20,0,20,40,60,80,100,120},yticklabels={
-  \(\displaystyle {\ensuremath{-}20}\),
+colorbar style={ytick={-25,0,25,50,75,100,125},yticklabels={
+  \(\displaystyle {\ensuremath{-}25}\),
   \(\displaystyle {0}\),
-  \(\displaystyle {20}\),
-  \(\displaystyle {40}\),
-  \(\displaystyle {60}\),
-  \(\displaystyle {80}\),
+  \(\displaystyle {25}\),
+  \(\displaystyle {50}\),
+  \(\displaystyle {75}\),
   \(\displaystyle {100}\),
-  \(\displaystyle {120}\)
+  \(\displaystyle {125}\)
 },ylabel={Features value}},
 colormap={mymap}{[1pt]
  rgb(0pt)=(0.050383,0.029803,0.527975);
@@ -315,7 +314,7 @@ ytick style={color=black},
 ytick={0,9,18,27,36,45,54,63},
 yticklabels={2092,2101,2110,2119,2128,2137,2146,2155}
 ]
-\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-053.png};
+\addplot graphics [includegraphics cmd=\pgfimage,xmin=-0.5, xmax=63.5, ymin=63.5, ymax=-0.5] {WT_heatmap-057.png};
 \end{groupplot}
 
 \end{tikzpicture}

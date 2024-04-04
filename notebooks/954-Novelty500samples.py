@@ -59,11 +59,7 @@ timestamps_float = [ts - offset for ts in timestamps_float]  # set the first tim
 print(f"type(timestamps_float): {type(timestamps_float)}")
 print(f"type(timestamps_float[0]): {type(timestamps_float[0])}")
 PRED_INSTANTS = ["2003-11-16 16:49",
-"2003-11-19 15:05",
-"2003-11-20 16:00",
-"2003-11-22 06:32",
-"2003-11-23 12:00",
-"2003-11-24 17:27"]
+"2003-11-22 06:32"]
 fig, ax = plt.subplots()
 plt.subplots_adjust(
     top=1.0,

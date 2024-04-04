@@ -89,16 +89,19 @@ print(Y.shape)
 print(IMSDATA['wavanaly_standardized'].shape)
 fig = plt.figure('figure1')#,figsize=[15, 15])
 ax = plt.axes(projection='3d')
-ax.set_xlabel('Features')
-ax.set_ylabel('Snapshots')
-ax.set_zlabel('Amplitude')
+# ax.set_xlabel('Features')
+# ax.set_ylabel('Snapshots')
+# ax.set_zlabel('Amplitude')
+ax.xaxis.set_ticks([])
+ax.yaxis.set_ticks([])
+ax.zaxis.set_ticks([])
 #ax.yaxis.set_ticks(np.arange(0,6,1))
 dummy=np.round(np.linspace(0, len(fileList) - 1, 6)).astype(int).tolist()
 print(dummy)
 #ax.set_yticklabels([fileList[i] for i in dummy])
 # Create surface plot
 ax.scatter(X, Y, IMSDATA['wavanaly_standardized'], marker='.',c=IMSDATA['wavanaly_standardized']/np.max(IMSDATA['wavanaly_standardized']), cmap='turbo')
-ax.set_xticklabels(IMSDATA['nodes'])
+
 
 
 # %%

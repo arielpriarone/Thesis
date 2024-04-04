@@ -52,10 +52,12 @@ ax.axhline(threshold, color='k', linestyle='dotted',label= 'Threshold',linewidth
 ax.set_ylim(-300,7500)  
 ax.set_xlabel("Timestamp")
 ax.set_ylabel("Novelty metric [%]")
-ax.set_yscale('symlog')
-ax.annotate('Novel behaviour\n2004-04-12 19:21', xy=(dt.datetime(2004,4,12,19,21),10), xytext=(dt.datetime(2004,4,4,12,0),200), arrowprops=dict(facecolor='black', arrowstyle='->'))
+# ax.set_yscale('symlog')
+ax.annotate('Faulty behaviour warning issued', xy=(dt.datetime(2004,4,15,14,00),10), xytext=(dt.datetime(2004,4,9,0,0),400), arrowprops=dict(facecolor='black', arrowstyle='->'))
 ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
+ax.set_xlim(dt.datetime(2004,4,5,0,0),dt.datetime(2004,4,18,0,0))
 ax.legend()
+
 
 
 # figure 2 - RUL prediction
@@ -94,7 +96,7 @@ ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_loca
 ax.legend()
 
 # figure 3 - Fault detection
-threshold = -25 # threshold for fault detection [%]
+threshold = -80 # threshold for fault detection [%]
 document = data.find_one({"_id": "Kmeans cluster fault indicator"})
 timestamps = document["timestamp"]
 if not all(timestamps[i] <= timestamps[i+1] for i in range(len(timestamps)-1)): raise ValueError("Timestamps are not in order")
@@ -112,20 +114,24 @@ left=0.112,
 right=0.989,
 hspace=0.2,
 wspace=0.2)
-ax.scatter(timestamps,fault_metric,c='k',marker='.', s=2, label='Fault metric')
+ax.scatter(timestamps,fault_metric,c='#002b49',marker='.', s=2, label='Fault metric')
 
 timestamp_plot = [timestamp_float for timestamp_float in np.linspace(timestamps_float[0],timestamps_float[-1]+86400*2,500)]
 
-ax.axhline(threshold, color='k', linestyle='dotted',label= 'Threshold',linewidth=1)
+ax.axhline(threshold, color='#ef7b00', linestyle='dotted',label= 'Threshold',linewidth=1)
+
+
 #ax.axhline(7000, color='k', linestyle='dashed',label= 'RUL threshold',linewidth=1)
 # ax.set_ylim(-300,7500)  
-#ax.set_xlabel("Timestamp")
-#ax.set_ylabel("Fault metric [%]")
+ax.set_xlabel("Timestamp")
+ax.set_ylabel("Fault metric [%]")
 # ax.set_yscale('symlog')
-ax.annotate('Faulty behaviour\n2004-04-17 17:33', xy=(dt.datetime(2004,4,17,17,33),threshold), xytext=(dt.datetime(2004,4,5,12,0),25), arrowprops=dict(facecolor='black', arrowstyle='->'))
-#ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
-#ax.legend()
+# ax.annotate('Faulty behaviour\n2004-04-17 17:33', xy=(dt.datetime(2004,4,17,17,33),threshold), xytext=(dt.datetime(2004,4,5,12,0),25), arrowprops=dict(facecolor='black', arrowstyle='->'))
+ax.xaxis.set_major_formatter(mdates.ConciseDateFormatter(ax.xaxis.get_major_locator()))
+ax.legend()
 
+plt.show()
+exit()
 
 # rul calculation
 from bisect import bisect_right

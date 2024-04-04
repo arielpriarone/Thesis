@@ -2,19 +2,19 @@
 % !TEX TS-program = pdflatex
 \newif\ifprint % to compile the print version or the digital one
 \printtrue     % to compile the print version
-\printfalse    % to compile the digital version  (default) - comment this line to compile the print version
+%\printfalse    % to compile the digital version  (default) - comment this line to compile the print version
 % toptesti document class
 \documentclass[%
     a4paper, % not needed, by default it is a4paper, or also b5paper can be used
     corpo=12pt, % dimension of basic font
     % oneside is generally the way to go
-    oneside, % two side optimizes for two-face printing, having chapters open on the right (aka odd numbers), if you don't want blank pages put oneside here
+    twoside, % two side optimizes for two-face printing, having chapters open on the right (aka odd numbers), if you don't want blank pages put oneside here
+    openright, % to force opening on the right for double-sided printing
     stile=standard,
     %evenboxes, % not needed, to put supervisors and candidate at the same level
     tipotesi=magistrale,
     numerazioneromana, % roman numbering for appendixes and preambles, up to Table of Contents
-    openright, % to force opening on the right for double-sided printing
-    cucitura=0mm, % for printing, 7mm should be enough
+    cucitura=7mm % for printing, 7mm should be enough
     %draft,
     %dvipsnames, % for compatibility with xcolor, it does not work
 ]{toptesi}
@@ -90,12 +90,14 @@
 %    }
     }} % abstract
 
-{\ifprint \customClearDoublePage \fi
+{
 \pdfbookmark[0]{\contentsname}{toc}%
 \tableofcontents}
 
+\ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
 \listoftables % ToC for tables
 
+\ifprint \customClearDoublePage \fi % to have a blank page and start on a fresh right page
 \listoffigures % ToC for figures
 
 % actually abbreviation is the name used for acronym in glossaries-extra
@@ -116,7 +118,7 @@
 
 %\part{Prima Parte} % parts division, not needed
 % Chapters always open on a right-side page, i.e. odd numbers, so a blank page is inserted if needed
-%\cleardoublepage[empty] % to have a fully blank page
+% to have a blank page and start on a fresh right page
 % a blank page appears before the first chapter in some configurations, on the last version it doesn't
 
 \input{content/chapters.tex}

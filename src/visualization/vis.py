@@ -18,7 +18,7 @@ import timeit
 
 def set_matplotlib_params():
     font = {'family' : 'sans-serif',
-            'size'   : 10,
+            'size'   : 12,
             'serif':  'Poppins'
             }
     mpl.rc('font', **font)
@@ -123,7 +123,7 @@ class Plotter:
         ax.set_ylabel('Distance relative error [%]')
 
         ax.set_xlabel('Time [s]')
-        ax.set_xticklabels([datetime.fromtimestamp(ts).strftime(r'%d/%m/%Y, %H:%M:%S') for ts in ax.get_xticks()])
+        ax.set_xticklabels([datetime.fromtimestamp(ts).strftime(r'%H:%M:%S') for ts in ax.get_xticks()])
         #ax.legend(self.__legend_lines, self.__legend_labels,loc='upper left')
 
         # x locator and formatter

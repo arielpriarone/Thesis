@@ -67,10 +67,9 @@ ax = fig.add_subplot(111, projection='3d',computed_zorder=False)
 ax.scatter(cluster1[:, 0], cluster1[:, 1], cluster1[:, 2], color=cmap(0), marker='.', label=r'$\bm{\mathcal{C}}_i$',zorder=2)
 ax.scatter(cluster2[:, 0], cluster2[:, 1], cluster2[:, 2], color=cmap(1), marker='.', label=r'$\bm{\mathcal{C}}_j$',zorder=2)
 ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1], kmeans.cluster_centers_[:, 2],s=50, c='k', marker='x', label=r'$\bm{c_i}$, $\bm{c}_j$',zorder=2)
-ax.set_xlabel('Feature 1')
-ax.set_ylabel('Feature 2')
-ax.set_zlabel('Feature 3')
-
+ax.xaxis.set_ticks([])
+ax.yaxis.set_ticks([])
+ax.zaxis.set_ticks([])
 # Calculate the radius of each cluster
 radii = []
 for i in range(n_clusters):
@@ -115,9 +114,9 @@ farthest_instance = cluster_points[farthest_instance_index]
 
 # Plot an arrow from the center to the farthest instance
 length = np.linalg.norm(farthest_instance - kmeans.cluster_centers_[0])
-ax.quiver(kmeans.cluster_centers_[0][0], kmeans.cluster_centers_[0][1], kmeans.cluster_centers_[0][2],
-          farthest_instance[0] - kmeans.cluster_centers_[0][0], farthest_instance[1] - kmeans.cluster_centers_[0][1], farthest_instance[2] - kmeans.cluster_centers_[0][2],
-          color="blue", arrow_length_ratio=1.5/length, label=r'$\bm{r}_i$',zorder=4)
+# ax.quiver(kmeans.cluster_centers_[0][0], kmeans.cluster_centers_[0][1], kmeans.cluster_centers_[0][2],
+#           farthest_instance[0] - kmeans.cluster_centers_[0][0], farthest_instance[1] - kmeans.cluster_centers_[0][1], farthest_instance[2] - kmeans.cluster_centers_[0][2],
+#           color="blue", arrow_length_ratio=1.5/length, label=r'$\bm{r}_i$',zorder=4)
 
 # Find the instance in the first cluster that is farthest from the center
 cluster_points = X[kmeans.labels_ == 1]
@@ -128,9 +127,9 @@ farthest_instance = cluster_points[farthest_instance_index]
 
 # Plot an arrow from the center to the farthest instance
 length = np.linalg.norm(farthest_instance - kmeans.cluster_centers_[1])
-ax.quiver(kmeans.cluster_centers_[1][0], kmeans.cluster_centers_[1][1], kmeans.cluster_centers_[1][2],
-          farthest_instance[0] - kmeans.cluster_centers_[1][0], farthest_instance[1] - kmeans.cluster_centers_[1][1], farthest_instance[2] - kmeans.cluster_centers_[1][2],
-          color="red", arrow_length_ratio=1.5/length, label=r'$\bm{r}_j$',zorder=4)
+# ax.quiver(kmeans.cluster_centers_[1][0], kmeans.cluster_centers_[1][1], kmeans.cluster_centers_[1][2],
+#           farthest_instance[0] - kmeans.cluster_centers_[1][0], farthest_instance[1] - kmeans.cluster_centers_[1][1], farthest_instance[2] - kmeans.cluster_centers_[1][2],
+#           color="red", arrow_length_ratio=1.5/length, label=r'$\bm{r}_j$',zorder=4)
 
 # ax.legend(loc='right',bbox_to_anchor=(1.7, 0.5)) 
 
@@ -138,4 +137,37 @@ ax.set_aspect('equal')
 ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
 ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
 ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
+
+fig, ax = plt.subplots()
+ax.scatter(cluster1[:, 0], cluster1[:, 1], color='#002b49', marker='.', label=r'$\bm{\mathcal{C}}_i$',zorder=2)
+ax.scatter(cluster2[:, 0], cluster2[:, 1], cluster2[:, 2], color="#EF7B00", marker='.', label=r'$\bm{\mathcal{C}}_j$',zorder=2)
+ax.scatter(kmeans.cluster_centers_[:, 0], kmeans.cluster_centers_[:, 1],s=50, c='k', marker='x', label=r'$\bm{c_i}$, $\bm{c}_j$',zorder=2)
+ax.set_xlabel('Feature i')
+ax.set_ylabel('Feature j')
+
+# Calculate the radius of each cluster
+radii = []
+for i in range(n_clusters):
+    cluster_points = X[kmeans.labels_ == i][0:1]
+    centroid = kmeans.cluster_centers_[i][0:1]
+    distances = np.linalg.norm(cluster_points - centroid, axis=1)
+    radius = np.max(distances)
+    radii.append(radius)
+    print(f"Cluster {i+1} radius: {radius}")
+
+# Plot the smooth transparent surfaces
+for i in range(n_clusters):
+    circle = plt.Circle((kmeans.cluster_centers_[i][0], kmeans.cluster_centers_[i][1]), radii[i], color=cmap(i), alpha=1)
+    ax.add_artist(circle)
+
+
+
+# Generate a new random instance
+new_instance = np.array([-4,12,-6])
+
+# Assign the new instance to a cluster
+new_instance_cluster = kmeans.predict([new_instance])[0]
+ax.scatter(new_instance[0], new_instance[1], c='magenta', marker='.', s=100, label=r'$\bm{\mathcal{S}}_n$',zorder=5)
+
+
 plt.show()
