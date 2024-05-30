@@ -12,8 +12,8 @@ import threading
 src.visualization.set_matplotlib_params() # set matplotlib parameters to generate plots for the thesis
 console = Console()
 # %% script settings
-configFilePath  = r"C:\Users\ariel\Documents\Courses\Tesi\Code\config.yaml" # configuration file path
-rawDataDirPath  = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\raw\1st_test_IMSBearing" # folder path
+configFilePath  = r".\config.yaml" # configuration file path
+rawDataDirPath  = r".\data\raw\1st_test_IMSBearing" # folder path
 N_train         = 600 # number of training samples
 
 # %% initialise script

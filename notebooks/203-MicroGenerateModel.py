@@ -19,7 +19,7 @@ console = Console()
 timestamps = np.array([])                                                                       # timestamps.shape = (n_samples,)
 features_matrix = np.array([])                                                                  # features_matrix.shape = (n_samples, n_features)
 train_data_filepath = r"data\processed\ETEL_Test2\train_data_refined_subset7features.csv"    # csv file with train data
-feature_scaler_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\feature_importance.csv"    # csv file with feature scaler
+feature_scaler_filepath = r".\feature_importance.csv"    # csv file with feature scaler
 model_filepath = r"RTOS\Restored\Core\Inc\model.h"                                              # model file to be created and included in C.
 modelfilename = "Model_7_feat_20240227.pickle"                                                          # model file to be created and included in python code
 python_model_path = r"models\NormalVsNoisereduction"                          # python model file to be created and included in python code

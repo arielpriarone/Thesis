@@ -134,9 +134,6 @@ length = np.linalg.norm(farthest_instance - kmeans.cluster_centers_[1])
 # ax.legend(loc='right',bbox_to_anchor=(1.7, 0.5)) 
 
 ax.set_aspect('equal')
-ax.w_xaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
-ax.w_yaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
-ax.w_zaxis.set_pane_color((1.0, 1.0, 1.0, 1.0))
 
 fig, ax = plt.subplots()
 ax.scatter(cluster1[:, 0], cluster1[:, 1], color='#002b49', marker='.', label=r'$\bm{\mathcal{C}}_i$',zorder=2)

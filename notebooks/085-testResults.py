@@ -26,7 +26,7 @@ src.vis.set_matplotlib_params()
 
 # %% read the first test results
 
-path = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\test_first_wave.log"
+path = r".\data\test_first_wave.log"
 errors_wave1 = [] # list of errors - prediction metric
 
 with open(path, "r") as file:
@@ -43,7 +43,7 @@ print(f"shape of the rerror, first wave: {np.shape(errors_wave1)}")
 
 # %% read the second test results
 
-path = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\test_second_wave.log"
+path = r".\data\test_second_wave.log"
 errors_wave2 = [] # list of errors - prediction metric
 
 with open(path, "r") as file:
@@ -61,7 +61,7 @@ print(f"shape of the rerror, second wave: {np.shape(errors_wave2)}")
 
 # %% read the novelty test results
 
-path = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\test_noveltydetected.log"
+path = r".\data\test_noveltydetected.log"
 errors_novelty = [] # list of errors - prediction metric
 
 with open(path, "r") as file:

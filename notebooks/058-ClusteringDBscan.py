@@ -6,6 +6,7 @@ from xml.dom.minidom import Document
 import arrow
 from click import style
 from matplotlib import projections
+import matplotlib.cm
 from matplotlib.patches import ArrowStyle
 from sklearn.cluster import KMeans
 from sklearn.datasets import make_blobs
@@ -132,7 +133,6 @@ print(predictions_lab, predictions_dist)
 # %% plot
 fig, ax = plt.subplots()
 threshold = 0.6
-cmap = cm.get_cmap("Set1")
 #ax.scatter(range(len(predictions_dist)),predictions_dist,c=[cmap(x) for x in predictions_lab],marker='.',s=.5)
 ax.scatter(timestamps_test,predictions_dist,c='k',marker='.',s=1, label= 'Novelty metric value')
 ax.axhline(y=db.eps*(1+threshold), color='k', linestyle='-.', label=f'novelty threshold = $\epsilon$*(1+{threshold})')

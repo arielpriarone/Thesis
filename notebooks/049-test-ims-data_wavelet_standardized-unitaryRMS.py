@@ -11,7 +11,6 @@ import numpy as np
 import os
 import src
 import pickle 
-import tikzplotlib as mp2tk
 from sklearn.preprocessing import StandardScaler
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 from IPython import get_ipython
@@ -109,19 +108,16 @@ fig, ax = plt.subplots(figsize=(6.4,1.5))
 ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:])
 ax.tick_params(labelbottom=False)
 ax.set_ylabel('Amplitude')
-mp2tk.save(tickpath+'WT_SingSnap_a.tex',axis_height='3cm', axis_width='0.9\linewidth')
 
 fig, ax = plt.subplots(figsize=(6.4,1.5))
 ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly'][aux,:]/np.linalg.norm(IMSDATA['wavanaly'][aux,:]))
 ax.tick_params(labelbottom=False)
 ax.set_ylabel('Amplitude')
-mp2tk.save(tickpath+'WT_SingSnap_b.tex',axis_height='3cm', axis_width='294.76926pt')
 
 fig, ax = plt.subplots(figsize=(6.4,1.5))
 ax.bar(IMSDATA['nodes'],IMSDATA['wavanaly_standardized'][aux,:])
 ax.set_ylabel('Amplitude')
 ax.tick_params(axis='x',rotation=90)
-mp2tk.save(tickpath+'WT_SingSnap_c.tex',axis_height='3cm', axis_width='294.76926pt')
 
 
 
@@ -175,8 +171,6 @@ cbar.set_label('Power of the features')
 
 # Adjust the layout to prevent overlapping of labels
 plt.tight_layout()
-# save the plot
-mp2tk.save(tickpath+'WT_heatmap.tex',axis_width='\\thesisAxisWidth',axis_height=None,textsize='\\thesisFigFontsize')
 # Show the plot
 plt.show()
 

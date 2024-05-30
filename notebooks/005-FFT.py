@@ -14,7 +14,8 @@ from IPython import get_ipython
 if src.visualization.isNotebook():  # run widget only if in interactive mode
     get_ipython().run_line_magic("matplotlib", "widget")
 from rich import print
-from scipy import fft, arange
+from scipy import fft
+from numpy import arange
 
 
 def plotSpectrum(y, Fs):

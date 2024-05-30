@@ -14,6 +14,7 @@ from datetime import datetime
 from sklearn.preprocessing import StandardScaler
 import scipy
 import matplotlib
+import PyQt5
 matplotlib.use('Qt5Agg')
 _ = importlib.reload(src)   # this make changes in the src package immediately effective without restarting the kernel
 

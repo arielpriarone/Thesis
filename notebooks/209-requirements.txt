@@ -1,8 +1,0 @@
-click==8.1.6
-k_means_constrained==0.7.3
-matplotlib==3.7.1
-numpy==1.24.2
-pandas==2.0.1
-pyserial==3.5
-rich==13.5.3
-scikit_learn==1.2.2

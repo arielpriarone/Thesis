@@ -16,8 +16,8 @@ from k_means_constrained import KMeansConstrained
 # %% global variables
 timestamps = np.array([])
 features_matrix = np.array([])
-snapshots_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\data\Log_train_combined.log"  # Change this to your actual file path
-model_filepath = r"C:\Users\ariel\Documents\Courses\Tesi\Code\RTOS\Framework\Core\Inc\model.h"  # Change this to your actual file path
+snapshots_filepath = r".\data\Log_train_combined.log"  # Change this to your actual file path
+model_filepath = r".\RTOS\Framework\Core\Inc\model.h"  # Change this to your actual file path
 min_cluster_size = 2   # minimum number of samples in a cluster
 
 # %% LOAD DATA

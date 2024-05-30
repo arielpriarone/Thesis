@@ -7,7 +7,7 @@ np.set_printoptions(formatter={'float': lambda x: "{0:0.3f}".format(x)})
 
 src.vis.set_matplotlib_params()
 # %% generate data
-n_samples=40000
+n_samples=4000
 x=np.linspace(-2,4,n_samples)
 noise=np.random.normal(0,1,n_samples)
 
