@@ -17,9 +17,9 @@ import matplotlib.dates as mdates
 import timeit
 
 def set_matplotlib_params():
-    font = {'family' : 'sans-serif',
-            'size'   : 12,
-            'serif':  'Poppins'
+    font = {'family' : 'serif',
+            'size'   : 10,
+            'serif':  'cmr10'
             }
     mpl.rc('font', **font)
     plt.rcParams["figure.figsize"] = (5.78851, 5.78851/16*9)
