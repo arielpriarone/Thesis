@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1717582441 "main.aux" "main.bbl" "main" 1717582445 0
+["bibtex main"] 1717603736 "main.aux" "main.bbl" "main" 1717603737 0
   "./Definitions/mdpi.bst" 1717577782 23653 62187687754729c82001f3236396925e ""
-  "./ref.bib" 1717582431 2131 1e13fb9b1956d1f66af6b795e6074777 ""
-  "main.aux" 1717582444 1038 18739478324272a62763b689d9f32fcb "pdflatex"
+  "./ref.bib" 1717603736 5801 cddf8a0cf0707b1e278a0e42e8c907c0 ""
+  "main.aux" 1717603338 1302 02045e1de4d87ca21f2372833c752dd5 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1717582442 "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" "main.pdf" "main" 1717582445 0
+["pdflatex"] 1717603335 "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" "main.pdf" "main" 1717603737 0
   "C:/Users/ariel/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1717577878 282630 a9d18d171a15472046409dcd03510ddc ""
   "C:/Users/ariel/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1702315174 24224316 b3145bceefbf2a0404675e71529be0e5 ""
   "C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -248,12 +248,13 @@
   "Definitions/logo-mdpi.eps" 1717577782 563678 5cdc8f4064e4e6cc8ec19e9f9b0d5b7c ""
   "Definitions/logo-orcid.pdf" 1717577782 12671 39a20ba789123aa897c7efc569fb5270 ""
   "Definitions/mdpi.cls" 1717577782 55480 c02d3e1f22de0d8856fef3ce3c2db710 ""
-  "Sections/ReatedWork.tex" 1717582431 120 66ae4ad636e9171ec702401814d8607f ""
-  "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" 1717579542 15620 b0d8c9c1021449ac0552d1e53758fe1f ""
-  "main.aux" 1717582444 1038 18739478324272a62763b689d9f32fcb "pdflatex"
-  "main.bbl" 1717582442 509 99cce8edf8df34542153ac1bec7f9408 "bibtex main"
-  "main.out" 1717582444 424 21095084f9f261dfcb05b873b0fd6bfa "pdflatex"
-  "main.tex" 1717579542 15620 b0d8c9c1021449ac0552d1e53758fe1f ""
+  "Sections/ReatedWork.tex" 1717603330 1112 78e63b96dd04275d4d9a0a81d0abe86d ""
+  "Sections/abbr.tex" 1717603330 317 af39dc1c999dd1965bebdfaf298506c1 ""
+  "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" 1717599706 15647 1279737b82d90bd4991acdc9fa6e3cb8 ""
+  "main.aux" 1717603338 1302 02045e1de4d87ca21f2372833c752dd5 "pdflatex"
+  "main.bbl" 1717603737 1848 efcd21b87fa46305e78c1ad9a54a62cd "bibtex main"
+  "main.out" 1717603338 285 190b44aadfc8c2ac105c25e80368af64 "pdflatex"
+  "main.tex" 1717599706 15647 1279737b82d90bd4991acdc9fa6e3cb8 ""
   (generated)
   "main.aux"
   "main.log"

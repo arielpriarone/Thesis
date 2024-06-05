@@ -1,12 +1,36 @@
 \begin{thebibliography}{999}
 
-\bibitem[Mansour et~al.(2023)Mansour, Abdel-Khalek, Hilali-Jaghdam, Nebhen,
-  Cho, and Joshi]{Mansour2023}
-Mansour, R.F.; Abdel-Khalek, S.; Hilali-Jaghdam, I.; Nebhen, J.; Cho, W.;
-  Joshi, G.P.
-\newblock An intelligent outlier detection with machine learning empowered big
-  data analytics for mobile edge computing.
-\newblock {\em Cluster Computing} {\bf 2023}, {\em 26},~71--83.
-\newblock {\url{https://doi.org/10.1007/s10586-021-03472-4}}.
+\bibitem[Zhou et~al.(2019)Zhou, Shen, Zhao, Liu, and Xiong]{Zhou2019}
+Zhou, Q.; Shen, H.; Zhao, J.; Liu, X.; Xiong, X.
+\newblock Degradation State Recognition of Rolling Bearing Based on K-Means and
+  CNN Algorithm.
+\newblock {\em Shock and Vibration} {\bf 2019}, {\em 2019},~8471732,
+  \href{http://arxiv.org/abs/https://onlinelibrary.wiley.com/doi/pdf/10.1155/2019/8471732}{{\normalfont
+  [https://onlinelibrary.wiley.com/doi/pdf/10.1155/2019/8471732]}}.
+\newblock {\url{https://doi.org/https://doi.org/10.1155/2019/8471732}}.
+
+\bibitem[Pinedo-S{\'a}nchez et~al.(2020)Pinedo-S{\'a}nchez, Mercado-Ravell, and
+  Carballo-Monsivais]{Pinedo2020}
+Pinedo-S{\'a}nchez, L.A.; Mercado-Ravell, D.A.; Carballo-Monsivais, C.A.
+\newblock Vibration analysis in bearings for failure prevention using CNN.
+\newblock {\em Journal of the Brazilian Society of Mechanical Sciences and
+  Engineering} {\bf 2020}, {\em 42},~628.
+\newblock {\url{https://doi.org/10.1007/s40430-020-02711-w}}.
+
+\bibitem[Lee et~al.(2007)Lee, Qiu, Yu, Lin, and Services]{IMS_data}
+Lee, J.; Qiu, H.; Yu, G.; Lin, J.; Services, R.T.
+\newblock Bearing Data Set.
+\newblock IMS, University of Cincinnati, NASA Prognostics Data Repository, NASA
+  Ames Research Center, Moffett Field, CA,  2007.
+\newblock Accessed on [Insert date of access].
+
+\bibitem[Spytek et~al.(2023)Spytek, Machynia, Dziedziech, Dworakowski, and
+  Holak]{SPYTEK2023109823}
+Spytek, J.; Machynia, A.; Dziedziech, K.; Dworakowski, Z.; Holak, K.
+\newblock Novelty detection approach for the monitoring of structural
+  vibrations using vision-based mean frequency maps.
+\newblock {\em Mechanical Systems and Signal Processing} {\bf 2023}, {\em
+  185},~109823.
+\newblock {\url{https://doi.org/https://doi.org/10.1016/j.ymssp.2022.109823}}.
 
 \end{thebibliography}

@@ -487,10 +487,9 @@ INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\jknappen\ec\ecss080
 INPUT .\Sections\ReatedWork.tex
 INPUT .\Sections\ReatedWork.tex
 INPUT Sections\ReatedWork.tex
-INPUT .\main.bbl
-INPUT .\main.bbl
-INPUT main.bbl
-INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplri8t.tfm
+INPUT .\Sections\abbr.tex
+INPUT .\Sections\abbr.tex
+INPUT Sections\abbr.tex
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplr7t.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplr7t.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\public\mathpazo\zplmr7m.tfm
@@ -507,6 +506,10 @@ INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\public\mathpazo\zpl
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\public\mathpazo\zplmr7t.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\euler\eurm10.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\euler\eurm7.tfm
+INPUT .\main.bbl
+INPUT .\main.bbl
+INPUT main.bbl
+INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplri8t.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplri8t.tfm
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\vf\adobe\palatino\pplb8t.vf
 INPUT C:\Users\ariel\AppData\Local\Programs\MiKTeX\fonts\tfm\adobe\palatino\pplb8r.tfm

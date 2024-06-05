@@ -1,5 +1,13 @@
 \section{State-of-Art andRelated Works}
 \label{sec:related_work}
 
-\subsection{Embedded Systems}
-\cite{Mansour2023}
+
+The K-means algorithm is used in \cite{Zhou2019,Pinedo2020} to label the degradation states of bearings.  In \cite{Zhou2019}, the labelled timeseries are than used to train a CNN recognition model. Traditional statistical features (TSF) and MFCC are used to form the hyperspace in which to cluster the data. When evaluating the state of the system, the raw data are fede to CNN model withowt the need to extract features. The authors validated this algorithm on the IMS bearing dataset \cite{IMS_data}. In \cite{Pinedo2020}, the TSF are used toghether with the Shannon's as features to perform the clustering. The authors then converted the timeseries into images and used a CNN (Alexnet) to classify the degradation states. This method was validated on the IMS and the CWRU datasets.
+
+
+
+
+
+A  computer vision method to detect anomalies in mechanical systems is proposed in \cite{SPYTEK2023109823}. Thi has the advantage of evaluating vibrations in multiple points of interest without phisical contact with the observed component.
+
+
