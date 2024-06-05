@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1717609387 "main.aux" "main.bbl" "main" 1717610467 0
+["bibtex main"] 1717625327 "main.aux" "main.bbl" "main" 1717625331 0
   "./Definitions/mdpi.bst" 1717577782 23653 62187687754729c82001f3236396925e ""
-  "./ref.bib" 1717608875 6413 022498196a06980e0b04ab7bc9e9576f ""
-  "main.aux" 1717610466 1644 e532c024dc2ce24bc680530a5c0eb60c "pdflatex"
+  "./ref.bib" 1717624699 8722 18998ef924bdc2e0056f115a7f28924f ""
+  "main.aux" 1717625330 2109 bc893fa6281121e0fb098e72841d5011 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1717610464 "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" "main.pdf" "main" 1717610467 0
+["pdflatex"] 1717625328 "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" "main.pdf" "main" 1717625331 0
   "C:/Users/ariel/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1717577878 282630 a9d18d171a15472046409dcd03510ddc ""
   "C:/Users/ariel/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1702315174 24224316 b3145bceefbf2a0404675e71529be0e5 ""
   "C:/Users/ariel/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc" 1458473887 4993 80dc9bab7f31fb78a000ccfed0e27cab ""
@@ -248,13 +248,13 @@
   "Definitions/logo-mdpi.eps" 1717577782 563678 5cdc8f4064e4e6cc8ec19e9f9b0d5b7c ""
   "Definitions/logo-orcid.pdf" 1717577782 12671 39a20ba789123aa897c7efc569fb5270 ""
   "Definitions/mdpi.cls" 1717577782 55480 c02d3e1f22de0d8856fef3ce3c2db710 ""
-  "Sections/ReatedWork.tex" 1717610463 2278 4f647f28c6a808add0bd38abd5eca81b ""
-  "Sections/abbr.tex" 1717610258 484 8a7b1f11ad49e4eccc861b0953ee521f ""
-  "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" 1717599706 15647 1279737b82d90bd4991acdc9fa6e3cb8 ""
-  "main.aux" 1717610466 1644 e532c024dc2ce24bc680530a5c0eb60c "pdflatex"
-  "main.bbl" 1717609388 3030 1709dd70dcffe23fa27814143efd345f "bibtex main"
-  "main.out" 1717610466 285 190b44aadfc8c2ac105c25e80368af64 "pdflatex"
-  "main.tex" 1717599706 15647 1279737b82d90bd4991acdc9fa6e3cb8 ""
+  "Sections/ReatedWork.tex" 1717625318 3841 d19ee989bc88af5db3746b7291c9f0bc ""
+  "Sections/abbr.tex" 1717624199 585 c8b2ac5dd436dedffd264a071a8b7e54 ""
+  "e:/Documents/Courses/Tesi/Code/LaTeX/MDPI/main.tex" 1717621267 15692 1d84b3898c4ba6b706942a491c555d9d ""
+  "main.aux" 1717625330 2109 bc893fa6281121e0fb098e72841d5011 "pdflatex"
+  "main.bbl" 1717625327 4765 afb19378ff278f0f0feb98c7d044b031 "bibtex main"
+  "main.out" 1717625330 202 a058cd2e879cf728bc6c4823febd1365 "pdflatex"
+  "main.tex" 1717621267 15692 1d84b3898c4ba6b706942a491c555d9d ""
   (generated)
   "main.aux"
   "main.log"

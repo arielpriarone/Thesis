@@ -31,15 +31,6 @@ Chalouli, M.; Berrached, N.e.; Denai, M.
   17},~1053--1066.
 \newblock {\url{https://doi.org/10.1007/s11668-017-0343-y}}.
 
-\bibitem[Spytek et~al.(2023)Spytek, Machynia, Dziedziech, Dworakowski, and
-  Holak]{SPYTEK2023109823}
-Spytek, J.; Machynia, A.; Dziedziech, K.; Dworakowski, Z.; Holak, K.
-\newblock Novelty detection approach for the monitoring of structural
-  vibrations using vision-based mean frequency maps.
-\newblock {\em Mechanical Systems and Signal Processing} {\bf 2023}, {\em
-  185},~109823.
-\newblock {\url{https://doi.org/https://doi.org/10.1016/j.ymssp.2022.109823}}.
-
 \bibitem[Zhang et~al.(2018)Zhang, Li, Gao, and Li]{ZHANG2018}
 Zhang, Y.; Li, X.; Gao, L.; Li, P.
 \newblock A new subset based deep feature learning method for intelligent fault
@@ -56,5 +47,49 @@ Gattino, C.; Ottonello, E.; Baggetta, M.; Razzoli, R.; Stecki, J.; Berselli, G.
 \newblock {\em The International Journal of Advanced Manufacturing Technology}
   {\bf 2023}, {\em 125},~4013--4026.
 \newblock {\url{https://doi.org/10.1007/s00170-022-10549-w}}.
+
+\bibitem[Masud et~al.(2011)Masud, Gao, Khan, Han, and Thuraisingham]{Masud2011}
+Masud, M.; Gao, J.; Khan, L.; Han, J.; Thuraisingham, B.M.
+\newblock Classification and Novel Class Detection in Concept-Drifting Data
+  Streams under Time Constraints.
+\newblock {\em IEEE Transactions on Knowledge and Data Engineering} {\bf 2011},
+  {\em 23},~859--874.
+\newblock {\url{https://doi.org/10.1109/TKDE.2010.61}}.
+
+\bibitem[Breunig et~al.(2000)Breunig, Kröger, Ng, and Sander]{Breunig00}
+Breunig, M.; Kröger, P.; Ng, R.; Sander, J.
+\newblock LOF: Identifying Density-Based Local Outliers.
+\newblock  06 2000, Vol.~29, pp. 93--104.
+\newblock {\url{https://doi.org/10.1145/342009.335388}}.
+
+\bibitem[He et~al.(2003)He, Xu, and Deng]{HE2003}
+He, Z.; Xu, X.; Deng, S.
+\newblock Discovering cluster-based local outliers.
+\newblock {\em Pattern Recognition Letters} {\bf 2003}, {\em 24},~1641--1650.
+\newblock
+  {\url{https://doi.org/https://doi.org/10.1016/S0167-8655(03)00003-5}}.
+
+\bibitem[Clifton et~al.(2006)Clifton, Bannister, and Tarassenko]{Clifton06}
+Clifton, D.A.; Bannister, P.R.; Tarassenko, L.
+\newblock Learning Shape for Jet Engine Novelty Detection.
+\newblock In Proceedings of the Advances in Neural Networks - ISNN 2006; Wang,
+  J.; Yi, Z.; Zurada, J.M.; Lu, B.L.; Yin, H., Eds., Berlin, Heidelberg,  2006;
+  pp. 828--835.
+
+\bibitem[Garcia et~al.(2019)Garcia, Poel, Kok, and de~Carvalho]{Garcia19}
+Garcia, K.D.; Poel, M.; Kok, J.N.; de~Carvalho, A.C.P.L.F.
+\newblock Online Clustering for Novelty Detection and Concept Drift in Data
+  Streams.
+\newblock In Proceedings of the Progress in Artificial Intelligence;
+  Moura~Oliveira, P.; Novais, P.; Reis, L.P., Eds., Cham,  2019; pp. 448--459.
+
+\bibitem[Spytek et~al.(2023)Spytek, Machynia, Dziedziech, Dworakowski, and
+  Holak]{SPYTEK2023109823}
+Spytek, J.; Machynia, A.; Dziedziech, K.; Dworakowski, Z.; Holak, K.
+\newblock Novelty detection approach for the monitoring of structural
+  vibrations using vision-based mean frequency maps.
+\newblock {\em Mechanical Systems and Signal Processing} {\bf 2023}, {\em
+  185},~109823.
+\newblock {\url{https://doi.org/https://doi.org/10.1016/j.ymssp.2022.109823}}.
 
 \end{thebibliography}

@@ -1,4 +1,4 @@
-\section{State-of-Art andRelated Works}
+\section{Related Works}
 \label{sec:related_work}
 
 
@@ -6,8 +6,17 @@ The K-means algorithm is used in \cite{Zhou2019,Pinedo2020} to label the degrada
 
 In \cite{Chalouli2017}, the authors propose a method to quantify the health of bearing. The time-domain features are extracted from the vibration signal and reduced, applying a cross-correlation filter to remove the redundant features. The K-means algorithm is then used to select only the most relevant features (optimising for obtaining the most dense and separated clusters). The SOM algorithm is then used to compute a Health indicators for the bearing. The authors validated this method on the IMS dataset.
 
-A  computer vision method to detect anomalies in mechanical systems is proposed in \cite{SPYTEK2023109823}. This has the advantage of evaluating vibrations in multiple points of interest without phisical contact with the observed component.
-
 In \cite{ZHANG2018}, the authors propose a subset based deep auto-encoder model to automatically learn discriminative features from datasets. This approach has been validated on the CWRU, IMS and SPCP bearing vibration datasets.
 
 A case-study on the IMS dataset is proposed in \cite{Gattino2023}. The anthors leverage the knowledge the Fault frequencies of the bearings to provide labels to the data. The features considered initially are TSF and RSGWPT coefficients. The dimensionality of the feature space is reduced by applying PCA. Lastly, K-means, SVM and agglomerative clustering are used to perform anomaly detection and to identify the failure modes.
+
+A powerful approach to data streams classification is proposed in \cite{Masud2011}. It is not a one-class approac as it manages more than one \quoted{normal} class as well as the emerging of novel classes during the classification task. 
+
+A metric for quantifying how novel a record is in a dataset has been developed by \cite{Breunig00}. This metric is called Local Outlier Factor (LOF) and depends on the position of the point and the density of known points around it. This concept has been extended to consider also the clustered structure of the data in \cite{HE2003}, that define the metric cluster-based LOF (CBLOF).
+
+A very simple way of quantifying the normality of data using a distance metric is proposed in \cite{Clifton06}. The authors propose to compute a novelty score that is the distance of the record from the nearest cluster, normalized by the standard deviation of the distance of the known points in the cluster. This method has been tested on vibration data collected on a jet engine.
+
+Another distance-based method  is proposed in \cite{Garcia19}. The method profides a hard classification of the data as normal, extension or unknown, based on the radius of the closest cluster and the position of the point to be evaluates. If the point is outside the decision boundary but whithin a tolerance, than it is classified as extension and the learned model is updated. If the point is outside the tolerance, than it is classified as unknown. Unknown points are kept in a buffer and used to update the model when new classes emerge whithin the data.
+
+
+A  computer vision method to detect anomalies in mechanical systems is proposed in \cite{SPYTEK2023109823}. This has the advantage of evaluating vibrations in multiple points of interest without phisical contact with the observed component.
