@@ -4,10 +4,10 @@
 
 The K-means algorithm is used in \cite{Zhou2019,Pinedo2020} to label the degradation states of bearings.  In \cite{Zhou2019}, the labelled timeseries are than used to train a CNN recognition model. Traditional statistical features (TSF) and MFCC are used to form the hyperspace in which to cluster the data. When evaluating the state of the system, the raw data are fede to CNN model withowt the need to extract features. The authors validated this algorithm on the IMS bearing dataset \cite{IMS_data}. In \cite{Pinedo2020}, the TSF are used toghether with the Shannon's as features to perform the clustering. The authors then converted the timeseries into images and used a CNN (Alexnet) to classify the degradation states. This method was validated on the IMS and the CWRU datasets.
 
+In \cite{Chalouli2017}, the authors propose a method to quantify the health of bearing. The time-domain features are extracted from the vibration signal and reduced, applying a cross-correlation filter to remove the redundant features. The K-means algorithm is then used to select only the most relevant features (optimising for obtaining the most dense and separated clusters). The SOM algorithm is then used to compute a Health indicators for the bearing. The authors validated this method on the IMS dataset.
 
+A  computer vision method to detect anomalies in mechanical systems is proposed in \cite{SPYTEK2023109823}. This has the advantage of evaluating vibrations in multiple points of interest without phisical contact with the observed component.
 
+In \cite{ZHANG2018}, the authors propose a subset based deep auto-encoder model to automatically learn discriminative features from datasets. This approach has been validated on the CWRU, IMS and SPCP bearing vibration datasets.
 
-
-A  computer vision method to detect anomalies in mechanical systems is proposed in \cite{SPYTEK2023109823}. Thi has the advantage of evaluating vibrations in multiple points of interest without phisical contact with the observed component.
-
-
+A case-study on the IMS dataset is proposed in \cite{Gattino2023}. The anthors leverage the knowledge the Fault frequencies of the bearings to provide labels to the data. The features considered initially are TSF and RSGWPT coefficients. The dimensionality of the feature space is reduced by applying PCA. Lastly, K-means, SVM and agglomerative clustering are used to perform anomaly detection and to identify the failure modes.
