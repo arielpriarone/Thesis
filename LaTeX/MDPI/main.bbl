@@ -1,0 +1,12 @@
+\begin{thebibliography}{999}
+
+\bibitem[Mansour et~al.(2023)Mansour, Abdel-Khalek, Hilali-Jaghdam, Nebhen,
+  Cho, and Joshi]{Mansour2023}
+Mansour, R.F.; Abdel-Khalek, S.; Hilali-Jaghdam, I.; Nebhen, J.; Cho, W.;
+  Joshi, G.P.
+\newblock An intelligent outlier detection with machine learning empowered big
+  data analytics for mobile edge computing.
+\newblock {\em Cluster Computing} {\bf 2023}, {\em 26},~71--83.
+\newblock {\url{https://doi.org/10.1007/s10586-021-03472-4}}.
+
+\end{thebibliography}
