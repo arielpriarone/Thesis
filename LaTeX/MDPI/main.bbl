@@ -23,6 +23,19 @@ Lee, J.; Qiu, H.; Yu, G.; Lin, J.; Services, R.T.
 \newblock IMS, University of Cincinnati, NASA Prognostics Data Repository, NASA
   Ames Research Center, Moffett Field, CA,  2007.
 
+\bibitem[University()]{CWRU_data}
+University, C.W.R.
+\newblock Bearing Data Center: Seeded Fault Test Data.
+\newblock \url{http://data-acquisition.case.edu/}.
+\newblock Accessed: 2024-06-05.
+
+\bibitem[Wan et~al.(2021)Wan, Zhang, Li, and Li]{Wan21}
+Wan, L.; Zhang, G.; Li, H.; Li, C.
+\newblock A Novel Bearing Fault Diagnosis Method Using Spark-Based Parallel
+  ACO-K-Means Clustering Algorithm.
+\newblock {\em IEEE Access} {\bf 2021}, {\em 9},~28753--28768.
+\newblock {\url{https://doi.org/10.1109/ACCESS.2021.3059221}}.
+
 \bibitem[Chalouli et~al.(2017)Chalouli, Berrached, and Denai]{Chalouli2017}
 Chalouli, M.; Berrached, N.e.; Denai, M.
 \newblock Intelligent Health Monitoring of Machine Bearings Based on Feature
